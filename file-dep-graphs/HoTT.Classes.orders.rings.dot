@@ -1,0 +1,65 @@
+digraph HoTT_Classes_orders_rings {
+  graph [ratio=0.5]
+  node [style=filled]
+rings_projected_full_pseudo_ring_order [label="projected_full_pseudo_ring_order", URL=<rings.html#projected_full_pseudo_ring_order>, peripheries=3, fillcolor="#F070D1"] ;
+rings_projected_pseudo_ring_order [label="projected_pseudo_ring_order", URL=<rings.html#projected_pseudo_ring_order>, fillcolor="#F070D1"] ;
+rings_projected_strict_ring_order [label="projected_strict_ring_order", URL=<rings.html#projected_strict_ring_order>, fillcolor="#F070D1"] ;
+rings_preserves_le_negate1 [label="preserves_le_negate1", URL=<rings.html#preserves_le_negate1>, peripheries=3, fillcolor="#F070D1"] ;
+rings_preserves_ge_negate1 [label="preserves_ge_negate1", URL=<rings.html#preserves_ge_negate1>, peripheries=3, fillcolor="#F070D1"] ;
+rings_reflecting_preserves_nonneg [label="reflecting_preserves_nonneg", URL=<rings.html#reflecting_preserves_nonneg>, peripheries=3, fillcolor="#F070D1"] ;
+rings_projected_ring_order [label="projected_ring_order", URL=<rings.html#projected_ring_order>, peripheries=3, fillcolor="#F070D1"] ;
+rings_negative_apart_zero [label="negative_apart_zero", URL=<rings.html#negative_apart_zero>, peripheries=3, fillcolor="#F070D1"] ;
+rings_positive_apart_zero [label="positive_apart_zero", URL=<rings.html#positive_apart_zero>, peripheries=3, fillcolor="#F070D1"] ;
+rings_between_pos [label="between_pos", URL=<rings.html#between_pos>, peripheries=3, fillcolor="#F070D1"] ;
+rings_pos_minus_lt_compat_l [label="pos_minus_lt_compat_l", URL=<rings.html#pos_minus_lt_compat_l>, peripheries=3, fillcolor="#F070D1"] ;
+rings_pos_minus_lt_compat_r [label="pos_minus_lt_compat_r", URL=<rings.html#pos_minus_lt_compat_r>, fillcolor="#F070D1"] ;
+rings_pos_minus_compat [label="pos_minus_compat", URL=<rings.html#pos_minus_compat>, peripheries=3, fillcolor="#F070D1"] ;
+rings_flip_neg_minus [label="flip_neg_minus", URL=<rings.html#flip_neg_minus>, peripheries=3, fillcolor="#F070D1"] ;
+rings_flip_pos_minus [label="flip_pos_minus", URL=<rings.html#flip_pos_minus>, peripheries=3, fillcolor="#F070D1"] ;
+rings_flip_lt_minus_l [label="flip_lt_minus_l", URL=<rings.html#flip_lt_minus_l>, fillcolor="#F070D1"] ;
+rings_flip_lt_minus_r [label="flip_lt_minus_r", URL=<rings.html#flip_lt_minus_r>, fillcolor="#F070D1"] ;
+rings_flip_neg_negate [label="flip_neg_negate", URL=<rings.html#flip_neg_negate>, peripheries=3, fillcolor="#F070D1"] ;
+rings_flip_pos_negate [label="flip_pos_negate", URL=<rings.html#flip_pos_negate>, fillcolor="#F070D1"] ;
+rings_flip_lt_negate_l [label="flip_lt_negate_l", URL=<rings.html#flip_lt_negate_l>, peripheries=3, fillcolor="#F070D1"] ;
+rings_flip_lt_negate_r [label="flip_lt_negate_r", URL=<rings.html#flip_lt_negate_r>, peripheries=3, fillcolor="#F070D1"] ;
+rings_flip_lt_negate [label="flip_lt_negate", URL=<rings.html#flip_lt_negate>, fillcolor="#F070D1"] ;
+rings_between_nonneg [label="between_nonneg", URL=<rings.html#between_nonneg>, peripheries=3, fillcolor="#F070D1"] ;
+rings_nonneg_minus_compat_back [label="nonneg_minus_compat_back", URL=<rings.html#nonneg_minus_compat_back>, peripheries=3, fillcolor="#F070D1"] ;
+rings_nonneg_minus_compat [label="nonneg_minus_compat", URL=<rings.html#nonneg_minus_compat>, fillcolor="#F070D1"] ;
+rings_flip_nonpos_minus [label="flip_nonpos_minus", URL=<rings.html#flip_nonpos_minus>, peripheries=3, fillcolor="#F070D1"] ;
+rings_flip_nonneg_minus [label="flip_nonneg_minus", URL=<rings.html#flip_nonneg_minus>, fillcolor="#F070D1"] ;
+rings_flip_le_minus_l [label="flip_le_minus_l", URL=<rings.html#flip_le_minus_l>, fillcolor="#F070D1"] ;
+rings_flip_le_minus_r [label="flip_le_minus_r", URL=<rings.html#flip_le_minus_r>, fillcolor="#F070D1"] ;
+rings_flip_nonpos_negate [label="flip_nonpos_negate", URL=<rings.html#flip_nonpos_negate>, peripheries=3, fillcolor="#F070D1"] ;
+rings_flip_nonneg_negate [label="flip_nonneg_negate", URL=<rings.html#flip_nonneg_negate>, fillcolor="#F070D1"] ;
+rings_flip_le_negate [label="flip_le_negate", URL=<rings.html#flip_le_negate>, fillcolor="#F070D1"] ;
+rings_from_full_pseudo_ring_order [label="from_full_pseudo_ring_order", URL=<rings.html#from_full_pseudo_ring_order>, peripheries=3, fillcolor="#F070D1"] ;
+rings_from_pseudo_ring_order [label="from_pseudo_ring_order", URL=<rings.html#from_pseudo_ring_order>, fillcolor="#F070D1"] ;
+rings_from_strict_ring_order [label="from_strict_ring_order", URL=<rings.html#from_strict_ring_order>, fillcolor="#F070D1"] ;
+rings_from_ring_order [label="from_ring_order", URL=<rings.html#from_ring_order>, peripheries=3, fillcolor="#F070D1"] ;
+  rings_projected_full_pseudo_ring_order -> rings_projected_pseudo_ring_order [] ;
+  rings_projected_pseudo_ring_order -> rings_projected_strict_ring_order [] ;
+  rings_projected_pseudo_ring_order -> rings_from_pseudo_ring_order [] ;
+  rings_projected_strict_ring_order -> rings_from_strict_ring_order [] ;
+  rings_reflecting_preserves_nonneg -> rings_flip_nonneg_minus [] ;
+  rings_between_pos -> rings_flip_pos_negate [] ;
+  rings_pos_minus_lt_compat_l -> rings_pos_minus_lt_compat_r [] ;
+  rings_pos_minus_lt_compat_r -> rings_flip_pos_negate [] ;
+  rings_flip_neg_minus -> rings_flip_lt_minus_l [] ;
+  rings_flip_pos_minus -> rings_flip_lt_minus_r [] ;
+  rings_flip_lt_minus_l -> rings_flip_lt_minus_r [] ;
+  rings_flip_neg_negate -> rings_flip_pos_negate [] ;
+  rings_flip_pos_negate -> rings_flip_lt_negate [] ;
+  rings_flip_lt_negate_l -> rings_flip_lt_negate [] ;
+  rings_flip_lt_negate_r -> rings_flip_lt_negate [] ;
+  rings_between_nonneg -> rings_flip_nonneg_negate [] ;
+  rings_nonneg_minus_compat_back -> rings_nonneg_minus_compat [] ;
+  rings_flip_nonpos_minus -> rings_flip_le_minus_l [] ;
+  rings_flip_nonneg_minus -> rings_flip_le_minus_r [] ;
+  rings_flip_le_minus_l -> rings_flip_le_minus_r [] ;
+  rings_flip_nonpos_negate -> rings_flip_nonneg_negate [] ;
+  rings_flip_nonneg_negate -> rings_flip_le_negate [] ;
+  rings_from_full_pseudo_ring_order -> rings_from_pseudo_ring_order [] ;
+subgraph cluster_rings { label="rings"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+rings_from_ring_order; rings_from_strict_ring_order; rings_from_pseudo_ring_order; rings_from_full_pseudo_ring_order; rings_flip_le_negate; rings_flip_nonneg_negate; rings_flip_nonpos_negate; rings_flip_le_minus_r; rings_flip_le_minus_l; rings_flip_nonneg_minus; rings_flip_nonpos_minus; rings_nonneg_minus_compat; rings_nonneg_minus_compat_back; rings_between_nonneg; rings_flip_lt_negate; rings_flip_lt_negate_r; rings_flip_lt_negate_l; rings_flip_pos_negate; rings_flip_neg_negate; rings_flip_lt_minus_r; rings_flip_lt_minus_l; rings_flip_pos_minus; rings_flip_neg_minus; rings_pos_minus_compat; rings_pos_minus_lt_compat_r; rings_pos_minus_lt_compat_l; rings_between_pos; rings_positive_apart_zero; rings_negative_apart_zero; rings_projected_ring_order; rings_reflecting_preserves_nonneg; rings_preserves_ge_negate1; rings_preserves_le_negate1; rings_projected_strict_ring_order; rings_projected_pseudo_ring_order; rings_projected_full_pseudo_ring_order; };
+} /* END */

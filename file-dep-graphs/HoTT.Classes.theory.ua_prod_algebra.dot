@@ -1,0 +1,53 @@
+digraph HoTT_Classes_theory_ua_prod_algebra {
+  graph [ratio=0.5]
+  node [style=filled]
+ua_prod_algebra_ump_bin_prod_algebra [label="ump_bin_prod_algebra", URL=<ua_prod_algebra.html#ump_bin_prod_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_prod_algebra_snd_prod_algebra [label="snd_prod_algebra", URL=<ua_prod_algebra.html#snd_prod_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_prod_algebra_fst_prod_algebra [label="fst_prod_algebra", URL=<ua_prod_algebra.html#fst_prod_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_prod_algebra_BinProdAlgebra [label="BinProdAlgebra", URL=<ua_prod_algebra.html#BinProdAlgebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_trunc_bin_prod_algebras [label="trunc_bin_prod_algebras", URL=<ua_prod_algebra.html#trunc_bin_prod_algebras>, fillcolor="#F070D1"] ;
+ua_prod_algebra_bin_prod_algebras [label="bin_prod_algebras", URL=<ua_prod_algebra.html#bin_prod_algebras>, fillcolor="#F070D1"] ;
+ua_prod_algebra_ump_prod_algebra [label="ump_prod_algebra", URL=<ua_prod_algebra.html#ump_prod_algebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_hom_prod_algebra_mapin [label="hom_prod_algebra_mapin", URL=<ua_prod_algebra.html#hom_prod_algebra_mapin>, fillcolor="#F070D1"] ;
+ua_prod_algebra_is_homomorphism_prod_algebra_mapin [label="is_homomorphism_prod_algebra_mapin", URL=<ua_prod_algebra.html#is_homomorphism_prod_algebra_mapin>, fillcolor="#F070D1"] ;
+ua_prod_algebra_oppreserving_prod_algebra_mapin [label="oppreserving_prod_algebra_mapin", URL=<ua_prod_algebra.html#oppreserving_prod_algebra_mapin>, fillcolor="#F070D1"] ;
+ua_prod_algebra_def_prod_algebra_mapin [label="def_prod_algebra_mapin", URL=<ua_prod_algebra.html#def_prod_algebra_mapin>, fillcolor="#F070D1"] ;
+ua_prod_algebra_hom_prod_algebra_mapout [label="hom_prod_algebra_mapout", URL=<ua_prod_algebra.html#hom_prod_algebra_mapout>, fillcolor="#F070D1"] ;
+ua_prod_algebra_hom_proj_prod_algebra [label="hom_proj_prod_algebra", URL=<ua_prod_algebra.html#hom_proj_prod_algebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_is_homomorphism_proj_prod_algebra [label="is_homomorphism_proj_prod_algebra", URL=<ua_prod_algebra.html#is_homomorphism_proj_prod_algebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_oppreserving_proj_prod_algebra [label="oppreserving_proj_prod_algebra", URL=<ua_prod_algebra.html#oppreserving_proj_prod_algebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_def_proj_prod_algebra [label="def_proj_prod_algebra", URL=<ua_prod_algebra.html#def_proj_prod_algebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_trunc_prod_algebra [label="trunc_prod_algebra", URL=<ua_prod_algebra.html#trunc_prod_algebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_ProdAlgebra [label="ProdAlgebra", URL=<ua_prod_algebra.html#ProdAlgebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_ops_prod_algebra [label="ops_prod_algebra", URL=<ua_prod_algebra.html#ops_prod_algebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_op_prod_algebra [label="op_prod_algebra", URL=<ua_prod_algebra.html#op_prod_algebra>, fillcolor="#F070D1"] ;
+ua_prod_algebra_carriers_prod_algebra [label="carriers_prod_algebra", URL=<ua_prod_algebra.html#carriers_prod_algebra>, fillcolor="#F070D1"] ;
+  ua_prod_algebra_ump_bin_prod_algebra -> ua_prod_algebra_BinProdAlgebra [] ;
+  ua_prod_algebra_ump_bin_prod_algebra -> ua_prod_algebra_trunc_bin_prod_algebras [] ;
+  ua_prod_algebra_ump_bin_prod_algebra -> ua_prod_algebra_ump_prod_algebra [] ;
+  ua_prod_algebra_snd_prod_algebra -> ua_prod_algebra_BinProdAlgebra [] ;
+  ua_prod_algebra_snd_prod_algebra -> ua_prod_algebra_hom_proj_prod_algebra [] ;
+  ua_prod_algebra_fst_prod_algebra -> ua_prod_algebra_BinProdAlgebra [] ;
+  ua_prod_algebra_fst_prod_algebra -> ua_prod_algebra_hom_proj_prod_algebra [] ;
+  ua_prod_algebra_BinProdAlgebra -> ua_prod_algebra_bin_prod_algebras [] ;
+  ua_prod_algebra_BinProdAlgebra -> ua_prod_algebra_ProdAlgebra [] ;
+  ua_prod_algebra_trunc_bin_prod_algebras -> ua_prod_algebra_bin_prod_algebras [] ;
+  ua_prod_algebra_ump_prod_algebra -> ua_prod_algebra_hom_prod_algebra_mapin [] ;
+  ua_prod_algebra_ump_prod_algebra -> ua_prod_algebra_hom_prod_algebra_mapout [] ;
+  ua_prod_algebra_ump_prod_algebra -> ua_prod_algebra_trunc_prod_algebra [] ;
+  ua_prod_algebra_hom_prod_algebra_mapin -> ua_prod_algebra_is_homomorphism_prod_algebra_mapin [] ;
+  ua_prod_algebra_is_homomorphism_prod_algebra_mapin -> ua_prod_algebra_oppreserving_prod_algebra_mapin [] ;
+  ua_prod_algebra_oppreserving_prod_algebra_mapin -> ua_prod_algebra_def_prod_algebra_mapin [] ;
+  ua_prod_algebra_def_prod_algebra_mapin -> ua_prod_algebra_ProdAlgebra [] ;
+  ua_prod_algebra_hom_prod_algebra_mapout -> ua_prod_algebra_hom_proj_prod_algebra [] ;
+  ua_prod_algebra_hom_proj_prod_algebra -> ua_prod_algebra_is_homomorphism_proj_prod_algebra [] ;
+  ua_prod_algebra_is_homomorphism_proj_prod_algebra -> ua_prod_algebra_oppreserving_proj_prod_algebra [] ;
+  ua_prod_algebra_oppreserving_proj_prod_algebra -> ua_prod_algebra_def_proj_prod_algebra [] ;
+  ua_prod_algebra_def_proj_prod_algebra -> ua_prod_algebra_ProdAlgebra [] ;
+  ua_prod_algebra_trunc_prod_algebra -> ua_prod_algebra_ProdAlgebra [] ;
+  ua_prod_algebra_ProdAlgebra -> ua_prod_algebra_ops_prod_algebra [] ;
+  ua_prod_algebra_ops_prod_algebra -> ua_prod_algebra_op_prod_algebra [] ;
+  ua_prod_algebra_op_prod_algebra -> ua_prod_algebra_carriers_prod_algebra [] ;
+subgraph cluster_ua_prod_algebra { label="ua_prod_algebra"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ua_prod_algebra_carriers_prod_algebra; ua_prod_algebra_op_prod_algebra; ua_prod_algebra_ops_prod_algebra; ua_prod_algebra_ProdAlgebra; ua_prod_algebra_trunc_prod_algebra; ua_prod_algebra_def_proj_prod_algebra; ua_prod_algebra_oppreserving_proj_prod_algebra; ua_prod_algebra_is_homomorphism_proj_prod_algebra; ua_prod_algebra_hom_proj_prod_algebra; ua_prod_algebra_hom_prod_algebra_mapout; ua_prod_algebra_def_prod_algebra_mapin; ua_prod_algebra_oppreserving_prod_algebra_mapin; ua_prod_algebra_is_homomorphism_prod_algebra_mapin; ua_prod_algebra_hom_prod_algebra_mapin; ua_prod_algebra_ump_prod_algebra; ua_prod_algebra_bin_prod_algebras; ua_prod_algebra_trunc_bin_prod_algebras; ua_prod_algebra_BinProdAlgebra; ua_prod_algebra_fst_prod_algebra; ua_prod_algebra_snd_prod_algebra; ua_prod_algebra_ump_bin_prod_algebra; };
+} /* END */

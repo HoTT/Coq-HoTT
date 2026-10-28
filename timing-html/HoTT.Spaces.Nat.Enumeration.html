@@ -1,0 +1,358 @@
+<html>
+<head>
+<title>Enumeration.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Enumeration.v</h1>
+
+<div class="code" title="File: Enumeration.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Enumerations by the natural numbers *)
+
+(** We enumerate pairs of natural numbers, and deduce that a product of two images of the natural numbers is again an image of the natural numbers.  Such surjections from the natural numbers are what bounded search needs, see [minimal_n_alt_type]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 4
+Time: 0.058s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types.Prod Truncations.Core Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 4
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+From HoTT Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Enumerating pairs *)
+
+(** We enumerate pairs of natural numbers diagonal by diagonal.  Here the [m]th diagonal consists of the pairs [(a, b)] with [a + b = m]. *)</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>Fixpoint nat_unpair (n : nat) : nat * nat
+  := match n with
+     | 0 =&gt; (0, 0)
+     | S n =&gt; match nat_unpair n with
+             | (0, b) =&gt; (S b, 0)
+             | (S a, b) =&gt; (a, S b)
+             end
+     end.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If we hit the end of a diagonal, we hit everything else on the diagonal. *)</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition nat_unpair_hit_diagonal (a b : nat) (p : {n : nat &amp; nat_unpair n = (a + b, 0)})
+  : {m : nat &amp; nat_unpair m = (a, b)}.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+  revert a p; induction b as [|b IH]; intros a p.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite nat_add_zero_r in p.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  exact p.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite nat_add_succ_r in p.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (IH (S a) p) as [m q].</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (S m).</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; rewrite q.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 27
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We hit everything on the x-axis. *)</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition nat_unpair_hit_axis (d : nat) : {n : nat &amp; nat_unpair n = (d, 0)}.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction d as [|d IH].</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (0; idpath).</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nat_unpair_hit_diagonal 0 d IH) as [n p].</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (S n).</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; rewrite p.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [nat_unpair] is a split surjective map. *)</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_unpair_hit (a b : nat) : {n : nat &amp; nat_unpair n = (a, b)}
+  := nat_unpair_hit_diagonal a b (nat_unpair_hit_axis (a + b)).</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Therefore, [nat_unpair] is surjective. *)</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issurj_nat_unpair : IsSurjection nat_unpair.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply BuildIsSurjection; intros [a b].</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (tr (nat_unpair_hit a b)).</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can use [nat_unpair] to enumerate the product of two types that can be enumerated. *)</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>Definition nat_prod_enumerator {X Y : Type} (s : nat -&gt; X) (t : nat -&gt; Y) : nat -&gt; X * Y
+  := functor_prod s t o nat_unpair.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The map is surjective because connected maps are closed under composition and products via [conn_map_compose] and [conn_map_functor_prod]. *)</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 50
+Time: 0.008s">
+<div class="time" style="width: 13.793103448276%"></div>
+<pre>Instance issurj_nat_prod_enumerator {X Y : Type} {s : nat -&gt; X} {t : nat -&gt; Y}
+  `{IsSurjection s} `{IsSurjection t}
+  : IsSurjection (nat_prod_enumerator s t)
+  := _.</pre>
+</div>
+<div class="code" title="File: Enumeration.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

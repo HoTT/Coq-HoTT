@@ -1,0 +1,26 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Spaces.Pos.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Spaces.Pos.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Spaces.Pos.Spec.",
+      "messages": [],
+      "goals": []
+    }
+  ]
+]

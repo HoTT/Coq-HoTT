@@ -1,0 +1,35 @@
+digraph HoTT_Types_Unit {
+  graph [ratio=0.5]
+  node [style=filled]
+Unit_const_tt [label="const_tt", URL=<Unit.html#const_tt>, peripheries=3, fillcolor="#F070D1"] ;
+Unit_contr_equiv_unit [label="contr_equiv_unit", URL=<Unit.html#contr_equiv_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Unit_equiv_contr_unit [label="equiv_contr_unit", URL=<Unit.html#equiv_contr_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Unit_contr_unit [label="contr_unit", URL=<Unit.html#contr_unit>, fillcolor="#F070D1"] ;
+Unit_equiv_unit_coind [label="equiv_unit_coind", URL=<Unit.html#equiv_unit_coind>, peripheries=3, fillcolor="#F070D1"] ;
+Unit_isequiv_unit_coind [label="isequiv_unit_coind", URL=<Unit.html#isequiv_unit_coind>, fillcolor="#F070D1"] ;
+Unit_unit_coind [label="unit_coind", URL=<Unit.html#unit_coind>, fillcolor="#F070D1"] ;
+Unit_isequiv_unit_name [label="isequiv_unit_name", URL=<Unit.html#isequiv_unit_name>, peripheries=3, fillcolor="#F070D1"] ;
+Unit_equiv_unit_rec [label="equiv_unit_rec", URL=<Unit.html#equiv_unit_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Unit_isequiv_unit_rec [label="isequiv_unit_rec", URL=<Unit.html#isequiv_unit_rec>, fillcolor="#F070D1"] ;
+Unit_isequiv_unit_ind [label="isequiv_unit_ind", URL=<Unit.html#isequiv_unit_ind>, fillcolor="#F070D1"] ;
+Unit_equiv_path_unit [label="equiv_path_unit", URL=<Unit.html#equiv_path_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Unit_isequiv_path_unit [label="isequiv_path_unit", URL=<Unit.html#isequiv_path_unit>, fillcolor="#F070D1"] ;
+Unit_eta_path_unit [label="eta_path_unit", URL=<Unit.html#eta_path_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Unit_path_unit [label="path_unit", URL=<Unit.html#path_unit>, fillcolor="#F070D1"] ;
+Unit_path_unit_uncurried [label="path_unit_uncurried", URL=<Unit.html#path_unit_uncurried>, fillcolor="#F070D1"] ;
+Unit_eta_unit [label="eta_unit", URL=<Unit.html#eta_unit>, peripheries=3, fillcolor="#F070D1"] ;
+  Unit_contr_equiv_unit -> Unit_contr_unit [] ;
+  Unit_equiv_contr_unit -> Unit_contr_unit [] ;
+  Unit_equiv_unit_coind -> Unit_isequiv_unit_coind [] ;
+  Unit_isequiv_unit_coind -> Unit_unit_coind [] ;
+  Unit_isequiv_unit_coind -> Unit_path_unit [] ;
+  Unit_isequiv_unit_name -> Unit_path_unit [] ;
+  Unit_equiv_unit_rec -> Unit_isequiv_unit_rec [] ;
+  Unit_isequiv_unit_rec -> Unit_isequiv_unit_ind [] ;
+  Unit_equiv_path_unit -> Unit_isequiv_path_unit [] ;
+  Unit_isequiv_path_unit -> Unit_path_unit_uncurried [] ;
+  Unit_eta_path_unit -> Unit_path_unit [] ;
+  Unit_path_unit -> Unit_path_unit_uncurried [] ;
+subgraph cluster_Unit { label="Unit"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Unit_eta_unit; Unit_path_unit_uncurried; Unit_path_unit; Unit_eta_path_unit; Unit_isequiv_path_unit; Unit_equiv_path_unit; Unit_isequiv_unit_ind; Unit_isequiv_unit_rec; Unit_equiv_unit_rec; Unit_isequiv_unit_name; Unit_unit_coind; Unit_isequiv_unit_coind; Unit_equiv_unit_coind; Unit_contr_unit; Unit_equiv_contr_unit; Unit_contr_equiv_unit; Unit_const_tt; };
+} /* END */

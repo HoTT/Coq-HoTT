@@ -1,0 +1,33 @@
+digraph HoTT_Projective {
+  graph [ratio=0.5]
+  node [style=filled]
+Projective_equiv_isprojective_ishset_AC [label="equiv_isprojective_ishset_AC", URL=<Projective.html#equiv_isprojective_ishset_AC>, peripheries=3, fillcolor="#F070D1"] ;
+Projective_projective_cover_AC [label="projective_cover_AC", URL=<Projective.html#projective_cover_AC>, fillcolor="#F070D1"] ;
+Projective_isprojective_unit [label="isprojective_unit", URL=<Projective.html#isprojective_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Projective_equiv_isoprojective_hasochoice [label="equiv_isoprojective_hasochoice", URL=<Projective.html#equiv_isoprojective_hasochoice>, fillcolor="#F070D1"] ;
+Projective_iff_isoprojective_hasochoice [label="iff_isoprojective_hasochoice", URL=<Projective.html#iff_isoprojective_hasochoice>, fillcolor="#F070D1"] ;
+Projective_hasochoice_oprojective [label="hasochoice_oprojective", URL=<Projective.html#hasochoice_oprojective>, fillcolor="#F070D1"] ;
+Projective_isoprojective_ochoice [label="isoprojective_ochoice", URL=<Projective.html#isoprojective_ochoice>, fillcolor="#F070D1"] ;
+Projective_hasochoice_sigma [label="hasochoice_sigma", URL=<Projective.html#hasochoice_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+Projective_hasochoice [label="hasochoice", URL=<Projective.html#hasochoice>, peripheries=3, fillcolor="#F070D1"] ;
+Projective_HasOChoice [label="HasOChoice", URL=<Projective.html#HasOChoice>, fillcolor="#F070D1"] ;
+Projective_equiv_isoprojective_surjections_split [label="equiv_isoprojective_surjections_split", URL=<Projective.html#equiv_isoprojective_surjections_split>, peripheries=3, fillcolor="#F070D1"] ;
+Projective_iff_isoprojective_surjections_split [label="iff_isoprojective_surjections_split", URL=<Projective.html#iff_isoprojective_surjections_split>, fillcolor="#F070D1"] ;
+Projective_IsOProjective [label="IsOProjective", URL=<Projective.html#IsOProjective>, fillcolor="#F070D1"] ;
+  Projective_equiv_isprojective_ishset_AC -> Projective_projective_cover_AC [] ;
+  Projective_projective_cover_AC -> Projective_equiv_isoprojective_hasochoice [] ;
+  Projective_isprojective_unit -> Projective_isoprojective_ochoice [] ;
+  Projective_equiv_isoprojective_hasochoice -> Projective_iff_isoprojective_hasochoice [] ;
+  Projective_iff_isoprojective_hasochoice -> Projective_hasochoice_oprojective [] ;
+  Projective_iff_isoprojective_hasochoice -> Projective_isoprojective_ochoice [] ;
+  Projective_hasochoice_oprojective -> Projective_HasOChoice [] ;
+  Projective_hasochoice_oprojective -> Projective_iff_isoprojective_surjections_split [] ;
+  Projective_isoprojective_ochoice -> Projective_HasOChoice [] ;
+  Projective_isoprojective_ochoice -> Projective_IsOProjective [] ;
+  Projective_hasochoice_sigma -> Projective_HasOChoice [] ;
+  Projective_hasochoice -> Projective_HasOChoice [] ;
+  Projective_equiv_isoprojective_surjections_split -> Projective_iff_isoprojective_surjections_split [] ;
+  Projective_iff_isoprojective_surjections_split -> Projective_IsOProjective [] ;
+subgraph cluster_Projective { label="Projective"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Projective_IsOProjective; Projective_iff_isoprojective_surjections_split; Projective_equiv_isoprojective_surjections_split; Projective_HasOChoice; Projective_hasochoice; Projective_hasochoice_sigma; Projective_isoprojective_ochoice; Projective_hasochoice_oprojective; Projective_iff_isoprojective_hasochoice; Projective_equiv_isoprojective_hasochoice; Projective_isprojective_unit; Projective_projective_cover_AC; Projective_equiv_isprojective_ishset_AC; };
+} /* END */

@@ -1,0 +1,104 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Composition of natural transformations *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Composition *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require NaturalTransformation.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Functoriality *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require NaturalTransformation.Composition.Functorial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Laws about composition *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include NaturalTransformation.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include NaturalTransformation.Composition.Functorial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export NaturalTransformationCompositionNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include NaturalTransformation.Composition.Core.NaturalTransformationCompositionCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End NaturalTransformationCompositionNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

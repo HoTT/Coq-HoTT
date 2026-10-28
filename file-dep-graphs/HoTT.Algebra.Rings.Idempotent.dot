@@ -1,0 +1,61 @@
+digraph HoTT_Algebra_Rings_Idempotent {
+  graph [ratio=0.5]
+  node [style=filled]
+Idempotent_isorthogonal_complement [label="isorthogonal_complement", URL=<Idempotent.html#isorthogonal_complement>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_isidempotent_plus_orthogonal [label="isidempotent_plus_orthogonal", URL=<Idempotent.html#isidempotent_plus_orthogonal>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_isorthogonal_op [label="isorthogonal_op", URL=<Idempotent.html#isorthogonal_op>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_isorthogonal_swap [label="isorthogonal_swap", URL=<Idempotent.html#isorthogonal_swap>, fillcolor="#F070D1"] ;
+Idempotent_ishprop_isorthogonal [label="ishprop_isorthogonal", URL=<Idempotent.html#ishprop_isorthogonal>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_issig_IsOrthogonal [label="issig_IsOrthogonal", URL=<Idempotent.html#issig_IsOrthogonal>, fillcolor="#F070D1"] ;
+Idempotent_rng_idem_orth_ [label="rng_idem_orth'", URL=<Idempotent.html#rng_idem_orth'>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_rng_idem_orth [label="rng_idem_orth", URL=<Idempotent.html#rng_idem_orth>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_IsOrthogonal_sind [label="IsOrthogonal_sind", URL=<Idempotent.html#IsOrthogonal_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_IsOrthogonal_rec [label="IsOrthogonal_rec", URL=<Idempotent.html#IsOrthogonal_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_IsOrthogonal_ind [label="IsOrthogonal_ind", URL=<Idempotent.html#IsOrthogonal_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Idempotent_IsOrthogonal_rect [label="IsOrthogonal_rect", URL=<Idempotent.html#IsOrthogonal_rect>, fillcolor="#F070D1"] ;
+Idempotent_Build_IsOrthogonal [label="Build_IsOrthogonal", URL=<Idempotent.html#Build_IsOrthogonal>, fillcolor="#7FAAFF"] ;
+Idempotent_IsOrthogonal [label="IsOrthogonal", URL=<Idempotent.html#IsOrthogonal>, fillcolor="#E2CDFA"] ;
+Idempotent_isidempotent_rng_homo [label="isidempotent_rng_homo", URL=<Idempotent.html#isidempotent_rng_homo>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_rng_power_idem [label="rng_power_idem", URL=<Idempotent.html#rng_power_idem>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_isidempotent_op [label="isidempotent_op", URL=<Idempotent.html#isidempotent_op>, fillcolor="#F070D1"] ;
+Idempotent_isidempotent_complement [label="isidempotent_complement", URL=<Idempotent.html#isidempotent_complement>, fillcolor="#F070D1"] ;
+Idempotent_isidempotent_one [label="isidempotent_one", URL=<Idempotent.html#isidempotent_one>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_isidempotent_zero [label="isidempotent_zero", URL=<Idempotent.html#isidempotent_zero>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_ishprop_isidempotent [label="ishprop_isidempotent", URL=<Idempotent.html#ishprop_isidempotent>, peripheries=3, fillcolor="#F070D1"] ;
+Idempotent_rng_idem [label="rng_idem", URL=<Idempotent.html#rng_idem>, fillcolor="#F070D1"] ;
+Idempotent_IsIdempotent [label="IsIdempotent", URL=<Idempotent.html#IsIdempotent>, fillcolor="#F070D1"] ;
+  Idempotent_isorthogonal_complement -> Idempotent_Build_IsOrthogonal [] ;
+  Idempotent_isorthogonal_complement -> Idempotent_IsOrthogonal [] ;
+  Idempotent_isorthogonal_complement -> Idempotent_isidempotent_complement [] ;
+  Idempotent_isidempotent_plus_orthogonal -> Idempotent_isorthogonal_swap [] ;
+  Idempotent_isidempotent_plus_orthogonal -> Idempotent_rng_idem [] ;
+  Idempotent_isorthogonal_op -> Idempotent_Build_IsOrthogonal [] ;
+  Idempotent_isorthogonal_op -> Idempotent_IsOrthogonal [] ;
+  Idempotent_isorthogonal_op -> Idempotent_isidempotent_op [] ;
+  Idempotent_isorthogonal_swap -> Idempotent_Build_IsOrthogonal [] ;
+  Idempotent_isorthogonal_swap -> Idempotent_IsOrthogonal [] ;
+  Idempotent_ishprop_isorthogonal -> Idempotent_issig_IsOrthogonal [] ;
+  Idempotent_issig_IsOrthogonal -> Idempotent_Build_IsOrthogonal [] ;
+  Idempotent_issig_IsOrthogonal -> Idempotent_IsOrthogonal [] ;
+  Idempotent_rng_idem_orth_ -> Idempotent_IsOrthogonal [] ;
+  Idempotent_rng_idem_orth -> Idempotent_IsOrthogonal [] ;
+  Idempotent_IsOrthogonal_sind -> Idempotent_Build_IsOrthogonal [] ;
+  Idempotent_IsOrthogonal_sind -> Idempotent_IsOrthogonal [] ;
+  Idempotent_IsOrthogonal_rec -> Idempotent_IsOrthogonal_rect [] ;
+  Idempotent_IsOrthogonal_ind -> Idempotent_Build_IsOrthogonal [] ;
+  Idempotent_IsOrthogonal_ind -> Idempotent_IsOrthogonal [] ;
+  Idempotent_IsOrthogonal_rect -> Idempotent_Build_IsOrthogonal [] ;
+  Idempotent_IsOrthogonal_rect -> Idempotent_IsOrthogonal [] ;
+  Idempotent_Build_IsOrthogonal -> Idempotent_IsIdempotent [] ;
+  Idempotent_IsOrthogonal -> Idempotent_IsIdempotent [] ;
+  Idempotent_isidempotent_rng_homo -> Idempotent_IsIdempotent [] ;
+  Idempotent_rng_power_idem -> Idempotent_rng_idem [] ;
+  Idempotent_isidempotent_op -> Idempotent_IsIdempotent [] ;
+  Idempotent_isidempotent_complement -> Idempotent_rng_idem [] ;
+  Idempotent_isidempotent_one -> Idempotent_IsIdempotent [] ;
+  Idempotent_isidempotent_zero -> Idempotent_IsIdempotent [] ;
+  Idempotent_ishprop_isidempotent -> Idempotent_IsIdempotent [] ;
+  Idempotent_rng_idem -> Idempotent_IsIdempotent [] ;
+subgraph cluster_Idempotent { label="Idempotent"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Idempotent_IsIdempotent; Idempotent_rng_idem; Idempotent_ishprop_isidempotent; Idempotent_isidempotent_zero; Idempotent_isidempotent_one; Idempotent_isidempotent_complement; Idempotent_isidempotent_op; Idempotent_rng_power_idem; Idempotent_isidempotent_rng_homo; Idempotent_IsOrthogonal; Idempotent_Build_IsOrthogonal; Idempotent_IsOrthogonal_rect; Idempotent_IsOrthogonal_ind; Idempotent_IsOrthogonal_rec; Idempotent_IsOrthogonal_sind; Idempotent_rng_idem_orth; Idempotent_rng_idem_orth_; Idempotent_issig_IsOrthogonal; Idempotent_ishprop_isorthogonal; Idempotent_isorthogonal_swap; Idempotent_isorthogonal_op; Idempotent_isidempotent_plus_orthogonal; Idempotent_isorthogonal_complement; };
+} /* END */

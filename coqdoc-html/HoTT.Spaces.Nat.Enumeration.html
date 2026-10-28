@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Nat.Enumeration</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Nat.Enumeration</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1713"></a><h1 class="section">Enumerations by the natural numbers</h1>
+
+<div class="paragraph"> </div>
+
+ We enumerate pairs of natural numbers, and deduce that a product of two images of the natural numbers is again an image of the natural numbers.  Such surjections from the natural numbers are what bounded search needs, see <span class="inlinecode"><a class="idref" href="HoTT.Misc.BoundedSearch.html#minimal_n_alt_type"><span class="id" title="definition">minimal_n_alt_type</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.Prod.html#"><span class="id" title="library">Types.Prod</span></a> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#"><span class="id" title="library">Modalities.ReflectiveSubuniverse</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1714"></a><h2 class="section">Enumerating pairs</h2>
+
+<div class="paragraph"> </div>
+
+ We enumerate pairs of natural numbers diagonal by diagonal.  Here the <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Connectedness.html#Wedge_Incl_Conn.m"><span class="id" title="variable">m</span></a></span>th diagonal consists of the pairs <span class="inlinecode">(<a class="idref" href="HoTT.WildCat.PointedCat.html#ZeroLaws.a"><span class="id" title="variable">a</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.PointedCat.html#ZeroLaws.b"><span class="id" title="variable">b</span></a>)</span> with <span class="inlinecode"><a class="idref" href="HoTT.WildCat.PointedCat.html#ZeroLaws.a"><span class="id" title="variable">a</span></a></span> <span class="inlinecode">+</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.PointedCat.html#ZeroLaws.b"><span class="id" title="variable">b</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Connectedness.html#Wedge_Incl_Conn.m"><span class="id" title="variable">m</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="nat_unpair" class="idref" href="#nat_unpair"><span class="id" title="definition">nat_unpair</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> 0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span> ⇒ <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair:2"><span class="id" title="definition">nat_unpair</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">b</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">b</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> 0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">a</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">b</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">a</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">b</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If we hit the end of a diagonal, we hit everything else on the diagonal. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Definition</span> <a id="nat_unpair_hit_diagonal" class="idref" href="#nat_unpair_hit_diagonal"><span class="id" title="definition">nat_unpair_hit_diagonal</span></a> (<a id="a:4" class="idref" href="#a:4"><span class="id" title="binder">a</span></a> <a id="b:5" class="idref" href="#b:5"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="p:7" class="idref" href="#p:7"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#n:6"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#a:4"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#b:5"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> 0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="m:8" class="idref" href="#m:8"><span class="id" title="binder">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#m:8"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#a:4"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#b:5"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">a</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">b</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">b</span> <span class="id" title="var">IH</span>]; <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add_zero_r"><span class="id" title="definition">nat_add_zero_r</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add_succ_r"><span class="id" title="definition">nat_add_succ_r</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">IH</span> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">a</span>) <span class="id" title="var">p</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">m</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span>). <span class="id" title="var">cbn</span>; <span class="id" title="tactic">rewrite</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We hit everything on the x-axis. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Definition</span> <a id="nat_unpair_hit_axis" class="idref" href="#nat_unpair_hit_axis"><span class="id" title="definition">nat_unpair_hit_axis</span></a> (<a id="d:9" class="idref" href="#d:9"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#d:9"><span class="id" title="variable">d</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> 0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">d</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">d</span> <span class="id" title="var">IH</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a>0<a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair_hit_diagonal"><span class="id" title="definition">nat_unpair_hit_diagonal</span></a> 0 <span class="id" title="var">d</span> <span class="id" title="var">IH</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">p</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span>). <span class="id" title="var">cbn</span>; <span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a></span> is a split surjective map. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_unpair_hit" class="idref" href="#nat_unpair_hit"><span class="id" title="definition">nat_unpair_hit</span></a> (<a id="a:11" class="idref" href="#a:11"><span class="id" title="binder">a</span></a> <a id="b:12" class="idref" href="#b:12"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#n:13"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#a:11"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#b:12"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair_hit_diagonal"><span class="id" title="definition">nat_unpair_hit_diagonal</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#a:11"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#b:12"><span class="id" title="variable">b</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair_hit_axis"><span class="id" title="definition">nat_unpair_hit_axis</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#a:11"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#b:12"><span class="id" title="variable">b</span></a>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Therefore, <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a></span> is surjective. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="issurj_nat_unpair" class="idref" href="#issurj_nat_unpair"><span class="id" title="instance">issurj_nat_unpair</span></a> : <a class="idref" href="HoTT.Truncations.Core.html#IsSurjection"><span class="id" title="abbreviation">IsSurjection</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#BuildIsSurjection"><span class="id" title="definition">BuildIsSurjection</span></a>; <span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span> <span class="id" title="var">b</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair_hit"><span class="id" title="definition">nat_unpair_hit</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can use <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a></span> to enumerate the product of two types that can be enumerated. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_prod_enumerator" class="idref" href="#nat_prod_enumerator"><span class="id" title="definition">nat_prod_enumerator</span></a> {<a id="X:14" class="idref" href="#X:14"><span class="id" title="binder">X</span></a> <a id="Y:15" class="idref" href="#Y:15"><span class="id" title="binder">Y</span></a> : <span class="id" title="keyword">Type</span>} (<a id="s:16" class="idref" href="#s:16"><span class="id" title="binder">s</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#X:14"><span class="id" title="variable">X</span></a>) (<a id="t:17" class="idref" href="#t:17"><span class="id" title="binder">t</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#Y:15"><span class="id" title="variable">Y</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#X:14"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#Y:15"><span class="id" title="variable">Y</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Types.Prod.html#functor_prod"><span class="id" title="definition">functor_prod</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#s:16"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#t:17"><span class="id" title="variable">t</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_unpair"><span class="id" title="definition">nat_unpair</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The map is surjective because connected maps are closed under composition and products via <span class="inlinecode"><a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#conn_map_compose"><span class="id" title="instance">conn_map_compose</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#conn_map_functor_prod"><span class="id" title="instance">conn_map_functor_prod</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="issurj_nat_prod_enumerator" class="idref" href="#issurj_nat_prod_enumerator"><span class="id" title="instance">issurj_nat_prod_enumerator</span></a> {<a id="X:18" class="idref" href="#X:18"><span class="id" title="binder">X</span></a> <a id="Y:19" class="idref" href="#Y:19"><span class="id" title="binder">Y</span></a> : <span class="id" title="keyword">Type</span>} {<a id="s:20" class="idref" href="#s:20"><span class="id" title="binder">s</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#X:18"><span class="id" title="variable">X</span></a>} {<a id="t:21" class="idref" href="#t:21"><span class="id" title="binder">t</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#Y:19"><span class="id" title="variable">Y</span></a>}<br/>
+&nbsp;&nbsp;`{<a id="IsSurjection0:22" class="idref" href="#IsSurjection0:22"><span class="id" title="binder">IsSurjection</span></a> <a id="IsSurjection0:22" class="idref" href="#IsSurjection0:22"><span class="id" title="binder">s</span></a>} `{<a id="IsSurjection1:23" class="idref" href="#IsSurjection1:23"><span class="id" title="binder">IsSurjection</span></a> <a id="IsSurjection1:23" class="idref" href="#IsSurjection1:23"><span class="id" title="binder">t</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Truncations.Core.html#IsSurjection"><span class="id" title="abbreviation">IsSurjection</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#nat_prod_enumerator"><span class="id" title="definition">nat_prod_enumerator</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#s:20"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Spaces.Nat.Enumeration.html#t:21"><span class="id" title="variable">t</span></a>)<br/>
+&nbsp;&nbsp;:= <span class="id" title="var">_</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

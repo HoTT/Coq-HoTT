@@ -1,0 +1,70 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.Core Adjoint.Dual Adjoint.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.Core Adjoint.Dual Adjoint.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Adjoint.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Utf8.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"\u22a3\" := Adjunction : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"\u2218\" := compose : adjunction_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** It would be nice to put [, format \"A '\u1d52\u1d56'\"] here, but that would\n    make this notation unparseable. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"A '\u1d52\u1d56'\" := (opposite A) : adjunction_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

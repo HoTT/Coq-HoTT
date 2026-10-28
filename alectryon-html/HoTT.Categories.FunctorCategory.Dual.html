@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.FunctorCategory.Dual.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * Dual functor categories *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Dual Functor.Dual NaturalTransformation.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">opposite</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+  <span class="sd">(** ** Functors [(C → D) ↔ (Cᵒᵖ → Dᵒᵖ)ᵒᵖ] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">opposite_functor</span> (<span class="nv">C</span> <span class="nv">D</span> : PreCategory) : Functor (C -&gt; D) (C^op -&gt; D^op)^op
+    := Build_Functor
+         (C -&gt; D) ((C^op -&gt; D^op)^op)
+         (<span class="k">fun</span> <span class="nv">F</span> =&gt; F^op)%functor
+         (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">T</span> =&gt; T^op)%natural_transformation
+         (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+         (<span class="k">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">op_t</span> C D :=
+    <span class="nb">split</span>;
+    path_functor;
+    <span class="kp">repeat</span> (<span class="nb">apply</span> path_forall; <span class="nb">intro</span>);
+    <span class="nb">simpl</span>;
+    destruct_head NaturalTransformation;
+    <span class="bp">exact</span> idpath.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+  <span class="sd">(** ** The above functors are isomorphisms *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-FunctorCategory-Dual-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-FunctorCategory-Dual-v-alectryon-json-chk0"><span class="kn">Definition</span> <span class="nf">opposite_functor_law</span> <span class="nv">C</span> <span class="nv">D</span>
+  : opposite_functor C D o (opposite_functor C^op D^op)^op = <span class="mi">1</span>
+    /\ (opposite_functor C^op D^op)^op o opposite_functor C D = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(opposite_functor C D o (opposite_functor C^op D^op)^op = <span class="mi">1</span>) *
+((opposite_functor C^op D^op)^op o opposite_functor C D = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-FunctorCategory-Dual-v-alectryon-json-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-FunctorCategory-Dual-v-alectryon-json-chk1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(opposite_functor C D o (opposite_functor C^op D^op)^op = <span class="mi">1</span>) *
+((opposite_functor C^op D^op)^op o opposite_functor C D = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">op_t C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">opposite</span>.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

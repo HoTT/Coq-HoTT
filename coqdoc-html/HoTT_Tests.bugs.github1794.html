@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT_Tests.bugs.github1794</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT_Tests.bugs.github1794</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The registered rewriting schemes have the expected universe variables and make proofs produced by <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> unfold to <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <a class="idref" href="HoTT.Basics.Overture.html#paths_rew"><span class="id" title="definition">paths_rew@</span></a>{<span class="id" title="var">u1</span> <span class="id" title="var">u2</span>}.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="HoTT.Basics.Overture.html#paths_rew_r"><span class="id" title="definition">paths_rew_r@</span></a>{<span class="id" title="var">u1</span> <span class="id" title="var">u2</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="rewrite_paths_rew" class="idref" href="#rewrite_paths_rew"><span class="id" title="definition">rewrite_paths_rew</span></a> {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} {<a id="x:2" class="idref" href="#x:2"><span class="id" title="binder">x</span></a> <a id="y:3" class="idref" href="#y:3"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#A:1"><span class="id" title="variable">A</span></a>} (<a id="P:4" class="idref" href="#P:4"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="u:5" class="idref" href="#u:5"><span class="id" title="binder">u</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:4"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#x:2"><span class="id" title="variable">x</span></a>) (<a id="p:6" class="idref" href="#p:6"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#x:2"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#y:3"><span class="id" title="variable">y</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:4"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#y:3"><span class="id" title="variable">y</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">u</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="rewrite_paths_rew_r" class="idref" href="#rewrite_paths_rew_r"><span class="id" title="definition">rewrite_paths_rew_r</span></a> {<a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} {<a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a> <a id="y:9" class="idref" href="#y:9"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#A:7"><span class="id" title="variable">A</span></a>} (<a id="P:10" class="idref" href="#P:10"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#A:7"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="u:11" class="idref" href="#u:11"><span class="id" title="binder">u</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:10"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#y:9"><span class="id" title="variable">y</span></a>) (<a id="p:12" class="idref" href="#p:12"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#x:8"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#y:9"><span class="id" title="variable">y</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:10"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#x:8"><span class="id" title="variable">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> → <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">u</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="rewrite_paths_rew_is_transport" class="idref" href="#rewrite_paths_rew_is_transport"><span class="id" title="definition">rewrite_paths_rew_is_transport</span></a> {<a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} {<a id="x:14" class="idref" href="#x:14"><span class="id" title="binder">x</span></a> <a id="y:15" class="idref" href="#y:15"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#A:13"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;(<a id="P:16" class="idref" href="#P:16"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) (<a id="u:17" class="idref" href="#u:17"><span class="id" title="binder">u</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:16"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#x:14"><span class="id" title="variable">x</span></a>) (<a id="p:18" class="idref" href="#p:18"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#y:15"><span class="id" title="variable">y</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT_Tests.bugs.github1794.html#rewrite_paths_rew"><span class="id" title="definition">rewrite_paths_rew</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:16"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#u:17"><span class="id" title="variable">u</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#p:18"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:16"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#p:18"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#u:17"><span class="id" title="variable">u</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="rewrite_paths_rew_r_is_transport" class="idref" href="#rewrite_paths_rew_r_is_transport"><span class="id" title="definition">rewrite_paths_rew_r_is_transport</span></a> {<a id="A:19" class="idref" href="#A:19"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} {<a id="x:20" class="idref" href="#x:20"><span class="id" title="binder">x</span></a> <a id="y:21" class="idref" href="#y:21"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#A:19"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;(<a id="P:22" class="idref" href="#P:22"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#A:19"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) (<a id="u:23" class="idref" href="#u:23"><span class="id" title="binder">u</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:22"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#y:21"><span class="id" title="variable">y</span></a>) (<a id="p:24" class="idref" href="#p:24"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT_Tests.bugs.github1794.html#x:20"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#y:21"><span class="id" title="variable">y</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT_Tests.bugs.github1794.html#rewrite_paths_rew_r"><span class="id" title="definition">rewrite_paths_rew_r</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:22"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#u:23"><span class="id" title="variable">u</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#p:24"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#P:22"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#p:24"><span class="id" title="variable">p</span></a><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT_Tests.bugs.github1794.html#u:23"><span class="id" title="variable">u</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

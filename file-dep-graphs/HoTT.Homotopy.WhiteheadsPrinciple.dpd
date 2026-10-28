@@ -1,0 +1,13 @@
+N: 5 "isequiv_is0connected_isequiv_loops" [body=yes, kind=cnst, prop=no, path="WhiteheadsPrinciple", ];
+N: 6 "isequiv_isbij_tr0_isequiv_loops" [body=yes, kind=cnst, prop=no, path="WhiteheadsPrinciple", ];
+N: 2 "isequiv_isconnected_istrunc_isequiv_pi" [body=yes, kind=cnst, prop=no, path="WhiteheadsPrinciple", ];
+N: 7 "isequiv_issurj_tr0_isequiv_ap" [body=yes, kind=cnst, prop=no, path="WhiteheadsPrinciple", ];
+N: 1 "isexact_purely_isexact_pi" [body=yes, kind=cnst, prop=no, path="WhiteheadsPrinciple", ];
+N: 4 "whiteheads_principle" [body=yes, kind=cnst, prop=no, path="WhiteheadsPrinciple", ];
+N: 3 "whiteheads_principle_is0connected" [body=yes, kind=cnst, prop=no, path="WhiteheadsPrinciple", ];
+E: 1 2 [weight=1, ];
+E: 2 3 [weight=1, ];
+E: 3 4 [weight=1, ];
+E: 4 6 [weight=1, ];
+E: 5 6 [weight=1, ];
+E: 6 7 [weight=1, ];

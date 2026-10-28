@@ -1,0 +1,54 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * An interval type implies function extensionality *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HIT.Interval.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Metatheory.Core Metatheory.FunextVarieties.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** From an interval type with definitional computation rules on the end points, we can prove function extensionality. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition funext_type_from_interval : Funext_type\n  := WeakFunext_implies_Funext (NaiveFunext_implies_WeakFunext\n    (fun A P f g p =>\n      let h := fun (x:interval) (a:A) =>\n        interval_rec _ (f a) (g a) (p a) x\n        in ap h seg)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Note that the converse is also true:  function extensionality implies that an interval type exists, with definitional computation rules.  This is illustrated in TruncImpliesFunext.v. *)\n"
+    }
+  ]
+]

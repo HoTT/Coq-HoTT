@@ -1,0 +1,13 @@
+N: 5 "Join_seq" [body=yes, kind=cnst, prop=no, path="PropTrunc", ];
+N: 4 "PropTrunc" [body=yes, kind=cnst, prop=no, path="PropTrunc", ];
+N: 2 "equiv_PropTrunc_rec" [body=yes, kind=cnst, prop=no, path="PropTrunc", ];
+N: 1 "ishprop_proptrunc" [body=yes, kind=cnst, prop=no, path="PropTrunc", ];
+N: 3 "ptr_in" [body=yes, kind=cnst, prop=no, path="PropTrunc", ];
+E: 1 2 [weight=1, ];
+E: 1 4 [weight=4, ];
+E: 1 5 [weight=3, ];
+E: 2 4 [weight=1, ];
+E: 2 5 [weight=10, ];
+E: 3 4 [weight=1, ];
+E: 3 5 [weight=1, ];
+E: 4 5 [weight=1, ];

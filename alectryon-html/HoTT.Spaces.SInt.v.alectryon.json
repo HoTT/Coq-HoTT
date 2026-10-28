@@ -1,0 +1,1813 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Nat Basics.Tactics Basics.Decidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Nat Basics.Tactics Basics.Decidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Numerals.Decimal Basics.Numeral.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Unset Elimination Schemes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * The signed integers *)\n\n(** In this file, we give a simple inductive type that represents the integers.  It is straightforward to show that this type has decidable equality and is therefore a set, and it is also straightforward to print and parse integers using this type.  However, we only use it for these purposes, and treat the HIT integers as our main definition of the integers, since they have an induction principle with better computational behaviour. *)\n\n(** ** Definition *)\n\n(** We define the signed integers as two copies of [nat] glued together around a [zero].  [sint_NegS n] represents [-(n + 1)] and [sint_PosS n] represents [n+1].  The trailing \"S\" indicates the successor. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Inductive SInt : Type0 :=\n| sint_NegS : nat -> SInt\n| sint_zero : SInt\n| sint_PosS : nat -> SInt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We can convert a [nat] to an [SInt] by mapping [0] to [sint_zero] and [S n] to [sint_PosS n]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sint_of_nat (n : nat) : SInt :=\n  match n with\n  | O => sint_zero\n  | S n => sint_PosS n\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Symmetrically, we can send [n] to \"-n\" in this way: *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition negsint_of_nat (n : nat) : SInt :=\n  match n with\n  | O => sint_zero\n  | S n => sint_NegS n\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Parsing and printing *)\n\n(** Here we define some printing and parsing functions that convert the integers between numeral representations.  We don't register these, but they are used for printing and parsing of the HIT integers in Int.v. *)\n\n(** Printing *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sint_to_number_int (n : SInt) : Numeral.int :=\n  match n with\n  | sint_PosS m => IntDec (Pos (to_uint (S m)))\n  | sint_zero => IntDec (Pos (to_uint 0))\n  | sint_NegS m => IntDec (Neg (to_uint (S m)))\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Parsing *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sint_of_number_int (d : Numeral.int) : SInt :=\n  match d with\n  | IntDec (Pos u) => sint_of_nat (of_uint u)\n  | IntDec (Neg u) => negsint_of_nat (of_uint u)\n  | IntHex (Hexadecimal.Pos u) => sint_of_nat (of_hex_uint u)\n  | IntHex (Hexadecimal.Neg u) => negsint_of_nat (of_hex_uint u)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Successor, predecessor and negation *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sint_succ (n : SInt) : SInt :=\n  match n with\n  | sint_PosS n => sint_PosS (S n)\n  | sint_zero => sint_PosS 0\n  | sint_NegS n => negsint_of_nat n\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sint_pred (n : SInt) : SInt :=\n  match n with\n  | sint_PosS n => sint_of_nat n\n  | sint_zero => sint_NegS 0\n  | sint_NegS n => sint_NegS (S n)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sint_neg@{} (x : SInt) : SInt :=\n  match x with\n  | sint_PosS x => sint_NegS x\n  | sint_zero => sint_zero\n  | sint_NegS x => sint_PosS x\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The successor of a predecessor is the identity. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sint_succ_pred@{} (x : SInt) : sint_succ (sint_pred x) = x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sint_succ (sint_pred x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "SInt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sint_succ (sint_pred x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "SInt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by destruct x as [ | | []].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The predecessor of a successor is the identity. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sint_pred_succ@{} (x : SInt) : sint_pred (sint_succ x) = x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sint_pred (sint_succ x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "SInt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sint_pred (sint_succ x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "SInt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by destruct x as [[] | | ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Decidable Equality *)\n\n(** The signed integers have decidable equality. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance decidablepaths_sint@{} : DecidablePaths SInt.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DecidablePaths SInt",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DecidablePaths SInt",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [x | | x] [y | | y].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_NegS x = sint_NegS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_NegS x = sint_zero)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_NegS x = sint_PosS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_zero = sint_NegS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_zero = sint_zero)",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_zero = sint_PosS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_PosS x = sint_NegS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_PosS x = sint_zero)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_PosS x = sint_PosS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2-4,6-8: right; intros; discriminate.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_NegS x = sint_NegS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_zero = sint_zero)",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_PosS x = sint_PosS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: by left.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_NegS x = sint_NegS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (sint_PosS x = sint_PosS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: napply decidable_iff.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Iff.iff ?Goal (sint_NegS x = sint_NegS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Iff.iff ?Goal2 (sint_PosS x = sint_PosS y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable ?Goal2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,3: split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal -> sint_NegS x = sint_NegS y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sint_NegS x = sint_NegS y -> ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal1 -> sint_PosS x = sint_PosS y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sint_PosS x = sint_PosS y -> ?Goal1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable ?Goal1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,3: napply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sint_NegS x = sint_NegS y -> x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sint_PosS x = sint_PosS y -> x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: intros H; by injection H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* Uses decidable equality of [nat]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** By Hedberg's theorem, we have that the signed integers are a set. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance ishset_sint@{} : IsHSet SInt := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Signed integer induction *)\n\n(** The induction principle for signed integers is similar to the induction principle for natural numbers. However we have two induction hypotheses going in either direction starting from [0].  This is used only in Int.v. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition SInt_ind@{i} (P : SInt -> Type@{i})\n  (H0 : P sint_zero)\n  (HP : forall n : nat, P (sint_of_nat n) -> P (sint_PosS n))\n  (HN : forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n))\n  : forall x, P x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : SInt, P x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : SInt, P x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [x | | x].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_NegS x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P sint_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_PosS x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_NegS x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction x as [|x IHx].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_NegS 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_NegS x.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHx"
+              ],
+              "body": null,
+              "type": "P (sint_NegS x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_NegS 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (HN 0%nat), H0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_NegS x.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHx"
+              ],
+              "body": null,
+              "type": "P (sint_NegS x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (HN x.+1%nat), IHx.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P sint_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact H0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_PosS x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction x as [|x IHx].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_PosS 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_PosS x.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHx"
+              ],
+              "body": null,
+              "type": "P (sint_PosS x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_PosS 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (HP 0%nat), H0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (sint_PosS x.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "SInt -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "P sint_zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_of_nat n) -> P (sint_PosS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HN"
+              ],
+              "body": null,
+              "type": "forall n : nat, P (sint_neg (sint_of_nat n)) -> P (sint_NegS n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHx"
+              ],
+              "body": null,
+              "type": "P (sint_PosS x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (HP x.+1%nat), IHx.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We record these so that they can be used with the [induction] tactic. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition SInt_rect := SInt_ind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition SInt_rec := SInt_ind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

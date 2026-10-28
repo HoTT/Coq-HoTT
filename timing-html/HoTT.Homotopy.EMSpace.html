@@ -1,0 +1,2540 @@
+<html>
+<head>
+<title>EMSpace.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for EMSpace.v</h1>
+
+<div class="code" title="File: EMSpace.v
+Line: 1
+Time: 0.044s">
+<div class="time" style="width: 58.666666666667%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 1
+Time: 0.02s">
+<div class="time" style="width: 26.666666666667%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Equiv PointedCat Yoneda.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 2
+Time: 0.03s">
+<div class="time" style="width: 40%"></div>
+<pre>
+Require Import Pointed.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import HSet.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 5
+Time: 0.025s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+Require Import Algebra.AbGroups.AbelianGroup.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 7
+Time: 0.005s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+Require Import Homotopy.ClassifyingSpace.Core.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Import ClassifyingSpaceNotation.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HSpace.Coherent.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 10
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+Require Import Homotopy.HomotopyGroup Homotopy.ExactSequence.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 11
+Time: 0.005s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+Require Import Homotopy.Hopf.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Modalities.Identity.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 13
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Eilenberg-Mac Lane spaces *)
+
+</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Maps from connected types to pointed types *)
+
+(** Before specializing to Eilenberg-Mac Lane spaces, we show that when [X] is [n]-connected and [Y] is [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence.  The case [n=1] is [isequiv_fmap_pi1_pmap], and the inductive step follows from [isequiv_fmap_loops_pmap]. *)
+
+(** Part of the inductive step is factored out here. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 25
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>Local Definition isequiv_fmap_pi_pmap_succ `{Univalence} (n : nat) {X Y : pType}
+  (el : IsEquiv (fmap loops (a:=X) (b:=Y)))
+  (e : IsEquiv (fmap (Pi n.+1) (a:=loops X) (b:=loops Y)))
+  : IsEquiv (fmap (Pi n.+2) (a:=X) (b:=Y)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (a := groupiso_pi_loops n X).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (b := groupiso_pi_loops n Y).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  pose (k := equiv_precompose_cat_equiv a
+              oE equiv_postcompose_cat_equiv (x:=Pi n.+1 (loops X)) b^-1$).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 33
+Time: 0.075s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  refine (isequiv_homotopic (k o fmap (Pi n.+1) o fmap loops (a:=X) (b:=Y)) _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro f.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  rapply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 37
+Time: 0.008s">
+<div class="time" style="width: 10.666666666667%"></div>
+<pre>
+  exact (moveR_equiv_V (f:=b) _ _ (fmap_pi_loops n.+1 f x)^).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 38
+Time: 0.01s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [X] [n]-connected and [Y] [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence from the pointed maps [X -&gt;* Y] to the group homomorphisms [Pi n.+1 X $-&gt; Pi n.+1 Y].  Neither connectivity of [Y] nor truncatedness of [X] is needed.  The induction is on [n]: the successor step is [isequiv_fmap_loops_pmap], which applies since [n.+2 &lt;= n +2+ n], and the base case is [isequiv_fmap_pi1_pmap]. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Instance isequiv_fmap_pi_pmap `{Univalence} (n : nat) (X Y : pType)
+  `{cX : IsConnected n X} `{tY : IsTrunc n.+1 Y}
+  : IsEquiv (fmap (Pi n.+1) (a:=X) (b:=Y)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n in X, Y, cX, tY |- *.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (isequiv_fmap_pi1_pmap X Y).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  napply isequiv_fmap_pi_pmap_succ.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 48
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre> napply (isequiv_fmap_loops_pmap (n:=n)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (istrunc_leq (trunc_index_leq_add_nat n n)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 51
+Time: 0.058s">
+<div class="time" style="width: 77.333333333333%"></div>
+<pre> rapply IHn.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+
+Definition equiv_fmap_pi_pmap `{Univalence} (n : nat) (X Y : pType)
+  `{IsConnected n X} `{IsTrunc n.+1 Y}
+  : (X -&gt;* Y) &lt;~&gt; (Pi n.+1 X $-&gt; Pi n.+1 Y)
+  := Build_Equiv _ _ _ (isequiv_fmap_pi_pmap n X Y).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed maps from an [n]-connected type to an [n.+1]-truncated type which agree on [Pi n.+1] are homotopic. (It's even easier to show they are equal, but downstream users most often want a homotopy.) *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Definition phomotopy_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
+  `{IsConnected n X} `{IsTrunc n.+1 Y}
+  (phi psi : X -&gt;* Y)
+  (h : fmap (Pi n.+1) phi == fmap (Pi n.+1) psi)
+  : phi ==* psi.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply phomotopy_path.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 65
+Time: 0.011s">
+<div class="time" style="width: 14.666666666667%"></div>
+<pre>
+  tapply (equiv_inj (fmap (Pi n.+1) (a:=X) (b:=Y))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_path_grouphomomorphism h).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed maps out of an [n]-connected type into an [n.+1]-truncated type are determined by their composite with a map that is an embedding on [Pi n.+1]. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Definition phomotopy_pmap_isembedding_pi `{Univalence} {W X Y : pType} (n : nat)
+  `{IsConnected n W} `{IsTrunc n.+1 X}
+  (g : X -&gt;* Y) (e : IsEmbedding (fmap (pPi n.+1) g))
+  {u v : W -&gt;* X} (p : g o* u ==* g o* v)
+  : u ==* v.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply (phomotopy_pmap_pi_connected n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (isinj_embedding _ e).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 78
+Time: 0.015s">
+<div class="time" style="width: 20%"></div>
+<pre>
+  lhs_V tapply (fmap_comp (Pi n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 79
+Time: 0.013s">
+<div class="time" style="width: 17.333333333333%"></div>
+<pre>
+  rhs_V tapply (fmap_comp (Pi n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  exact (fmap2 (Pi n.+1) p x).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Two commuting squares between purely exact sequences form a map of fiber sequences, in the sense needed by [connecting_map_natural_isexact], whenever [F] is [n]-connected and [X'] and [Y'] are [n.+1]-truncated.  This is because the two sides agree after composing with [pfib f'], which is an embedding on [Pi n.+1]. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 84
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre>Definition phomotopy_functor_pfiber_cxfib `{Univalence} (n : nat)
+  {F X Y F' X' Y' : pType}
+  {i : F -&gt;* X} {f : X -&gt;* Y} `{IsExact purely F X Y i f}
+  {i' : F' -&gt;* X'} {f' : X' -&gt;* Y'} `{IsExact purely F' X' Y' i' f'}
+  {g : F -&gt;* F'} {h : X -&gt;* X'} {k : Y -&gt;* Y'}
+  `{IsConnected n F} `{IsTrunc n.+1 X'} `{IsTrunc n.+1 Y'}
+  (p : h o* i ==* i' o* g) (q : k o* f ==* f' o* h)
+  : functor_pfiber q o* pequiv_cxfib ==* pequiv_cxfib o* g.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 92
+Time: 0.018s">
+<div class="time" style="width: 24%"></div>
+<pre>
+  rapply (phomotopy_pmap_isembedding_pi n (pfib f')
+            (isembedding_fmap_pi_isexact _ _ n
+               (c := contr_pi_istrunc n.+1 _))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  lhs_V' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  lhs_V' napply (pmap_prewhisker _ (square_functor_pfiber q)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  rhs' napply (pmap_prewhisker _ (pfib_cxfib _)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 102
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Two [n]-connected [n.+1]-truncated pointed types with isomorphic [Pi n.+1] are pointed equivalent. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 105
+Time: 0.027s">
+<div class="time" style="width: 36%"></div>
+<pre>Definition pequiv_pi_connected_truncated `{Univalence} (n : nat) {X Y : pType}
+  `{IsConnected n X} `{IsTrunc n.+1 X} `{IsConnected n Y} `{IsTrunc n.+1 Y}
+  (phi : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 Y))
+  : X &lt;~&gt;* Y
+  := cate_reflect_fmap (Pi n.+1) (x:=X) (y:=Y) phi.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The equivalence induces the given isomorphism on [Pi n.+1]. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 111
+Time: 0.024s">
+<div class="time" style="width: 32%"></div>
+<pre>Definition fmap_pi_pequiv_pi_connected_truncated `{Univalence} (n : nat) {X Y : pType}
+  `{IsConnected n X} `{IsTrunc n.+1 X} `{IsConnected n Y} `{IsTrunc n.+1 Y}
+  (phi : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 Y))
+  : fmap (Pi n.+1) (pequiv_pi_connected_truncated n phi) == phi
+  := fmap_cate_reflect_fmap (Pi n.+1) (x:=X) (y:=Y) phi.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Definition and properties of Eilenberg-Mac Lane spaces *)
+
+(** The definition of the Eilenberg-Mac Lane spaces.  Note that while we allow [G] to be non-abelian for [n &gt; 1], later results will need to assume that [G] is abelian. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 119
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Fixpoint EilenbergMacLane@{u v | u &lt;= v} (G : Group@{u}) (n : nat) : pType@{v}
+  := match n with
+      | 0    =&gt; G
+      | 1    =&gt; pClassifyingSpace@{u} G
+      | m.+1 =&gt; pTr m.+1 (psusp (EilenbergMacLane G m))
+     end.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "'K(' G , n )" := (EilenbergMacLane G n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section EilenbergMacLane.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance istrunc_em {G : Group} {n : nat} : IsTrunc n K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n as [|[]]; exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is subsumed by the next result, but Coq doesn't always find the next result when it should. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isconnected_em {G : Group} (n : nat)
+    : IsConnected n K(G, n.+1).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 139
+Time: 0.005s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+    induction n; exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isconnected_em' {G : Group} (n : nat)
+    : IsConnected n.-1 K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (is_minus_one_connected_pointed _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isconnected_em.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is0connected_em {G : Group} (n : nat)
+    : IsConnected 0 K(G, n.+1).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply (is0connected_isconnected n.-2).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 &lt;= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Lemma pequiv_ptr_loop_psusp' (X : pType) (n : nat) `{IsConnected n.+1 X}
+    : pTr n.+2 X &lt;~&gt;* pTr n.+2 (loops (psusp X)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pEquiv.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fmap (pTr _) (loop_susp_unit _)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    napply O_inverts_conn_map.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply (conn_map_O_leq _ (Tr (n +2+ n))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (O_leq_Tr_leq (trunc_index_leq_add_nat n n)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (conn_map_loop_susp_unit n X).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pequiv_loops_em_em (G : AbGroup) (n : nat)
+    : K(G, n) &lt;~&gt;* loops K(G, n.+1).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact pequiv_g_loops_bg.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (K(G, n.+1) &lt;~&gt;* loops (pTr n.+2 (psusp (K(G, n.+1))))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ptr_loops _ _ o*E _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: srapply (licata_finster (m:=-2)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ o*E pequiv_ptr (n:=n.+2)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 180
+Time: 0.008s">
+<div class="time" style="width: 10.666666666667%"></div>
+<pre>
+    rapply pequiv_ptr_loop_psusp'.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pequiv_loops_em_g (G : AbGroup) (n : nat)
+    : G &lt;~&gt;* iterated_loops n K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pequiv_pmap_idmap.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine ((unfold_iterated_loops' _ _)^-1* o*E _ o*E IHn).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+      exact (emap (iterated_loops n) (pequiv_loops_em_em _ _)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** For positive indices, we in fact get a group isomorphism. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_g_pi_n_em (G : AbGroup) (n : nat)
+    : GroupIsomorphism G (Pi n.+1 K(G, n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact grp_iso_g_pi1_bg.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (grp_iso_compose _ IHn).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (grp_iso_compose _ (groupiso_pi_functor _ (pequiv_loops_em_em _ _))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry; exact (groupiso_pi_loops _ _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition iscohhspace_em {G : AbGroup} (n : nat)
+    : IsCohHSpace K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply iscohhspace_equiv_cohhspace.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply pequiv_loops_em_em.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact iscohhspace_loops.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [K(-, n)] as a functor from groups to pointed types.  [fmap B] and the WildCat functoriality of [psusp] and [pTr] constrain the two groups to a single universe. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition K' (n : nat) (G : Group) : pType := K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is0functor_em (n : nat) : Is0Functor (K' n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros G G' f.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n as [|m].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fmap B f).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 223
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre> exact (fmap (pTr m.+2) (fmap psusp IHn)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is1functor_em (n : nat) : Is1Functor (K' n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G G' f g p.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (phomotopy_path (ap (fmap (K' n))
+                               (equiv_path_grouphomomorphism p))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      induction n as [|[|m] IH].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        reflexivity.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fmap_id B G).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 237
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre> change (fmap (pTr m.+2) (fmap psusp (fmap (K' m.+1) (Id G))) ==* Id (K' m.+2 G)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 237
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+        refine (_ @* fmap_id (pTr m.+2) _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 238
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+        tapply (fmap2 (pTr m.+2)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 239
+Time: 0.005s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+        refine (_ @* fmap_id psusp _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 240
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+        tapply (fmap2 psusp).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact IH.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G G' G'' f g.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      induction n as [|[|m] IH].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        reflexivity.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fmap_comp B f g).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 248
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre> change (fmap (K' m.+2) ?f) with (fmap (pTr m.+2) (fmap psusp (fmap (K' m.+1) f))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 248
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+        refine (_ @* fmap_comp (pTr m.+2) _ _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 249
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+        tapply (fmap2 (pTr m.+2)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 250
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+        refine (_ @* fmap_comp psusp _ _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 251
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+        tapply (fmap2 psusp).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact IH.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 253
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** At positive levels, [pequiv_loops_em_em] is the canonical comparison map: the loop-suspension unit followed by [loops] of the truncation map.  This presentation makes its naturality transparent, without reference to the Hopf-construction input used to show that it is an equivalence. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 257
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Definition loops_em_em_ptr_unit (G : AbGroup) (n : nat)
+    : pequiv_loops_em_em G n.+1
+      ==* fmap loops ptr o* loop_susp_unit K(G, n.+1).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n as [|n].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 261
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+    all: refine (compose_cate_fun (A:=pType) _ _ @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    all: refine (pmap_postwhisker _ (compose_cate_fun (A:=pType) _ _) @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: refine (pmap_postwhisker _ (pto_O_natural (Tr _) _) @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: refine (pmap_postwhisker _ (ptr_natural _ _) @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: refine ((pmap_compose_assoc _ _ _)^* @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: exact (pmap_prewhisker _ (ptr_loops_commutes _ _)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 267
+Time: 0.037s">
+<div class="time" style="width: 49.333333333333%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [fmap (K' n)] commutes with the loop-space identifications, so it is a map of spectra. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 271
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>Definition em_fmap_loops_natural {G G' : AbGroup}
+    (f : GroupHomomorphism G G') (n : nat)
+    : fmap loops (fmap (K' n.+1) f) o* pequiv_loops_em_em G n
+      ==* pequiv_loops_em_em G' n o* fmap (K' n) f.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n as [|n].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pbloop_natural G G' f).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (pmap_postwhisker _ (loops_em_em_ptr_unit G n) @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @* pmap_prewhisker _ (loops_em_em_ptr_unit G' n)^*).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine ((pmap_compose_assoc _ _ _)^* @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 280
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+      refine (pmap_prewhisker _ (fmap_comp loops _ _)^* @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 281
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+      refine (pmap_prewhisker _ (fmap2 loops (ptr_natural _ _)) @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 282
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+      refine (pmap_prewhisker _ (fmap_comp loops _ _) @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (pmap_compose_assoc _ _ _ @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (pmap_postwhisker _ (loop_susp_unit_natural _)^* @* _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (pmap_compose_assoc _ _ _)^*.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 286
+Time: 0.013s">
+<div class="time" style="width: 17.333333333333%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [equiv_g_pi_n_em] at level [n.+1] unfolds to the level-[n] map conjugated by [groupiso_pi_loops] and [pequiv_loops_em_em]. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 290
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>Local Definition equiv_g_pi_n_em_succ (G : AbGroup) (n : nat) (x : G)
+    : equiv_g_pi_n_em G n.+1 x
+      = grp_iso_inverse (groupiso_pi_loops _ _)
+          (groupiso_pi_functor _ (pequiv_loops_em_em G n.+1)
+            (equiv_g_pi_n_em G n x))
+    := idpath.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The action of [fmap (K' n.+1) f] on [Pi n.+1] agrees with [f] under the identifications [equiv_g_pi_n_em]. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 298
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Definition pi_em_fmap {G G' : AbGroup}
+    (f : GroupHomomorphism G G') (n : nat)
+    : fmap (Pi n.+1) (fmap (K' n.+1) f) o equiv_g_pi_n_em G n
+      == equiv_g_pi_n_em G' n o f.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|n IHn]; intro g.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 304
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre> exact (ap tr (bloop_natural G G' f g)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> lhs napply (ap _ (equiv_g_pi_n_em_succ G n g)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply (equiv_g_pi_n_em_succ G' n (f g)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveL_equiv_V.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 307
+Time: 0.015s">
+<div class="time" style="width: 20%"></div>
+<pre>
+      lhs tapply (fmap_pi_loops n.+1 (fmap (K' n.+2) f)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 308
+Time: 0.013s">
+<div class="time" style="width: 17.333333333333%"></div>
+<pre>
+      lhs napply (ap _ (eisretr (groupiso_pi_loops n _) _)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 309
+Time: 0.015s">
+<div class="time" style="width: 20%"></div>
+<pre>
+      lhs_V tapply (fmap_comp (pPi n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 310
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+      lhs tapply (fmap2 (pPi n.+1) (em_fmap_loops_natural f n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 311
+Time: 0.017s">
+<div class="time" style="width: 22.666666666667%"></div>
+<pre>
+      lhs tapply (fmap_comp (pPi n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap _ (IHn g)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 313
+Time: 0.008s">
+<div class="time" style="width: 10.666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Equivalently, the composite is conjugation by the identifications [equiv_g_pi_n_em]. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 317
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>Definition pi_em_fmap' {G G' : AbGroup}
+    (f : GroupHomomorphism G G') (n : nat)
+    : fmap (Pi n.+1) (fmap (K' n.+1) f)
+      == equiv_g_pi_n_em G' n o f o (equiv_g_pi_n_em G n)^-1
+    := cate_moveL_eV (A:=Group) _ _ (equiv_g_pi_n_em G' n $o f) (pi_em_fmap f n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It follows that [fmap (Pi n.+1) (fmap (K' n.+1) f)] is an embedding when [f] is. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 324
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>#[export] Instance isembedding_pi_em_fmap {G G' : AbGroup}
+    (f : GroupHomomorphism G G') `{!IsEmbedding f} (n : nat)
+    : IsEmbedding (fmap (Pi n.+1) (fmap (K' n.+1) f)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 327
+Time: 0.007s">
+<div class="time" style="width: 9.3333333333333%"></div>
+<pre>
+    snapply (mapinO_homotopic (Tr (-1))
+               (equiv_g_pi_n_em G' n o f o (equiv_g_pi_n_em G n)^-1%equiv)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 330
+Time: 0.007s">
+<div class="time" style="width: 9.3333333333333%"></div>
+<pre> symmetry; apply pi_em_fmap'.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 331
+Time: 0.065s">
+<div class="time" style="width: 86.666666666667%"></div>
+<pre> rapply mapinO_compose.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 331
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [G] is also the [n.+1]-st homotopy group of [loops K(G, n.+2)], through the loop identification [pequiv_loops_em_em].  Composing with the inverse of [groupiso_pi_loops] gives [equiv_g_pi_n_em G n.+1]. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_g_pi_n_loops_em (G : AbGroup) (n : nat)
+    : GroupIsomorphism G (Pi n.+1 (loops K(G, n.+2)))
+    := grp_iso_compose (groupiso_pi_functor n (pequiv_loops_em_em G n.+1))
+         (equiv_g_pi_n_em G n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This identification is natural, since [pequiv_loops_em_em] and [equiv_g_pi_n_em] are. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 341
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>Definition pi_loops_em_fmap {G G' : AbGroup}
+    (f : GroupHomomorphism G G') (n : nat)
+    : fmap (Pi n.+1) (fmap loops (fmap (K' n.+2) f)) o equiv_g_pi_n_loops_em G n
+      == equiv_g_pi_n_loops_em G' n o f.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro g.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 346
+Time: 0.015s">
+<div class="time" style="width: 20%"></div>
+<pre>
+    lhs_V tapply (fmap_comp (Pi n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 347
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+    lhs tapply (fmap2 (Pi n.+1) (em_fmap_loops_natural f n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 348
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre>
+    lhs tapply (fmap_comp (Pi n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap _ (pi_em_fmap f n g)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 350
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Eilenberg-Mac Lane spaces of a contractible group are contractible. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance contr_em_contr {G : Group} `{Contr G} (n : nat)
+    : Contr K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|[|n] IHn].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply contr_O_contr.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [K(-,n)] is a pointed functor. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance ispointedfunctor_em (n : nat)
+    : IsPointedFunctor (K' n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 366
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rapply Build_IsPointedFunctor'; cbn.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pEquiv.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact pconst.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply isequiv_contr_contr.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [fmap (K' n.+1) f] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isconnmap_em_fmap {G G' : AbGroup}
+    (f : GroupHomomorphism G G') `{!IsSurjection f} (n : nat)
+    : IsConnMap n (fmap (K' n.+1) f).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (isconnmap_fmap_pclassifyingspace f).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 380
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre> napply (isconnmap_isconnmap_fmap_loops (n:=n)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1, 2: exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (cancelR_conn_map n (pequiv_loops_em_em G n.+1) _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 382
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+      1: exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 383
+Time: 0.016s">
+<div class="time" style="width: 21.333333333333%"></div>
+<pre>
+      rapply (conn_map_homotopic n _ _ (em_fmap_loops_natural f _)^* ).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 384
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [fmap (K' n.+1)] is an equivalence from group homomorphisms to pointed maps.  Since [K(G, n.+1)] is [n]-connected and [K(G', n.+1)] is [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence from the pointed maps to the group homomorphisms [Pi n.+1 K(G, n.+1) $-&gt; Pi n.+1 K(G', n.+1)], and by [pi_em_fmap'] the composite with [fmap (K' n.+1)] is conjugation by the identifications [equiv_g_pi_n_em], which is also an equivalence.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isequiv_em_fmap (G G' : AbGroup) (n : nat)
+    : IsEquiv (fun f : GroupHomomorphism G G' =&gt; fmap (K' n.+1) f).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 390
+Time: 0.014s">
+<div class="time" style="width: 18.666666666667%"></div>
+<pre>
+    refine (isequiv_commsq' _
+              (equiv_precompose_cat_equiv (A:=Group)
+                 (grp_iso_inverse (equiv_g_pi_n_em G n)))
+              (equiv_postcompose_cat_equiv (A:=Group) (equiv_g_pi_n_em G' n))
+              (fmap (Pi n.+1)) _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro f.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 396
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+    apply equiv_path_grouphomomorphism; symmetry.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 397
+Time: 0.017s">
+<div class="time" style="width: 22.666666666667%"></div>
+<pre>
+    apply pi_em_fmap'.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 398
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The equivalence between group homomorphisms and pointed maps of Eilenberg-Mac Lane spaces. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 402
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Definition equiv_em_fmap (G G' : AbGroup) (n : nat)
+    : GroupHomomorphism G G' &lt;~&gt; (K(G, n.+1) -&gt;* K(G', n.+1))
+    := Build_Equiv _ _ _ (isequiv_em_fmap G G' n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The canonical identification of [Pi n.+1 K(Pi n.+1 X, n.+1)] with [Pi n.+1 X].  For [n = 0] this is [grp_iso_g_pi1_bg], and for positive [n] it is [equiv_g_pi_n_em] applied to the abelian group [Pi n.+1 X]. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_iso_pi_em_pi (X : pType) (n : nat)
+    : GroupIsomorphism (Pi n.+1 K(Pi n.+1 X, n.+1)) (Pi n.+1 X).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n as [|m].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact grp_iso_g_pi1_bg.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 413
+Time: 0.006s">
+<div class="time" style="width: 8%"></div>
+<pre> exact (equiv_g_pi_n_em (abgroup_pi m X) m.+1).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 413
+Time: 0.005s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 417
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Definition pequiv_em_connected_truncated (X : pType)
+    (n : nat) `{IsConnected n X} `{IsTrunc n.+1 X}
+    : K(Pi n.+1 X, n.+1) &lt;~&gt;* X
+    := pequiv_pi_connected_truncated n (grp_iso_pi_em_pi X n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It induces [grp_iso_pi_em_pi] on [Pi n.+1]. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 423
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>Definition fmap_pi_pequiv_em_connected_truncated (X : pType)
+    (n : nat) `{IsConnected n X} `{IsTrunc n.+1 X}
+    : fmap (Pi n.+1) (pequiv_em_connected_truncated X n) == grp_iso_pi_em_pi X n
+    := fmap_pi_pequiv_pi_connected_truncated n (grp_iso_pi_em_pi X n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 426
+Time: 0.021s">
+<div class="time" style="width: 28%"></div>
+<pre>
+
+End EilenbergMacLane.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Delooping maps between Eilenberg-Mac Lane spaces *)
+
+(** Pointed maps [K(B,n.+1) -&gt;* K(A,m.+1)] are equivalent to pointed maps [K(B,n) -&gt;* K(A,m)] when [m.+1 &lt;= 2n], via [fmap loops] conjugated by the loop identifications.  This is an instance of the stabilization theorem, Buchholtz-van Doorn-Rijke, Theorem 6.7. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_loops_em_pmap `{Univalence} (B A : AbGroup@{u}) (n m : nat)
+  {mlt2n : (m.+1 &lt;= n + n)%nat}
+  : (K(B, n.+1) -&gt;** K(A, m.+1)) &lt;~&gt;* (K(B, n) -&gt;** K(A, m)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 435
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  refine (pequiv_pequiv_postcompose (pequiv_loops_em_em A m)^-1*
+             o*E pequiv_pequiv_precompose (pequiv_loops_em_em B n)
+               o*E pequiv_fmap_loops_pmap (n:=n.-1) _ _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n as [|k].</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (Empty_rec (not_lt_zero_r m mlt2n)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply (istrunc_leq (m:=m.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (m.+1 &lt;= k +2+ k)%trunc.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The universe annotations avoid two spurious universe variables. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (transport@{Set Set} (fun x =&gt; (m.+1 &lt;= x)%trunc)
+           (trunc_index_add_nat_add))^-1.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (trunc_index_leq_nat mlt2n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

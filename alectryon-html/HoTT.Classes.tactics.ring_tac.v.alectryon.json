@@ -1,0 +1,6045 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Classes.interfaces.abstract_algebra\n  HoTT.Classes.tactics.ring_quote\n  HoTT.Classes.tactics.ring_pol\n  HoTT.Classes.theory.rings\n  HoTT.Classes.orders.sum\n  HoTT.Classes.interfaces.naturals\n  HoTT.Classes.interfaces.integers.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable Variables A B C R V f l n m Vlt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Quoting.Instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section content.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{DecidablePaths C}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `(phi : C -> R) `{AlmostRingPreserving C R phi}\n  `{!AlmostRing C} `{!AlmostRing R}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ _ V l n m V' l'}\n  `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}\n  : eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R)))\n  = eval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))\n  -> n = m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\neval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R)) -> \nn = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\neval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R)) -> \nn = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros E.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\neval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply Quoting.eval_eqquote.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Quoting.eval R (Quoting.merge R l l')\n  (Quoting.expr_map inl (Quoting.eqquote_l R)) =\nQuoting.eval R (Quoting.merge R l l') (Quoting.eqquote_r R)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\neval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity;[symmetry;apply (eval_toPol _)|].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\nQuoting.eval R (Quoting.merge R l l') (Quoting.eqquote_r R)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\neval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity;[|apply (eval_toPol _)].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\neval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\neval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact E.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma by_quoting `{Q : @Quoting.EqQuote R _ _ _ _ _ V l n m V' l'}\n  `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}\n  : toPol (Quoting.expr_map inl (@Quoting.eqquote_l R _ _ _ _ _ _ _ _ _ _ _ Q))\n  =? toPol (@Quoting.eqquote_r R  _ _ _ _ _ _ _ _ _ _ _ Q) = true\n  -> n = m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(toPol (Quoting.expr_map inl (Quoting.eqquote_l R)) =?\n toPol (Quoting.eqquote_r R)) =\ntrue -> n = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(toPol (Quoting.expr_map inl (Quoting.eqquote_l R)) =?\n toPol (Quoting.eqquote_r R)) =\ntrue -> n = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros E.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "(toPol (Quoting.expr_map inl (Quoting.eqquote_l R)) =?\n toPol (Quoting.eqquote_r R)) =\ntrue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply normalize_eq.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eval phi (Quoting.merge R l l')\n  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R))) =\neval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V'"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l'"
+              ],
+              "body": null,
+              "type": "V' -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "Quoting.EqQuote R l n m l'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt'"
+              ],
+              "body": null,
+              "type": "Relation V'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "(toPol (Quoting.expr_map inl (Quoting.eqquote_l R)) =?\n toPol (Quoting.eqquote_r R)) =\ntrue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply eval_eqb,E.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma normalize_prequoted `{Trichotomy V Vlt} (a b : Quoting.Expr V) vs\n  : eval phi vs (toPol a) = eval phi vs (toPol b) ->\n  Quoting.eval _ vs a = Quoting.eval _ vs b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eval phi vs (toPol a) = eval phi vs (toPol b) ->\nQuoting.eval R vs a = Quoting.eval R vs b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Quoting.Expr V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vs"
+              ],
+              "body": null,
+              "type": "V -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eval phi vs (toPol a) = eval phi vs (toPol b) ->\nQuoting.eval R vs a = Quoting.eval R vs b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Quoting.Expr V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vs"
+              ],
+              "body": null,
+              "type": "V -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !(eval_toPol _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Quoting.eval R vs a = Quoting.eval R vs b ->\nQuoting.eval R vs a = Quoting.eval R vs b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Quoting.Expr V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vs"
+              ],
+              "body": null,
+              "type": "V -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "trivial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma prove_prequoted `{Trichotomy V Vlt} (a b : Quoting.Expr V) vs\n  : toPol a =? toPol b = true -> Quoting.eval _ vs a = Quoting.eval _ vs b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(toPol a =? toPol b) = true -> Quoting.eval R vs a = Quoting.eval R vs b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Quoting.Expr V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vs"
+              ],
+              "body": null,
+              "type": "V -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(toPol a =? toPol b) = true -> Quoting.eval R vs a = Quoting.eval R vs b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Quoting.Expr V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vs"
+              ],
+              "body": null,
+              "type": "V -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Quoting.eval R vs a = Quoting.eval R vs b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Quoting.Expr V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vs"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(toPol a =? toPol b) = true"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply normalize_prequoted.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eval phi vs (toPol a) = eval phi vs (toPol b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "C -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bneg"
+              ],
+              "body": null,
+              "type": "AlmostNegate R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "AlmostRingPreserving phi"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing0"
+              ],
+              "body": null,
+              "type": "AlmostRing C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AlmostRing1"
+              ],
+              "body": null,
+              "type": "AlmostRing R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "V"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Vlt"
+              ],
+              "body": null,
+              "type": "Relation V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Trichotomy Vlt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Quoting.Expr V"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vs"
+              ],
+              "body": null,
+              "type": "V -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(toPol a =? toPol b) = true"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply eval_eqb;trivial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End content.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance default_almostneg `{Zero A} : AlmostNegate A | 20\n  := fun _ => 0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments default_almostneg _ _ _ /.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A\n  := (-).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments negate_almostneg _ _ _ /.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance semiring_almostring `{IsSemiCRing A} : AlmostRing A | 10.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AlmostRing A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiCRing A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AlmostRing A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiCRing A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "split;try exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, almost_negate x = almost_negate 1 * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiCRing A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "almost_negate x = almost_negate 1 * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold almost_negate;simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 = 0 * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry;apply mult_0_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance ring_almostring `{IsCRing A} : AlmostRing A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AlmostRing A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AlmostRing A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "split;try exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, almost_negate x = almost_negate 1 * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "almost_negate x = almost_negate 1 * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold almost_negate;simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- x = -1 * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply negate_mult_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}\n  : AlmostRingPreserving f | 10.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AlmostRingPreserving f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AlmostRingPreserving f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "split;try exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, f (almost_negate x) = almost_negate (f x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold almost_negate;simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A -> f 0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bplus"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bmult"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bzero"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Bone"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact preserves_0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section VarSec.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{IsCRing A} `{IsCRing B} {f : A -> B} `{!IsSemiRingPreserving f}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ring_mor_almostring_mor : AlmostRingPreserving f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AlmostRingPreserving f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus0"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult0"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero0"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone0"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate0"
+              ],
+              "body": null,
+              "type": "Negate B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AlmostRingPreserving f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus0"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult0"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero0"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone0"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate0"
+              ],
+              "body": null,
+              "type": "Negate B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "split;try exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, f (almost_negate x) = almost_negate (f x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus0"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult0"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero0"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone0"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate0"
+              ],
+              "body": null,
+              "type": "Negate B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold almost_negate;simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, f (- x) = - f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus0"
+              ],
+              "body": null,
+              "type": "Plus B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult0"
+              ],
+              "body": null,
+              "type": "Mult B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero0"
+              ],
+              "body": null,
+              "type": "Zero B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone0"
+              ],
+              "body": null,
+              "type": "One B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate0"
+              ],
+              "body": null,
+              "type": "Negate B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact preserves_negate.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End VarSec.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments normalize_eq {C _ R} phi\n  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments by_quoting {C _ R} phi\n  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac ring_with_nat :=\n  match goal with\n  |- @paths ?R _ _ =>\n    ((pose proof (_ : IsSemiCRing R)) || fail \"target equality not on a semiring\");\n    apply (by_quoting (naturals_to_semiring nat R));\n    reflexivity\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac ring_with_integers Z :=\n  match goal with\n  |- @paths ?R _ _ =>\n    ((pose proof (_ : IsCRing R)) || fail \"target equality not on a ring\");\n    apply (by_quoting (integers_to_ring Z R));\n    reflexivity\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac ring_with_self :=\n  match goal with\n  |- @paths ?R _ _ =>\n    ((pose proof (_ : IsSemiCRing R)) || fail \"target equality not on a ring\");\n    apply (by_quoting (@id R));\n    reflexivity\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac ring_repl a b :=\n  let Hrw := fresh \"Hrw\" in\n  assert (Hrw : a = b);[ring_with_nat|rewrite Hrw;clear Hrw].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"ring_replace\" constr(x) \"with\" constr(y) := ring_repl x y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

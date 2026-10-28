@@ -1,0 +1,52 @@
+digraph HoTT_Modalities_Lex {
+  graph [ratio=0.5]
+  node [style=filled]
+Lex_nsep_iff_trunc_to_O [label="nsep_iff_trunc_to_O", URL=<Lex.html#nsep_iff_trunc_to_O>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_nSep [label="nSep", URL=<Lex.html#nSep>, fillcolor="#F070D1"] ;
+Lex_lex_gen [label="lex_gen", URL=<Lex.html#lex_gen>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_ismodality_isequiv_O_functor_hfiber [label="ismodality_isequiv_O_functor_hfiber", URL=<Lex.html#ismodality_isequiv_O_functor_hfiber>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_lex_from_ispullback_connmap_mapino_commsq [label="lex_from_ispullback_connmap_mapino_commsq", URL=<Lex.html#lex_from_ispullback_connmap_mapino_commsq>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_lex_from_isequiv_ismodal_isconnected_types [label="lex_from_isequiv_ismodal_isconnected_types", URL=<Lex.html#lex_from_isequiv_ismodal_isconnected_types>, fillcolor="#F070D1"] ;
+Lex_lex_from_isconnected_paths [label="lex_from_isconnected_paths", URL=<Lex.html#lex_from_isconnected_paths>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_lex_from_conn_map_lex [label="lex_from_conn_map_lex", URL=<Lex.html#lex_from_conn_map_lex>, fillcolor="#F070D1"] ;
+Lex_lex_from_cancelL_conn_map [label="lex_from_cancelL_conn_map", URL=<Lex.html#lex_from_cancelL_conn_map>, fillcolor="#F070D1"] ;
+Lex_lex_from_inO_typeO [label="lex_from_inO_typeO", URL=<Lex.html#lex_from_inO_typeO>, fillcolor="#F070D1"] ;
+Lex_lex_from_modal_over_connected_isconst [label="lex_from_modal_over_connected_isconst", URL=<Lex.html#lex_from_modal_over_connected_isconst>, fillcolor="#F070D1"] ;
+Lex_istrunc_O_lex [label="istrunc_O_lex", URL=<Lex.html#istrunc_O_lex>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_inO_typeO_lex [label="inO_typeO_lex", URL=<Lex.html#inO_typeO_lex>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_modal_over_connected_isconst_lex [label="modal_over_connected_isconst_lex", URL=<Lex.html#modal_over_connected_isconst_lex>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_conn_map_O_inverts [label="conn_map_O_inverts", URL=<Lex.html#conn_map_O_inverts>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_cancelL_conn_map [label="cancelL_conn_map", URL=<Lex.html#cancelL_conn_map>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_diagonal_O_functor [label="diagonal_O_functor", URL=<Lex.html#diagonal_O_functor>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_O_functor_pullback [label="O_functor_pullback", URL=<Lex.html#O_functor_pullback>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_equiv_O_pullback [label="equiv_O_pullback", URL=<Lex.html#equiv_O_pullback>, fillcolor="#F070D1"] ;
+Lex_O_inverts_functor_pullback_to_O [label="O_inverts_functor_pullback_to_O", URL=<Lex.html#O_inverts_functor_pullback_to_O>, fillcolor="#F070D1"] ;
+Lex_equiv_path_O_to_O [label="equiv_path_O_to_O", URL=<Lex.html#equiv_path_O_to_O>, fillcolor="#F070D1"] ;
+Lex_equiv_path_O [label="equiv_path_O", URL=<Lex.html#equiv_path_O>, fillcolor="#F070D1"] ;
+Lex_isequiv_path_O [label="isequiv_path_O", URL=<Lex.html#isequiv_path_O>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_equiv_O_functor_hfiber [label="equiv_O_functor_hfiber", URL=<Lex.html#equiv_O_functor_hfiber>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_isequiv_O_functor_hfiber [label="isequiv_O_functor_hfiber", URL=<Lex.html#isequiv_O_functor_hfiber>, fillcolor="#F070D1"] ;
+Lex_conn_map_functor_hfiber_to_O [label="conn_map_functor_hfiber_to_O", URL=<Lex.html#conn_map_functor_hfiber_to_O>, fillcolor="#F070D1"] ;
+Lex_ispullback_connmap_mapino_commsq [label="ispullback_connmap_mapino_commsq", URL=<Lex.html#ispullback_connmap_mapino_commsq>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_conn_map_functor_hfiber [label="conn_map_functor_hfiber", URL=<Lex.html#conn_map_functor_hfiber>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_isequiv_mapino_isconnected [label="isequiv_mapino_isconnected", URL=<Lex.html#isequiv_mapino_isconnected>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_conn_map_lex [label="conn_map_lex", URL=<Lex.html#conn_map_lex>, peripheries=3, fillcolor="#F070D1"] ;
+Lex_isconnected_paths [label="isconnected_paths", URL=<Lex.html#isconnected_paths>, peripheries=3, fillcolor="#F070D1"] ;
+  Lex_nsep_iff_trunc_to_O -> Lex_nSep [] ;
+  Lex_nsep_iff_trunc_to_O -> Lex_equiv_path_O_to_O [] ;
+  Lex_lex_gen -> Lex_lex_from_inO_typeO [] ;
+  Lex_lex_from_ispullback_connmap_mapino_commsq -> Lex_lex_from_isequiv_ismodal_isconnected_types [] ;
+  Lex_lex_from_isequiv_ismodal_isconnected_types -> Lex_lex_from_conn_map_lex [] ;
+  Lex_lex_from_isconnected_paths -> Lex_lex_from_conn_map_lex [] ;
+  Lex_lex_from_conn_map_lex -> Lex_lex_from_cancelL_conn_map [] ;
+  Lex_lex_from_cancelL_conn_map -> Lex_lex_from_modal_over_connected_isconst [] ;
+  Lex_istrunc_O_lex -> Lex_equiv_path_O [] ;
+  Lex_diagonal_O_functor -> Lex_equiv_O_pullback [] ;
+  Lex_O_functor_pullback -> Lex_O_inverts_functor_pullback_to_O [] ;
+  Lex_equiv_O_pullback -> Lex_O_inverts_functor_pullback_to_O [] ;
+  Lex_equiv_path_O_to_O -> Lex_equiv_path_O [] ;
+  Lex_equiv_O_functor_hfiber -> Lex_isequiv_O_functor_hfiber [] ;
+  Lex_isequiv_O_functor_hfiber -> Lex_conn_map_functor_hfiber_to_O [] ;
+subgraph cluster_Lex { label="Lex"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Lex_isconnected_paths; Lex_conn_map_lex; Lex_isequiv_mapino_isconnected; Lex_conn_map_functor_hfiber; Lex_ispullback_connmap_mapino_commsq; Lex_conn_map_functor_hfiber_to_O; Lex_isequiv_O_functor_hfiber; Lex_equiv_O_functor_hfiber; Lex_isequiv_path_O; Lex_equiv_path_O; Lex_equiv_path_O_to_O; Lex_O_inverts_functor_pullback_to_O; Lex_equiv_O_pullback; Lex_O_functor_pullback; Lex_diagonal_O_functor; Lex_cancelL_conn_map; Lex_conn_map_O_inverts; Lex_modal_over_connected_isconst_lex; Lex_inO_typeO_lex; Lex_istrunc_O_lex; Lex_lex_from_modal_over_connected_isconst; Lex_lex_from_inO_typeO; Lex_lex_from_cancelL_conn_map; Lex_lex_from_conn_map_lex; Lex_lex_from_isconnected_paths; Lex_lex_from_isequiv_ismodal_isconnected_types; Lex_lex_from_ispullback_connmap_mapino_commsq; Lex_ismodality_isequiv_O_functor_hfiber; Lex_lex_gen; Lex_nSep; Lex_nsep_iff_trunc_to_O; };
+} /* END */

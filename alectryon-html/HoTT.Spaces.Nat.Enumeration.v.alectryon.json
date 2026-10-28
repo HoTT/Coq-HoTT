@@ -1,0 +1,1027 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Enumerations by the natural numbers *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We enumerate pairs of natural numbers, and deduce that a product of two images of the natural numbers is again an image of the natural numbers.  Such surjections from the natural numbers are what bounded search needs, see [minimal_n_alt_type]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.Prod Truncations.Core Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Modalities.ReflectiveSubuniverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Enumerating pairs *)\n\n(** We enumerate pairs of natural numbers diagonal by diagonal.  Here the [m]th diagonal consists of the pairs [(a, b)] with [a + b = m]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint nat_unpair (n : nat) : nat * nat\n  := match n with\n     | 0 => (0, 0)\n     | S n => match nat_unpair n with\n             | (0, b) => (S b, 0)\n             | (S a, b) => (a, S b)\n             end\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If we hit the end of a diagonal, we hit everything else on the diagonal. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition nat_unpair_hit_diagonal (a b : nat) (p : {n : nat & nat_unpair n = (a + b, 0)})\n  : {m : nat & nat_unpair m = (a, b)}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m : nat & nat_unpair m = (a, b)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (a + b, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m : nat & nat_unpair m = (a, b)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (a + b, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert a p; induction b as [|b IH]; intros a p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m : nat & nat_unpair m = (a, 0)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (a + 0, 0)}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m : nat & nat_unpair m = (a, b.+1)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall a0 : nat,\n{n : nat & nat_unpair n = (a0 + b, 0)} -> {m : nat & nat_unpair m = (a0, b)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (a + b.+1, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m : nat & nat_unpair m = (a, 0)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (a + 0, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite nat_add_zero_r in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m : nat & nat_unpair m = (a, 0)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (a, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m : nat & nat_unpair m = (a, b.+1)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall a0 : nat,\n{n : nat & nat_unpair n = (a0 + b, 0)} -> {m : nat & nat_unpair m = (a0, b)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (a + b.+1, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite nat_add_succ_r in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m : nat & nat_unpair m = (a, b.+1)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall a0 : nat,\n{n : nat & nat_unpair n = (a0 + b, 0)} -> {m : nat & nat_unpair m = (a0, b)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = ((a + b).+1, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (IH (S a) p) as [m q].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{m0 : nat & nat_unpair m0 = (a, b.+1)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall a0 : nat,\n{n : nat & nat_unpair n = (a0 + b, 0)} ->\n{m0 : nat & nat_unpair m0 = (a0, b)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = ((a + b).+1, 0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "nat_unpair m = (a.+1, b)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (S m).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat_unpair m.+1 = (a, b.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall a0 : nat,\n{n : nat & nat_unpair n = (a0 + b, 0)} ->\n{m0 : nat & nat_unpair m0 = (a0, b)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = ((a + b).+1, 0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "nat_unpair m = (a.+1, b)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; rewrite q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(a, b.+1) = (a, b.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall a0 : nat,\n{n : nat & nat_unpair n = (a0 + b, 0)} ->\n{m0 : nat & nat_unpair m0 = (a0, b)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = ((a + b).+1, 0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "nat_unpair m = (a.+1, b)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We hit everything on the x-axis. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition nat_unpair_hit_axis (d : nat) : {n : nat & nat_unpair n = (d, 0)}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n : nat & nat_unpair n = (d, 0)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n : nat & nat_unpair n = (d, 0)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction d as [|d IH].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n : nat & nat_unpair n = (0, 0)}",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n : nat & nat_unpair n = (d.+1, 0)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (d, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n : nat & nat_unpair n = (0, 0)}",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (0; idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n : nat & nat_unpair n = (d.+1, 0)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "{n : nat & nat_unpair n = (d, 0)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (nat_unpair_hit_diagonal 0 d IH) as [n p].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n0 : nat & nat_unpair n0 = (d.+1, 0)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "{n0 : nat & nat_unpair n0 = (d, 0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "nat_unpair n = (0, d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (S n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat_unpair n.+1 = (d.+1, 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "{n0 : nat & nat_unpair n0 = (d, 0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "nat_unpair n = (0, d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; rewrite p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(d.+1, 0) = (d.+1, 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "{n0 : nat & nat_unpair n0 = (d, 0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "nat_unpair n = (0, d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [nat_unpair] is a split surjective map. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}\n  := nat_unpair_hit_diagonal a b (nat_unpair_hit_axis (a + b)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Therefore, [nat_unpair] is surjective. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance issurj_nat_unpair : IsSurjection nat_unpair.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) nat_unpair",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) nat_unpair",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply BuildIsSurjection; intros [a b].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merely (hfiber nat_unpair (a, b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (tr (nat_unpair_hit a b)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We can use [nat_unpair] to enumerate the product of two types that can be enumerated. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nat_prod_enumerator {X Y : Type} (s : nat -> X) (t : nat -> Y) : nat -> X * Y\n  := functor_prod s t o nat_unpair.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The map is surjective because connected maps are closed under composition and products via [conn_map_compose] and [conn_map_functor_prod]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance issurj_nat_prod_enumerator {X Y : Type} {s : nat -> X} {t : nat -> Y}\n  `{IsSurjection s} `{IsSurjection t}\n  : IsSurjection (nat_prod_enumerator s t)\n  := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

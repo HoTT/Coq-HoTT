@@ -1,0 +1,29 @@
+digraph HoTT_Classes_theory_additional_operations {
+  graph [ratio=0.5]
+  node [style=filled]
+additional_operations_total_abs_either [label="total_abs_either", URL=<additional_operations.html#total_abs_either>, peripheries=3, fillcolor="#F070D1"] ;
+additional_operations_tricho_compare_ok [label="tricho_compare_ok", URL=<additional_operations.html#tricho_compare_ok>, peripheries=3, fillcolor="#F070D1"] ;
+additional_operations_tricho_compare_eq [label="tricho_compare_eq", URL=<additional_operations.html#tricho_compare_eq>, peripheries=3, fillcolor="#F070D1"] ;
+additional_operations_tricho_compare [label="tricho_compare", URL=<additional_operations.html#tricho_compare>, fillcolor="#F070D1"] ;
+additional_operations_compare_eqb_eq [label="compare_eqb_eq", URL=<additional_operations.html#compare_eqb_eq>, peripheries=3, fillcolor="#F070D1"] ;
+additional_operations_compare_eqb [label="compare_eqb", URL=<additional_operations.html#compare_eqb>, fillcolor="#F070D1"] ;
+additional_operations_GT_EQ [label="GT_EQ", URL=<additional_operations.html#GT_EQ>, fillcolor="#F070D1"] ;
+additional_operations_EQ_GT [label="EQ_GT", URL=<additional_operations.html#EQ_GT>, fillcolor="#F070D1"] ;
+additional_operations_EQ_LT [label="EQ_LT", URL=<additional_operations.html#EQ_LT>, peripheries=3, fillcolor="#F070D1"] ;
+additional_operations_LT_GT [label="LT_GT", URL=<additional_operations.html#LT_GT>, peripheries=3, fillcolor="#F070D1"] ;
+additional_operations_LT_EQ [label="LT_EQ", URL=<additional_operations.html#LT_EQ>, fillcolor="#F070D1"] ;
+additional_operations_decide_eqb_ok [label="decide_eqb_ok", URL=<additional_operations.html#decide_eqb_ok>, peripheries=3, fillcolor="#F070D1"] ;
+additional_operations_decide_eqb [label="decide_eqb", URL=<additional_operations.html#decide_eqb>, fillcolor="#F070D1"] ;
+  additional_operations_tricho_compare_ok -> additional_operations_tricho_compare [] ;
+  additional_operations_tricho_compare_ok -> additional_operations_GT_EQ [] ;
+  additional_operations_tricho_compare_ok -> additional_operations_LT_EQ [] ;
+  additional_operations_tricho_compare_eq -> additional_operations_tricho_compare [] ;
+  additional_operations_tricho_compare_eq -> additional_operations_GT_EQ [] ;
+  additional_operations_tricho_compare_eq -> additional_operations_LT_EQ [] ;
+  additional_operations_compare_eqb_eq -> additional_operations_compare_eqb [] ;
+  additional_operations_GT_EQ -> additional_operations_EQ_GT [] ;
+  additional_operations_EQ_LT -> additional_operations_LT_EQ [] ;
+  additional_operations_decide_eqb_ok -> additional_operations_decide_eqb [] ;
+subgraph cluster_additional_operations { label="additional_operations"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+additional_operations_decide_eqb; additional_operations_decide_eqb_ok; additional_operations_LT_EQ; additional_operations_LT_GT; additional_operations_EQ_LT; additional_operations_EQ_GT; additional_operations_GT_EQ; additional_operations_compare_eqb; additional_operations_compare_eqb_eq; additional_operations_tricho_compare; additional_operations_tricho_compare_eq; additional_operations_tricho_compare_ok; additional_operations_total_abs_either; };
+} /* END */

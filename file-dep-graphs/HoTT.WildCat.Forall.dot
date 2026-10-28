@@ -1,0 +1,16 @@
+digraph HoTT_WildCat_Forall {
+  graph [ratio=0.5]
+  node [style=filled]
+Forall_is1cat_forall [label="is1cat_forall", URL=<Forall.html#is1cat_forall>, peripheries=3, fillcolor="#F070D1"] ;
+Forall_is2graph_forall [label="is2graph_forall", URL=<Forall.html#is2graph_forall>, fillcolor="#F070D1"] ;
+Forall_is0gpd_forall [label="is0gpd_forall", URL=<Forall.html#is0gpd_forall>, fillcolor="#F070D1"] ;
+Forall_is01cat_forall [label="is01cat_forall", URL=<Forall.html#is01cat_forall>, fillcolor="#F070D1"] ;
+Forall_isgraph_forall [label="isgraph_forall", URL=<Forall.html#isgraph_forall>, fillcolor="#F070D1"] ;
+  Forall_is1cat_forall -> Forall_is2graph_forall [] ;
+  Forall_is1cat_forall -> Forall_is0gpd_forall [] ;
+  Forall_is2graph_forall -> Forall_isgraph_forall [] ;
+  Forall_is0gpd_forall -> Forall_is01cat_forall [] ;
+  Forall_is01cat_forall -> Forall_isgraph_forall [] ;
+subgraph cluster_Forall { label="Forall"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Forall_isgraph_forall; Forall_is01cat_forall; Forall_is0gpd_forall; Forall_is2graph_forall; Forall_is1cat_forall; };
+} /* END */

@@ -1,0 +1,27 @@
+digraph HoTT_Homotopy_HSpace_Pointwise {
+  graph [ratio=0.5]
+  node [style=filled]
+Pointwise_isleftinvertible_hspace_pmap [label="isleftinvertible_hspace_pmap", URL=<Pointwise.html#isleftinvertible_hspace_pmap>, peripheries=3, fillcolor="#F070D1"] ;
+Pointwise_sgop_pmap_phomotopy [label="sgop_pmap_phomotopy", URL=<Pointwise.html#sgop_pmap_phomotopy>, peripheries=3, fillcolor="#F070D1"] ;
+Pointwise_sgop_pmap_precompose [label="sgop_pmap_precompose", URL=<Pointwise.html#sgop_pmap_precompose>, peripheries=3, fillcolor="#F070D1"] ;
+Pointwise_iscoherent_hspace_pmap [label="iscoherent_hspace_pmap", URL=<Pointwise.html#iscoherent_hspace_pmap>, peripheries=3, fillcolor="#F070D1"] ;
+Pointwise_ishspace_pmap [label="ishspace_pmap", URL=<Pointwise.html#ishspace_pmap>, fillcolor="#F070D1"] ;
+Pointwise_rightidentity_pmap [label="rightidentity_pmap", URL=<Pointwise.html#rightidentity_pmap>, fillcolor="#F070D1"] ;
+Pointwise_leftidentity_pmap [label="leftidentity_pmap", URL=<Pointwise.html#leftidentity_pmap>, fillcolor="#F070D1"] ;
+Pointwise_sgop_pmap [label="sgop_pmap", URL=<Pointwise.html#sgop_pmap>, fillcolor="#F070D1"] ;
+Pointwise_isleftinvertible_hspace_map [label="isleftinvertible_hspace_map", URL=<Pointwise.html#isleftinvertible_hspace_map>, peripheries=3, fillcolor="#F070D1"] ;
+Pointwise_iscoherent_ishspace_map [label="iscoherent_ishspace_map", URL=<Pointwise.html#iscoherent_ishspace_map>, peripheries=3, fillcolor="#F070D1"] ;
+Pointwise_ishspace_map [label="ishspace_map", URL=<Pointwise.html#ishspace_map>, fillcolor="#F070D1"] ;
+  Pointwise_isleftinvertible_hspace_pmap -> Pointwise_ishspace_pmap [] ;
+  Pointwise_sgop_pmap_phomotopy -> Pointwise_sgop_pmap [] ;
+  Pointwise_sgop_pmap_precompose -> Pointwise_sgop_pmap [] ;
+  Pointwise_iscoherent_hspace_pmap -> Pointwise_ishspace_pmap [] ;
+  Pointwise_ishspace_pmap -> Pointwise_rightidentity_pmap [] ;
+  Pointwise_ishspace_pmap -> Pointwise_leftidentity_pmap [] ;
+  Pointwise_rightidentity_pmap -> Pointwise_sgop_pmap [] ;
+  Pointwise_leftidentity_pmap -> Pointwise_sgop_pmap [] ;
+  Pointwise_isleftinvertible_hspace_map -> Pointwise_ishspace_map [] ;
+  Pointwise_iscoherent_ishspace_map -> Pointwise_ishspace_map [] ;
+subgraph cluster_Pointwise { label="Pointwise"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Pointwise_ishspace_map; Pointwise_iscoherent_ishspace_map; Pointwise_isleftinvertible_hspace_map; Pointwise_sgop_pmap; Pointwise_leftidentity_pmap; Pointwise_rightidentity_pmap; Pointwise_ishspace_pmap; Pointwise_iscoherent_hspace_pmap; Pointwise_sgop_pmap_precompose; Pointwise_sgop_pmap_phomotopy; Pointwise_isleftinvertible_hspace_pmap; };
+} /* END */

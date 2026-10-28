@@ -1,0 +1,582 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Cat, the precategory of strict categories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Objects InitialTerminalCategory.Core InitialTerminalCategory.Functors Functor.Core Category.Strict Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Identity Functor.Composition.Core Functor.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section sub_pre_cat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We use a slight generalization; we look at a full 1-precategory\n      of the 2-precategory Cat, such that all types of functors are\n      hSets.  It might be possible to prove that this doesn't buy you\n      anything, because it's probably the case that [IsHSet (Functor C\n      C) \u2192 IsStrictCategory C]. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : PreCategory -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** There is a precategory of precategories which satisfy the proposition P *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sub_pre_cat : PreCategory\n    := @Build_PreCategory\n         { C : PreCategory | P C }\n         (fun C D => Functor C.1 D.1)\n         (fun C => identity C.1)\n         (fun _ _ _ F G => F o G)\n         (fun _ _ _ _ _ _ _ => associativity _ _ _)\n         (fun _ _ _ => left_identity _)\n         (fun _ _ _ => right_identity _)\n         (fun s d => HF s.2 d.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End sub_pre_cat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments sub_pre_cat {_} P {_}, {_} P _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition strict_cat `{Funext} : PreCategory\n  := sub_pre_cat (fun C => IsStrictCategory C).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*Definition Cat `{Funext} : PreCategory.\n  refine (@sub_pre_cat _ (fun C => IsCategory C) _).\n  *)\n\n(** ** The initial and terminal categories are initial and terminal objects in cat *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section objects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : PreCategory -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{forall C, IsHProp (P C)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma is_terminal_object__is_terminal_category\n        `(IsTerminalCategory one)\n        (HT : P one)\n  : IsTerminalObject (sub_pre_cat P HF) (one; HT).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTerminalObject (sub_pre_cat P) (one; HT)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "one"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr one"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall s d : one, Contr (morphism one s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsTerminalCategory one"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HT"
+              ],
+              "body": null,
+              "type": "P one"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTerminalObject (sub_pre_cat P) (one; HT)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "one"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr one"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall s d : one, Contr (morphism one s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsTerminalCategory one"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HT"
+              ],
+              "body": null,
+              "type": "P one"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "typeclasses eauto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma is_initial_object__is_initial_category\n        `(IsInitialCategory zero)\n        (HI : P zero)\n  : IsInitialObject (sub_pre_cat P HF) (zero; HI).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitialObject (sub_pre_cat P) (zero; HI)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zero"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsInitialCategory zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HI"
+              ],
+              "body": null,
+              "type": "P zero"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitialObject (sub_pre_cat P) (zero; HI)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zero"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsInitialCategory zero"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HI"
+              ],
+              "body": null,
+              "type": "P zero"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "typeclasses eauto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End objects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

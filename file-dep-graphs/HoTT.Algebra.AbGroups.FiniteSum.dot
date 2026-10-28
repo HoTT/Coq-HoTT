@@ -1,0 +1,18 @@
+digraph HoTT_Algebra_AbGroups_FiniteSum {
+  graph [ratio=0.5]
+  node [style=filled]
+FiniteSum_path_ab_sum [label="path_ab_sum", URL=<FiniteSum.html#path_ab_sum>, peripheries=3, fillcolor="#F070D1"] ;
+FiniteSum_ab_sum_sum [label="ab_sum_sum", URL=<FiniteSum.html#ab_sum_sum>, peripheries=3, fillcolor="#F070D1"] ;
+FiniteSum_ab_sum_plus [label="ab_sum_plus", URL=<FiniteSum.html#ab_sum_plus>, fillcolor="#F070D1"] ;
+FiniteSum_ab_sum_zero [label="ab_sum_zero", URL=<FiniteSum.html#ab_sum_zero>, fillcolor="#F070D1"] ;
+FiniteSum_ab_sum_const [label="ab_sum_const", URL=<FiniteSum.html#ab_sum_const>, fillcolor="#F070D1"] ;
+FiniteSum_ab_sum [label="ab_sum", URL=<FiniteSum.html#ab_sum>, fillcolor="#F070D1"] ;
+  FiniteSum_path_ab_sum -> FiniteSum_ab_sum [] ;
+  FiniteSum_ab_sum_sum -> FiniteSum_ab_sum_plus [] ;
+  FiniteSum_ab_sum_sum -> FiniteSum_ab_sum_zero [] ;
+  FiniteSum_ab_sum_plus -> FiniteSum_ab_sum [] ;
+  FiniteSum_ab_sum_zero -> FiniteSum_ab_sum_const [] ;
+  FiniteSum_ab_sum_const -> FiniteSum_ab_sum [] ;
+subgraph cluster_FiniteSum { label="FiniteSum"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+FiniteSum_ab_sum; FiniteSum_ab_sum_const; FiniteSum_ab_sum_zero; FiniteSum_ab_sum_plus; FiniteSum_ab_sum_sum; FiniteSum_path_ab_sum; };
+} /* END */

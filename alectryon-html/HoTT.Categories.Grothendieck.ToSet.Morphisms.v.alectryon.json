@@ -1,0 +1,2082 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Classification of morphisms of the Grothendieck Construction of a functor to Set *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import SetCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Grothendieck.ToSet.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Grothendieck.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {C : PreCategory}\n          {F : Functor C set_cat}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isequiv_sigma_category_isomorphism {s d : category F}\n  : (s <~=~> d)%category <~> { e : (s.(c) <~=~> d.(c))%category | (F _1 e s.(x) = d.(x))%category }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(s <~=~> d)%category <~>\n{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(s <~=~> d)%category <~>\n{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (equiv_adjointify _ _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(s <~=~> d)%category -> {e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d} -> (s <~=~> d)%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o ?f == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(s <~=~> d)%category -> {e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (_; _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(c s <~=~> c d)%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun e : (c s <~=~> c d)%category => (F _1 e) (x s) = x d) ?proj1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(c s <~=~> c d)%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (m : morphism _ _ _).1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism m.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (m^-1).1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(m^-1).1 o m.1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "m.1 o (m^-1).1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(m^-1).1 o m.1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap proj1 (@left_inverse _ _ _ m _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "m.1 o (m^-1).1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "m.1 o (m^-1).1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap proj1 (@right_inverse _ _ _ m _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun e : (c s <~=~> c d)%category => (F _1 e) (x s) = x d)\n  {|\n    morphism_isomorphic := m.1;\n    isisomorphism_isomorphic :=\n      {|\n        morphism_inverse := (m^-1).1;\n        left_inverse := ap pr1 left_inverse;\n        right_inverse := ap pr1 right_inverse\n      |}\n  |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun e : (c s <~=~> c d)%category => (F _1 e) (x s) = x d)\n  {|\n    morphism_isomorphic := m.1;\n    isisomorphism_isomorphic :=\n      {|\n        morphism_inverse := (m^-1).1;\n        left_inverse := ap pr1 left_inverse;\n        right_inverse := ap pr1 right_inverse\n      |}\n  |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "(s <~=~> d)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (m : morphism _ _ _).2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d} -> (s <~=~> d)%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun m : (s <~=~> d)%category =>\n ({|\n    morphism_isomorphic := m.1;\n    isisomorphism_isomorphic :=\n      {|\n        morphism_inverse := (m^-1%morphism).1;\n        left_inverse := ap pr1 left_inverse;\n        right_inverse := ap pr1 right_inverse\n      |}\n  |};\n (m : morphism (category F) s d).2))\no ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g\no (fun m : (s <~=~> d)%category =>\n   ({|\n      morphism_isomorphic := m.1;\n      isisomorphism_isomorphic :=\n        {|\n          morphism_inverse := (m^-1%morphism).1;\n          left_inverse := ap pr1 left_inverse;\n          right_inverse := ap pr1 right_inverse\n        |}\n    |};\n   (m : morphism (category F) s d).2)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d} -> (s <~=~> d)%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(s <~=~> d)%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (m.1 : morphism _ _ _ ; m.2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (m.1; m.2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eexists (m.1^-1;\n               ((ap (F _1 (m.1)^-1) m.2)^)\n                 @ (ap10 ((((composition_of F _ _ _ _ _)^)\n                             @ (ap (fun m => F _1 m) (@left_inverse _ _ _ m.1 _))\n                             @ (identity_of F _))\n                          : (F _1 (m.1 : morphism _ _ _)^-1) o F _1 m.1 = idmap) s.(x)));\n        apply path_sigma_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(((m.1)^-1;\n (ap (F _1 (m.1)^-1) m.2)^ @\n ap10\n   (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n     ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n    identity_of F (c s))\n   (x s))\n o (m.1; m.2)).1 =\n1.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((m.1; m.2)\n o ((m.1)^-1;\n   (ap (F _1 (m.1)^-1) m.2)^ @\n   ap10\n     (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n       ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n      identity_of F (c s))\n     (x s))).1 =\n1.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(((m.1)^-1;\n (ap (F _1 (m.1)^-1) m.2)^ @\n ap10\n   (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n     ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n    identity_of F (c s))\n   (x s))\n o (m.1; m.2)).1 =\n1.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact left_inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((m.1; m.2)\n o ((m.1)^-1;\n   (ap (F _1 (m.1)^-1) m.2)^ @\n   ap10\n     (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n       ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n      identity_of F (c s))\n     (x s))).1 =\n1.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "{e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact right_inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun m : (s <~=~> d)%category =>\n ({|\n    morphism_isomorphic := m.1;\n    isisomorphism_isomorphic :=\n      {|\n        morphism_inverse := (m^-1%morphism).1;\n        left_inverse := ap pr1 left_inverse;\n        right_inverse := ap pr1 right_inverse\n      |}\n  |};\n (m : morphism (category F) s d).2))\no (fun m : {e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d} =>\n   {|\n     morphism_isomorphic := (m.1; m.2);\n     isisomorphism_isomorphic :=\n       {|\n         morphism_inverse :=\n           ((m.1)^-1%morphism;\n           (ap (F _1 (m.1)^-1) m.2)^ @\n           ap10\n             (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n               ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n              identity_of F (c s))\n             (x s));\n         left_inverse :=\n           path_sigma_hprop\n             (((m.1)^-1;\n              (ap (F _1 (m.1)^-1) m.2)^ @\n              ap10\n                (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                  ap (fun m0 : morphism C (c s) (c s) => F _1 m0)\n                    left_inverse) @\n                 identity_of F (c s))\n                (x s))\n              o (m.1; m.2))%morphism\n             1 left_inverse;\n         right_inverse :=\n           path_sigma_hprop\n             ((m.1; m.2)\n              o ((m.1)^-1;\n                (ap (F _1 (m.1)^-1) m.2)^ @\n                ap10\n                  (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                    ap (fun m0 : morphism C (c s) (c s) => F _1 m0)\n                      left_inverse) @\n                   identity_of F (c s))\n                  (x s)))%morphism\n             1 right_inverse\n       |}\n   |}) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun m : {e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d} =>\n {|\n   morphism_isomorphic := (m.1; m.2);\n   isisomorphism_isomorphic :=\n     {|\n       morphism_inverse :=\n         ((m.1)^-1%morphism;\n         (ap (F _1 (m.1)^-1) m.2)^ @\n         ap10\n           (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n             ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n            identity_of F (c s))\n           (x s));\n       left_inverse :=\n         path_sigma_hprop\n           (((m.1)^-1;\n            (ap (F _1 (m.1)^-1) m.2)^ @\n            ap10\n              (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n               identity_of F (c s))\n              (x s))\n            o (m.1; m.2))%morphism\n           1 left_inverse;\n       right_inverse :=\n         path_sigma_hprop\n           ((m.1; m.2)\n            o ((m.1)^-1;\n              (ap (F _1 (m.1)^-1) m.2)^ @\n              ap10\n                (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                  ap (fun m0 : morphism C (c s) (c s) => F _1 m0)\n                    left_inverse) @\n                 identity_of F (c s))\n                (x s)))%morphism\n           1 right_inverse\n     |}\n |})\no (fun m : (s <~=~> d)%category =>\n   ({|\n      morphism_isomorphic := m.1;\n      isisomorphism_isomorphic :=\n        {|\n          morphism_inverse := (m^-1%morphism).1;\n          left_inverse := ap pr1 left_inverse;\n          right_inverse := ap pr1 right_inverse\n        |}\n    |};\n   (m : morphism (category F) s d).2)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun m : (s <~=~> d)%category =>\n ({|\n    morphism_isomorphic := m.1;\n    isisomorphism_isomorphic :=\n      {|\n        morphism_inverse := (m^-1%morphism).1;\n        left_inverse := ap pr1 left_inverse;\n        right_inverse := ap pr1 right_inverse\n      |}\n  |};\n (m : morphism (category F) s d).2))\no (fun m : {e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d} =>\n   {|\n     morphism_isomorphic := (m.1; m.2);\n     isisomorphism_isomorphic :=\n       {|\n         morphism_inverse :=\n           ((m.1)^-1%morphism;\n           (ap (F _1 (m.1)^-1) m.2)^ @\n           ap10\n             (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n               ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n              identity_of F (c s))\n             (x s));\n         left_inverse :=\n           path_sigma_hprop\n             (((m.1)^-1;\n              (ap (F _1 (m.1)^-1) m.2)^ @\n              ap10\n                (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                  ap (fun m0 : morphism C (c s) (c s) => F _1 m0)\n                    left_inverse) @\n                 identity_of F (c s))\n                (x s))\n              o (m.1; m.2))%morphism\n             1 left_inverse;\n         right_inverse :=\n           path_sigma_hprop\n             ((m.1; m.2)\n              o ((m.1)^-1;\n                (ap (F _1 (m.1)^-1) m.2)^ @\n                ap10\n                  (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                    ap (fun m0 : morphism C (c s) (c s) => F _1 m0)\n                      left_inverse) @\n                   identity_of F (c s))\n                  (x s)))%morphism\n             1 right_inverse\n       |}\n   |}) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x; apply path_sigma_hprop; apply path_isomorphic.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "({|\n   morphism_isomorphic :=\n     {|\n       morphism_isomorphic := (x.1; x.2);\n       isisomorphism_isomorphic :=\n         {|\n           morphism_inverse :=\n             ((x.1)^-1;\n             (ap (F _1 (x.1)^-1) x.2)^ @\n             ap10\n               (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n                 ap (fun m : morphism C (c s) (c s) => F _1 m) left_inverse) @\n                identity_of F (c s))\n               (Core.x s));\n           left_inverse :=\n             path_sigma_hprop\n               (((x.1)^-1;\n                (ap (F _1 (x.1)^-1) x.2)^ @\n                ap10\n                  (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n                    ap (fun m : morphism C (c s) (c s) => F _1 m)\n                      left_inverse) @\n                   identity_of F (c s))\n                  (Core.x s))\n                o (x.1; x.2))\n               1 left_inverse;\n           right_inverse :=\n             path_sigma_hprop\n               ((x.1; x.2)\n                o ((x.1)^-1;\n                  (ap (F _1 (x.1)^-1) x.2)^ @\n                  ap10\n                    (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n                      ap (fun m : morphism C (c s) (c s) => F _1 m)\n                        left_inverse) @\n                     identity_of F (c s))\n                    (Core.x s)))\n               1 right_inverse\n         |}\n     |}.1;\n   isisomorphism_isomorphic :=\n     {|\n       morphism_inverse :=\n         ({|\n            morphism_isomorphic := (x.1; x.2);\n            isisomorphism_isomorphic :=\n              {|\n                morphism_inverse :=\n                  ((x.1)^-1;\n                  (ap (F _1 (x.1)^-1) x.2)^ @\n                  ap10\n                    (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n                      ap (fun m : morphism C (c s) (c s) => F _1 m)\n                        left_inverse) @\n                     identity_of F (c s))\n                    (Core.x s));\n                left_inverse :=\n                  path_sigma_hprop\n                    (((x.1)^-1;\n                     (ap (F _1 (x.1)^-1) x.2)^ @\n                     ap10\n                       (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n                         ap (fun m : morphism C (c s) (c s) => F _1 m)\n                           left_inverse) @\n                        identity_of F (c s))\n                       (Core.x s))\n                     o (x.1; x.2))\n                    1 left_inverse;\n                right_inverse :=\n                  path_sigma_hprop\n                    ((x.1; x.2)\n                     o ((x.1)^-1;\n                       (ap (F _1 (x.1)^-1) x.2)^ @\n                       ap10\n                         (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n                           ap (fun m : morphism C (c s) (c s) => F _1 m)\n                             left_inverse) @\n                          identity_of F (c s))\n                         (Core.x s)))\n                    1 right_inverse\n              |}\n          |}^-1).1;\n       left_inverse := ap pr1 left_inverse;\n       right_inverse := ap pr1 right_inverse\n     |}\n |};\n{|\n  morphism_isomorphic := (x.1; x.2);\n  isisomorphism_isomorphic :=\n    {|\n      morphism_inverse :=\n        ((x.1)^-1;\n        (ap (F _1 (x.1)^-1) x.2)^ @\n        ap10\n          (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n            ap (fun m : morphism C (c s) (c s) => F _1 m) left_inverse) @\n           identity_of F (c s))\n          (Core.x s));\n      left_inverse :=\n        path_sigma_hprop\n          (((x.1)^-1;\n           (ap (F _1 (x.1)^-1) x.2)^ @\n           ap10\n             (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n               ap (fun m : morphism C (c s) (c s) => F _1 m) left_inverse) @\n              identity_of F (c s))\n             (Core.x s))\n           o (x.1; x.2))\n          1 left_inverse;\n      right_inverse :=\n        path_sigma_hprop\n          ((x.1; x.2)\n           o ((x.1)^-1;\n             (ap (F _1 (x.1)^-1) x.2)^ @\n             ap10\n               (((composition_of F (c s) (c d) (c s) x.1 (x.1)^-1)^ @\n                 ap (fun m : morphism C (c s) (c s) => F _1 m) left_inverse) @\n                identity_of F (c s))\n               (Core.x s)))\n          1 right_inverse\n    |}\n|}.2).1 = x.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "{e : (c s <~=~> c d)%category & (F _1 e) (Core.x s) = Core.x d}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun m : {e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d} =>\n {|\n   morphism_isomorphic := (m.1; m.2);\n   isisomorphism_isomorphic :=\n     {|\n       morphism_inverse :=\n         ((m.1)^-1%morphism;\n         (ap (F _1 (m.1)^-1) m.2)^ @\n         ap10\n           (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n             ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n            identity_of F (c s))\n           (x s));\n       left_inverse :=\n         path_sigma_hprop\n           (((m.1)^-1;\n            (ap (F _1 (m.1)^-1) m.2)^ @\n            ap10\n              (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n               identity_of F (c s))\n              (x s))\n            o (m.1; m.2))%morphism\n           1 left_inverse;\n       right_inverse :=\n         path_sigma_hprop\n           ((m.1; m.2)\n            o ((m.1)^-1;\n              (ap (F _1 (m.1)^-1) m.2)^ @\n              ap10\n                (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                  ap (fun m0 : morphism C (c s) (c s) => F _1 m0)\n                    left_inverse) @\n                 identity_of F (c s))\n                (x s)))%morphism\n           1 right_inverse\n     |}\n |})\no (fun m : (s <~=~> d)%category =>\n   ({|\n      morphism_isomorphic := m.1;\n      isisomorphism_isomorphic :=\n        {|\n          morphism_inverse := (m^-1%morphism).1;\n          left_inverse := ap pr1 left_inverse;\n          right_inverse := ap pr1 right_inverse\n        |}\n    |};\n   (m : morphism (category F) s d).2)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun m : {e : (c s <~=~> c d)%category & (F _1 e) (x s) = x d} =>\n {|\n   morphism_isomorphic := (m.1; m.2);\n   isisomorphism_isomorphic :=\n     {|\n       morphism_inverse :=\n         ((m.1)^-1%morphism;\n         (ap (F _1 (m.1)^-1) m.2)^ @\n         ap10\n           (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n             ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n            identity_of F (c s))\n           (x s));\n       left_inverse :=\n         path_sigma_hprop\n           (((m.1)^-1;\n            (ap (F _1 (m.1)^-1) m.2)^ @\n            ap10\n              (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                ap (fun m0 : morphism C (c s) (c s) => F _1 m0) left_inverse) @\n               identity_of F (c s))\n              (x s))\n            o (m.1; m.2))%morphism\n           1 left_inverse;\n       right_inverse :=\n         path_sigma_hprop\n           ((m.1; m.2)\n            o ((m.1)^-1;\n              (ap (F _1 (m.1)^-1) m.2)^ @\n              ap10\n                (((composition_of F (c s) (c d) (c s) m.1 (m.1)^-1)^ @\n                  ap (fun m0 : morphism C (c s) (c s) => F _1 m0)\n                    left_inverse) @\n                 identity_of F (c s))\n                (x s)))%morphism\n           1 right_inverse\n     |}\n |})\no (fun m : (s <~=~> d)%category =>\n   ({|\n      morphism_isomorphic := m.1;\n      isisomorphism_isomorphic :=\n        {|\n          morphism_inverse := (m^-1%morphism).1;\n          left_inverse := ap pr1 left_inverse;\n          right_inverse := ap pr1 right_inverse\n        |}\n    |};\n   (m : morphism (category F) s d).2)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "category F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x; apply path_isomorphic; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Grothendieck.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

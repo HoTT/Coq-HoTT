@@ -1,0 +1,23 @@
+digraph HoTT_Cubical_DPathCube {
+  graph [ratio=0.5]
+  node [style=filled]
+DPathCube_dc_fill_back [label="dc_fill_back", URL=<DPathCube.html#dc_fill_back>, peripheries=3, fillcolor="#F070D1"] ;
+DPathCube_dc_fill_front [label="dc_fill_front", URL=<DPathCube.html#dc_fill_front>, peripheries=3, fillcolor="#F070D1"] ;
+DPathCube_dc_fill_bottom [label="dc_fill_bottom", URL=<DPathCube.html#dc_fill_bottom>, peripheries=3, fillcolor="#F070D1"] ;
+DPathCube_dc_fill_top [label="dc_fill_top", URL=<DPathCube.html#dc_fill_top>, peripheries=3, fillcolor="#F070D1"] ;
+DPathCube_dc_fill_right [label="dc_fill_right", URL=<DPathCube.html#dc_fill_right>, peripheries=3, fillcolor="#F070D1"] ;
+DPathCube_dc_fill_left [label="dc_fill_left", URL=<DPathCube.html#dc_fill_left>, peripheries=3, fillcolor="#F070D1"] ;
+DPathCube_equiv_dc_const [label="equiv_dc_const", URL=<DPathCube.html#equiv_dc_const>, peripheries=3, fillcolor="#F070D1"] ;
+DPathCube_equiv_dc_const_ [label="equiv_dc_const'", URL=<DPathCube.html#equiv_dc_const'>, peripheries=3, fillcolor="#F070D1"] ;
+DPathCube_DPathCube [label="DPathCube", URL=<DPathCube.html#DPathCube>, fillcolor="#F070D1"] ;
+  DPathCube_dc_fill_back -> DPathCube_DPathCube [] ;
+  DPathCube_dc_fill_front -> DPathCube_DPathCube [] ;
+  DPathCube_dc_fill_bottom -> DPathCube_DPathCube [] ;
+  DPathCube_dc_fill_top -> DPathCube_DPathCube [] ;
+  DPathCube_dc_fill_right -> DPathCube_DPathCube [] ;
+  DPathCube_dc_fill_left -> DPathCube_DPathCube [] ;
+  DPathCube_equiv_dc_const -> DPathCube_DPathCube [] ;
+  DPathCube_equiv_dc_const_ -> DPathCube_DPathCube [] ;
+subgraph cluster_DPathCube { label="DPathCube"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+DPathCube_DPathCube; DPathCube_equiv_dc_const_; DPathCube_equiv_dc_const; DPathCube_dc_fill_left; DPathCube_dc_fill_right; DPathCube_dc_fill_top; DPathCube_dc_fill_bottom; DPathCube_dc_fill_front; DPathCube_dc_fill_back; };
+} /* END */

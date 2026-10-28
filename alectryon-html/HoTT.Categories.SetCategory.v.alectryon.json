@@ -1,0 +1,64 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Category of sets *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Definitions of [set_cat] and [prop_cat] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require SetCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Morphisms in the category of sets *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require SetCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** If there were a [SetCategory.Functors.Core], we'd [Include] it here. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include SetCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include SetCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Functors to/from the category of sets *)\n(** Since [Functors] is a separate sub-directory, we need to re-create the module structure.  Alas, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require SetCategory.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

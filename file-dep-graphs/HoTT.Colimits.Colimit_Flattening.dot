@@ -1,0 +1,29 @@
+digraph HoTT_Colimits_Colimit_Flattening {
+  graph [ratio=0.5]
+  node [style=filled]
+Colimit_Flattening_flattening_lemma [label="flattening_lemma", URL=<Colimit_Flattening.html#flattening_lemma>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Flattening_unicocone_cocone_E_ [label="unicocone_cocone_E'", URL=<Colimit_Flattening.html#unicocone_cocone_E'>, fillcolor="#F070D1"] ;
+Colimit_Flattening_cocone_issect [label="cocone_issect", URL=<Colimit_Flattening.html#cocone_issect>, fillcolor="#F070D1"] ;
+Colimit_Flattening_cocone_isretr [label="cocone_isretr", URL=<Colimit_Flattening.html#cocone_isretr>, fillcolor="#F070D1"] ;
+Colimit_Flattening_cocone_extends [label="cocone_extends", URL=<Colimit_Flattening.html#cocone_extends>, fillcolor="#F070D1"] ;
+Colimit_Flattening_cocone_E_ [label="cocone_E'", URL=<Colimit_Flattening.html#cocone_E'>, fillcolor="#F070D1"] ;
+Colimit_Flattening_transport_E__V_E_ [label="transport_E'_V_E'", URL=<Colimit_Flattening.html#transport_E'_V_E'>, fillcolor="#F070D1"] ;
+Colimit_Flattening_transport_E__V [label="transport_E'_V", URL=<Colimit_Flattening.html#transport_E'_V>, fillcolor="#F070D1"] ;
+Colimit_Flattening_transport_E_ [label="transport_E'", URL=<Colimit_Flattening.html#transport_E'>, fillcolor="#F070D1"] ;
+Colimit_Flattening_E_ [label="E'", URL=<Colimit_Flattening.html#E'>, fillcolor="#F070D1"] ;
+  Colimit_Flattening_flattening_lemma -> Colimit_Flattening_unicocone_cocone_E_ [] ;
+  Colimit_Flattening_unicocone_cocone_E_ -> Colimit_Flattening_cocone_issect [] ;
+  Colimit_Flattening_unicocone_cocone_E_ -> Colimit_Flattening_cocone_isretr [] ;
+  Colimit_Flattening_cocone_issect -> Colimit_Flattening_cocone_extends [] ;
+  Colimit_Flattening_cocone_issect -> Colimit_Flattening_cocone_E_ [] ;
+  Colimit_Flattening_cocone_issect -> Colimit_Flattening_transport_E__V_E_ [] ;
+  Colimit_Flattening_cocone_isretr -> Colimit_Flattening_cocone_extends [] ;
+  Colimit_Flattening_cocone_isretr -> Colimit_Flattening_cocone_E_ [] ;
+  Colimit_Flattening_cocone_extends -> Colimit_Flattening_transport_E__V [] ;
+  Colimit_Flattening_cocone_E_ -> Colimit_Flattening_transport_E_ [] ;
+  Colimit_Flattening_transport_E__V_E_ -> Colimit_Flattening_transport_E__V [] ;
+  Colimit_Flattening_transport_E__V -> Colimit_Flattening_transport_E_ [] ;
+  Colimit_Flattening_transport_E_ -> Colimit_Flattening_E_ [] ;
+subgraph cluster_Colimit_Flattening { label="Colimit_Flattening"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Colimit_Flattening_E_; Colimit_Flattening_transport_E_; Colimit_Flattening_transport_E__V; Colimit_Flattening_transport_E__V_E_; Colimit_Flattening_cocone_E_; Colimit_Flattening_cocone_extends; Colimit_Flattening_cocone_isretr; Colimit_Flattening_cocone_issect; Colimit_Flattening_unicocone_cocone_E_; Colimit_Flattening_flattening_lemma; };
+} /* END */

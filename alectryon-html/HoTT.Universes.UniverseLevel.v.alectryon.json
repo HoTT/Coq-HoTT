@@ -1,0 +1,240 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics.Overture Basics.PathGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics.Overture Basics.PathGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Universe Levels *)\n\n(** We provide casting definitions for raising universe levels. *)\n\n(** Because we have cumulativity (that [T : U@{i}] gives us [T : U@{j}] when [i < j]), we may define [Lift : U@{i} \u2192 U@{j}] to be the identity function. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Lift@{i j | i < j} (A : Type@{i}) : Type@{j}\n  := A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lift {A} : A -> Lift A := fun x => x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lower {A} : Lift A -> A := fun x => x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lift2 {A B} (f : forall x : A, B x) : forall x : Lift A, Lift (B (lower x))\n  := f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lower2 {A B} (f : forall x : Lift A, Lift (B (lower x))) : forall x : A, B x\n  := f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreak havoc. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[global] Typeclasses Opaque lift lower lift2 lower2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_lift T : IsEquiv (@lift T)\n  := @Build_IsEquiv\n       _ _\n       (@lift T)\n       (@lower T)\n       (fun _ => idpath)\n       (fun _ => idpath)\n       (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_lift2 A B : IsEquiv (@lift2 A B)\n  := @Build_IsEquiv\n       _ _\n       (@lift2 A B)\n       (@lower2 A B)\n       (fun _ => idpath)\n       (fun _ => idpath)\n       (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance lift_isequiv {A B} (f : A -> B) {H : IsEquiv f} : @IsEquiv (Lift A) (Lift B) (lift2 f)\n  := @Build_IsEquiv\n       (Lift A) (Lift B)\n       (lift2 f)\n       (lift2 (f^-1))\n       (fun x => ap lift (eisretr f (lower x)))\n       (fun x => ap lift (eissect f (lower x)))\n       (fun x => ((ap (ap lift) (eisadj f (lower x)))\n                    @ (ap_compose f lift _)^)\n                   @ (@ap_compose A (Lift A) (Lift B) lift (lift2 f) _ _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance lower_isequiv {A B} (f : Lift A -> Lift B) {H : IsEquiv f} : @IsEquiv A B (lower2 f)\n  := @Build_IsEquiv\n       _ _\n       (lower2 f)\n       (lower2 (f^-1))\n       (fun x => ap lower (eisretr f (lift x)))\n       (fun x => ap lower (eissect f (lift x)))\n       (fun x => ((ap (ap lower) (eisadj f (lift x)))\n                    @ (ap_compose f lower _)^)\n                   @ (@ap_compose (Lift A) A B lower (lower2 f) _ _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lower_equiv {A B} (e : Equiv (Lift A) (Lift B)) : Equiv A B\n  := @Build_Equiv A B (lower2 e) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This version doesn't force strict containment, i.e. it allows the two universes to possibly be the same. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Lift'@{i j | i <= j} (A : Type@{i}) : Type@{j} := A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** However, if we don't give the universes as explicit arguments here, then Coq collapses them. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lift'@{i j} {A : Type@{i}} : A -> Lift'@{i j} A := fun x => x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lower'@{i j} {A : Type@{i}} : Lift'@{i j} A -> A := fun x => x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lift'2@{i i' j j'} {A : Type@{i}} {B : A -> Type@{i'}} (f : forall x : A, B x)\n  : forall x : Lift'@{i j} A, Lift'@{i' j'} (B (lower' x))\n  := f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lower'2@{i i' j j'} {A : Type@{i}} {B : A -> Type@{i'}}\n           (f : forall x : Lift'@{i j} A, Lift'@{i' j'} (B (lower' x)))\n  : forall x : A, B x\n  := f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreak havoc. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[global] Typeclasses Opaque lift' lower' lift'2 lower'2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_lift'@{i j} (T : Type@{i})\n  : IsEquiv (@lift'@{i j} T)\n  := @Build_IsEquiv\n       _ _\n       (@lift' T)\n       (@lower' T)\n       (fun _ => idpath)\n       (fun _ => idpath)\n       (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{j})\n  : IsEquiv@{e0 e1} (@lift'2@{i i' j j'} A B)\n  := @Build_IsEquiv\n       _ _\n       (@lift'2 A B)\n       (@lower'2 A B)\n       (fun _ => idpath)\n       (fun _ => idpath)\n       (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}}\n  (f : A -> B) {H : IsEquiv f}\n  : @IsEquiv (Lift'@{i j} A) (Lift'@{i' j'} B) (lift'2 f)\n  := @Build_IsEquiv\n       (Lift' A) (Lift' B)\n       (lift'2 f)\n       (lift'2 (f^-1))\n       (fun x => ap lift' (eisretr f (lower' x)))\n       (fun x => ap lift' (eissect f (lower' x)))\n       (fun x => ((ap (ap lift') (eisadj f (lower' x)))\n                    @ (ap_compose f lift' _)^)\n                   @ (@ap_compose A (Lift' A) (Lift' B) lift' (lift'2 f) _ _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}}\n  (f : Lift'@{i j} A -> Lift'@{i' j'} B) {H : IsEquiv f}\n  : @IsEquiv A B (lower'2 f)\n  := @Build_IsEquiv\n       _ _\n       (lower'2 f)\n       (lower'2 (f^-1))\n       (fun x => ap lower' (eisretr f (lift' x)))\n       (fun x => ap lower' (eissect f (lift' x)))\n       (fun x => ((ap (ap lower') (eisadj f (lift' x)))\n                    @ (ap_compose f lower' _)^)\n                   @ (@ap_compose (Lift' A) A B lower' (lower'2 f) _ _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lower'_equiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}}\n  (e : Equiv (Lift'@{i j} A) (Lift'@{i' j'} B))\n  : Equiv A B\n  := @Build_Equiv A B (lower'2 e) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

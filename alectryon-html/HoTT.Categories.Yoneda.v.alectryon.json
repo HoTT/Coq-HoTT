@@ -1,0 +1,2904 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * The Yoneda Lemma *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Dual Functor.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import SetCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Attributes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Functorial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HomFunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting Wikipedia on the Yoneda lemma (changing [A] to [a] and\n    [C] to [A] so that we can use unicode superscripts and\n    subscripts):\n\n    In mathematics, specifically in category theory, the Yoneda lemma\n    is an abstract result on functors of the type morphisms into a\n    fixed object. It is a vast generalisation of Cayley's theorem from\n    group theory (viewing a group as a particular kind of category\n    with just one object). It allows the embedding of any category\n    into a category of functors (contravariant set-valued functors)\n    defined on that category. It also clarifies how the embedded\n    category, of representable functors and their natural\n    transformations, relates to the other objects in the larger\n    functor category. It is an important tool that underlies several\n    modern developments in algebraic geometry and representation\n    theory. It is named after Nobuo Yoneda.\n\n    ** Generalities\n\n    The Yoneda lemma suggests that instead of studying the (locally\n    small) category [A], one should study the category of all functors\n    of [A] into [Set] (the category of sets with functions as\n    morphisms). [Set] is a category we understand well, and a functor\n    of [A] into [Set] can be seen as a \"representation\" of [A] in\n    terms of known structures. The original category [A] is contained\n    in this functor category, but new objects appear in the functor\n    category which were absent and \"hidden\" in [A]. Treating these new\n    objects just like the old ones often unifies and simplifies the\n    theory.  This approach is akin to (and in fact generalizes) the\n    common method of studying a ring by investigating the modules over\n    that ring. The ring takes the place of the category [A], and the\n    category of modules over the ring is a category of functors\n    defined on [A].\n\n    ** Formal statement\n\n    *** General version\n\n    Yoneda's lemma concerns functors from a fixed category [A] to the\n    category of sets, [Set]. If [A] is a locally small category\n    (i.e. the hom-sets are actual sets and not proper classes), then\n    each object [a] of [A] gives rise to a natural functor to [Set]\n    called a hom-functor. This functor is denoted:\n\n    [h\u1d43 = Hom(a, \u2500)].\n\n    The (covariant) hom-functor [h\u1d43] sends [x] to the set of morphisms\n    [Hom(a, x)] and sends a morphism [f] from [x] to [y] to the\n    morphism [f \u2218 \u2500] (composition with [f] on the left) that sends a\n    morphism [g] in [Hom(a, x)] to the morphism [f \u2218 g] in [Hom(a,\n    y)]. That is,\n\n    [f \u21a6 Hom(a, f) = \u27e6 Hom(a, x) \u220b g \u21a6 f \u2218 g \u2208 Hom(a,y) \u27e7].\n *)\n\n(** ** The (co-)Yoneda functors [A \u2192 (A\u1d52\u1d56 \u2192 set)] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section yoneda.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (* TODO(JasonGross): Find a way to unify the [yoneda] and [coyoneda] lemmas into a single lemma which is more functorial. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition coyoneda A : Functor A^op (A -> set_cat)\n    := ExponentialLaws.Law4.Functors.inverse _ _ _ (hom_functor A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition yoneda A : Functor A (A^op -> set_cat)\n    := coyoneda A^op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End yoneda.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The (co-)Yoneda lemma *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section coyoneda_lemma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** Let [F] be an arbitrary functor from [A] to [Set]. Then Yoneda's\n      lemma says that: *)\n    (*Variable F : Functor A (@set_cat fs).*)\n    (** For each object [a] of [A], *)\n    (*Variable a : A.*)\n    (** the natural transformations from [h\u1d43] to [F] are in one-to-one\n      correspondence with the elements of [F(a)]. That is,\n\n      [Nat(h\u1d43, F) \u2245 F(a)].\n\n      Moreover this isomorphism is natural in [a] and [F] when both\n      sides are regarded as functors from [Set\u1d2c \u00d7 A] to\n      [Set].\n\n      Given a natural transformation [\u03a6] from [h\u1d43] to [F], the\n      corresponding element of [F(a)] is [u = \u03a6\u2090(id\u2090)]. *)\n\n    (*   Definition coyoneda_lemma_morphism (a : A)\n  : morphism set_cat\n             (BuildhSet\n                (morphism (A -> set_cat) (coyoneda A a) F)\n                _)\n             (F a)\n    := fun phi => phi a 1%morphism. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition coyoneda_functor\n    : Functor (A -> set_cat)\n              (A -> set_cat)\n      := (compose_functor _ _ set_cat (coyoneda A)^op)\n           o (yoneda (A -> set_cat)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section nt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition coyoneda_natural_transformation_helper F\n    : morphism (_ -> _) (coyoneda_functor A F) F.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism (A -> set_cat) ((coyoneda_functor A) _0 F)%object F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "(A -> set_cat)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism (A -> set_cat) ((coyoneda_functor A) _0 F)%object F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "(A -> set_cat)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Build_NaturalTransformation\n                (coyoneda_functor A F) F\n                (fun a phi => phi a 1%morphism)\n                _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (s d : A) (m : morphism A s d),\n((fun phi : Trunc.trunctype_type (((coyoneda_functor A) _0 F) _0 d)%object =>\n  phi d 1)\n o ((coyoneda_functor A) _0 F)%object _1 m)%morphism =\n(F _1 m\n o (fun phi : Trunc.trunctype_type (((coyoneda_functor A) _0 F) _0 s)%object =>\n    phi s 1))%morphism",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "(A -> set_cat)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (s d : A) (m : morphism A s d),\n(fun\n   x : NaturalTransformation\n         (Functors.inverse_object_of_object_of (hom_functor A) s) F =>\n x d (1 o 1 o m)%morphism) =\n(fun\n   x : NaturalTransformation\n         (Functors.inverse_object_of_object_of (hom_functor A) s) F =>\n (F _1 m) (x s 1%morphism))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "(A -> set_cat)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (\n          repeat (intro || apply path_forall);\n          simpl in *;\n            match goal with\n              | [ T : NaturalTransformation _ _ |- _ ]\n                => simpl rewrite <- (fun s d m => apD10 (commutes T s d m))\n            end;\n          rewrite ?left_identity, ?right_identity;\n          reflexivity\n        ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition coyoneda_natural_transformation\n    : morphism (_ -> _)\n               (coyoneda_functor A)\n               1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism ((A -> set_cat) -> A -> set_cat) (coyoneda_functor A) 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism ((A -> set_cat) -> A -> set_cat) (coyoneda_functor A) 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaturalTransformation (coyoneda_functor A) 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaturalTransformation (coyoneda_functor A) 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "let F := match goal with |- NaturalTransformation ?F ?G => constr:(F) end in\n      let G := match goal with |- NaturalTransformation ?F ?G => constr:(G) end in\n      refine (Build_NaturalTransformation\n                F G\n                coyoneda_natural_transformation_helper\n                _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (s d : (A -> set_cat)%category) (m : morphism (A -> set_cat) s d),\n(coyoneda_natural_transformation_helper d o (coyoneda_functor A) _1 m)%morphism =\n(1 _1 m o coyoneda_natural_transformation_helper s)%morphism",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (s d : Functor A set_cat) (m : NaturalTransformation s d),\nCore.compose (coyoneda_natural_transformation_helper d)\n  (Core.whisker_r\n     (Functors.inverse_object_of_morphism_of (hom_functor (A -> set_cat)^op)\n        s d m)\n     (coyoneda A)^op) =\nCore.compose m (coyoneda_natural_transformation_helper s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (repeat first [ intro\n                             | progress path_natural_transformation\n                             | reflexivity ]).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End nt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition coyoneda_lemma_morphism_inverse\n             `{Funext}\n             A\n             (F : object (A -> set_cat))\n             a\n  : morphism set_cat\n             (F a)\n             (coyoneda_functor A F a).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism set_cat (F _0 a)%object (((coyoneda_functor A) _0 F) _0 a)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "(A -> set_cat)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism set_cat (F _0 a)%object (((coyoneda_functor A) _0 F) _0 a)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "(A -> set_cat)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro Fa.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc.trunctype_type (((coyoneda_functor A) _0 F) _0 a)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "(A -> set_cat)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fa"
+              ],
+              "body": null,
+              "type": "Trunc.trunctype_type (F _0 a)%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaturalTransformation (snd (F, ((coyoneda A)^op _0 a)%object))\n  (fst (F, ((coyoneda A)^op _0 a)%object))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "(A -> set_cat)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fa"
+              ],
+              "body": null,
+              "type": "Trunc.trunctype_type (F _0 a)%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaturalTransformation\n  (Functors.inverse_object_of_object_of (hom_functor A) a) F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fa"
+              ],
+              "body": null,
+              "type": "Trunc.trunctype_type (F _0 a)%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "let F0 := match goal with |- NaturalTransformation ?F ?G => constr:(F) end in\n    let G0 := match goal with |- NaturalTransformation ?F ?G => constr:(G) end in\n    refine (Build_NaturalTransformation\n              F0 G0\n              (fun a' : A => (fun f : morphism A a a' => F _1 f Fa))\n              _\n           ).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (s d : A) (m : morphism A s d),\n((fun f : morphism A a d => (F _1 f) Fa)\n o (Functors.inverse_object_of_object_of (hom_functor A) a) _1 m)%morphism =\n(F _1 m o (fun f : morphism A a s => (F _1 f) Fa))%morphism",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fa"
+              ],
+              "body": null,
+              "type": "Trunc.trunctype_type (F _0 a)%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (s d : A) (m : morphism A s d),\n(fun x : morphism A a s => (F _1 (m o x o 1)) Fa) =\n(fun x : morphism A a s => (F _1 m) ((F _1 x) Fa))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fa"
+              ],
+              "body": null,
+              "type": "Trunc.trunctype_type (F _0 a)%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (\n        repeat first [ reflexivity\n                     | intro\n                     | apply path_forall\n                     | progress rewrite ?composition_of, ?identity_of ]\n      ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance coyoneda_lemma `{Funext} A\n  : IsIsomorphism (coyoneda_natural_transformation A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (coyoneda_natural_transformation A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (coyoneda_natural_transformation A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply isisomorphism_natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : (A -> set_cat)%category,\nIsIsomorphism (coyoneda_natural_transformation A x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Functor A set_cat,\nIsIsomorphism (coyoneda_natural_transformation_helper x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro F.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (coyoneda_natural_transformation_helper F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A set_cat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply isisomorphism_natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, IsIsomorphism (coyoneda_natural_transformation_helper F x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A set_cat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (coyoneda_natural_transformation_helper F a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism\n  (fun\n     phi : NaturalTransformation\n             (Functors.inverse_object_of_object_of (hom_functor A) a) F =>\n   phi a 1%morphism)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A set_cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (coyoneda_lemma_morphism_inverse F a);\n      simpl in *;\n    abstract (\n        repeat (intro || apply path_forall || path_natural_transformation);\n        simpl in *;\n          solve [ simpl rewrite <- (fun c d m => ap10 (commutes x c d m));\n                  rewrite ?right_identity, ?left_identity;\n                  reflexivity\n                | rewrite identity_of;\n                  reflexivity ]\n      ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End coyoneda_lemma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section yoneda_lemma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** There is a contravariant version of Yoneda's lemma which\n      concerns contravariant functors from [A] to [Set]. This version\n      involves the contravariant hom-functor\n\n      [h\u2090 = Hom(\u2500, A)],\n\n      which sends [x] to the hom-set [Hom(x, a)]. Given an arbitrary\n      contravariant functor [G] from [A] to [Set], Yoneda's lemma\n      asserts that\n\n      [Nat(h\u2090, G) \u2245 G(a)]. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** Let [F] be an arbitrary functor from [A] to [Set]. Then Yoneda's\n      lemma says that: *)\n    (*Variable F : Functor A (@set_cat fs).*)\n    (** For each object [a] of [A], *)\n    (*Variable a : A.*)\n    (** the natural transformations from [h\u1d43] to [F] are in one-to-one\n      correspondence with the elements of [F(a)]. That is,\n\n      [Nat(h\u1d43, F) \u2245 F(a)].\n\n      Moreover this isomorphism is natural in [a] and [F] when both\n      sides are regarded as functors from [Set\u1d2c \u00d7 A] to\n      [Set].\n\n      Given a natural transformation [\u03a6] from [h\u1d43] to [F], the\n      corresponding element of [F(a)] is [u = \u03a6\u2090(id\u2090)]. *)\n\n    (* Definition yoneda_lemma_morphism A (G : object (A^op -> set_cat)) (a : A)\n  : morphism set_cat\n             (BuildhSet\n                (morphism (A^op -> set_cat) (yoneda A a) G)\n                _)\n             (G a)\n    := fun phi => phi a 1%morphism.*)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition yoneda_functor\n    : Functor (A^op -> set_cat)\n              (A^op -> set_cat)\n      := coyoneda_functor A^op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition yoneda_natural_transformation\n  : morphism (_ -> _)\n             1\n             (yoneda_functor A)\n    := @morphism_inverse _ _ _ _ (coyoneda_lemma A^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance yoneda_lemma\n  : IsIsomorphism yoneda_natural_transformation\n    := @isisomorphism_inverse _ _ _ _ (coyoneda_lemma A^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End yoneda_lemma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The Yoneda embedding\n\n    An important special case of Yoneda's lemma is when the functor\n    [F] from [A] to [Set] is another hom-functor [h\u1d47]. In this case,\n    the covariant version of Yoneda's lemma states that\n\n    [Nat(h\u1d43, h\u1d47) \u2245 Hom(b, a)].\n\n    That is, natural transformations between hom-functors are in\n    one-to-one correspondence with morphisms (in the reverse\n    direction) between the associated objects. Given a morphism [f : b\n    \u2192 a] the associated natural transformation is denoted [Hom(f, \u2500)].\n\n    Mapping each object [a] in [A] to its associated hom-functor [h\u1d43=\n    Hom(a, \u2500)] and each morphism [f : B \u2192 A] to the corresponding\n    natural transformation [Hom(f, \u2500)] determines a contravariant\n    functor [h\u207b] from [A] to [Set\u1d2c], the functor category of all\n    (covariant) functors from [A] to [Set]. One can interpret [h\u207b] as\n    a covariant functor:\n\n    [h\u207b : A\u1d52\u1d56 \u2192 Set\u1d2c].\n\n    The meaning of Yoneda's lemma in this setting is that the functor\n    [h\u207b] is fully faithful, and therefore gives an embedding of [A\u1d52\u1d56]\n    in the category of functors to [Set]. The collection of all\n    functors {[h\u1d43], [a] in [A]} is a subcategory of [Set\u0302\u1d2c]. Therefore,\n    Yoneda embedding implies that the category [A\u1d52\u1d56] is isomorphic to\n    the category {[h\u1d43], [a] in [A]}.\n\n    The contravariant version of Yoneda's lemma states that\n\n    [Nat(h\u2090, h_b) \u2245 Hom(a, b)].\n\n    Therefore, [h\u208b] gives rise to a covariant functor from [A] to the\n    category of contravariant functors to [Set]:\n\n    [h\u208b : A \u2192 Set\u207d\u207d\u1d2c\u207e\u1d52\u1d56\u207e].\n\n    Yoneda's lemma then states that any locally small category [A] can\n    be embedded in the category of contravariant functors from [A] to\n    [Set] via [h\u208b]. This is called the Yoneda embedding. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section FullyFaithful.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition coyoneda_embedding (A : PreCategory) : IsFullyFaithful (coyoneda A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsFullyFaithful (coyoneda A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsFullyFaithful (coyoneda A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (induced_hom_natural_transformation (coyoneda A) (a, b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A^op%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (@isisomorphism_inverse\n                  _ _ _ _\n                  (@isisomorphism_components_of\n                     _ _ _ _ _ _\n                     (@isisomorphism_components_of\n                        _ _ _ _ _ _\n                        (@coyoneda_lemma _ A)\n                        (@coyoneda _ A b))\n                     a)) as H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (induced_hom_natural_transformation (coyoneda A) (a, b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A^op%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "IsIsomorphism\n  (coyoneda_natural_transformation A ((coyoneda A) _0 b)%object a)^-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism\n  (fun m : morphism A b a =>\n   Functors.inverse_object_of_morphism_of (hom_functor A) a b m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "IsIsomorphism\n  (coyoneda_lemma_morphism_inverse\n     (Functors.inverse_object_of_object_of (hom_functor A) b) a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold coyoneda_lemma_morphism_inverse in *; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism\n  (fun m : morphism A b a =>\n   Functors.inverse_object_of_morphism_of (hom_functor A) a b m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold Functors.inverse_object_of_morphism_of in *; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism\n  (fun m : morphism A b a =>\n   Build_NaturalTransformation\n     (Functors.inverse_object_of_object_of (hom_functor A) a)\n     (Functors.inverse_object_of_object_of (hom_functor A) b)\n     (fun (c : A) (g : morphism A a c) => (1 o g o m)%morphism)\n     (Functors.inverse_object_of_morphism_of_subproof (hom_functor A) a b m))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "let m := match type of H' with IsIsomorphism ?m => constr:(m) end in\n    apply isisomorphism_set_cat_natural_transformation_paths with (T1 := m).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall\n(x : Trunc.trunctype_type\n       {|\n         Trunc.trunctype_type := morphism A b a;\n         Trunc.trunctype_istrunc := trunc_morphism A b a\n       |})\n(y : A),\nBuild_NaturalTransformation\n  (Functors.inverse_object_of_object_of (hom_functor A) a)\n  (Functors.inverse_object_of_object_of (hom_functor A) b)\n  (fun (a' : A) (f : morphism A a a') => (f o x o 1)%morphism)\n  (HoTT.Categories.Yoneda.coyoneda_lemma_morphism_inverse_subproof H A\n     (Functors.inverse_object_of_object_of (hom_functor A) b) a x)\n  y =\nBuild_NaturalTransformation\n  (Functors.inverse_object_of_object_of (hom_functor A) a)\n  (Functors.inverse_object_of_object_of (hom_functor A) b)\n  (fun (c : A) (g : morphism A a c) => (1 o g o x)%morphism)\n  (Functors.inverse_object_of_morphism_of_subproof (hom_functor A) a b x) y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "printer failed!",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall\n(x : Trunc.trunctype_type\n       {|\n         Trunc.trunctype_type := morphism A b a;\n         Trunc.trunctype_istrunc := trunc_morphism A b a\n       |})\n(y : A),\nBuild_NaturalTransformation\n  (Functors.inverse_object_of_object_of (hom_functor A) a)\n  (Functors.inverse_object_of_object_of (hom_functor A) b)\n  (fun (a' : A) (f : morphism A a a') => (f o x o 1)%morphism)\n  (HoTT.Categories.Yoneda.coyoneda_lemma_morphism_inverse_subproof H A\n     (Functors.inverse_object_of_object_of (hom_functor A) b) a x)\n  y =\nBuild_NaturalTransformation\n  (Functors.inverse_object_of_object_of (hom_functor A) a)\n  (Functors.inverse_object_of_object_of (hom_functor A) b)\n  (fun (c : A) (g : morphism A a c) => (1 o g o x)%morphism)\n  (Functors.inverse_object_of_morphism_of_subproof (hom_functor A) a b x) y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : morphism A b a) (y : A),\n(fun f : morphism A a y => (f o x o 1)%morphism) =\n(fun g : morphism A a y => (1 o g o x)%morphism)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clear H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : morphism A b a) (y : A),\n(fun f : morphism A a y => (f o x o 1)%morphism) =\n(fun g : morphism A a y => (1 o g o x)%morphism)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; apply path_forall;\n      intro;\n      rewrite left_identity, right_identity;\n      reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "printer failed!",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct H' as [m' H0' H1'].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "printer failed!",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism set_cat\n  {|\n    Trunc.trunctype_type :=\n      NaturalTransformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b);\n    Trunc.trunctype_istrunc :=\n      trunc_natural_transformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b)\n  |}\n  {|\n    Trunc.trunctype_type := morphism A b a;\n    Trunc.trunctype_istrunc := trunc_morphism A b a\n  |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "(exists m').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "printer failed!",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism set_cat\n  {|\n    Trunc.trunctype_type :=\n      NaturalTransformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b);\n    Trunc.trunctype_istrunc :=\n      trunc_natural_transformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b)\n  |}\n  {|\n    Trunc.trunctype_type := morphism A b a;\n    Trunc.trunctype_istrunc := trunc_morphism A b a\n  |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "printer failed!",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism set_cat\n  {|\n    Trunc.trunctype_type :=\n      NaturalTransformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b);\n    Trunc.trunctype_istrunc :=\n      trunc_natural_transformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b)\n  |}\n  {|\n    Trunc.trunctype_type := morphism A b a;\n    Trunc.trunctype_istrunc := trunc_morphism A b a\n  |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "printer failed!",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism set_cat\n  {|\n    Trunc.trunctype_type :=\n      NaturalTransformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b);\n    Trunc.trunctype_istrunc :=\n      trunc_natural_transformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b)\n  |}\n  {|\n    Trunc.trunctype_type := morphism A b a;\n    Trunc.trunctype_istrunc := trunc_morphism A b a\n  |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact H0'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "printer failed!",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism set_cat\n  {|\n    Trunc.trunctype_type :=\n      NaturalTransformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b);\n    Trunc.trunctype_istrunc :=\n      trunc_natural_transformation\n        (Functors.inverse_object_of_object_of (hom_functor A) a)\n        (Functors.inverse_object_of_object_of (hom_functor A) b)\n  |}\n  {|\n    Trunc.trunctype_type := morphism A b a;\n    Trunc.trunctype_istrunc := trunc_morphism A b a\n  |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "printer failed!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact H1'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition yoneda_embedding (A : PreCategory) : IsFullyFaithful (yoneda A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsFullyFaithful (yoneda A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsFullyFaithful (yoneda A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (induced_hom_natural_transformation (yoneda A) (a, b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (@coyoneda_embedding A^op a b) as CYE.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (induced_hom_natural_transformation (yoneda A) (a, b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CYE"
+              ],
+              "body": null,
+              "type": "IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold yoneda.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CYE"
+              ],
+              "body": null,
+              "type": "IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "let T := type of CYE in\n    let T' := (eval simpl in T) in\n    pose proof ((fun x : T => (x : T')) CYE) as CYE'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CYE"
+              ],
+              "body": null,
+              "type": "IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CYE'"
+              ],
+              "body": null,
+              "type": "IsIsomorphism\n  (fun m : morphism A a b =>\n   Functors.inverse_object_of_morphism_of (hom_functor A^op) a b m)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "let G := match goal with |- ?G => constr:(G) end in\n    let G' := (eval simpl in G) in\n    exact ((fun x : G' => (x : G)) CYE').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End FullyFaithful.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

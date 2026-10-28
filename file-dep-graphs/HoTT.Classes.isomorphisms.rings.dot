@@ -1,0 +1,57 @@
+digraph HoTT_Classes_isomorphisms_rings {
+  graph [ratio=0.5]
+  node [style=filled]
+rings_SemiRings_iso_leibnitz [label="iso_leibnitz", URL=<rings.html#SemiRings.iso_leibnitz>, peripheries=3, fillcolor="#F070D1"] ;
+rings_SemiRings_iso_same_semirings [label="iso_same_semirings", URL=<rings.html#SemiRings.iso_same_semirings>, fillcolor="#F070D1"] ;
+rings_SemiRings_SR_one [label="SR_one", URL=<rings.html#SemiRings.SR_one>, fillcolor="#F070D1"] ;
+rings_SemiRings_SR_zero [label="SR_zero", URL=<rings.html#SemiRings.SR_zero>, fillcolor="#F070D1"] ;
+rings_SemiRings_SR_mult [label="SR_mult", URL=<rings.html#SemiRings.SR_mult>, fillcolor="#F070D1"] ;
+rings_SemiRings_SR_plus [label="SR_plus", URL=<rings.html#SemiRings.SR_plus>, fillcolor="#F070D1"] ;
+rings_SemiRings_SR_carrier [label="SR_carrier", URL=<rings.html#SemiRings.SR_carrier>, fillcolor="#F070D1"] ;
+rings_SemiRings_BuildOperations [label="BuildOperations", URL=<rings.html#SemiRings.BuildOperations>, peripheries=3, fillcolor="#F070D1"] ;
+rings_SemiRings_operations [label="operations", URL=<rings.html#SemiRings.operations>, peripheries=3, fillcolor="#F070D1"] ;
+rings_SemiRings_Operations [label="Operations", URL=<rings.html#SemiRings.Operations>, fillcolor="#F070D1"] ;
+rings_Rings_iso_leibnitz [label="iso_leibnitz", URL=<rings.html#Rings.iso_leibnitz>, peripheries=3, fillcolor="#F070D1"] ;
+rings_Rings_iso_same_rings [label="iso_same_rings", URL=<rings.html#Rings.iso_same_rings>, fillcolor="#F070D1"] ;
+rings_Rings_R_negate [label="R_negate", URL=<rings.html#Rings.R_negate>, fillcolor="#F070D1"] ;
+rings_Rings_R_one [label="R_one", URL=<rings.html#Rings.R_one>, fillcolor="#F070D1"] ;
+rings_Rings_R_zero [label="R_zero", URL=<rings.html#Rings.R_zero>, fillcolor="#F070D1"] ;
+rings_Rings_R_mult [label="R_mult", URL=<rings.html#Rings.R_mult>, fillcolor="#F070D1"] ;
+rings_Rings_R_plus [label="R_plus", URL=<rings.html#Rings.R_plus>, fillcolor="#F070D1"] ;
+rings_Rings_R_carrier [label="R_carrier", URL=<rings.html#Rings.R_carrier>, fillcolor="#F070D1"] ;
+rings_Rings_BuildOperations [label="BuildOperations", URL=<rings.html#Rings.BuildOperations>, peripheries=3, fillcolor="#F070D1"] ;
+rings_Rings_operations [label="operations", URL=<rings.html#Rings.operations>, peripheries=3, fillcolor="#F070D1"] ;
+rings_Rings_Operations [label="Operations", URL=<rings.html#Rings.Operations>, fillcolor="#F070D1"] ;
+  rings_SemiRings_iso_leibnitz -> rings_SemiRings_iso_same_semirings [] ;
+  rings_SemiRings_iso_same_semirings -> rings_SemiRings_SR_one [] ;
+  rings_SemiRings_iso_same_semirings -> rings_SemiRings_SR_zero [] ;
+  rings_SemiRings_iso_same_semirings -> rings_SemiRings_SR_mult [] ;
+  rings_SemiRings_iso_same_semirings -> rings_SemiRings_SR_plus [] ;
+  rings_SemiRings_SR_one -> rings_SemiRings_SR_carrier [] ;
+  rings_SemiRings_SR_zero -> rings_SemiRings_SR_carrier [] ;
+  rings_SemiRings_SR_mult -> rings_SemiRings_SR_carrier [] ;
+  rings_SemiRings_SR_plus -> rings_SemiRings_SR_carrier [] ;
+  rings_SemiRings_SR_carrier -> rings_SemiRings_Operations [] ;
+  rings_SemiRings_BuildOperations -> rings_SemiRings_Operations [] ;
+  rings_SemiRings_operations -> rings_SemiRings_Operations [] ;
+  rings_Rings_iso_leibnitz -> rings_Rings_iso_same_rings [] ;
+  rings_Rings_iso_same_rings -> rings_Rings_R_negate [] ;
+  rings_Rings_iso_same_rings -> rings_Rings_R_one [] ;
+  rings_Rings_iso_same_rings -> rings_Rings_R_zero [] ;
+  rings_Rings_iso_same_rings -> rings_Rings_R_mult [] ;
+  rings_Rings_iso_same_rings -> rings_Rings_R_plus [] ;
+  rings_Rings_R_negate -> rings_Rings_R_carrier [] ;
+  rings_Rings_R_one -> rings_Rings_R_carrier [] ;
+  rings_Rings_R_zero -> rings_Rings_R_carrier [] ;
+  rings_Rings_R_mult -> rings_Rings_R_carrier [] ;
+  rings_Rings_R_plus -> rings_Rings_R_carrier [] ;
+  rings_Rings_R_carrier -> rings_Rings_Operations [] ;
+  rings_Rings_BuildOperations -> rings_Rings_Operations [] ;
+  rings_Rings_operations -> rings_Rings_Operations [] ;
+subgraph cluster_rings { label="rings"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_rings_Rings { label="Rings"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+rings_Rings_Operations; rings_Rings_operations; rings_Rings_BuildOperations; rings_Rings_R_carrier; rings_Rings_R_plus; rings_Rings_R_mult; rings_Rings_R_zero; rings_Rings_R_one; rings_Rings_R_negate; rings_Rings_iso_same_rings; rings_Rings_iso_leibnitz; };
+subgraph cluster_rings_SemiRings { label="SemiRings"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+rings_SemiRings_Operations; rings_SemiRings_operations; rings_SemiRings_BuildOperations; rings_SemiRings_SR_carrier; rings_SemiRings_SR_plus; rings_SemiRings_SR_mult; rings_SemiRings_SR_zero; rings_SemiRings_SR_one; rings_SemiRings_iso_same_semirings; rings_SemiRings_iso_leibnitz; };
+};
+} /* END */

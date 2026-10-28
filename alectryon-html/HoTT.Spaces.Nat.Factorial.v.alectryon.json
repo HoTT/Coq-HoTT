@@ -1,0 +1,2683 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids\n  Basics.Decidable Spaces.Nat.Core Spaces.Nat.Division Tactics.EvalIn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Factorials *)\n\n(** ** Definition *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint factorial n := \n  match n with\n  | 0 => 1\n  | S n => S n * factorial n\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Properties *)\n\n(** The factorial of [0] is [1]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nat_factorial_zero : factorial 0 = 1 := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The factorial of [n + 1] is [n + 1] times the factorial of [n]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nat_factorial_succ n : factorial n.+1 = n.+1 * factorial n\n  := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A variant of [nat_factorial_succ]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nat_factorial_pred n\n  : 0 < n -> factorial n = n * factorial (nat_pred n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n -> factorial n = n * factorial (nat_pred n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n -> factorial n = n * factorial (nat_pred n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros []; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Every factorial is positive. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance lt_zero_factorial n : 0 < factorial n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < factorial n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < factorial n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Except for [factorial 0 = factorial 1], the [factorial] function is strictly monotone.  We separate out the successor case since it is used twice in the proof of the general result. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nat_factorial_strictly_monotone_succ n\n  : 0 < n -> factorial n < factorial n.+1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n -> factorial n < factorial n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n -> factorial n < factorial n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "factorial n < factorial n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "0 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (nat_mul_one_l (factorial n)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 * factorial n < factorial n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "0 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (nat_mul_r_strictly_monotone _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance nat_factorial_strictly_monotone n m\n  : 0 < n -> n < m -> factorial n < factorial m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n -> n < m -> factorial n < factorial m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n -> n < m -> factorial n < factorial m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros H1 H2; induction H2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "factorial n < factorial n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "0 < n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "factorial n < factorial m.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "0 < n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "n.+1 <= m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHleq"
+              ],
+              "body": null,
+              "type": "factorial n < factorial m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "factorial n < factorial n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "0 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply nat_factorial_strictly_monotone_succ.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "factorial n < factorial m.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "0 < n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "n.+1 <= m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHleq"
+              ],
+              "body": null,
+              "type": "factorial n < factorial m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (lt_trans IHleq).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "factorial m < factorial m.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "0 < n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "n.+1 <= m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHleq"
+              ],
+              "body": null,
+              "type": "factorial n < factorial m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply nat_factorial_strictly_monotone_succ.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Divisibility *)\n\n(** Any number less than or equal to [n] divides [factorial n]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance nat_divides_factorial_factor n m\n  : 0 < n -> n <= m -> (n | factorial m).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n -> n <= m -> (n | factorial m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n -> n <= m -> (n | factorial m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [] H2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(1 | factorial m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "1 <= m"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(m0.+1 | factorial m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m",
+                "m0"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "1 <= m0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "m0.+1 <= m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(m0.+1 | factorial m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m",
+                "m0"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "1 <= m0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "m0.+1 <= m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction H2; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [factorial] is a monotone function from [nat] to [nat] with respect to [<=] and divides. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance nat_divides_factorial_lt n m\n  : n <= m -> (factorial n | factorial m).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n <= m -> (factorial n | factorial m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n <= m -> (factorial n | factorial m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros H; induction H; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A product of factorials divides the factorial of the sum. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance nat_divides_factorial_mul_factorial_add n m\n  : (factorial n * factorial m | factorial (n + m)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial (n + m))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial (n + m))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "remember (n + m) as k eqn:p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m",
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert k n m p; snapply nat_ind_strong; hnf; intros k IH n m p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct k.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < 0 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = 0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial k.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < 0 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_nat_add_zero in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < 0 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(n = 0) * (m = 0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p as [p q].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < 0 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n = 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "m = 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p^, q^.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial 0 * factorial 0 | factorial 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m : nat,\nm < 0 ->\nforall n m0 : nat, n + m0 = m -> (factorial n * factorial m0 | factorial m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "0 = 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | factorial k.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite_refl nat_factorial_succ.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | k.+1 * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | (n + m) * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite nat_dist_r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | n * factorial k + m * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "assert (helper : forall n' m' (p' : n' + m' = k.+1), (factorial n' * factorial m' | n' * factorial k)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | n * factorial k + m * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "helper"
+              ],
+              "body": null,
+              "type": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros n' m' p'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n' * factorial m' | n' * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'",
+                "m'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "n' + m' = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct n'; only 1: exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n'.+1 * factorial m' | n'.+1 * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'",
+                "m'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "n'.+1 + m' = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite nat_factorial_succ.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(n'.+1 * factorial n' * factorial m' | n'.+1 * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'",
+                "m'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "n'.+1 + m' = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- nat_mul_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(n'.+1 * (factorial n' * factorial m') | n'.+1 * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'",
+                "m'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "n'.+1 + m' = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply nat_divides_mul_monotone.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n' * factorial m' | factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'",
+                "m'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "n'.+1 + m' = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply IH.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n' + m' = k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'",
+                "m'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "n'.+1 + m' = k.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap nat_pred p').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | n * factorial k + m * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "helper"
+              ],
+              "body": null,
+              "type": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply nat_divides_add.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | n * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "helper"
+              ],
+              "body": null,
+              "type": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | m * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "helper"
+              ],
+              "body": null,
+              "type": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | n * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "helper"
+              ],
+              "body": null,
+              "type": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply helper, p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial n * factorial m | m * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "helper"
+              ],
+              "body": null,
+              "type": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite nat_mul_comm.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial m * factorial n | m * factorial k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "helper"
+              ],
+              "body": null,
+              "type": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply helper.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "m + n = k.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall m0 : nat,\nm0 < k.+1 ->\nforall n0 m1 : nat,\nn0 + m1 = m0 -> (factorial n0 * factorial m1 | factorial m0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "n + m = k.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "helper"
+              ],
+              "body": null,
+              "type": "forall n' m' : nat,\nn' + m' = k.+1 -> (factorial n' * factorial m' | n' * factorial k)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply nat_add_comm; exact p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here is a variant of [nat_divides_factorial_mul_factorial_add] that is more suitable for binomial coefficients. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance nat_divides_factorial_mul_factorial_add' n m\n  : m <= n -> (factorial m * factorial (n - m) | factorial n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "m <= n -> (factorial m * factorial (n - m) | factorial n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "m <= n -> (factorial m * factorial (n - m) | factorial n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial m * factorial (n - m) | factorial n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "m <= n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (ap factorial (nat_add_sub_r_cancel H)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(factorial m * factorial (n - m) | factorial (m + (n - m)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "m <= n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply nat_divides_factorial_mul_factorial_add.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

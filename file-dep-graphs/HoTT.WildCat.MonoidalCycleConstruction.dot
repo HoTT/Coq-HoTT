@@ -1,0 +1,32 @@
+digraph HoTT_WildCat_MonoidalCycleConstruction {
+  graph [ratio=0.5]
+  node [style=filled]
+MonoidalCycleConstruction_issymmetricmonoidal_cycle [label="issymmetricmonoidal_cycle", URL=<MonoidalCycleConstruction.html#issymmetricmonoidal_cycle>, peripheries=3, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_ismonoidal_cycle [label="ismonoidal_cycle", URL=<MonoidalCycleConstruction.html#ismonoidal_cycle>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_hexagon_cycle [label="hexagon_cycle", URL=<MonoidalCycleConstruction.html#hexagon_cycle>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_pentagon_cycle [label="pentagon_cycle", URL=<MonoidalCycleConstruction.html#pentagon_cycle>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_triangle_cycle [label="triangle_cycle", URL=<MonoidalCycleConstruction.html#triangle_cycle>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_left_unitor_cycle [label="left_unitor_cycle", URL=<MonoidalCycleConstruction.html#left_unitor_cycle>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_associator_cycle_unfold [label="associator_cycle_unfold", URL=<MonoidalCycleConstruction.html#associator_cycle_unfold>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_associator_cycle [label="associator_cycle", URL=<MonoidalCycleConstruction.html#associator_cycle>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_moveL_cycle_cycleR [label="moveL_cycle_cycleR", URL=<MonoidalCycleConstruction.html#moveL_cycle_cycleR>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_moveL_cycleR [label="moveL_cycleR", URL=<MonoidalCycleConstruction.html#moveL_cycleR>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_cyclee [label="cyclee", URL=<MonoidalCycleConstruction.html#cyclee>, fillcolor="#F070D1"] ;
+MonoidalCycleConstruction_catie_cycle [label="catie_cycle", URL=<MonoidalCycleConstruction.html#catie_cycle>, fillcolor="#F070D1"] ;
+  MonoidalCycleConstruction_issymmetricmonoidal_cycle -> MonoidalCycleConstruction_ismonoidal_cycle [] ;
+  MonoidalCycleConstruction_issymmetricmonoidal_cycle -> MonoidalCycleConstruction_hexagon_cycle [] ;
+  MonoidalCycleConstruction_ismonoidal_cycle -> MonoidalCycleConstruction_pentagon_cycle [] ;
+  MonoidalCycleConstruction_ismonoidal_cycle -> MonoidalCycleConstruction_triangle_cycle [] ;
+  MonoidalCycleConstruction_hexagon_cycle -> MonoidalCycleConstruction_associator_cycle_unfold [] ;
+  MonoidalCycleConstruction_hexagon_cycle -> MonoidalCycleConstruction_moveL_cycle_cycleR [] ;
+  MonoidalCycleConstruction_pentagon_cycle -> MonoidalCycleConstruction_associator_cycle_unfold [] ;
+  MonoidalCycleConstruction_triangle_cycle -> MonoidalCycleConstruction_left_unitor_cycle [] ;
+  MonoidalCycleConstruction_triangle_cycle -> MonoidalCycleConstruction_associator_cycle_unfold [] ;
+  MonoidalCycleConstruction_associator_cycle_unfold -> MonoidalCycleConstruction_associator_cycle [] ;
+  MonoidalCycleConstruction_associator_cycle -> MonoidalCycleConstruction_cyclee [] ;
+  MonoidalCycleConstruction_moveL_cycle_cycleR -> MonoidalCycleConstruction_moveL_cycleR [] ;
+  MonoidalCycleConstruction_moveL_cycleR -> MonoidalCycleConstruction_catie_cycle [] ;
+  MonoidalCycleConstruction_cyclee -> MonoidalCycleConstruction_catie_cycle [] ;
+subgraph cluster_MonoidalCycleConstruction { label="MonoidalCycleConstruction"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+MonoidalCycleConstruction_catie_cycle; MonoidalCycleConstruction_cyclee; MonoidalCycleConstruction_moveL_cycleR; MonoidalCycleConstruction_moveL_cycle_cycleR; MonoidalCycleConstruction_associator_cycle; MonoidalCycleConstruction_associator_cycle_unfold; MonoidalCycleConstruction_left_unitor_cycle; MonoidalCycleConstruction_triangle_cycle; MonoidalCycleConstruction_pentagon_cycle; MonoidalCycleConstruction_hexagon_cycle; MonoidalCycleConstruction_ismonoidal_cycle; MonoidalCycleConstruction_issymmetricmonoidal_cycle; };
+} /* END */

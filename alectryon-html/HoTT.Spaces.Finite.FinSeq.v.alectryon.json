@@ -1,0 +1,6212 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Basics\n  HoTT.Types\n  HoTT.Universes.HSet\n  HoTT.Spaces.Finite.Fin\n  HoTT.Spaces.Finite.FinInduction\n  HoTT.Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Finite-dimensional sequence. It is often referred to as vector,\n    but we call it finite sequence [FinSeq] to avoid confusion with\n    vector from linear algebra.\n\n    Note that the induction principle [finseq_]*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition FinSeq@{u} (n : nat) (A : Type@{u}) : Type@{u} := Fin n -> A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The empty finite sequence. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fsnil {A : Type} : FinSeq 0 A := Empty_rec.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_fsnil `{Funext} {A : Type} (v : FinSeq 0 A) : fsnil = v.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fsnil = v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq 0 A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fsnil = v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq 0 A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Add an element in the end of a finite sequence, [fscons'] and [fscons]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fscons' {A : Type} (n : nat) (a : A) (v : FinSeq (nat_pred n) A)\n  : FinSeq n A\n  := fun i =>  fin_rec (fun n => FinSeq (nat_pred n) A -> A)\n                       (fun _ _ => a) (fun n' i _ v => v i) i v.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fscons {A : Type} {n : nat} : A -> FinSeq n A -> FinSeq n.+1 A\n  := fscons' n.+1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Take the first element of a non-empty finite sequence,\n    [fshead'] and [fshead]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fshead' {A} (n : nat) : 0 < n -> FinSeq n A -> A\n  := match n with\n     | 0 => fun N _ => Empty_rec (not_lt_zero_r _ N)\n     | n'.+1 => fun _ v => v fin_zero\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fshead {A} {n : nat} : FinSeq n.+1 A -> A := fshead' n.+1 _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fshead'_beta_fscons' {A} n (N : n > 0) (a : A) (v : FinSeq (nat_pred n) A)\n  : fshead' n N (fscons' n a v) = a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead' n N (fscons' n a v) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead' n N (fscons' n a v) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct n; [elim (lt_irrefl _ N)|].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead' n.+1 N (fscons' n.+1 a v) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (apD10 (fin_rec_beta_zero _ _ _ _) v).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fshead_beta_fscons {A} {n} (a : A) (v : FinSeq n A)\n  : fshead (fscons a v) = a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead (fscons a v) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead (fscons a v) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply fshead'_beta_fscons'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If the sequence is non-empty, then remove the first element. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fstail' {A} (n : nat) : FinSeq n A -> FinSeq (nat_pred n) A\n  := match n with\n     | 0 => fun _ => Empty_rec\n     | n'.+1 => fun v i => v (fsucc i)\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Remove the first element from a non-empty sequence. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fstail {A} {n : nat} : FinSeq n.+1 A -> FinSeq n A := fstail' n.+1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fstail'_beta_fscons' {A} n (a : A) (v : FinSeq (nat_pred n) A)\n  : fstail' n (fscons' n a v) == v.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail' n (fscons' n a v) == v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail' n (fscons' n a v) == v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail' n (fscons' n a v) i = v i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin (nat_pred n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct n; [elim i|].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail' n.+1 (fscons' n.+1 a v) i = v i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin (nat_pred n.+1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (apD10 (fin_rec_beta_fsucc _ _ _ _) v).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fstail_beta_fscons `{Funext} {A} {n} (a : A) (v : FinSeq n A)\n  : fstail (fscons a v) = v.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail (fscons a v) = v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail (fscons a v) = v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail (fscons a v) i = v i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply fstail'_beta_fscons'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A non-empty finite sequence is equal to [fscons] of head and tail,\n    [path_expand_fscons'] and [path_expand_fscons]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_expand_fscons' {A : Type} (n : nat)\n  (i : Fin n) (N : n > 0) (v : FinSeq n A)\n  : fscons' n (fshead' n N v) (fstail' n v) i = v i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n (fshead' n N v) (fstail' n v) i = v i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n (fshead' n N v) (fstail' n v) i = v i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction i using fin_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 (fshead' n.+1 N v) (fstail' n.+1 v) fin_zero = v fin_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 (fshead' n.+1 N v) (fstail' n.+1 v) (fsucc i) = v (fsucc i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (N0 : n > 0) (v0 : FinSeq n A),\nfscons' n (fshead' n N0 v0) (fstail' n v0) i = v0 i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 (fshead' n.+1 N v) (fstail' n.+1 v) fin_zero = v fin_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply fshead_beta_fscons.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 (fshead' n.+1 N v) (fstail' n.+1 v) (fsucc i) = v (fsucc i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (N0 : n > 0) (v0 : FinSeq n A),\nfscons' n (fshead' n N0 v0) (fstail' n v0) i = v0 i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (fstail'_beta_fscons' n.+1 (fshead v) (fstail v)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_expand_fscons `{Funext} {A} {n} (v : FinSeq n.+1 A)\n  : fscons (fshead v) (fstail v) = v.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons (fshead v) (fstail v) = v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons (fshead v) (fstail v) = v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons (fshead v) (fstail v) i = v i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_expand_fscons'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The following [path_fscons'] and [path_fscons] gives a way to construct\n    a path between [fscons] finite sequences. They cooperate nicely with\n    [path_expand_fscons'] and [path_expand_fscons]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_fscons' {A} n {a1 a2 : A} {v1 v2 : FinSeq (nat_pred n) A}\n  (p : a1 = a2) (q : forall i, v1 i = v2 i) (i : Fin n)\n  : fscons' n a1 v1 i = fscons' n a2 v2 i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n a1 v1 i = fscons' n a2 v2 i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin (nat_pred n), v1 i0 = v2 i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n a1 v1 i = fscons' n a2 v2 i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin (nat_pred n), v1 i0 = v2 i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction i using fin_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 a1 v1 fin_zero = fscons' n.+1 a2 v2 fin_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall i : Fin (nat_pred n.+1), v1 i = v2 i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 a1 v1 (fsucc i) = fscons' n.+1 a2 v2 (fsucc i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin (nat_pred n.+1), v1 i0 = v2 i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall v0 v3 : FinSeq (nat_pred n) A,\n(forall i0 : Fin (nat_pred n), v0 i0 = v3 i0) ->\nfscons' n a1 v0 i = fscons' n a2 v3 i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 a1 v1 fin_zero = fscons' n.+1 a2 v2 fin_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall i : Fin (nat_pred n.+1), v1 i = v2 i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fshead_beta_fscons _ _ @ p @ (fshead_beta_fscons _ _)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 a1 v1 (fsucc i) = fscons' n.+1 a2 v2 (fsucc i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin (nat_pred n.+1), v1 i0 = v2 i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall v0 v3 : FinSeq (nat_pred n) A,\n(forall i0 : Fin (nat_pred n), v0 i0 = v3 i0) ->\nfscons' n a1 v0 i = fscons' n a2 v3 i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (fstail'_beta_fscons' n.+1 a2 v2 i)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons' n.+1 a1 v1 (fsucc i) = v2 i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin (nat_pred n.+1), v1 i0 = v2 i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall v0 v3 : FinSeq (nat_pred n) A,\n(forall i0 : Fin (nat_pred n), v0 i0 = v3 i0) ->\nfscons' n a1 v0 i = fscons' n a2 v3 i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fstail'_beta_fscons' n.+1 a1 v1 i @ q i).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_fscons'_beta {A} (n : nat)\n    (a : A) (v : FinSeq (nat_pred n) A) (i : Fin n)\n    : path_fscons' n (idpath a) (fun j => idpath (v j)) i = idpath.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_fscons' n 1 (fun j : Fin (nat_pred n) => 1) i = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_fscons' n 1 (fun j : Fin (nat_pred n) => 1) i = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction i using fin_ind; unfold path_fscons'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i : Fin n0) =>\n   forall v1 v2 : FinSeq (nat_pred n0) A,\n   (forall i0 : Fin (nat_pred n0), v1 i0 = v2 i0) ->\n   fscons' n0 a v1 i = fscons' n0 a v2 i)\n  (fun (n0 : nat) (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (_ : forall i : Fin (nat_pred n0.+1), v1 i = v2 i) =>\n   (fshead_beta_fscons a v1 @ 1) @ (fshead_beta_fscons a v2)^)\n  (fun (n0 : nat) (i : Fin n0)\n     (_ : forall v1 v2 : FinSeq (nat_pred n0) A,\n          (forall i0 : Fin (nat_pred n0), v1 i0 = v2 i0) ->\n          fscons' n0 a v1 i = fscons' n0 a v2 i)\n     (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (q : forall i0 : Fin (nat_pred n0.+1), v1 i0 = v2 i0) =>\n   (fstail'_beta_fscons' n0.+1 a v1 i @ q i) @\n   (fstail'_beta_fscons' n0.+1 a v2 i)^)\n  fin_zero v v (fun j : Fin (nat_pred n.+1) => 1) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i0 : Fin n0) =>\n   forall v1 v2 : FinSeq (nat_pred n0) A,\n   (forall i1 : Fin (nat_pred n0), v1 i1 = v2 i1) ->\n   fscons' n0 a v1 i0 = fscons' n0 a v2 i0)\n  (fun (n0 : nat) (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (_ : forall i0 : Fin (nat_pred n0.+1), v1 i0 = v2 i0) =>\n   (fshead_beta_fscons a v1 @ 1) @ (fshead_beta_fscons a v2)^)\n  (fun (n0 : nat) (i0 : Fin n0)\n     (_ : forall v1 v2 : FinSeq (nat_pred n0) A,\n          (forall i1 : Fin (nat_pred n0), v1 i1 = v2 i1) ->\n          fscons' n0 a v1 i0 = fscons' n0 a v2 i0)\n     (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (q : forall i1 : Fin (nat_pred n0.+1), v1 i1 = v2 i1) =>\n   (fstail'_beta_fscons' n0.+1 a v1 i0 @ q i0) @\n   (fstail'_beta_fscons' n0.+1 a v2 i0)^)\n  (fsucc i) v v (fun j : Fin (nat_pred n.+1) => 1) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall v0 : FinSeq (nat_pred n) A,\npath_fscons' n 1 (fun j : Fin (nat_pred n) => 1) i = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i : Fin n0) =>\n   forall v1 v2 : FinSeq (nat_pred n0) A,\n   (forall i0 : Fin (nat_pred n0), v1 i0 = v2 i0) ->\n   fscons' n0 a v1 i = fscons' n0 a v2 i)\n  (fun (n0 : nat) (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (_ : forall i : Fin (nat_pred n0.+1), v1 i = v2 i) =>\n   (fshead_beta_fscons a v1 @ 1) @ (fshead_beta_fscons a v2)^)\n  (fun (n0 : nat) (i : Fin n0)\n     (_ : forall v1 v2 : FinSeq (nat_pred n0) A,\n          (forall i0 : Fin (nat_pred n0), v1 i0 = v2 i0) ->\n          fscons' n0 a v1 i = fscons' n0 a v2 i)\n     (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (q : forall i0 : Fin (nat_pred n0.+1), v1 i0 = v2 i0) =>\n   (fstail'_beta_fscons' n0.+1 a v1 i @ q i) @\n   (fstail'_beta_fscons' n0.+1 a v2 i)^)\n  fin_zero v v (fun j : Fin (nat_pred n.+1) => 1) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite fin_ind_beta_zero.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fshead_beta_fscons a v @ 1) @ (fshead_beta_fscons a v)^ = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (fun p => p @ _) (concat_p1 _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead_beta_fscons a v @ (fshead_beta_fscons a v)^ = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply concat_pV.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i0 : Fin n0) =>\n   forall v1 v2 : FinSeq (nat_pred n0) A,\n   (forall i1 : Fin (nat_pred n0), v1 i1 = v2 i1) ->\n   fscons' n0 a v1 i0 = fscons' n0 a v2 i0)\n  (fun (n0 : nat) (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (_ : forall i0 : Fin (nat_pred n0.+1), v1 i0 = v2 i0) =>\n   (fshead_beta_fscons a v1 @ 1) @ (fshead_beta_fscons a v2)^)\n  (fun (n0 : nat) (i0 : Fin n0)\n     (_ : forall v1 v2 : FinSeq (nat_pred n0) A,\n          (forall i1 : Fin (nat_pred n0), v1 i1 = v2 i1) ->\n          fscons' n0 a v1 i0 = fscons' n0 a v2 i0)\n     (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (q : forall i1 : Fin (nat_pred n0.+1), v1 i1 = v2 i1) =>\n   (fstail'_beta_fscons' n0.+1 a v1 i0 @ q i0) @\n   (fstail'_beta_fscons' n0.+1 a v2 i0)^)\n  (fsucc i) v v (fun j : Fin (nat_pred n.+1) => 1) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall v0 : FinSeq (nat_pred n) A,\npath_fscons' n 1 (fun j : Fin (nat_pred n) => 1) i = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite fin_ind_beta_fsucc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fstail'_beta_fscons' n.+1 a v i @ 1) @ (fstail'_beta_fscons' n.+1 a v i)^ =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall v0 : FinSeq (nat_pred n) A,\npath_fscons' n 1 (fun j : Fin (nat_pred n) => 1) i = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (fun p => p @ _) (concat_p1 _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail'_beta_fscons' n.+1 a v i @ (fstail'_beta_fscons' n.+1 a v i)^ = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall v0 : FinSeq (nat_pred n) A,\npath_fscons' n 1 (fun j : Fin (nat_pred n) => 1) i = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply concat_pV.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_fscons `{Funext} {A} {n} {a1 a2 : A} (p : a1 = a2)\n  {v1 v2 : FinSeq n A} (q : v1 = v2)\n  : fscons a1 v1 = fscons a2 v2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons a1 v1 = fscons a2 v2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "v1 = v2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons a1 v1 = fscons a2 v2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "v1 = v2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fscons a1 v1 i = fscons a2 v2 i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "v1 = v2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_fscons'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a1 = a2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "v1 = v2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i0 : Fin (nat_pred n.+1), v1 i0 = v2 i0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "v1 = v2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a1 = a2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "v1 = v2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i0 : Fin (nat_pred n.+1), v1 i0 = v2 i0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "v1 = v2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro j.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "v1 j = v2 j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a1 = a2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v1",
+                "v2"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "v1 = v2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "Fin (nat_pred n.+1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (apD10 q j).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_fscons_beta `{Funext} {A} {n} (a : A) (v : FinSeq n A)\n  : path_fscons (idpath a) (idpath v) = idpath.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_fscons 1 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_fscons 1 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (path_forall _ _) _ @ eta_path_forall _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun i : Fin n.+1 =>\n path_fscons' n.+1 1 (fun j : Fin (nat_pred n.+1) => apD10 1 j) i) =\napD10 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_fscons' n.+1 1 (fun j : Fin (nat_pred n.+1) => apD10 1 j) i = apD10 1 i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (path_fscons'_beta n.+1 a v i).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The lemmas [path_expand_fscons_fscons'] and [path_expand_fscons_fscons]\n    identify [path_expand_fscons'] with [path_fscons'] and\n    [path_expand_fscons] with [path_fscons]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_expand_fscons_fscons' {A : Type} (n : nat)\n  (N : n > 0) (a : A) (v : FinSeq (nat_pred n) A) (i : Fin n)\n  : path_expand_fscons' n i N (fscons' n a v) =\n    path_fscons' n (fshead'_beta_fscons' n N a v) (fstail'_beta_fscons' n a v) i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_expand_fscons' n i N (fscons' n a v) =\npath_fscons' n (fshead'_beta_fscons' n N a v) (fstail'_beta_fscons' n a v) i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_expand_fscons' n i N (fscons' n a v) =\npath_fscons' n (fshead'_beta_fscons' n N a v) (fstail'_beta_fscons' n a v) i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction i using fin_ind; unfold path_fscons', path_expand_fscons'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i : Fin n0) =>\n   forall (N0 : n0 > 0) (v0 : FinSeq n0 A),\n   fscons' n0 (fshead' n0 N0 v0) (fstail' n0 v0) i = v0 i)\n  (fun (n0 : nat) (_ : n0.+1 > 0) (v0 : FinSeq n0.+1 A) =>\n   fshead_beta_fscons (v0 fin_zero) (fstail' n0.+1 v0))\n  (fun (n0 : nat) (i : Fin n0)\n     (_ : forall (N0 : n0 > 0) (v0 : FinSeq n0 A),\n          fscons' n0 (fshead' n0 N0 v0) (fstail' n0 v0) i = v0 i)\n     (_ : n0.+1 > 0) (v0 : FinSeq n0.+1 A) =>\n   fstail'_beta_fscons' n0.+1 (fshead v0) (fstail v0) i)\n  fin_zero N (fscons' n.+1 a v) =\nfin_ind\n  (fun (n0 : nat) (i : Fin n0) =>\n   forall v1 v2 : FinSeq (nat_pred n0) A,\n   (forall i0 : Fin (nat_pred n0), v1 i0 = v2 i0) ->\n   fscons' n0 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i = fscons' n0 a v2 i)\n  (fun (n0 : nat) (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (_ : forall i : Fin (nat_pred n0.+1), v1 i = v2 i) =>\n   (fshead_beta_fscons (fshead' n.+1 N (fscons' n.+1 a v)) v1 @\n    fshead'_beta_fscons' n.+1 N a v) @\n   (fshead_beta_fscons a v2)^)\n  (fun (n0 : nat) (i : Fin n0)\n     (_ : forall v1 v2 : FinSeq (nat_pred n0) A,\n          (forall i0 : Fin (nat_pred n0), v1 i0 = v2 i0) ->\n          fscons' n0 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i =\n          fscons' n0 a v2 i)\n     (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (q : forall i0 : Fin (nat_pred n0.+1), v1 i0 = v2 i0) =>\n   (fstail'_beta_fscons' n0.+1 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i @ q i) @\n   (fstail'_beta_fscons' n0.+1 a v2 i)^)\n  fin_zero (fstail' n.+1 (fscons' n.+1 a v)) v\n  (fstail'_beta_fscons' n.+1 a v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i0 : Fin n0) =>\n   forall (N0 : n0 > 0) (v0 : FinSeq n0 A),\n   fscons' n0 (fshead' n0 N0 v0) (fstail' n0 v0) i0 = v0 i0)\n  (fun (n0 : nat) (_ : n0.+1 > 0) (v0 : FinSeq n0.+1 A) =>\n   fshead_beta_fscons (v0 fin_zero) (fstail' n0.+1 v0))\n  (fun (n0 : nat) (i0 : Fin n0)\n     (_ : forall (N0 : n0 > 0) (v0 : FinSeq n0 A),\n          fscons' n0 (fshead' n0 N0 v0) (fstail' n0 v0) i0 = v0 i0)\n     (_ : n0.+1 > 0) (v0 : FinSeq n0.+1 A) =>\n   fstail'_beta_fscons' n0.+1 (fshead v0) (fstail v0) i0)\n  (fsucc i) N (fscons' n.+1 a v) =\nfin_ind\n  (fun (n0 : nat) (i0 : Fin n0) =>\n   forall v1 v2 : FinSeq (nat_pred n0) A,\n   (forall i1 : Fin (nat_pred n0), v1 i1 = v2 i1) ->\n   fscons' n0 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i0 = fscons' n0 a v2 i0)\n  (fun (n0 : nat) (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (_ : forall i0 : Fin (nat_pred n0.+1), v1 i0 = v2 i0) =>\n   (fshead_beta_fscons (fshead' n.+1 N (fscons' n.+1 a v)) v1 @\n    fshead'_beta_fscons' n.+1 N a v) @\n   (fshead_beta_fscons a v2)^)\n  (fun (n0 : nat) (i0 : Fin n0)\n     (_ : forall v1 v2 : FinSeq (nat_pred n0) A,\n          (forall i1 : Fin (nat_pred n0), v1 i1 = v2 i1) ->\n          fscons' n0 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i0 =\n          fscons' n0 a v2 i0)\n     (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (q : forall i1 : Fin (nat_pred n0.+1), v1 i1 = v2 i1) =>\n   (fstail'_beta_fscons' n0.+1 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i0 @\n    q i0) @\n   (fstail'_beta_fscons' n0.+1 a v2 i0)^)\n  (fsucc i) (fstail' n.+1 (fscons' n.+1 a v)) v\n  (fstail'_beta_fscons' n.+1 a v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (N0 : n > 0) (v0 : FinSeq (nat_pred n) A),\npath_expand_fscons' n i N0 (fscons' n a v0) =\npath_fscons' n (fshead'_beta_fscons' n N0 a v0) (fstail'_beta_fscons' n a v0)\n  i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i : Fin n0) =>\n   forall (N0 : n0 > 0) (v0 : FinSeq n0 A),\n   fscons' n0 (fshead' n0 N0 v0) (fstail' n0 v0) i = v0 i)\n  (fun (n0 : nat) (_ : n0.+1 > 0) (v0 : FinSeq n0.+1 A) =>\n   fshead_beta_fscons (v0 fin_zero) (fstail' n0.+1 v0))\n  (fun (n0 : nat) (i : Fin n0)\n     (_ : forall (N0 : n0 > 0) (v0 : FinSeq n0 A),\n          fscons' n0 (fshead' n0 N0 v0) (fstail' n0 v0) i = v0 i)\n     (_ : n0.+1 > 0) (v0 : FinSeq n0.+1 A) =>\n   fstail'_beta_fscons' n0.+1 (fshead v0) (fstail v0) i)\n  fin_zero N (fscons' n.+1 a v) =\nfin_ind\n  (fun (n0 : nat) (i : Fin n0) =>\n   forall v1 v2 : FinSeq (nat_pred n0) A,\n   (forall i0 : Fin (nat_pred n0), v1 i0 = v2 i0) ->\n   fscons' n0 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i = fscons' n0 a v2 i)\n  (fun (n0 : nat) (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (_ : forall i : Fin (nat_pred n0.+1), v1 i = v2 i) =>\n   (fshead_beta_fscons (fshead' n.+1 N (fscons' n.+1 a v)) v1 @\n    fshead'_beta_fscons' n.+1 N a v) @\n   (fshead_beta_fscons a v2)^)\n  (fun (n0 : nat) (i : Fin n0)\n     (_ : forall v1 v2 : FinSeq (nat_pred n0) A,\n          (forall i0 : Fin (nat_pred n0), v1 i0 = v2 i0) ->\n          fscons' n0 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i =\n          fscons' n0 a v2 i)\n     (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (q : forall i0 : Fin (nat_pred n0.+1), v1 i0 = v2 i0) =>\n   (fstail'_beta_fscons' n0.+1 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i @ q i) @\n   (fstail'_beta_fscons' n0.+1 a v2 i)^)\n  fin_zero (fstail' n.+1 (fscons' n.+1 a v)) v\n  (fstail'_beta_fscons' n.+1 a v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "do 2 rewrite fin_ind_beta_zero.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead_beta_fscons (fscons' n.+1 a v fin_zero)\n  (fstail' n.+1 (fscons' n.+1 a v)) =\n(fshead_beta_fscons (fshead' n.+1 N (fscons' n.+1 a v))\n   (fstail' n.+1 (fscons' n.+1 a v)) @\n fshead'_beta_fscons' n.+1 N a v) @\n(fshead_beta_fscons a v)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ concat_p_pp _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead_beta_fscons (fscons' n.+1 a v fin_zero)\n  (fstail' n.+1 (fscons' n.+1 a v)) =\nfshead_beta_fscons (fshead' n.+1 N (fscons' n.+1 a v))\n  (fstail' n.+1 (fscons' n.+1 a v)) @\n(fshead'_beta_fscons' n.+1 N a v @ (fshead_beta_fscons a v)^)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun p => _ @ p) (concat_pV _))^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fshead_beta_fscons (fscons' n.+1 a v fin_zero)\n  (fstail' n.+1 (fscons' n.+1 a v)) =\nfshead_beta_fscons (fshead' n.+1 N (fscons' n.+1 a v))\n  (fstail' n.+1 (fscons' n.+1 a v)) @\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (concat_p1 _)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i0 : Fin n0) =>\n   forall (N0 : n0 > 0) (v0 : FinSeq n0 A),\n   fscons' n0 (fshead' n0 N0 v0) (fstail' n0 v0) i0 = v0 i0)\n  (fun (n0 : nat) (_ : n0.+1 > 0) (v0 : FinSeq n0.+1 A) =>\n   fshead_beta_fscons (v0 fin_zero) (fstail' n0.+1 v0))\n  (fun (n0 : nat) (i0 : Fin n0)\n     (_ : forall (N0 : n0 > 0) (v0 : FinSeq n0 A),\n          fscons' n0 (fshead' n0 N0 v0) (fstail' n0 v0) i0 = v0 i0)\n     (_ : n0.+1 > 0) (v0 : FinSeq n0.+1 A) =>\n   fstail'_beta_fscons' n0.+1 (fshead v0) (fstail v0) i0)\n  (fsucc i) N (fscons' n.+1 a v) =\nfin_ind\n  (fun (n0 : nat) (i0 : Fin n0) =>\n   forall v1 v2 : FinSeq (nat_pred n0) A,\n   (forall i1 : Fin (nat_pred n0), v1 i1 = v2 i1) ->\n   fscons' n0 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i0 = fscons' n0 a v2 i0)\n  (fun (n0 : nat) (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (_ : forall i0 : Fin (nat_pred n0.+1), v1 i0 = v2 i0) =>\n   (fshead_beta_fscons (fshead' n.+1 N (fscons' n.+1 a v)) v1 @\n    fshead'_beta_fscons' n.+1 N a v) @\n   (fshead_beta_fscons a v2)^)\n  (fun (n0 : nat) (i0 : Fin n0)\n     (_ : forall v1 v2 : FinSeq (nat_pred n0) A,\n          (forall i1 : Fin (nat_pred n0), v1 i1 = v2 i1) ->\n          fscons' n0 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i0 =\n          fscons' n0 a v2 i0)\n     (v1 v2 : FinSeq (nat_pred n0.+1) A)\n     (q : forall i1 : Fin (nat_pred n0.+1), v1 i1 = v2 i1) =>\n   (fstail'_beta_fscons' n0.+1 (fshead' n.+1 N (fscons' n.+1 a v)) v1 i0 @\n    q i0) @\n   (fstail'_beta_fscons' n0.+1 a v2 i0)^)\n  (fsucc i) (fstail' n.+1 (fscons' n.+1 a v)) v\n  (fstail'_beta_fscons' n.+1 a v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (N0 : n > 0) (v0 : FinSeq (nat_pred n) A),\npath_expand_fscons' n i N0 (fscons' n a v0) =\npath_fscons' n (fshead'_beta_fscons' n N0 a v0) (fstail'_beta_fscons' n a v0)\n  i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "do 2 rewrite fin_ind_beta_fsucc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail'_beta_fscons' n.+1 (fshead (fscons' n.+1 a v))\n  (fstail (fscons' n.+1 a v)) i =\n(fstail'_beta_fscons' n.+1 (fshead' n.+1 N (fscons' n.+1 a v))\n   (fstail' n.+1 (fscons' n.+1 a v)) i @\n fstail'_beta_fscons' n.+1 a v i) @\n(fstail'_beta_fscons' n.+1 a v i)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (N0 : n > 0) (v0 : FinSeq (nat_pred n) A),\npath_expand_fscons' n i N0 (fscons' n a v0) =\npath_fscons' n (fshead'_beta_fscons' n N0 a v0) (fstail'_beta_fscons' n a v0)\n  i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ concat_p_pp _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail'_beta_fscons' n.+1 (fshead (fscons' n.+1 a v))\n  (fstail (fscons' n.+1 a v)) i =\nfstail'_beta_fscons' n.+1 (fshead' n.+1 N (fscons' n.+1 a v))\n  (fstail' n.+1 (fscons' n.+1 a v)) i @\n(fstail'_beta_fscons' n.+1 a v i @ (fstail'_beta_fscons' n.+1 a v i)^)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (N0 : n > 0) (v0 : FinSeq (nat_pred n) A),\npath_expand_fscons' n i N0 (fscons' n a v0) =\npath_fscons' n (fshead'_beta_fscons' n N0 a v0) (fstail'_beta_fscons' n a v0)\n  i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun p => _ @ p) (concat_pV _))^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fstail'_beta_fscons' n.+1 (fshead (fscons' n.+1 a v))\n  (fstail (fscons' n.+1 a v)) i =\nfstail'_beta_fscons' n.+1 (fshead' n.+1 N (fscons' n.+1 a v))\n  (fstail' n.+1 (fscons' n.+1 a v)) i @\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq (nat_pred n.+1) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (N0 : n > 0) (v0 : FinSeq (nat_pred n) A),\npath_expand_fscons' n i N0 (fscons' n a v0) =\npath_fscons' n (fshead'_beta_fscons' n N0 a v0) (fstail'_beta_fscons' n a v0)\n  i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (concat_p1 _)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_expand_fscons_fscons `{Funext}\n  {A : Type} {n : nat} (a : A) (v : FinSeq n A)\n  : path_expand_fscons (fscons a v) =\n    path_fscons (fshead_beta_fscons a v) (fstail_beta_fscons a v).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_expand_fscons (fscons a v) =\npath_fscons (fshead_beta_fscons a v) (fstail_beta_fscons a v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_expand_fscons (fscons a v) =\npath_fscons (fshead_beta_fscons a v) (fstail_beta_fscons a v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (path_forall _ _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun i : Fin n.+1 => path_expand_fscons' n.+1 i (leq_add_r 1 n) (fscons a v)) =\n(fun i : Fin n.+1 =>\n path_fscons' n.+1 (fshead_beta_fscons a v)\n   (fun j : Fin (nat_pred n.+1) => apD10 (fstail_beta_fscons a v) j) i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_expand_fscons' n.+1 i (leq_add_r 1 n) (fscons a v) =\npath_fscons' n.+1 (fshead_beta_fscons a v)\n  (fun j : Fin (nat_pred n.+1) => apD10 (fstail_beta_fscons a v) j) i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (p := eisretr apD10 (fstail'_beta_fscons' n.+1 a v)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_expand_fscons' n.+1 i (leq_add_r 1 n) (fscons a v) =\npath_fscons' n.+1 (fshead_beta_fscons a v)\n  (fun j : Fin (nat_pred n.+1) => apD10 (fstail_beta_fscons a v) j) i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "eisretr apD10 (fstail'_beta_fscons' n.+1 a v)",
+              "type": "(apD10 o apD10^-1) (fstail'_beta_fscons' n.+1 a v) =\nidmap (fstail'_beta_fscons' n.+1 a v)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun f => _ f i) p)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_expand_fscons' n.+1 i (leq_add_r 1 n) (fscons a v) =\npath_fscons' n.+1 (fshead_beta_fscons a v) (fstail'_beta_fscons' n.+1 a v) i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "eisretr apD10 (fstail'_beta_fscons' n.+1 a v)",
+              "type": "(apD10 o apD10^-1) (fstail'_beta_fscons' n.+1 a v) =\nidmap (fstail'_beta_fscons' n.+1 a v)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (path_expand_fscons_fscons' n.+1 _ a v i).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The induction principle for finite sequence, [finseq_ind].\n    Note that it uses funext and does not compute. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma finseq_ind `{Funext} {A : Type} (P : forall n, FinSeq n A -> Type)\n  (z : P 0 fsnil) (s : forall n a (v : FinSeq n A), P n v -> P n.+1 (fscons a v))\n  {n : nat} (v : FinSeq n A)\n  : P n v.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P 0 v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n : nat, FinSeq n A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n : nat) (a : A) (v0 : FinSeq n A), P n v0 -> P n.+1 (fscons a v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq 0 A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall v0 : FinSeq n A, P n v0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P 0 v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n : nat, FinSeq n A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n : nat) (a : A) (v0 : FinSeq n A), P n v0 -> P n.+1 (fscons a v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq 0 A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (transport (P 0) (path_fsnil v) z).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall v0 : FinSeq n A, P n v0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (transport (P n.+1) (path_expand_fscons v) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 (fscons (fshead v) (fstail v))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall v0 : FinSeq n A, P n v0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n (fstail v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall v0 : FinSeq n A, P n v0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IHn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma finseq_ind_beta_fsnil `{Funext} {A : Type}\n  (P : forall n, FinSeq n A -> Type) (z : P 0 fsnil)\n  (s : forall (n : nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v))\n  : finseq_ind P z s fsnil = z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finseq_ind P z s fsnil = z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n : nat, FinSeq n A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n : nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finseq_ind P z s fsnil = z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n : nat, FinSeq n A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n : nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (fun x => _ x z) (hset_path2 1 (path_fsnil fsnil)))^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma finseq_ind_beta_fscons `{Funext} {A : Type}\n  (P : forall n, FinSeq n A -> Type) (z : P 0 fsnil)\n  (s : forall (n : nat) (a : A) (v : FinSeq n A), P n v -> P n.+1 (fscons a v))\n  {n : nat} (a : A) (v : FinSeq n A)\n  : finseq_ind P z s (fscons a v) = s n a v (finseq_ind P z s v).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finseq_ind P z s (fscons a v) = s n a v (finseq_ind P z s v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a0 : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a0 v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finseq_ind P z s (fscons a v) = s n a v (finseq_ind P z s v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a0 : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a0 v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (P n.+1) (path_expand_fscons (fscons a v))\n  (s n (fshead (fscons a v)) (fstail (fscons a v))\n     (finseq_ind P z s (fstail (fscons a v)))) =\ns n a v (finseq_ind P z s v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a0 : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a0 v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction (path_expand_fscons_fscons a v)^.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (P n.+1)\n  (path_fscons (fshead_beta_fscons a v) (fstail_beta_fscons a v))\n  (s n (fshead (fscons a v)) (fstail (fscons a v))\n     (finseq_ind P z s (fstail (fscons a v)))) =\ns n a v (finseq_ind P z s v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a0 : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a0 v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "set (p1 := fshead_beta_fscons a v).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (P n.+1) (path_fscons p1 (fstail_beta_fscons a v))\n  (s n (fshead (fscons a v)) (fstail (fscons a v))\n     (finseq_ind P z s (fstail (fscons a v)))) =\ns n a v (finseq_ind P z s v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a0 : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a0 v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p1"
+              ],
+              "body": "fshead_beta_fscons a v",
+              "type": "fshead (fscons a v) = a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "set (p2 := fstail_beta_fscons a v).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (P n.+1) (path_fscons p1 p2)\n  (s n (fshead (fscons a v)) (fstail (fscons a v))\n     (finseq_ind P z s (fstail (fscons a v)))) =\ns n a v (finseq_ind P z s v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a0 : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a0 v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p1"
+              ],
+              "body": "fshead_beta_fscons a v",
+              "type": "fshead (fscons a v) = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p2"
+              ],
+              "body": "fstail_beta_fscons a v",
+              "type": "fstail (fscons a v) = v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction p1, p2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (P n.+1) (path_fscons 1 1)\n  (s n (fshead (fscons a (fstail (fscons a v)))) (fstail (fscons a v))\n     (finseq_ind P z s (fstail (fscons a v)))) =\ns n (fshead (fscons a (fstail (fscons a v)))) (fstail (fscons a v))\n  (finseq_ind P z s (fstail (fscons a v)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinSeq n0 A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "P 0 fsnil"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (a0 : A) (v0 : FinSeq n0 A),\nP n0 v0 -> P n0.+1 (fscons a0 v0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "FinSeq n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (fun p => transport _ p _) (path_fscons_beta _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    }
+  ]
+]

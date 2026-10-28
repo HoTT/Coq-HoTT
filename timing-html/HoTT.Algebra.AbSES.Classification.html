@@ -1,0 +1,1887 @@
+<html>
+<head>
+<title>Classification.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Classification.v</h1>
+
+<div class="code" title="File: Classification.v
+Line: 1
+Time: 0.065s">
+<div class="time" style="width: 54.166666666667%"></div>
+<pre>From HoTT Require Import Basics Types HFiber Truncations.Core
+  Truncations.SeparatedTrunc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 2
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+From HoTT.WildCat Require Import Core PointedCat Equiv.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 3
+Time: 0.024s">
+<div class="time" style="width: 20%"></div>
+<pre>
+Require Import Pointed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 4
+Time: 0.024s">
+<div class="time" style="width: 20%"></div>
+<pre>
+Require Import AbelianGroup.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 5
+Time: 0.041s">
+<div class="time" style="width: 34.166666666667%"></div>
+<pre>
+Require Import AbSES.Core AbSES.Ext.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 6
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Universes.Smallness.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 8
+Time: 0.01s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+From HoTT.Homotopy Require Import HomotopyGroup EMSpace ExactSequence Hopf
+  WhiteheadsPrinciple.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 10
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+Require Import Groups.Group.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Equiv.BiInv.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Modalities.Identity Modalities.Descent.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 13
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Classification of short exact sequences *)
+
+(** Short exact sequences [A -&gt; E -&gt; B] of abelian groups are classified by pointed maps [K(B,n.+2) -&gt;* K(A,n.+3)], for any [n : nat].  This is Christensen and Flaten, "Ext groups in homotopy type theory", Theorem 2.2.2, and the following comment.  Here we prove it for general [n] from the start. *)
+
+</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Applying [(K-, n.+1)] to a short exact sequence of an abelian groups gives a fiber sequence *)
+
+</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section EMFiberSequence.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} (n : nat) {B A : AbGroup@{u}} (E : AbSES B A).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The identifications [equiv_g_pi_n_em] carry [Pi n.+1] of the sequence [K(-, n.+1)] applied to [E] back to [E] itself, so that sequence is exact. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 26
+Time: 0.005s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>Local Definition isexact_pi_em_abses
+    : IsExact (Tr (-1))
+        (fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)))
+        (fmap (Pi n.+1) (fmap (K' n.+1) (projection E))).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 30
+Time: 0.006s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    napply (isexact_square_if _ (i := inclusion E) (f := projection E)
+      (grp_iso_inverse (equiv_g_pi_n_em A n))
+      (grp_iso_inverse (equiv_g_pi_n_em E n))
+      (grp_iso_inverse (equiv_g_pi_n_em B n))).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 34
+Time: 0.025s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>
+    1,2: srapply phomotopy_homotopy_hset; intro x;
+           apply moveR_equiv_V; apply pi_em_fmap'.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 37
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [K(-, n.+1)] sends short exact sequences of abelian groups to fiber sequences of Eilenberg-Mac Lane spaces.  The hypotheses of [isexact_purely_isexact_pi] are found by typeclass search: the spaces are [n]-connected and [n.+1]-truncated, [fmap (K' n.+1)] of the projection is [n]-connected since the projection is surjective, and [fmap (K' n.+1)] of the inclusion is an embedding on [Pi n.+1] since the inclusion is an embedding. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 41
+Time: 0.11s">
+<div class="time" style="width: 91.666666666667%"></div>
+<pre>#[export] Instance isexact_em_abses
+    : IsExact purely (fmap (K' n.+1) (inclusion E))
+        (fmap (K' n.+1) (projection E))
+    := isexact_purely_isexact_pi n
+        (fmap_iscomplex (K' n.+1) (iscomplex_abses E))
+        isexact_pi_em_abses.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+
+End EMFiberSequence.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The classifying map of a short exact sequence *)
+
+(** We associate to each short exact sequence [A -&gt; E -&gt; B] the connecting map of the fiber sequence [K(A,n.+3) -&gt; K(E,n.+3) -&gt; K(B,n.+3)], expressed as a pointed map [K(B,n.+2) -&gt;* K(A,n.+3)]. *)</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 52
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>Definition abses_classifying_map `{Univalence} (n : nat) {B A : AbGroup@{u}}
+  (E : AbSES B A)
+  : K(B, n.+2) -&gt;* K(A, n.+3)
+  := connecting_map (fmap (K' n.+3) (inclusion E))
+       (fmap (K' n.+3) (projection E))
+     o* pequiv_loops_em_em B n.+2.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The short exact sequence of a pointed map *)
+
+(** Conversely, a pointed map [f : K(B,n.+2) -&gt;* K(A,n.+3)] yields a short exact sequence [A -&gt; Pi n.+2 (pfiber f) -&gt; B], by rotating the fiber sequence of [f] and taking homotopy groups. *)
+
+</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AbSESPfiber.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} {n : nat} {B A : AbGroup@{u}}
+    (f : K(B, n.+2) -&gt;* K(A, n.+3)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The inclusion of the short exact sequence is given by the composite of the identification of [A] with [Pi n.+2 (loops K(A, n.+3))] and [Pi n.+2] applied to the connecting map [loops K(A,n+3) -&gt; pfiber f] of the fiber sequence. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Definition abses_pfiber_incl : A $-&gt; abgroup_pi n (pfiber f)
+    := fmap (Pi n.+2) (connecting_map (pfib f) f)
+        $o equiv_g_pi_n_loops_em A n.+1.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The projection is similarly induced by the fiber inclusion of [f]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Definition abses_pfiber_proj : abgroup_pi n (pfiber f) $-&gt; B
+    := grp_iso_inverse (equiv_g_pi_n_em B n.+1)
+        $o fmap (Pi n.+2) (pfib f).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The two homotopy groups neighbouring the sequence vanish: [Pi n.+2 K(A, n.+3)] lies below the connectivity of [K(A, n.+3)], and [Pi n.+3 K(B, n.+2)] lies above the truncation level of [K(B, n.+2)]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Local Instance contr_pi_em_below : Contr (Pi n.+2 K(A, n.+3))
+    := contr_pi_isconnected n.+2 K(A, n.+3).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 78
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+
+  Local Instance contr_pi_em_above : Contr (Pi n.+3 K(B, n.+2))
+    := contr_pi_istrunc n.+2 K(B, n.+2).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The three conditions defining a short exact sequence therefore come from the long exact sequences of the fiber sequence of [f] and of its rotation. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance isembedding_abses_pfiber_incl : IsEmbedding abses_pfiber_incl.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 86
+Time: 0.014s">
+<div class="time" style="width: 11.666666666667%"></div>
+<pre>
+    napply (istruncmap_compose (-1) (equiv_g_pi_n_loops_em A n.+1)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 87
+Time: 0.008s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+    2: rapply istruncmap_mapinO_tr.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 88
+Time: 0.005s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    exact (isembedding_fmap_pi_isexact (connecting_map (pfib f) f) (pfib f)
+             n.+1).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance issurjection_abses_pfiber_proj
+    : IsSurjection abses_pfiber_proj.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply conn_map_compose.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 96
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    2: rapply conn_map_isequiv.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    exact (issurj_fmap_pi_isexact (pfib f) f n.+2).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance isexact_abses_pfiber
+    : IsExact (Tr (-1)) abses_pfiber_incl abses_pfiber_proj.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    napply (isexact_square_if _ (equiv_g_pi_n_loops_em A n.+1)
+      pequiv_pmap_idmap (equiv_g_pi_n_em B n.+1)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 105
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    3: exact (isexact_pi_total (connecting_map (pfib f) f) (pfib f) n.+2).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The first square commutes by definition.  We give the term, since [reflexivity] is very slow here. *)
+   </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 108
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>1: srapply phomotopy_homotopy_hset; intro x;
+         exact (idpath (abses_pfiber_incl x)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    srapply phomotopy_homotopy_hset; intro x.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    exact (eisretr (equiv_g_pi_n_em B n.+1) _).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 111
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The short exact sequence associated to [f]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_pfiber : AbSES B A
+    := Build_AbSES (abgroup_pi n (pfiber f)) abses_pfiber_incl abses_pfiber_proj
+         _ _ _.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+
+End AbSESPfiber.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [abses_pfiber] composed with [abses_classifying_map] is the identity *)
+
+(** In other words, the short exact sequence extracted from the classifying map of [E] is [E] itself. *)
+
+</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ClassifyingRoundTrip.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} (n : nat) {B A : AbGroup@{u}} (E : AbSES B A).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This square arises three times below, so we state it as a local result.  The RHS is just the definition [abses_classifying_map], so the only difference is the postcomposition of the pointed identity map. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 128
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>Local Definition square_classifying_map
+    : pequiv_pmap_idmap o* abses_classifying_map n E
+      ==* connecting_map (fmap (K' n.+3) (inclusion E))
+            (fmap (K' n.+3) (projection E))
+          o* pequiv_loops_em_em B n.+2
+    := pmap_postcompose_idmap _.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The fiber of the classifying map is [loops K(E,n.+3)].  Precomposing with the loop identification of [K(B,n.+2)] does not change the fiber, so it is the fiber of the connecting map, which [pequiv_pfiber_connecting_map] identifies with [loops K(E,n.+3)]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Local Definition pequiv_pfiber_classifying_map
+    : pfiber (abses_classifying_map n E) &lt;~&gt;* loops K(E, n.+3)
+    := pequiv_pfiber_connecting_map _ _ o*E pequiv_pfiber _ _ square_classifying_map.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Through this identification, the fiber inclusion of the classifying map is [loops] of the projection. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Local Definition square_pfib_classifying_map
+    : pequiv_loops_em_em B n.+2 o* pfib (abses_classifying_map n E)
+      ==* fmap loops (fmap (K' n.+3) (projection E))
+          o* pequiv_pfiber_classifying_map.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 145
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    lhs' napply (square_pequiv_pfiber _ _ square_classifying_map).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 146
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    lhs' napply (pmap_prewhisker _ (pfib_connecting_map _ _)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 148
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Through the same identification, the connecting map of the fiber sequence of the classifying map is [loops] of the inclusion. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 152
+Time: 0.006s">
+<div class="time" style="width: 5%"></div>
+<pre>Local Definition connecting_map_classifying_map
+    : pequiv_pfiber_classifying_map
+      o* connecting_map (pfib (abses_classifying_map n E))
+           (abses_classifying_map n E)
+      ==* fmap loops (fmap (K' n.+3) (inclusion E)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 157
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    lhs' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 158
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    lhs' napply (pmap_postwhisker _
+      (connecting_map_natural_idmap square_classifying_map)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply connecting_map_pfib_connecting_map.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 161
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The middle isomorphism of the round trip. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 165
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Local Definition grp_iso_pi_pfiber_classifying_map
+    : GroupIsomorphism (abgroup_pi n (pfiber (abses_classifying_map n E))) E
+    := grp_iso_compose (grp_iso_inverse (equiv_g_pi_n_loops_em E n.+1))
+         (groupiso_pi_functor n.+1 pequiv_pfiber_classifying_map).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It commutes with the inclusions. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition grp_iso_pi_pfiber_classifying_map_inclusion (a : A)
+    : grp_iso_pi_pfiber_classifying_map
+        (abses_pfiber_incl (abses_classifying_map n E) a)
+      = inclusion E a.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 176
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    lhs_V exact (fmap_comp (Pi n.+2)
+      (connecting_map (pfib (abses_classifying_map n E)) _)
+      pequiv_pfiber_classifying_map (equiv_g_pi_n_loops_em A n.+1 a)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 179
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    lhs tapply (fmap2 (Pi n.+2) connecting_map_classifying_map).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    napply pi_loops_em_fmap.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 181
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It commutes with the projections. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 185
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>Local Definition grp_iso_pi_pfiber_classifying_map_projection
+    (x : Pi n.+2 (pfiber (abses_classifying_map n E)))
+    : abses_pfiber_proj (abses_classifying_map n E) x
+      = projection E (grp_iso_pi_pfiber_classifying_map x).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 190
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    apply (equiv_inj (groupiso_pi_functor n.+1 (pequiv_loops_em_em B n.+2))).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The left side, through the pointed square. *)
+   </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 193
+Time: 0.015s">
+<div class="time" style="width: 12.5%"></div>
+<pre>lhs_V tapply (fmap_comp (Pi n.+2)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 193
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    lhs tapply (fmap2 (Pi n.+2) square_pfib_classifying_map).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 194
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    lhs tapply (fmap_comp (Pi n.+2)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The right side, by naturality of [equiv_g_pi_n_loops_em]. *)
+   </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 197
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>rhs_V napply (pi_loops_em_fmap (projection E) n.+1).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 197
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    tapply (ap (fmap (Pi n.+2) (fmap loops (fmap (K' n.+3) (projection E))))).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 198
+Time: 0.012s">
+<div class="time" style="width: 10%"></div>
+<pre>
+    symmetry; napply eisretr.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 199
+Time: 0.005s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The short exact sequence extracted from the classifying map of [E] is [E]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 203
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Definition abses_pfiber_abses_classifying_map
+    : abses_pfiber (abses_classifying_map n E) = E
+    := path_abses (E := abses_pfiber (abses_classifying_map n E)) (F := E)
+         grp_iso_pi_pfiber_classifying_map
+         grp_iso_pi_pfiber_classifying_map_inclusion
+         grp_iso_pi_pfiber_classifying_map_projection.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End ClassifyingRoundTrip.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The classifying map of the sequence of a delooped map *)
+
+(** Rather than proving that the other composite is the identity, we will define an a priori different section of [abses_classifying_map].  To do this, we first show that for [psi : K(B,n.+3) -&gt;* K(A,n.+4)], the classifying map [K(B,n.+2) -&gt;* K(A,n.+3)] of [abses_pfiber psi] is [fmap loops psi] (with corrected endpoints) precomposed with negation on [K(B,n.+2)].  Since every map [K(B,n.+2) -&gt;* K(A,n.+3)] can be delooped to such a [psi], this will give a section of [abses_classifying_map] in [abses_classifying_section] below. *)
+
+</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PfiberDeloop.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} {n : nat} {B A : AbGroup@{u}}
+    (psi : K(B, n.+3) -&gt;* K(A, n.+4)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The fiber of a map from an [n.+2]-connected type to an [n.+3]-connected type is [n.+2]-connected. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Local Instance isconnected_pfiber_em : IsConnected n.+2 (pfiber psi)
+    := OO_isconnected_hfiber (Tr (n.+3)%nat) (Tr (n.+2)%nat) psi pt.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The fiber of [psi] is the Eilenberg-Mac Lane space of its homotopy group in degree [n.+3], by [pequiv_em_connected_truncated].  On [Pi n.+3], that identification is the inverse of [equiv_g_pi_n_em]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 224
+Time: 0.069s">
+<div class="time" style="width: 57.5%"></div>
+<pre>Local Definition fmap_pi_pequiv_em_pfiber
+    (x : Pi n.+3 K(abgroup_pi n.+1 (pfiber psi), n.+3))
+    : fmap (Pi n.+3) (pequiv_em_connected_truncated (pfiber psi) n.+2) x
+      = (equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2)^-1 x
+    := fmap_pi_pequiv_em_connected_truncated (pfiber psi) n.+2 x.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Through that identification, [fmap (K' n.+3)] of the projection is the fiber inclusion of [psi]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 231
+Time: 0.013s">
+<div class="time" style="width: 10.833333333333%"></div>
+<pre>Local Definition phomotopy_em_proj_pfib
+    : fmap (K' n.+3) (abses_pfiber_proj psi)
+      ==* pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 234
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    rapply (phomotopy_pmap_pi_connected n.+2).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 236
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    lhs tapply (pi_em_fmap' (abses_pfiber_proj psi) n.+2).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 237
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    lhs napply (eisretr (equiv_g_pi_n_em B n.+2)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 238
+Time: 0.12s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    rhs tapply (fmap_comp (Pi n.+3)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 239
+Time: 0.016s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+    tapply (ap _ (fmap_pi_pequiv_em_pfiber x)^).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 240
+Time: 0.091s">
+<div class="time" style="width: 75.833333333333%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Through that identification, [fmap (K' n.+3)] of the inclusion is the connecting map of [psi], modulo the loop identification of [K(A,n.+3)]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 244
+Time: 0.037s">
+<div class="time" style="width: 30.833333333333%"></div>
+<pre>Local Definition phomotopy_em_incl_pfib
+    : pequiv_em_connected_truncated (pfiber psi) n.+2
+        o* fmap (K' n.+3) (abses_pfiber_incl psi)
+      ==* connecting_map (pfib psi) psi
+        o* pequiv_loops_em_em A n.+3.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 249
+Time: 0.011s">
+<div class="time" style="width: 9.1666666666667%"></div>
+<pre>
+    rapply (phomotopy_pmap_pi_connected n.+2).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 251
+Time: 0.049s">
+<div class="time" style="width: 40.833333333333%"></div>
+<pre>
+    lhs tapply (fmap_comp (Pi n.+3)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 252
+Time: 0.018s">
+<div class="time" style="width: 15%"></div>
+<pre>
+    lhs tapply (ap _ (pi_em_fmap' (abses_pfiber_incl psi) n.+2 x)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply fmap_pi_pequiv_em_pfiber.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply eissect.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 255
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    rhs tapply (fmap_comp (Pi n.+3)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold abses_pfiber_incl.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* This is faster than using [_] for [F]. *)
+   </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 259
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>match goal with |- _ = ?F x =&gt;
+                      exact (ap F (eisretr (equiv_g_pi_n_em A n.+2) x)) end.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 260
+Time: 0.12s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* A bit slow. *)
+
+  (** The projection triangle enlarged to a square. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 264
+Time: 0.012s">
+<div class="time" style="width: 10%"></div>
+<pre>Local Definition square_em_proj_pfib
+    : pequiv_pmap_idmap o* fmap (K' n.+3) (projection (abses_pfiber psi))
+      ==* pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2
+    := pmap_postcompose_idmap _ @* phomotopy_em_proj_pfib.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The two squares above form a map from the fiber sequence of Eilenberg-Mac Lane spaces of the extracted sequence to the fiber sequence of [pfib psi] in the sense required by [connecting_map_natural_isexact]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 270
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Local Definition phomotopy_cxfib_em_pfib
+    : functor_pfiber square_em_proj_pfib
+      o* pequiv_cxfib (i := fmap (K' n.+3) (inclusion (abses_pfiber psi)))
+           (f := fmap (K' n.+3) (projection (abses_pfiber psi)))
+      ==* pequiv_cxfib (i := pfib (pfib psi)) (f := pfib psi)
+          o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 276
+Time: 0.013s">
+<div class="time" style="width: 10.833333333333%"></div>
+<pre>
+    rapply (phomotopy_functor_pfiber_cxfib n.+2).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 277
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    rhs_V' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 278
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    rhs_V' napply (pmap_prewhisker _ (connecting_map_pfib psi)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact phomotopy_em_incl_pfib.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 280
+Time: 0.005s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Through the loop identification of [K(A,n.+3)], the connecting map of the extracted fiber sequence is [loops psi], twisted by loop inversion. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 284
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>Local Definition connecting_map_em_loops
+    : connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))
+        (fmap (K' n.+3) (projection (abses_pfiber psi)))
+      ==* (pequiv_loops_em_em A n.+3)^-1*
+        o* (fmap loops psi o* loops_inv K(B, n.+3)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 289
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    napply moveL_pequiv_Vf.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* By [connecting_map_pfib2], it suffices to compare with the connecting map of the fiber sequence of [pfib psi], which we do by naturality. *)
+   </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 292
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>rhs_V' napply (connecting_map_pfib2 psi).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply moveL_pequiv_Mf.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 293
+Time: 0.01s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+    lhs_V' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 294
+Time: 0.009s">
+<div class="time" style="width: 7.5%"></div>
+<pre>
+    lhs' napply (connecting_map_natural_isexact phomotopy_cxfib_em_pfib).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 295
+Time: 0.009s">
+<div class="time" style="width: 7.5%"></div>
+<pre>
+    lhs' tapply (pmap_postwhisker _ (fmap_id loops _)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply pmap_precompose_idmap.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 297
+Time: 0.011s">
+<div class="time" style="width: 9.1666666666667%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Negation on [K(B,n.+2)], as loop inversion conjugated by the loop identification.  It should agree with [fmap (K' n.+2) ab_homo_negation], since both act by inversion on [Pi n.+2], but we do not need that here. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 301
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Local Definition pequiv_neg_em : K(B, n.+2) &lt;~&gt;* K(B, n.+2)
+    := (pequiv_loops_em_em B n.+2)^-1*
+       o*E (loops_inv K(B, n.+3) o*E pequiv_loops_em_em B n.+2).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Under the loop identification, [pequiv_neg_em] is loop inversion. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 306
+Time: 0.005s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>Local Definition pequiv_neg_em_loops
+    : pequiv_loops_em_em B n.+2 o* pequiv_neg_em
+      ==* loops_inv K(B, n.+3) o* pequiv_loops_em_em B n.+2
+    := moveR_pequiv_Mf _ _ _ (reflexivity _).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The classifying map of the extracted sequence is [equiv_loops_em_pmap] applied to [psi], twisted by [pequiv_neg_em].  Recall that [equiv_loops_em_pmap] is [fmap loops] conjugated by the loop identifications. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 312
+Time: 0.006s">
+<div class="time" style="width: 5%"></div>
+<pre>Local Definition abses_classifying_pfiber_loop
+    : abses_classifying_map n (abses_pfiber psi)
+      ==* equiv_loops_em_pmap B A n.+2 n.+3 psi o* pequiv_neg_em.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold abses_classifying_map, equiv_loops_em_pmap.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 316
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    rhs' napply (pmap_compose_assoc _ _ _
+                 @* pmap_postwhisker _ (pmap_compose_assoc _ _ _)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 318
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    lhs' napply (pmap_prewhisker _ connecting_map_em_loops).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 319
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    lhs' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 320
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply pmap_postwhisker.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply pmap_postwhisker.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 323
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    symmetry; exact pequiv_neg_em_loops.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 324
+Time: 0.009s">
+<div class="time" style="width: 7.5%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 325
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+End PfiberDeloop.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The classification theorem *)
+
+(** [abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ClassificationTheorem.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We declare [u] so that it refers to the same universe in the [Context] and in [equiv_ext_classifying]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Universe u.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} (n : nat) {B A : AbGroup@{u}}.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A section of the classifying map. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 338
+Time: 0.007s">
+<div class="time" style="width: 5.8333333333333%"></div>
+<pre>Local Definition abses_classifying_section (f : K(B, n.+2) -&gt;* K(A, n.+3))
+    : abses_classifying_map n
+        (abses_pfiber ((equiv_loops_em_pmap B A n.+2 n.+3)^-1
+           (f o* pequiv_neg_em^-1*)))
+      = f.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_pforall.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 344
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    lhs' napply abses_classifying_pfiber_loop.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 345
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    lhs' napply (pmap_prewhisker _
+      (phomotopy_path (eisretr (equiv_loops_em_pmap B A n.+2 n.+3) _))).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 347
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    lhs' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 348
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    lhs' napply (pmap_postwhisker _ (peissect pequiv_neg_em)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pmap_precompose_idmap.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 350
+Time: 0.003s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The map [abses_classifying_map] has a retraction [abses_pfiber] by [abses_pfiber_abses_classifying_map] and a section by [abses_classifying_section].  Therefore it is an equivalence.  This proof uses [abses_pfiber] as the inverse. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isequiv_abses_classifying_map
+    : IsEquiv (abses_classifying_map (A:=A) (B:=B) n).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_isbiinv.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Build_IsBiInv _ _ _ _ _ abses_classifying_section
+             (abses_pfiber_abses_classifying_map n)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Short exact sequences [A -&gt; E -&gt; B] are classified by pointed maps [K(B,n.+2) -&gt;* K(A,n.+3)]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_abses_classifying_map
+    : AbSES B A &lt;~&gt; (K(B, n.+2) -&gt;* K(A, n.+3))
+    := Build_Equiv _ _ (abses_classifying_map n) _.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Consequently [Ext B A] is the set of path components of the classifying mapping type.  Since [Trunc] is cumulative, we can take the truncation in the universe [u] of [B] and [A], rather than in the larger universe of [Ext B A]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_ext_classifying
+    : Ext B A &lt;~&gt; Tr@{u} 0 (K(B, n.+2) -&gt;* K(A, n.+3))
+    := Trunc_functor_equiv 0 equiv_abses_classifying_map.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End ClassificationTheorem.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Smallness *)
+
+(** [AbSES B A] is essentially small, and so is [Ext B A].  We use the case [n = 0] of the classification. *)
+
+</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Smallness.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Universe u.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} {B A : AbGroup@{u}}.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance issmall_abses : IsSmall@{u _} (AbSES B A)
+    := Build_IsSmall _ _ (equiv_abses_classifying_map 0)^-1%equiv.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance issmall_ext : IsSmall@{u _} (Ext B A)
+    := Build_IsSmall _ _ (equiv_ext_classifying 0)^-1%equiv.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Smallness.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Naturality of the classifying map *)
+
+(** A morphism of short exact sequences induces a commuting square relating the two classifying maps. *)
+
+</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Naturality.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} (n : nat) {B A Y X : AbGroup@{u}}
+    {E : AbSES B A} {F : AbSES Y X} (phi : AbSESMorphism E F).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [K(-,n.+3)] of the projection square of [phi]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 397
+Time: 0.007s">
+<div class="time" style="width: 5.8333333333333%"></div>
+<pre>Local Definition em_proj_square
+    : fmap (K' n.+3) (projection F) o* fmap (K' n.+3) (component2 phi)
+      ==* fmap (K' n.+3) (component3 phi) o* fmap (K' n.+3) (projection E)
+    := (fmap_comp (K' n.+3) _ _)^* @* fmap2 (K' n.+3) (right_square phi)
+       @* fmap_comp (K' n.+3) _ _.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [K(-,n.+3)] of the inclusion square of [phi]. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 404
+Time: 0.008s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Local Definition em_incl_square
+    : fmap (K' n.+3) (component2 phi) o* fmap (K' n.+3) (inclusion E)
+      ==* fmap (K' n.+3) (inclusion F) o* fmap (K' n.+3) (component1 phi)
+    := (fmap_comp (K' n.+3) _ _)^*
+       @* fmap2 (K' n.+3) (fun a =&gt; (left_square phi a)^)
+       @* fmap_comp (K' n.+3) _ _.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The two squares above form a map between the fiber sequences of Eilenberg-Mac Lane spaces. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 412
+Time: 0.006s">
+<div class="time" style="width: 5%"></div>
+<pre>Local Definition phomotopy_cxfib_em
+    : functor_pfiber (em_proj_square^* )
+      o* pequiv_cxfib (i := fmap (K' n.+3) (inclusion E))
+           (f := fmap (K' n.+3) (projection E))
+      ==* pequiv_cxfib (i := fmap (K' n.+3) (inclusion F))
+            (f := fmap (K' n.+3) (projection F))
+          o* fmap (K' n.+3) (component1 phi)
+    := phomotopy_functor_pfiber_cxfib n.+2 em_incl_square (em_proj_square^* ).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A morphism of short exact sequences induces a commuting square of classifying maps, by naturality of the connecting map and of the loop identification. *)
+ </pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 422
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>Definition abses_classifying_map_natural
+    : fmap (K' n.+3) (component1 phi) o* abses_classifying_map n E
+      ==* abses_classifying_map n F o* fmap (K' n.+2) (component3 phi).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 425
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    lhs_V' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 426
+Time: 0.002s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    lhs' napply (pmap_prewhisker _
+      (connecting_map_natural_isexact phomotopy_cxfib_em)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 428
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    lhs' napply pmap_compose_assoc.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 429
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+    lhs' napply (pmap_postwhisker _
+      (em_fmap_loops_natural (component3 phi) n.+2)).</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (pmap_compose_assoc _ _ _)^*.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 432
+Time: 0.004s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 433
+Time: 0.001s">
+<div class="time" style="width: 0.83333333333333%"></div>
+<pre>
+
+End Naturality.</pre>
+</div>
+<div class="code" title="File: Classification.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

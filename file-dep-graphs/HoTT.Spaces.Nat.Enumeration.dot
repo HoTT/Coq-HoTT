@@ -1,0 +1,20 @@
+digraph HoTT_Spaces_Nat_Enumeration {
+  graph [ratio=0.5]
+  node [style=filled]
+Enumeration_issurj_nat_prod_enumerator [label="issurj_nat_prod_enumerator", URL=<Enumeration.html#issurj_nat_prod_enumerator>, peripheries=3, fillcolor="#F070D1"] ;
+Enumeration_nat_prod_enumerator [label="nat_prod_enumerator", URL=<Enumeration.html#nat_prod_enumerator>, fillcolor="#F070D1"] ;
+Enumeration_issurj_nat_unpair [label="issurj_nat_unpair", URL=<Enumeration.html#issurj_nat_unpair>, fillcolor="#F070D1"] ;
+Enumeration_nat_unpair_hit [label="nat_unpair_hit", URL=<Enumeration.html#nat_unpair_hit>, fillcolor="#F070D1"] ;
+Enumeration_nat_unpair_hit_axis [label="nat_unpair_hit_axis", URL=<Enumeration.html#nat_unpair_hit_axis>, fillcolor="#F070D1"] ;
+Enumeration_nat_unpair_hit_diagonal [label="nat_unpair_hit_diagonal", URL=<Enumeration.html#nat_unpair_hit_diagonal>, fillcolor="#F070D1"] ;
+Enumeration_nat_unpair [label="nat_unpair", URL=<Enumeration.html#nat_unpair>, fillcolor="#F070D1"] ;
+  Enumeration_issurj_nat_prod_enumerator -> Enumeration_nat_prod_enumerator [] ;
+  Enumeration_issurj_nat_prod_enumerator -> Enumeration_issurj_nat_unpair [] ;
+  Enumeration_nat_prod_enumerator -> Enumeration_nat_unpair [] ;
+  Enumeration_issurj_nat_unpair -> Enumeration_nat_unpair_hit [] ;
+  Enumeration_nat_unpair_hit -> Enumeration_nat_unpair_hit_axis [] ;
+  Enumeration_nat_unpair_hit_axis -> Enumeration_nat_unpair_hit_diagonal [] ;
+  Enumeration_nat_unpair_hit_diagonal -> Enumeration_nat_unpair [] ;
+subgraph cluster_Enumeration { label="Enumeration"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Enumeration_nat_unpair; Enumeration_nat_unpair_hit_diagonal; Enumeration_nat_unpair_hit_axis; Enumeration_nat_unpair_hit; Enumeration_issurj_nat_unpair; Enumeration_nat_prod_enumerator; Enumeration_issurj_nat_prod_enumerator; };
+} /* END */

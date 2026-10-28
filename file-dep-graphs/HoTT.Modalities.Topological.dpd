@@ -1,0 +1,4 @@
+N: 2 "lex_nullification" [body=yes, kind=cnst, prop=no, path="Topological", ];
+N: 3 "lex_topological" [body=yes, kind=cnst, prop=no, path="Topological", ];
+N: 1 "topological_lex_trunc_acc" [body=yes, kind=cnst, prop=no, path="Topological", ];
+E: 2 3 [weight=1, ];
