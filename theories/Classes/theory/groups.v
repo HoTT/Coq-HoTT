@@ -4,6 +4,26 @@ Require Import
 Local Open Scope mc_mult_scope.
 Generalizable Variables G H A B C f g.
 
+(** Anti-multiplicativity of inverses does not require a set-truncated carrier or coherent associativity. *)
+Lemma inverse_sg_op {G : Type}
+  {op : SgOp G} {unit : MonUnit G} {i : Inverse G}
+  `{!Associative op, !LeftIdentity op unit, !RightIdentity op unit,
+    !LeftInverse op i unit, !RightInverse op i unit}
+  (x y : G) : inv (x * y) = inv y * inv x.
+Proof.
+  pose (assoc := simple_associativity (f:=op)).
+  assert (p : (x * y) * (i y * i x) = unit).
+  { refine (assoc (x * y) (i y) (i x) @ _).
+    refine (ap (.* i x) _ @ right_inverse x).
+    refine ((assoc x y (i y))^ @ _).
+    exact (ap (x *.) (right_inverse y) @ right_identity x). }
+  refine ((right_identity (i (x * y)))^ @ _).
+  refine (ap (i (x * y) *.) p^ @ _).
+  refine (assoc (i (x * y)) (x * y) (i y * i x) @ _).
+  exact (ap (.* (i y * i x)) (left_inverse (x * y))
+    @ left_identity (i y * i x)).
+Defined.
+
 Section group_props.
   Context `{IsGroup G}.
 
@@ -59,19 +79,6 @@ Section group_props.
     rewrite E.
     rewrite <-(associativity y ), right_inverse, right_identity.
     reflexivity.
-  Qed.
-
-  Lemma inverse_sg_op x y : (x * y)^ = y^ * x^.
-  Proof.
-    rewrite <- (left_identity (-y * -x)).
-    rewrite <- (left_inverse (unit:=mon_unit) (x * y)).
-    rewrite <- simple_associativity.
-    rewrite <- simple_associativity.
-    rewrite (associativity y).
-    rewrite right_inverse.
-    rewrite (left_identity (-x)).
-    rewrite right_inverse.
-    apply symmetry, right_identity.
   Qed.
 
 End group_props.

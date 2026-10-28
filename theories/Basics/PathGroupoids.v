@@ -854,6 +854,14 @@ Proof.
   apply concat_1p.
 Defined.
 
+(** Applying a binary function to the same path in both arguments is its action on the diagonal. *)
+Definition ap011_diag {A B : Type} (f : A -> A -> B)
+  {x y : A} (p : x = y)
+  : ap011 f p p = ap (fun a => f a a) p.
+Proof.
+  by destruct p.
+Defined.
+
 (** It would be nice to have a consistent way to name the different ways in which this can be dependent.  The following are a sort of half-hearted attempt. *)
 
 Definition ap011D {A B C} (f : forall (a:A), B a -> C)
