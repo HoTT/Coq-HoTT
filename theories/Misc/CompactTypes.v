@@ -3,18 +3,19 @@
 From HoTT Require Import Basics Types.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Spaces.Nat.Core Finite.Fin.
-Require Import Misc.UStructures.
+Require Import Misc.UStructures BoundedSearch.
 Require Import Spaces.NatSeq.Core Spaces.NatSeq.UStructure.
 Require Import Homotopy.Suspension.
 Require Import Pointed.Core.
 Require Import Universes.TruncType Universes.HProp.
+Require Import ExcludedMiddle Projective.
 
 Local Open Scope nat_scope.
 Local Open Scope pointed_scope.
 
 (** ** Basic definitions of compact types *)
 
-(** A type [A] is compact if for every decidable family over [A], the Σ-type is decidable. *)
+(** A type [A] is Sigma-compact if for every decidable family over [A], the Σ-type is decidable. We generally drop the "Sigma" from the name in prose. *)
 Definition IsSigmaCompact (A : Type)
   := forall P : A -> Type, (forall a : A, Decidable (P a)) -> Decidable (sig P).
 
@@ -38,41 +39,67 @@ Proof.
   exact merely_inhabited_iff_inhabited_stable.
 Defined.
 
-(** A weaker definition: for any decidable family, the dependent function type is decidable. *)
+(** A weaker definition: a type is ∃-compact if for any decidable family, the propositional truncation of the Σ-type is decidable. *)
+Definition IsHExistsCompact (A : Type)
+  := forall P : A -> Type,
+      (forall a : A, Decidable (P a)) -> Decidable (hexists P).
+
+Definition ishprop_ishexistscompact `{Funext} (A : Type)
+  : IsHProp (IsHExistsCompact A) := _.
+
+(** Sigma-compactness implies exists-compactness. *)
+Definition ishexistscompact_issigmacompact {A} (c : IsSigmaCompact A)
+  : IsHExistsCompact A.
+Proof.
+  intros P dP.
+  destruct (c P dP) as [l|r].
+  - left; exact (tr l).
+  - right; intros u; by strip_truncations.
+Defined.
+
+(** An even weaker definition: a type is Π-compact if for any decidable family, the dependent function type is decidable. *)
 Definition IsPiCompact (A : Type)
   := forall (P : A -> Type) (dP : forall a : A, Decidable (P a)),
       Decidable (forall a : A, P a).
 
-Definition ispicompact_issigmacompact {A : Type} (c : IsSigmaCompact A)
+(** It is enough to consider [HProp]-valued families. *)
+Definition IsPiCompactProps (A : Type)
+  := forall P : A -> HProp,
+      (forall a, Decidable (P a)) -> Decidable (forall a, P a).
+
+Definition ishprop_ispicompactprops `{Funext} (A : Type)
+  : IsHProp (IsPiCompactProps A) := _.
+
+Definition ispicompactprops_ispicompact {A} (h : IsPiCompact A)
+  : IsPiCompactProps A := h.
+
+Definition ispicompact_ispicompactprops {A} (h : IsPiCompactProps A)
+  : IsPiCompact A.
+Proof.
+  intros P dP.
+  refine (decidable_iff _ (h (merely o P) _)); split.
+  2: exact (fun f a => tr (f a)).
+  intros f a.
+  apply merely_inhabited_iff_inhabited_stable; exact (f a).
+Defined.
+
+(** exists-compactness implies Pi-compactness. *)
+Definition ispicompact_ishexistscompact {A} (c : IsHExistsCompact A)
   : IsPiCompact A.
 Proof.
   intros P dP.
   destruct (c (not o P) _) as [l|r].
-  - right; exact (fun f => l.2 (f l.1)).
-  - left.
-    intro a.
+  - right; intro f; strip_truncations.
+    exact (l.2 (f l.1)).
+  - left; intro a.
     apply (stable_decidable (P a)).
-    exact (fun u => r (a; u)).
+    exact (fun u => r (tr (a; u))).
 Defined.
 
-(** The weak limited principle of omniscience.  We state this in one form, and then prove it is equivalent to the common form involving the universal quantifier. *)
-Definition WLPO
-  := forall (P : nat -> Type) (dP : forall n : nat, Decidable (P n)), Decidable (~ sig P).
-
-Instance ishprop_wlpo `{Funext} : IsHProp WLPO := _.
-
-Definition iff_wlpo_ispicompact_nat : WLPO <-> IsPiCompact nat.
-Proof.
-  split.
-  - intros w P dP.
-    destruct (w (not o P) _) as [l|r].
-    + left. intro n; exact (stable_decidable (P n) (fun u => l (n; u))).
-    + right. intro f; exact (r (fun u => u.2 (f u.1))).
-  - intros c P dP.
-    destruct (c (not o P) _) as [l|r].
-    + left. intro u; exact (l u.1 u.2).
-    + right. intro nu; exact (r (fun n p => nu (n; p))).
-Defined.
+(** Therefore, compactness implies Pi-compactness. *)
+Definition ispicompact_issigmacompact {A} (c : IsSigmaCompact A)
+  : IsPiCompact A
+  := (ispicompact_ishexistscompact (ishexistscompact_issigmacompact c)).
 
 (** Compact types are closed under retracts. *)
 Definition issigmacompact_retract {A R : Type} {f : A -> R} {g : R -> A}
@@ -101,6 +128,20 @@ Proof.
   - right; intro a.
     exact (c2 (a; pt)).
 Defined.
+
+(** Any ∃-compact type has decidable propositional truncation. *)
+Definition decidable_tr_ishexistscompact {A : Type} (c : IsHExistsCompact A)
+  : Decidable (Tr (-1) A).
+Proof.
+  refine (decidable_equiv' (hexists (fun _ => Unit)) _ (c _ _)).
+  apply Trunc_functor_equiv.
+  rapply equiv_sigma_contr.
+Defined.
+
+(** The negation of any Π-compact type is decidable. *)
+Definition decidable_not_ispicompact {A} (h : IsPiCompact A)
+  : Decidable (~A)
+  := h (const False_hp) _.
 
 (** ** Equivalent definitions *)
 
@@ -155,6 +196,26 @@ Defined.
 Definition iff_iscompact_issigmacompact (A : Type)
   : IsCompact A <-> IsSigmaCompact A
   := iff_compose (iff_iscompact_iscompact' A) (iff_iscompact'_issigmacompact A).
+
+(** This wrapper for [equiv_sig_ind] will get used twice in the next proof, so we factor it out. *)
+Definition pi_not_equiv_not_sigma {A} (P : A -> Type)
+  : (forall a, ~(P a)) <~> ~(sig P)
+  := equiv_sig_ind _.
+
+(** Being Π-compact is equivalent to the statement that for any decidable family, the negation of the Σ-type is decidable. *)
+Definition iff_ispicompact_decidable_not_sigma (A : Type)
+  : IsPiCompact A <->
+    forall P : A -> Type,
+      (forall a, Decidable (P a)) -> Decidable (~(sig P)).
+Proof.
+  split.
+  1,2: intros c P dP.
+  1: exact (decidable_equiv' _ (pi_not_equiv_not_sigma _) (c _ _)).
+  refine (decidable_iff _ (c (not o P) _)).
+  refine (iff_compose (pi_not_equiv_not_sigma _)^-1%equiv _).
+  apply iff_functor_forall; intro a.
+  rapply iff_stable.
+Defined.
 
 (** ** Basic definitions of searchable types *)
 
@@ -386,6 +447,88 @@ Proof.
   intro a.
   rapply issigmacompact_decidable_hprop.
 Defined.
+
+(** ** Constructive taboos *)
+
+(** In the next two results, we assume some form of choice and LEM. This is redundant since LEM follows from AC_(0,-1) by the Diaconescu-Goodman-Myhill theorem, which is not currently part of the library.  *)
+
+(** Assuming univalence and AC_(oo,-1), every type is merely compact. Note that "all types are compact" would be equivalent to all types being decidable, and thus inconsistent with univalence. *)
+Definition merely_issigmacompact_choice `{Univalence} `{ExcludedMiddle}
+  {ac : forall X, IsHSet X -> HasChoice X} (A : Type)
+  : merely (IsSigmaCompactProps A).
+Proof.
+  rapply ac; intro P.
+  rapply ac; intro d.
+  apply trunc_decidable_decidable_trunc.
+  rapply LEM.
+Defined.
+
+(** Similarly, assuming univalence and AC_(n,-1), every n-type is merely compact. *)
+Definition merely_issigmacompact_trchoice `{Univalence} `{ExcludedMiddle}
+  (n : nat) {ac : forall X, IsHSet X -> HasTrChoice n X}
+  (A : Type) `{IsTrunc n A}
+  : merely (IsSigmaCompactProps A).
+Proof.
+  rapply ac.
+  - intro; napply istrunc_forall.
+    shelve.
+  - intro P.
+    rapply ac.
+    + Unshelve.
+      all: intro; apply istrunc_sum; exact _.
+    + intro d.
+      apply trunc_decidable_decidable_trunc.
+      rapply LEM.
+Defined.
+
+(** The statement "every type is ∃-compact" is logically equivalent to LEM. *)
+Definition iff_lem_ishexistscompact_all
+  : ExcludedMiddle_type <-> forall A, IsHExistsCompact A.
+Proof.
+  split.
+  1: intros lem A P dP; rapply lem.
+  intros c P hP.
+  refine (decidable_equiv' _ _ (decidable_tr_ishexistscompact (c P))).
+  symmetry; rapply equiv_tr.
+Defined.
+
+(** Weak LEM says that all negations are decidable.  *)
+Definition WLEM := forall A, Decidable (~A).
+
+(** The statement "every type is Π-compact" is logically equivalent to weak LEM. *)
+Definition iff_wlem_ispicompact_all
+  : WLEM <-> forall A, IsPiCompact A.
+Proof.
+  split.
+  2: exact (fun c A => decidable_not_ispicompact (c A)).
+  intros wlem A P dP.
+  destruct (wlem (forall a, P a)) as [l|r].
+  1: right; exact l.
+  left; exact (stable_forall _ _ r).
+Defined.
+
+(** The limited principle of omniscience says that [nat] is exists-compact. *)
+Definition LPO := IsHExistsCompact nat.
+
+(** The limited principle of omniscience is equivalent to [nat] being compact. *)
+Definition issigmacompact_nat_lpo (lpo : LPO)
+  : IsSigmaCompact nat.
+Proof.
+  intros P dP.
+  destruct (lpo P dP) as [l|r].
+  1: left; exact (minimal_n _ _ l).
+  right; exact (r o tr).
+Defined.
+
+(** The weak limited principle of omniscience says that for any decidable family on [nat], the negation of the total type is decidable. *)
+Definition WLPO
+  := forall (P : nat -> Type) (dP : forall n : nat, Decidable (P n)), Decidable (~ sig P).
+
+Instance ishprop_wlpo `{Funext} : IsHProp WLPO := _.
+
+(** The weak limited principle of omniscience is logically equivalent to [nat] being Π-compact. *)
+Definition iff_wlpo_ispicompact_nat : WLPO <-> IsPiCompact nat
+  := symmetric_iff _ _ (iff_ispicompact_decidable_not_sigma nat).
 
 Section Uniform_Search.
 
