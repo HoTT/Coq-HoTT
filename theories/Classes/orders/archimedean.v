@@ -37,10 +37,10 @@ Section strict_field_order.
 
   (** ** Addition *)
 
-  Lemma char_plus_left : forall (q : Q) (x y : F),
+  Lemma char_plus_left (q : Q) (x y : F) :
       ' q < x + y <-> hexists (fun s : Q => (' s < x) /\ (' (q - s) < y)).
   Proof.
-    intros q x y; split.
+    split.
     - intros ltqxy.
       assert (ltqyx : ' q - y < x) by exact (snd (flip_lt_minus_l y (' q) x) ltqxy).
       assert (hs := archimedean_property Q F (' q - y) x ltqyx).
@@ -53,10 +53,10 @@ Section strict_field_order.
       apply plus_lt_compat; [exact ltsx|exact ltqsy].
   Qed.
 
-  Lemma char_plus_right : forall (r : Q) (x y : F),
+  Lemma char_plus_right (r : Q) (x y : F) :
       x + y < ' r <-> hexists (fun t : Q => (x < ' t) /\ (y < ' (r - t))).
   Proof.
-    intros r x y; split.
+    split.
     - intros ltxyr.
       assert (ltxry : x < ' r - y) by exact (snd (flip_lt_minus_r y (' r) x) ltxyr).
       assert (ht := archimedean_property Q F x (' r - y) ltxry).
@@ -197,7 +197,7 @@ Section strict_field_order.
       intro lt; apply flip_lt_negate, (strictly_order_reflecting (x +)), lt.
     Qed.
 
-    Lemma char_times_left : forall (q : Q) (x y : F),
+    Lemma char_times_left (q : Q) (x y : F) :
             ' q < x * y
         <-> hexists4 (fun a b c d : Q =>
                         (q < meet (meet (a * c) (a * d)) (meet (b * c) (b * d)))
@@ -208,7 +208,7 @@ Section strict_field_order.
                         )
                      ).
     Proof.
-      intros q x y; split.
+      split.
       - intros ltqxy.
         assert (pos : 0 < x * y - ' q) by exact (snd (flip_pos_minus (' q) (x * y)) ltqxy).
         assert (h := archimedean_mult_approx x y (x * y - ' q) pos).
@@ -224,7 +224,7 @@ Section strict_field_order.
           first [assumption | apply lt_le; assumption].
     Qed.
 
-    Lemma char_times_right : forall (r : Q) (x y : F),
+    Lemma char_times_right (r : Q) (x y : F) :
             x * y < ' r
         <-> hexists4 (fun a b c d : Q =>
                         (join (join (a * c) (a * d)) (join (b * c) (b * d)) < r)
@@ -235,7 +235,7 @@ Section strict_field_order.
                         )
                      ).
     Proof.
-      intros r x y; split.
+      split.
       - intros ltxyr.
         assert (pos : 0 < ' r - x * y) by exact (snd (flip_pos_minus (x * y) (' r)) ltxyr).
         assert (h := archimedean_mult_approx x y (' r - x * y) pos).
@@ -270,54 +270,50 @@ Section strict_field_order.
     rewrite <- 2!negate_mult_distr_r. apply flip_lt_negate.
   Qed.
 
-  Lemma char_recip_pos_left : forall (q : Q) (z : F) (nu : 0 < z),
+  Lemma char_recip_pos_left (q : Q) (z : F) (nu : 0 < z) :
     'q < recip' z (positive_apart_zero z nu) <-> ' q * z < 1.
   Proof.
-    intros q z nu.
     rewrite <- (recip_inverse' z (positive_apart_zero z nu)), (commutativity z).
     apply lt_iff_mult_pos_r, nu.
   Qed.
 
-  Lemma char_recip_pos_right : forall (r : Q) (z : F) (nu : 0 < z),
+  Lemma char_recip_pos_right (r : Q) (z : F) (nu : 0 < z) :
     recip' z (positive_apart_zero z nu) < ' r <-> 1 < ' r * z.
   Proof.
-    intros r z nu.
     rewrite <- (recip_inverse' z (positive_apart_zero z nu)), (commutativity z).
     apply lt_iff_mult_pos_r, nu.
   Qed.
 
-  Lemma char_recip_neg_left : forall (q : Q) (w : F) (nu : w < 0),
+  Lemma char_recip_neg_left (q : Q) (w : F) (nu : w < 0) :
     'q < recip' w (negative_apart_zero w nu) <-> 1 < ' q * w.
   Proof.
-    intros q w nu.
     rewrite <- (recip_inverse' w (negative_apart_zero w nu)), (commutativity w).
     apply lt_iff_mult_neg_r, nu.
   Qed.
 
-  Lemma char_recip_neg_right : forall (r : Q) (w : F) (nu : w < 0),
+  Lemma char_recip_neg_right (r : Q) (w : F) (nu : w < 0) :
     recip' w (negative_apart_zero w nu) < ' r <-> ' r * w < 1.
   Proof.
-    intros r w nu.
     rewrite <- (recip_inverse' w (negative_apart_zero w nu)), (commutativity w).
     apply lt_iff_mult_neg_r, nu.
   Qed.
 
   (** ** Meet and join *)
 
-  Lemma char_meet_left : forall (q : Q) (x y : F),
+  Lemma char_meet_left (q : Q) (x y : F) :
       ' q < meet x y <-> ' q < x /\ ' q < y.
   Proof.
-    intros q x y; split.
+    split.
     - intros ltqm; split; (rapply lt_le_trans; [exact ltqm|]).
       + apply meet_lb_l.
       + apply meet_lb_r.
     - intros [ltqx ltqy]. apply meet_lt_l; assumption.
   Qed.
 
-  Lemma char_meet_right : forall (r : Q) (x y : F),
+  Lemma char_meet_right (r : Q) (x y : F) :
       meet x y < 'r <-> hor (x < 'r) (y < 'r).
   Proof.
-    intros r x y; split.
+    split.
     - intros ltmr.
       assert (cx := cotransitive ltmr x).
       assert (cy := cotransitive ltmr y).
@@ -330,10 +326,10 @@ Section strict_field_order.
       + apply meet_lt_r_r. assumption.
   Qed.
 
-  Lemma char_join_left : forall (q : Q) (x y : F),
+  Lemma char_join_left (q : Q) (x y : F) :
       ' q < join x y <-> hor ('q < x) ('q < y).
   Proof.
-    intros q x y; split.
+    split.
     - intros ltqj.
       assert (cx := cotransitive ltqj x).
       assert (cy := cotransitive ltqj y).
@@ -346,10 +342,10 @@ Section strict_field_order.
       + apply join_lt_l_r. assumption.
   Qed.
 
-  Lemma char_join_right : forall (r : Q) (x y : F),
+  Lemma char_join_right (r : Q) (x y : F) :
       join x y < ' r <-> x < ' r /\ y < ' r.
   Proof.
-    intros r x y; split.
+    split.
     - intros ltjr; split; (rapply le_lt_trans; [|exact ltjr]).
       + apply join_ub_l.
       + apply join_ub_r.
