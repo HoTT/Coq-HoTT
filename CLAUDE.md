@@ -39,6 +39,7 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 ## Working on a track
 
 - Re-read this file before each commit: the rules may have changed since you started, and changes are announced only by updating it.
+- Force-pushing is allowed to any branch whose name starts with `abooij/` and that has no pull request open; never force-push other branches.
 - Edit only your own entries of `contrib/Booij2020Thesis.v`.
 - A clean build of the library takes about 1.5 minutes on 4 cores; `bin/build check` takes about 30 seconds more.
 
