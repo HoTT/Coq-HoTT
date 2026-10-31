@@ -927,7 +927,9 @@ be avoided in this context: although the terms it produces are at
 least predictable, they are one big `transport` (under a different
 name) whereas a term we would want to reason about ought to be
 constructed using smaller pieces like `ap` and `concat` which we can
-understand.
+understand. That said, `rewrite` now produces terms that unfold to
+`transport`, so we are able to reason about such terms when necessary
+using lemmas about transport.
 
 Here are some acceptable tactics to use in transparent definitions
 (this is not an exhaustive list):
@@ -940,20 +942,15 @@ Here are some acceptable tactics to use in transparent definitions
 - `apply`, `eapply`, `assumption`, `eassumption`, `exact`
 - `refine`, `nrefine`, `srefine`, `snrefine` (see below for the last three)
 - `rapply`, `napply`, `tapply`, `srapply`, `snapply`, `stapply` (see below)
-- `lhs`, `lhs_V`, `rhs`, `rhs_V`
+- `lhs`, `lhs_V`, `rhs`, `rhs_V` and their primed variants
 - `reflexivity`, `symmetry`, `transitivity`, `etransitivity`
 - `by`, `done`
+- `rewrite`, if necessary
 
-Conversely, if you want to use `rewrite`, that is fine, but you might
-then make the thing you are defining opaque. If it turns out later
-that you need it to be transparent, then you should go back and prove
-it without using `rewrite`.
-
-Currently, there are some basic facts in the library, such as the
-"adjointify" lemma, which are proven using `rewrite` and hence are at
-least partially opaque. It might be desirable one day to prove these
-more explicitly and make them transparent, but so far it has not been
-necessary.
+If the term you produce is particularly unwieldy, it might be best
+to make the thing you are defining opaque. If it turns out later
+that you need it to be transparent, then you might need to reprove
+it with a cleaner proof.
 
 Note that it _is_ acceptable for the definition of a transparent
 theorem to invoke other theorems which are opaque. For instance,
@@ -967,13 +964,14 @@ generally be "completely transparent".
 It is possible to make subterms of a term opaque by using the
 `abstract` tactic, although that requires grouping the entire proof
 script to be abstracted into a single command with semicolons,
-e.g. `abstract (apply lem1; apply lem2; reflexivity)`. Note that the
-`assert` tactic produces subterms that cannot be inspected by the rest
-of the proof script, but they remain transparent in the resulting
-proof term (at least if the proof is ended with `Defined.`).
+e.g. `abstract (apply lem1; apply lem2; reflexivity)`.
 
-For a transparent subterm, use `refine` or `transparent assert` (the
-latter defined in `Basics/Overture`; see "Available tactics", below).
+Note that the `assert` tactic produces subterms that cannot be
+inspected by the rest of the proof script, but they remain transparent
+in the resulting proof term (at least if the proof is ended with
+`Defined.`).  For a transparent subterm, use `refine` or `transparent
+assert` (the latter defined in `Basics/Overture`; see "Available
+tactics", below).
 
 ## 8. Imports/exports
 
