@@ -32,12 +32,12 @@ Class Triangular A `{Closeness A}
   := triangular : forall u v w e d, close e u v -> close d v w ->
   close (e+d) u w.
 
-Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
+Class Rounded@{i j} (A:Type@{i}) `{Closeness@{i} A}
   := rounded : forall e u v, iff@{i j j} (close e u v)
     (merely@{j} (sig@{UQ j} (fun d => sig@{UQ j} (fun d' =>
       e = d + d' /\ close d u v)))).
 
-Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
+Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness@{i} A} :=
   { premetric_prop :: forall e, is_mere_relation A (close e)
   ; premetric_refl :: forall e, Reflexive (close (A:=A) e)
   ; premetric_symm :: forall e, Symmetric (close (A:=A) e)
@@ -54,26 +54,30 @@ apply (@HSet.ishset_hrel_subpaths@{j i j} _ (fun x y => forall e, close e x y)).
 - apply separated.
 Qed.
 
-Record Approximation@{i} (A:Type@{i}) {Aclose : Closeness A} :=
+Record Approximation@{i} (A:Type@{i}) {Aclose : Closeness@{i} A} :=
   { approximate :> Q+ -> A
   ; approx_equiv : forall d e, close (d+e) (approximate d) (approximate e) }.
 
-Lemma approx_eq `{Funext} `{Closeness A} `{forall e x y, IsHProp (close e x y)}
-  : forall x y : Approximation A,
-  approximate _ x = approximate _ y -> x = y.
+Lemma approx_eq@{i j | i <= j, UQ <= j}
+  `{Funext} {A : Type@{i}} `{Closeness@{i} A}
+  `{forall e x y, IsHProp (close e x y)}
+  : forall x y : Approximation@{i} A,
+  @paths@{j} _ (approximate@{i} _ x) (approximate@{i} _ y)
+    -> @paths@{j} _ x y.
 Proof.
 intros [x Ex] [y Ey];simpl;intros E.
 destruct E. apply ap. apply path_ishprop.
 Qed.
 
 
-Definition IsLimit@{i} {A:Type@{i} } {Aclose : Closeness A}
+Definition IsLimit@{i} {A:Type@{i} } {Aclose : Closeness@{i} A}
   (x : Approximation A) (l : A)
   := forall e d : Q+, close (e+d) (x d) l.
 
-Class Lim@{i} (A:Type@{i}) {Aclose : Closeness A} := lim : Approximation A -> A.
+Class Lim@{i} (A:Type@{i}) {Aclose : Closeness@{i} A} := lim : Approximation A -> A.
 
-Class CauchyComplete@{i} (A:Type@{i}) {Aclose : Closeness A} {Alim : Lim A}
+Class CauchyComplete@{i} (A:Type@{i})
+  {Aclose : Closeness@{i} A} {Alim : Lim@{i} A}
   := cauchy_complete : forall x : Approximation A, IsLimit x (lim x).
 
 Section contents.
@@ -953,8 +957,11 @@ End rationals.
 
 Section cauchy.
 Universe UA.
-Context {A : Type@{UA} } {Aclose : Closeness A}.
-Context `{!PreMetric A}.
+Context {A : Type@{UA} } {Aclose : Closeness@{UA} A}.
+Context `{!PreMetric@{UA _} A}.
+
+(** Keep the metric fixed when applying [IsLimit] to cumulative approximations. *)
+Local Notation IsLimit := (@IsLimit@{UA} A Aclose).
 
 Lemma limit_unique : forall x l1 l2, IsLimit x l1 -> IsLimit x l2 -> l1 = l2.
 Proof.

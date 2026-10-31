@@ -25,8 +25,10 @@ Coercion lgenerator : LocalGenerators >-> Funclass.
 
 (** We put this definition in a module so that no one outside of this file will use it accidentally.  It will be redefined in [Localization] to refer to the localization reflective subuniverse, which is judgmentally the same but will also pick up typeclass inference for [In]. *)
 Module Import IsLocal_Internal.
-  Definition IsLocal f X :=
-    (forall (i : lgen_indices f), ooExtendableAlong (f i) (fun _ => X)).
+  Definition IsLocal@{i j a | i <= j, a <= j}
+    (f : LocalGenerators@{a}) (X : Type@{i}) : Type@{j}
+    := forall (k : lgen_indices f),
+        ooExtendableAlong@{a a i j} (f k) (fun _ => X).
 End IsLocal_Internal.
 
 Class IsAccRSU@{a i} (O : Subuniverse@{i}) :=

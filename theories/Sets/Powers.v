@@ -1,4 +1,6 @@
-From HoTT Require Import Basics Types TruncType.
+From HoTT Require Import Basics Types.
+(** Export the universe-truncation hints needed to infer truncation of power sets. *)
+From HoTT Require Export Universes.TruncType.
 From HoTT Require Import Universes.Smallness.
 From HoTT Require Import Spaces.Card Spaces.Nat.Core.
 
@@ -27,7 +29,8 @@ Definition power_iterated_shift X n
   : power_iterated (X -> HProp) n = (power_iterated X n -> HProp)
   := (nat_iter_succ_r _ _ _)^.
 
-Instance hset_power {UA : Univalence} (X : HSet)
+(** This is not an instance: [istrunc_arrow] and [istrunc_trunctype] already suffice, and an instance hint can lift [HProp] to an unwanted universe. *)
+Lemma hset_power {UA : Univalence} (X : HSet)
   : IsHSet (X -> HProp).
 Proof.
   apply istrunc_S.

@@ -111,9 +111,7 @@ Defined.
 Definition equiv_path_dhprop `{Univalence} (P Q : DHProp)
 : (P = Q :> Type) <~> (P = Q :> DHProp).
 Proof.
-  assert (eq_type_hprop : (P = Q :> Type) <~> (P = Q :> HProp)) by apply equiv_path_trunctype'.
-  assert (eq_hprop_dhprop : (P = Q :> HProp) <~> (P = Q :> DHProp)) by apply equiv_path_dhprop'.
-  exact (eq_hprop_dhprop oE eq_type_hprop).
+  exact (equiv_path_dhprop' P Q oE equiv_path_trunctype' P Q).
 Defined.
 
 Definition path_dhprop `{Univalence} {P Q : DHProp}
