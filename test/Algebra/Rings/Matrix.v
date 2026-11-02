@@ -192,7 +192,7 @@ Section Centrosymmetric.
   Goal matrix_mult (exchange_matrix R n) M
     = matrix_mult M (exchange_matrix R n).
   Proof.
-    exact (exchange_matrix_iscentrosymmetric M).
+    exact (commute_exchange_iscentrosymmetric M).
   Qed.
 
   Goal forall P : Matrix R 0 0,
@@ -200,7 +200,7 @@ Section Centrosymmetric.
       = matrix_mult P (exchange_matrix R 0) -> IsCentrosymmetric P.
   Proof.
     intros P p.
-    exact (iscentrosymmetric_exchange_matrix p).
+    exact (iscentrosymmetric_commute_exchange p).
   Qed.
 End Centrosymmetric.
 

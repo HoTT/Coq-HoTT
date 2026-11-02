@@ -1144,7 +1144,7 @@ Class IsCentrosymmetric {A : Type@{i}} {n : nat} (M : Matrix@{i} A n n) : Type@{
         entry M i j = entry M (nat_pred n - i) (nat_pred n - j)).
 
 (** The characterizing property of centrosymmetric matrices is that they commute with the exchange matrix. *)
-Definition exchange_matrix_iscentrosymmetric {R : Ring@{i}} {n : nat}
+Definition commute_exchange_iscentrosymmetric {R : Ring@{i}} {n : nat}
   (M : Matrix@{i} R n n) `{!IsCentrosymmetric M}
   : matrix_mult (exchange_matrix R n) M = matrix_mult M (exchange_matrix R n).
 Proof.
@@ -1161,7 +1161,7 @@ Proof.
 Defined.
 
 (** Conversely, a matrix commuting with the exchange matrix is centrosymmetric. *)
-Definition iscentrosymmetric_exchange_matrix {R : Ring@{i}} {n : nat}
+Definition iscentrosymmetric_commute_exchange {R : Ring@{i}} {n : nat}
   {M : Matrix@{i} R n n}
   (p : matrix_mult (exchange_matrix R n) M = matrix_mult M (exchange_matrix R n))
   : IsCentrosymmetric M.
@@ -1195,7 +1195,7 @@ Defined.
 Instance iscentrosymmetric_matrix_identity {R : Ring@{i}} {n : nat}
   : IsCentrosymmetric (identity_matrix R n).
 Proof.
-  napply iscentrosymmetric_exchange_matrix.
+  napply iscentrosymmetric_commute_exchange.
   exact (rng_mult_one_r (A:=matrix_ring R n) _ @ (rng_mult_one_l _)^).
 Defined.
 
@@ -1250,11 +1250,13 @@ Instance iscentrosymmetric_matrix_mult {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) {H1 : IsCentrosymmetric M} {H2 : IsCentrosymmetric N}
   : IsCentrosymmetric (matrix_mult M N).
 Proof.
-  napply iscentrosymmetric_exchange_matrix.
+  napply iscentrosymmetric_commute_exchange.
   lhs napply (rng_mult_assoc (A:=matrix_ring R n)).
-  lhs exact (ap (fun X => matrix_mult X N) (exchange_matrix_iscentrosymmetric M)).
+  lhs exact (ap (fun X => matrix_mult X N)
+    (commute_exchange_iscentrosymmetric M)).
   lhs_V napply (rng_mult_assoc (A:=matrix_ring R n)).
-  lhs exact (ap (matrix_mult M) (exchange_matrix_iscentrosymmetric N)).
+  lhs exact (ap (matrix_mult M)
+    (commute_exchange_iscentrosymmetric N)).
   napply (rng_mult_assoc (A:=matrix_ring R n)).
 Defined.
 
