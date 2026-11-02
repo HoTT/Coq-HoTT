@@ -3,6 +3,7 @@ Require Import Types.Sigma.
 Require Import Spaces.Nat.Core.
 Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.
 Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.FiniteSum.
+Require Import Algebra.Monoids.Centralizer.
 Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
   Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
@@ -1255,13 +1256,10 @@ Instance iscentrosymmetric_matrix_mult {R : Ring@{i}} {n : nat}
   : IsCentrosymmetric (matrix_mult M N).
 Proof.
   napply iscentrosymmetric_commute_exchange.
-  lhs napply (rng_mult_assoc (A:=matrix_ring R n)).
-  lhs exact (ap (fun X => matrix_mult X N)
-    (commute_exchange_iscentrosymmetric M)).
-  lhs_V napply (rng_mult_assoc (A:=matrix_ring R n)).
-  lhs exact (ap (matrix_mult M)
+  exact (centralizer_sgop (Aop:=@ring_mult (matrix_ring R n))
+    (exchange_matrix R n) M N
+    (commute_exchange_iscentrosymmetric M)
     (commute_exchange_iscentrosymmetric N)).
-  napply (rng_mult_assoc (A:=matrix_ring R n)).
 Defined.
 
 (** Centrosymmetric matrices form a subring of the matrix ring. *)
