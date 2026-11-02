@@ -45,10 +45,14 @@ Section cong_trace.
     : for_all_2_family_prod A A Φ
         (map_family_prod i a) (map_family_prod i b).
   Proof.
-    induction w; try assumption.
-    destruct a as [x a], b as [y b], R as [C R].
-    split; try assumption.
-    apply IHw; try assumption.
+    revert a b R.
+    induction w as [s|s w IHw].
+    - intros a b R.
+      exact R.
+    - intros [x a] [y b] [C R].
+      split.
+      + exact C.
+      + exact (IHw a b R).
   Qed.
 
   #[export] Instance ops_compatible_trace_trace
