@@ -1056,7 +1056,7 @@ Instance issymmetric_exchange {R : Ring} {n : nat}
   := exchange_matrix_transpose.
 
 (** An alternate way to write the exchange matrix. *)
-Definition exchange_matrix_sub {R n}
+Definition entry_exchange_matrix {R n}
   (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
   : entry (exchange_matrix R n) i j = kronecker_delta (R:=R) i (nat_pred n - j)%nat.
 Proof.
@@ -1075,7 +1075,7 @@ Definition exchange_matrix_sub' {R n}
 Proof.
   rewrite <- exchange_matrix_transpose.
   lhs napply entry_Build_Matrix.
-  lhs napply exchange_matrix_sub.
+  lhs napply entry_exchange_matrix.
   apply kronecker_delta_symm.
 Defined.
 
@@ -1117,7 +1117,7 @@ Proof.
   2: napply rng_sum_kronecker_delta_r'.
   intros k Hk.
   apply (ap (fun r => entry M i k * r)).
-  apply exchange_matrix_sub.
+  apply entry_exchange_matrix.
 Defined.
 
 (** The square of the exchange matrix is the identity matrix. *)
