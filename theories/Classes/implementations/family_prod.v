@@ -72,9 +72,11 @@ Section family_prod.
     (R : ∀ i, Relation (F i)) `{!∀ i, Reflexive (R i)}
     {ℓ : list I} (s : FamilyProd F ℓ)
     : for_all_2_family_prod F F R s s.
-  Proof with try reflexivity.
-    induction ℓ...
-    split...
-    apply IHℓ.
+  Proof.
+    induction ℓ as [|i ℓ IHℓ].
+    - exact tt.
+    - split.
+      + reflexivity.
+      + exact (IHℓ (snd s)).
   Defined.
 End family_prod.
