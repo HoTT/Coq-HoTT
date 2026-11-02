@@ -1040,20 +1040,15 @@ Definition exchange_matrix (R : Ring) n : Matrix R n n
   := Build_Matrix R n n (fun i j Hi Hj
       => kronecker_delta (R:=R) (i + j) (nat_pred n))%nat.
 
-(** The exchange matrix is invariant under transpose. *)
-Definition exchange_matrix_transpose {R n}
-  : matrix_transpose (exchange_matrix R n) = exchange_matrix R n.
+(** The exchange matrix is symmetric. *)
+Instance issymmetric_exchange {R : Ring} {n : nat}
+  : IsSymmetric (exchange_matrix R n).
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
   rewrite 3 entry_Build_Matrix.
   by rewrite nat_add_comm.
 Defined.
-
-(** The exchange matrix is symmetric. *)
-Instance issymmetric_exchange {R : Ring} {n : nat}
-  : IsSymmetric (exchange_matrix R n)
-  := exchange_matrix_transpose.
 
 (** An alternate way to write the exchange matrix. *)
 Definition entry_exchange_matrix {R n}
@@ -1073,7 +1068,8 @@ Definition entry_exchange_matrix' {R n}
   (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
   : entry (exchange_matrix R n) i j = kronecker_delta (R:=R) (nat_pred n - i)%nat j.
 Proof.
-  rewrite <- exchange_matrix_transpose.
+  lhs_V rapply (ap (fun M => entry M i j)
+    (matrix_transpose_issymmetric (exchange_matrix R n))).
   lhs napply entry_Build_Matrix.
   lhs napply entry_exchange_matrix.
   apply kronecker_delta_symm.
