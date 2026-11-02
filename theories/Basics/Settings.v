@@ -57,6 +57,7 @@ Global Set Keyed Unification.
 (** This tells Coq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. *)
 Global Set Loose Hint Behavior "Strict".
 
+Create HintDb core.
 Create HintDb rewrite discriminated.
 #[export] Hint Variables Opaque : rewrite.
 Create HintDb typeclass_instances discriminated.

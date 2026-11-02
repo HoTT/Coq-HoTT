@@ -504,6 +504,8 @@ End SelfBiproducts.
 
 (** * Export hints *)
 
+Create HintDb biproduct.
+
 Hint Resolve
   biproduct_coprod_beta_l biproduct_coprod_beta_r
   biproduct_prod_beta_l biproduct_prod_beta_r
