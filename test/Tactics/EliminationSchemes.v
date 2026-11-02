@@ -1,6 +1,9 @@
 From HoTT.Basics Require Import Overture Notations.
 From HoTT.Spaces Require Import Nat.Core Nat.Arithmetic SInt.
 
+Local Set Warnings "-unknown-warning".
+Local Set Warnings "+deprecated-lookup-elim-by-name".
+
 Goal forall n : nat, n = n.
 Proof.
   intro n; induction n; reflexivity.
