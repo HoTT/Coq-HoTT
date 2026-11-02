@@ -73,13 +73,10 @@ Section family_prod.
     {ℓ : list I} (s : FamilyProd F ℓ)
     : for_all_2_family_prod F F R s s.
   Proof.
-    revert s.
     induction ℓ as [|i ℓ IHℓ].
-    - intro s.
-      exact tt.
-    - intros [x s].
-      split.
+    - exact tt.
+    - split.
       + reflexivity.
-      + exact (IHℓ s).
+      + exact (IHℓ (snd s)).
   Defined.
 End family_prod.
