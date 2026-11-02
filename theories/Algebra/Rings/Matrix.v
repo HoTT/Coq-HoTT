@@ -1069,7 +1069,7 @@ Proof.
 Defined.
 
 (** And another way to write the exchange matrix. *)
-Definition exchange_matrix_sub' {R n}
+Definition entry_exchange_matrix' {R n}
   (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
   : entry (exchange_matrix R n) i j = kronecker_delta (R:=R) (nat_pred n - i)%nat j.
 Proof.
@@ -1102,7 +1102,7 @@ Proof.
   2: napply rng_sum_kronecker_delta_l.
   intros k Hk.
   apply (ap (.* _)).
-  apply exchange_matrix_sub'.
+  apply entry_exchange_matrix'.
 Defined.
 
 Definition entry_matrix_mult_exchange_r {R : Ring} {m n : nat}
@@ -1127,7 +1127,7 @@ Proof.
   apply path_matrix.
   intros i j Hi Hj.
   lhs napply entry_matrix_mult_exchange_l.
-  lhs napply exchange_matrix_sub'.
+  lhs napply entry_exchange_matrix'.
   rhs napply entry_Build_Matrix.
   apply (ap (fun k => kronecker_delta k j)).
   apply nat_sub_sub_cancel_r.
