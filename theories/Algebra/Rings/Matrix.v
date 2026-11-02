@@ -1199,6 +1199,14 @@ Proof.
   exact (rng_mult_one_r (A:=matrix_ring R n) _ @ (rng_mult_one_l _)^).
 Defined.
 
+(** The exchange matrix is centrosymmetric. *)
+Instance iscentrosymmetric_exchange_matrix {R : Ring@{i}} {n : nat}
+  : IsCentrosymmetric (exchange_matrix R n).
+Proof.
+  napply iscentrosymmetric_commute_exchange.
+  reflexivity.
+Defined.
+
 (** The sum of two centrosymmetric matrices is centrosymmetric. *)
 Instance iscentrosymmetric_matrix_plus {A : AbGroup@{i}} {n : nat}
   (M N : Matrix A n n) {H1 : IsCentrosymmetric M} {H2 : IsCentrosymmetric N}

@@ -148,6 +148,9 @@ Definition test_exchange_matrix_columns_entry
 Section Centrosymmetric.
   Context (R : Ring).
 
+  Succeed Definition test (n : nat)
+    : IsCentrosymmetric (exchange_matrix R n) := _.
+
   Goal IsCentrosymmetric (identity_matrix R 0).
   Proof.
     exact _.
