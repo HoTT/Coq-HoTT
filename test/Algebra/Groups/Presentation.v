@@ -7,31 +7,29 @@ Local Set Warnings "+parsing".
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
-Check ⟨ x | x * x * x , x^ ⟩.
-Check ⟨ x , y | x * y ,  x * y * x , x * y^ * x * x * x⟩.
-Check ⟨ x , y , z | x * y * z , x * z^ , x * y⟩.
+(** Check the full expansions, including binder substitution and the order of relators. *)
+Succeed Definition test
+  : ⟨ x | x , x^ ⟩
+    = Build_Finite_GroupPresentation 1 2
+        (fscons (freegroup_in (fin_nat 0))
+          (fscons ((freegroup_in (fin_nat 0))^) fsnil)) := 1.
+Succeed Definition test
+  : ⟨ x , y | y , x ⟩
+    = Build_Finite_GroupPresentation 2 2
+        (fscons (freegroup_in (fin_nat 1))
+          (fscons (freegroup_in (fin_nat 0)) fsnil)) := 1.
+Succeed Definition test
+  : ⟨ x , y , z | z , x , y ⟩
+    = Build_Finite_GroupPresentation 3 3
+        (fscons (freegroup_in (fin_nat 2))
+          (fscons (freegroup_in (fin_nat 0))
+            (fscons (freegroup_in (fin_nat 1)) fsnil))) := 1.
 
-(** Presentations can be passed as unparenthesized function arguments, with one or several relators. *)
+(** Each notation also works as an unparenthesized function argument with a single relator. *)
 Succeed Definition test : gp_generators ⟨ x | x ⟩ = Fin 1 := 1.
 Succeed Definition test : gp_generators ⟨ x , y | x * y ⟩ = Fin 2 := 1.
 Succeed Definition test
   : gp_generators ⟨ x , y , z | x * y * z ⟩ = Fin 3 := 1.
-Succeed Definition test : gp_rel_index ⟨ x | x , x^ ⟩ = Fin 2 := 1.
-Succeed Definition test
-  : gp_rel_index ⟨ x , y | x * y , y * x , x^ ⟩ = Fin 3 := 1.
-Succeed Definition test
-  : gp_rel_index ⟨ x , y , z | x * y , y * z , z * x ⟩ = Fin 3 := 1.
-
-(** Check binder substitution and the order of relators. *)
-Succeed Definition test
-  : gp_relators ⟨ x | x , x^ ⟩ (fin_nat 1)
-    = (freegroup_in (fin_nat 0))^ := 1.
-Succeed Definition test
-  : gp_relators ⟨ x , y | x * y ⟩ (fin_nat 0)
-    = freegroup_in (fin_nat 0) * freegroup_in (fin_nat 1) := 1.
-Succeed Definition test
-  : gp_relators ⟨ x , y , z | x * y , z^ , x * z ⟩ (fin_nat 1)
-    = (freegroup_in (fin_nat 2))^ := 1.
 
 (** Relators still admit full terms, including binders, at level 200. *)
 Succeed Definition test

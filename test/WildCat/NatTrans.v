@@ -8,9 +8,6 @@ Section PointedTransformationNotation.
     `{IsPointed B, IsPointed C}.
   Context (F G K : B -->* C).
 
-  Succeed Definition test (h : F $=>* G)
-    : h ^*$ = ptransformation_inverse F G h := 1.
-
   (** Inversion binds more tightly than function application and composes with other postfix notations. *)
   Succeed Definition test (h : F $=>* G) (f : (G $=>* F) -> B)
     : f h ^*$ = f (ptransformation_inverse F G h) := 1.
