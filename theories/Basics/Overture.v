@@ -696,6 +696,7 @@ Inductive nat : Type0 :=
 | O : nat
 | S : nat -> nat.
 
+(** TODO: Once our minimum supported Rocq version is 9.2, consolidate these duplicate schemes, updating registrations and explicit uses. Rocq 9.1 still requires the [_rec] and [_rect] names for [induction] and [elim]. *)
 Scheme nat_ind := Induction for nat Sort Type.
 Scheme nat_rect := Induction for nat Sort Type.
 Scheme nat_rec := Induction for nat Sort Type.
@@ -712,6 +713,7 @@ Register Empty as core.False.type.
 
 Scheme Empty_ind := Induction for Empty Sort Type.
 Scheme Empty_rec := Minimality for Empty Sort Type.
+(** TODO: Once our minimum supported Rocq version is 9.2, remove [Empty_rect] and update its explicit uses. Rocq 9.1 still looks up this name for elimination into [Type]. *)
 Definition Empty_rect := Empty_ind.
 Register Scheme Empty_ind as rec_dep for Empty.
 Register Scheme Empty_rec as rec_nodep for Empty.

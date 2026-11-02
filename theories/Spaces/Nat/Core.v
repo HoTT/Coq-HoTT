@@ -131,6 +131,7 @@ Inductive leq (n : nat) : nat -> Type0 :=
 
 Arguments leq_succ_r {n m} _.
 
+(** TODO: Once our minimum supported Rocq version is 9.2, consolidate these duplicate schemes and update their registrations. Rocq 9.1 still requires the [_rec] and [_rect] names for [induction] and [elim]. *)
 Scheme leq_ind := Induction for leq Sort Type.
 Scheme leq_rect := Induction for leq Sort Type.
 Scheme leq_rec := Induction for leq Sort Type.
