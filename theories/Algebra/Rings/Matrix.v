@@ -1256,7 +1256,7 @@ Instance iscentrosymmetric_matrix_mult {R : Ring@{i}} {n : nat}
   : IsCentrosymmetric (matrix_mult M N).
 Proof.
   napply iscentrosymmetric_commute_exchange.
-  exact (centralizer_sgop (Aop:=@ring_mult (matrix_ring R n))
+  exact (centralizer_sgop (A:=matrix_ring R n)
     (exchange_matrix R n) M N
     (commute_exchange_iscentrosymmetric M)
     (commute_exchange_iscentrosymmetric N)).
