@@ -120,10 +120,10 @@ Reserved Notation "x .2" (at level 1, format "x '.2'").
 
 (** Paths *)
 Reserved Notation "p ^" (at level 1, format "p '^'").
-Reserved Notation "p @ q" (at level 20).
+Reserved Notation "p @ q" (at level 20, left associativity).
 Reserved Notation "p # x" (right associativity, at level 65).
 Reserved Notation "p # x" (right associativity, at level 65).
-Reserved Notation "p @@ q" (at level 20).
+Reserved Notation "p @@ q" (at level 20, left associativity).
 Reserved Notation "p @' q" (at level 21, left associativity,
   format "'[v' p '/' '@''  q ']'").
 Reserved Notation "f == g" (at level 70, no associativity).
@@ -190,9 +190,9 @@ Reserved Notation "f ^-1$'" (at level 1, format "f '^-1$''").
 Reserved Infix "@@h" (at level 30).
 Reserved Infix "@@v" (at level 30).
 Reserved Infix "@lr" (at level 30).
-Reserved Notation "x '@Dp' y"  (at level 20).
-Reserved Notation "x '@Dr' y" (at level 20).
-Reserved Notation "x '@Dl' y" (at level 20).
+Reserved Notation "x '@Dp' y"  (at level 20, left associativity).
+Reserved Notation "x '@Dr' y" (at level 20, left associativity).
+Reserved Notation "x '@Dl' y" (at level 20, left associativity).
 Reserved Notation "x '^D'" (at level 1).
 
 (** Lists *)
