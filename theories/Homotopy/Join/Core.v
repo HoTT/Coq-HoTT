@@ -1,5 +1,4 @@
 From HoTT Require Import Basics Types.
-Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Homotopy.NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
@@ -460,22 +459,6 @@ Section JoinNatSq.
     apply concat_1p_p1.
   Defined.
 
-  Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
-    (p : a = a') (q : b = b')
-    : PathSquare (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
-  Proof.
-    destruct p, q.
-    apply sq_refl_v.
-  Defined.
-
-  Definition join_natsq_h {A B : Type} {a a' : A} {b b' : B}
-    (p : a = a') (q : b = b')
-    : PathSquare (jglue a b) (jglue a' b') (ap joinl p) (ap joinr q).
-  Proof.
-    destruct p, q.
-    apply sq_refl_h.
-  Defined.
-
 End JoinNatSq.
 
 (** The triangles that arise when one of the given paths is reflexivity. *)
@@ -527,44 +510,31 @@ Section Diamond.
 
   Context {A B : Type}.
 
-  Definition Diamond (a a' : A) (b b' : B)
-    := PathSquare (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
+  Definition diamond (a a' : A) (b b' : B)
+    := zigzag a a' b = zigzag a a' b'.
 
   Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
-    : zigzag a a' b = zigzag a a' b'.
+    : diamond a a' b b'.
   Proof.
     destruct p.
     exact (concat_pV _ @ (concat_pV _)^).
   Defined.
 
-  Definition diamond_h_sq {a a' : A} (b b' : B) (p : a = a')
-    : Diamond a a' b b'.
-  Proof.
-    by apply sq_path, diamond_h.
-  Defined.
-
   Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
-    : zigzag a a' b = zigzag a a' b'
+    : diamond a a' b b'
     := ap (zigzag a a') p.
 
-  Definition diamond_v_sq (a a' : A) {b b' : B} (p : b = b')
-    : Diamond a a' b b'.
-  Proof.
-    by apply sq_path, diamond_v.
-  Defined.
-
   Lemma diamond_symm (a : A) (b : B)
-    : diamond_v_sq a a 1 = diamond_h_sq b b 1.
+    : diamond_v a a 1 = diamond_h b b 1.
   Proof.
-    unfold diamond_v_sq, diamond_h_sq, diamond_v, diamond_h.
-    symmetry; apply ap, concat_pV.
+    symmetry; apply concat_pV.
   Defined.
 
 End Diamond.
 
 Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
-  : DPath (fun x => Diamond a' x a x) p
-    (diamond_v_sq a' a 1) (diamond_h_sq a a' 1).
+  : transport (fun x => diamond a' x a x) p
+      (diamond_v a' a 1) = diamond_h a a' 1.
 Proof.
   destruct p.
   apply diamond_symm.

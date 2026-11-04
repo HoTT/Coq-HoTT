@@ -1,6 +1,6 @@
+From HoTT Require Import Basics.
 Require Import Types.Paths.
 Require Import Classes.interfaces.abstract_algebra.
-Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
@@ -8,6 +8,7 @@ Require Import Homotopy.Join.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** The Cayley-Dickson Construction *)
 
@@ -228,30 +229,27 @@ Section ImaginaroidHSpace.
     - intros; symmetry; apply jglue.
     - intros a b c d; cbn beta.
       symmetry.
-      apply sq_path.
+      change (diamond (a * c) ((-d) * conj b)
+        (c * b) (conj a * d)).
       rewrite <- (lemma1 a c).
       rewrite <- (lemma2 a b c d).
       rewrite <- (lemma3 b c).
       rewrite <- (lemma4 a b c d).
-      refine (sq_GGGG _ _ _ _ _).
-      2,4: apply ap.
-      1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
-      refine (sq_cGcG _ _ _).
-      1,2: exact (ap_V _ (jglue _ _ )).
-      refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^
-        (jglue _ _) (jglue _ _)^ _).
-      change (PathSquare
-        (jglue (- mon_unit) mon_unit)
-        (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^
-        (jglue (- mon_unit) (conj c * conj a * d * conj b))
-        (jglue (conj c * conj a * d * conj b) mon_unit)^).
+      lhs_V napply (Join_rec_beta_zigzag _ _
+        (fun x y => jglue (f x) (g y))).
+      rhs_V napply (Join_rec_beta_zigzag _ _
+        (fun x y => jglue (f x) (g y))).
+      napply (ap (ap (Join_rec (joinl o f) (joinr o g)
+        (fun x y => jglue (f x) (g y))))).
+      change (diamond (-mon_unit) (conj c * conj a * d * conj b)
+        mon_unit (conj c * conj a * d * conj b)).
       generalize (conj c * conj a * d * conj b).
       clear a b c d.
       change (forall s : Susp A,
-        Diamond (-mon_unit) s (mon_unit) s).
+        diamond (-mon_unit) s mon_unit s).
       srapply Susp_ind; hnf.
-      1: by apply diamond_v_sq.
-      1: by apply diamond_h_sq.
+      1: by apply diamond_v.
+      1: by apply diamond_h.
       intro a.
       apply diamond_twist.
   Defined.
