@@ -1,13 +1,13 @@
-Require Import Types.Paths.
-Require Import Classes.interfaces.abstract_algebra.
-Require Import Cubical.DPath Cubical.PathSquare.
+From HoTT Require Import Basics.
+Require Import Classes.interfaces.abstract_algebra Classes.theory.groups.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
-Require Import Homotopy.Join.Core.
+Require Import Homotopy.Join.Core Homotopy.Join.JoinSusp.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** The Cayley-Dickson Construction *)
 
@@ -46,7 +46,7 @@ Section CayleyDicksonSpheroid_Properties.
   Context {X : pType} `(CayleyDicksonSpheroid X).
 
   Local Instance isequiv_cds_conjug : IsEquiv cds_conjug
-    := isequiv_adjointify cds_conjug cds_conjug cds_conjug_inv cds_conjug_inv.
+    := isequiv_involution cds_conjug cds_conjug_inv.
 
   #[export] Instance cds_factorneg_l : FactorNegLeft (-) (.*.).
   Proof.
@@ -97,7 +97,7 @@ Proof.
   exact involutive.
 Defined.
 
-(** [conjugate_susp A] is involutive as any composite of commuting involutions is an involution. *)
+(** [negate_susp A] is involutive as any composite of commuting involutions is an involution. *)
 Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
   : Involutive (negate_susp A (-)).
 Proof.
@@ -120,19 +120,13 @@ Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_susp_conjug_distr :: DistrOpp hspace_op (conjugate_susp A cdi_negate);
 }.
 
-Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
-  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate)
+Instance isunitpreserving_conjugate_susp {A} `(Negate A)
+  : @IsUnitPreserving _ _ pt pt (conjugate_susp A _)
   := idpath.
 
 (** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spheroid. *)
 Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
   : CayleyDicksonSpheroid (psusp A) := {}.
-
-Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
-  : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
-Proof.
-  exact cds_conjug_left_inv.
-Defined.
 
 Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)
   : RightInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
@@ -164,55 +158,55 @@ Section ImaginaroidHSpace.
   Local Instance hspace_op' : SgOp (Susp A) := hspace_op.
   Local Instance hspace_unit' : MonUnit (Susp A) := hspace_mon_unit.
 
-  (** First we make some observations with the context we have. *)
-  Section Lemmata.
+  Local Definition cd_diamond_map_l (a c : Susp A)
+    := fun x => a * (c * -x).
+  Local Definition cd_diamond_map_r (b c : Susp A)
+    := fun y => c * (y * b).
+
+  Section ScalarBoundary.
 
     Context (a b c d : Susp A).
 
-    Local Definition f := (fun x => a * (c * -x)).
-    Local Definition g := (fun y => c * (y * b)).
-
-    Lemma lemma1 : f (- mon_unit) = a * c.
+    Lemma cd_diamond_map_l_neg_unit
+      : cd_diamond_map_l a c (- mon_unit) = a * c.
     Proof.
-      unfold f; apply ap.
+      unfold cd_diamond_map_l; apply ap.
       exact (hspace_right_identity c).
     Defined.
 
-    Lemma lemma2 : f (conj c * conj a * d * conj b) = (-d) * conj b.
+    Lemma cd_diamond_map_l_parameter
+      : cd_diamond_map_l a c ((conj c * (conj a * d)) * conj b)
+        = (-d) * conj b.
     Proof.
-      unfold f.
-      rewrite 2 factorneg_r.
-      rewrite 3 simple_associativity.
-      rewrite <- distropp.
-      rewrite (right_inverse (a * c)).
-      rewrite (left_identity d).
-      symmetry.
-      apply factorneg_l.
+      unfold cd_diamond_map_l.
+      lhs tapply (ap (a *.) (factorneg_r _ _)).
+      lhs tapply factorneg_r.
+      rhs tapply factorneg_l.
+      napply ap.
+      lhs tapply (ap (a *.) (simple_associativity (f:=(.*.)) _ _ _)).
+      lhs tapply (simple_associativity (f:=(.*.))).
+      napply (ap (.* conj b)).
+      lhs tapply (ap (a *.) (sgop_inv_g_Vg c _)).
+      rapply sgop_inv_g_Vg.
     Defined.
 
-    Lemma lemma3 : g mon_unit = c * b.
+    Lemma cd_diamond_map_r_unit
+      : cd_diamond_map_r b c mon_unit = c * b.
     Proof.
-      unfold g; apply ap.
+      unfold cd_diamond_map_r; apply ap.
       apply left_identity.
     Defined.
 
-    Lemma lemma4 : g (conj c * conj a * d * conj b) = conj a * d.
+    Lemma cd_diamond_map_r_parameter
+      : cd_diamond_map_r b c ((conj c * (conj a * d)) * conj b)
+        = conj a * d.
     Proof.
-      unfold g.
-      rewrite 2 simple_associativity.
-      rewrite <- simple_associativity.
-      rewrite left_inverse.
-      rewrite right_identity.
-      rewrite 2 simple_associativity.
-      rewrite right_inverse.
-      rewrite <- simple_associativity.
-      apply left_identity.
+      unfold cd_diamond_map_r.
+      lhs tapply (ap (c *.) (sgop_inv_gV_g _ b)).
+      tapply sgop_inv_g_Vg.
     Defined.
 
-  End Lemmata.
-
-  Arguments f {_ _}.
-  Arguments g {_ _}.
+  End ScalarBoundary.
 
   (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)].  The following is the spherical form. *)
   #[export] Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).
@@ -228,57 +222,31 @@ Section ImaginaroidHSpace.
     - intros; symmetry; apply jglue.
     - intros a b c d; cbn beta.
       symmetry.
-      apply sq_path.
-      rewrite <- (lemma1 a c).
-      rewrite <- (lemma2 a b c d).
-      rewrite <- (lemma3 b c).
-      rewrite <- (lemma4 a b c d).
-      refine (sq_GGGG _ _ _ _ _).
-      2,4: apply ap.
-      1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
-      refine (sq_cGcG _ _ _).
-      1,2: exact (ap_V _ (jglue _ _ )).
-      refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^
-        (jglue _ _) (jglue _ _)^ _).
-      change (PathSquare
-        (jglue (- mon_unit) mon_unit)
-        (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^
-        (jglue (- mon_unit) (conj c * conj a * d * conj b))
-        (jglue (conj c * conj a * d * conj b) mon_unit)^).
-      generalize (conj c * conj a * d * conj b).
-      clear a b c d.
-      change (forall s : Susp A,
-        Diamond (-mon_unit) s (mon_unit) s).
-      srapply Susp_ind; hnf.
-      1: by apply diamond_v_sq.
-      1: by apply diamond_h_sq.
-      intro a.
-      apply diamond_twist.
+      change (diamond (a * c) ((-d) * conj b) (c * b) (conj a * d)).
+      rewrite <- (cd_diamond_map_l_neg_unit a c).
+      (** Rewrite this corner first since the other also contains [conj a * d]. *)
+      rewrite <- (cd_diamond_map_r_parameter a b c d).
+      rewrite <- (cd_diamond_map_l_parameter a b c d).
+      rewrite <- (cd_diamond_map_r_unit b c).
+      napply (functor_diamond (cd_diamond_map_l a c) (cd_diamond_map_r b c)).
+      apply diamond_susp.
   Defined.
 
   #[export] Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
-    snapply Join_ind_Flr.
-    1,2: exact (fun _ => ap _ (hspace_left_identity _)).
-    intros a b.
-    lhs napply whiskerR.
-    1: exact (Join_rec_beta_jglue _ _ _ a b).
-    symmetry.
-    apply join_natsq.
+    intro z; simpl.
+    lhs exact (functor2_join hspace_left_identity hspace_left_identity z).
+    napply functor_join_idmap.
   Defined.
 
   #[export] Instance cd_op_right_identity
     : RightIdentity cd_op pt.
   Proof.
-    snapply Join_ind_Flr.
-    1: exact (fun _ => ap joinl (hspace_right_identity _)).
-    1: exact (fun _ => ap joinr (hspace_left_identity _)).
-    intros a b.
-    lhs napply whiskerR.
-    1: exact (Join_rec_beta_jglue _ _ _ a b).
-    simpl; symmetry.
-    apply join_natsq.
+    intro z.
+    (* This one doesn't simplify to a nice term, but a similar proof works. *)
+    lhs napply (functor2_join hspace_right_identity hspace_left_identity).
+    napply functor_join_idmap.
   Defined.
 
   #[export] Instance hspace_cdi_susp_assoc
