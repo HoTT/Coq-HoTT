@@ -1,8 +1,37 @@
+From HoTT Require Import Basics.Overture.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra.
 
 Local Open Scope mc_mult_scope.
 Generalizable Variables G H A B C f g.
+
+(** Cancellation with one-sided inverse and unit laws does not require a group or set truncation. *)
+Section inverse_cancellation.
+  Local Open Scope path_scope.
+
+  Definition sgop_inv_cancel_l {A : Type} `{op : SgOp A}
+    {e : A} {i : A -> A}
+    `{!Associative op, !LeftIdentity op e,
+      !RightInverse op i e} (x y : A)
+    : x * (i x * y) = y.
+  Proof.
+    exact (simple_associativity (f:=op) x (i x) y
+      @ ap (.* y) (right_inverse (op:=op) (inv:=i) (unit:=e) x)
+      @ left_identity (op:=op) (x:=e) y).
+  Defined.
+
+  Definition sgop_inv_cancel_r {A : Type} `{op : SgOp A}
+    {e : A} {i : A -> A}
+    `{!Associative op, !RightIdentity op e,
+      !LeftInverse op i e} (x y : A)
+    : (x * i y) * y = x.
+  Proof.
+    exact ((simple_associativity (f:=op) x (i y) y)^
+      @ ap (x *.) (left_inverse (op:=op) (inv:=i) (unit:=e) y)
+      @ right_identity (op:=op) (y:=e) x).
+  Defined.
+
+End inverse_cancellation.
 
 Section group_props.
   Context `{IsGroup G}.

@@ -1,6 +1,6 @@
 From HoTT Require Import Basics.
 Require Import Types.Paths.
-Require Import Classes.interfaces.abstract_algebra.
+Require Import Classes.interfaces.abstract_algebra Classes.theory.groups.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
@@ -182,17 +182,19 @@ Section ImaginaroidHSpace.
     Defined.
 
     Lemma cd_diamond_map_l_parameter
-      : cd_diamond_map_l a c (conj c * conj a * d * conj b)
+      : cd_diamond_map_l a c ((conj c * (conj a * d)) * conj b)
         = (-d) * conj b.
     Proof.
       unfold cd_diamond_map_l.
-      rewrite 2 factorneg_r.
-      rewrite 3 simple_associativity.
-      rewrite <- distropp.
-      rewrite (right_inverse (a * c)).
-      rewrite (left_identity d).
-      symmetry.
-      apply factorneg_l.
+      lhs tapply (ap (a *.) (factorneg_r _ _)).
+      lhs tapply factorneg_r.
+      rhs tapply factorneg_l.
+      napply ap.
+      lhs tapply (ap (a *.) (simple_associativity (f:=(.*.)) _ _ _)).
+      lhs tapply (simple_associativity (f:=(.*.))).
+      napply (ap (.* conj b)).
+      lhs tapply (ap (a *.) (sgop_inv_cancel_l c _)).
+      rapply sgop_inv_cancel_l.
     Defined.
 
     Lemma cd_diamond_map_r_unit
@@ -203,18 +205,12 @@ Section ImaginaroidHSpace.
     Defined.
 
     Lemma cd_diamond_map_r_parameter
-      : cd_diamond_map_r b c (conj c * conj a * d * conj b)
+      : cd_diamond_map_r b c ((conj c * (conj a * d)) * conj b)
         = conj a * d.
     Proof.
       unfold cd_diamond_map_r.
-      rewrite 2 simple_associativity.
-      rewrite <- simple_associativity.
-      rewrite left_inverse.
-      rewrite right_identity.
-      rewrite 2 simple_associativity.
-      rewrite right_inverse.
-      rewrite <- simple_associativity.
-      apply left_identity.
+      lhs tapply (ap (c *.) (sgop_inv_cancel_r _ b)).
+      tapply sgop_inv_cancel_l.
     Defined.
 
   End ScalarBoundary.
@@ -235,9 +231,10 @@ Section ImaginaroidHSpace.
       symmetry.
       change (diamond (a * c) ((-d) * conj b) (c * b) (conj a * d)).
       rewrite <- (cd_diamond_map_l_neg_unit a c).
+      (** Rewrite this corner first since the other also contains [conj a * d]. *)
+      rewrite <- (cd_diamond_map_r_parameter a b c d).
       rewrite <- (cd_diamond_map_l_parameter a b c d).
       rewrite <- (cd_diamond_map_r_unit b c).
-      rewrite <- (cd_diamond_map_r_parameter a b c d).
       napply (functor_diamond (cd_diamond_map_l a c) (cd_diamond_map_r b c)).
       apply diamond_susp.
   Defined.
