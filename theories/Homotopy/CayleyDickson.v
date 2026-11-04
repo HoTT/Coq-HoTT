@@ -4,7 +4,7 @@ Require Import Classes.interfaces.abstract_algebra.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
-Require Import Homotopy.Join.Core.
+Require Import Homotopy.Join.Core Homotopy.Join.JoinSusp.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
@@ -236,17 +236,7 @@ Section ImaginaroidHSpace.
       rewrite <- (lemma3 b c).
       rewrite <- (lemma4 a b c d).
       napply (functor_diamond f g).
-      change (diamond (-mon_unit) (conj c * conj a * d * conj b)
-        mon_unit (conj c * conj a * d * conj b)).
-      generalize (conj c * conj a * d * conj b).
-      clear a b c d.
-      change (forall s : Susp A,
-        diamond (-mon_unit) s mon_unit s).
-      srapply Susp_ind; hnf.
-      1: by apply diamond_v.
-      1: by apply diamond_h.
-      intro a.
-      apply diamond_twist.
+      apply diamond_susp.
   Defined.
 
   #[export] Instance cd_op_left_identity

@@ -6,6 +6,19 @@ Require Import Pointed.Core Pointed.pEquiv Pointed.pSusp.
 
 Local Open Scope pointed_scope.
 
+(** * Diamonds in the self-join of a suspension *)
+
+Definition diamond_susp {A : Type} (t : Susp A)
+  : diamond South t North t.
+Proof.
+  revert t.
+  snapply Susp_ind.
+  - exact (diamond_v South North 1).
+  - exact (diamond_h North South 1).
+  - intro a.
+    apply diamond_twist.
+Defined.
+
 (** * [Join Bool A] is equivalent to [Susp A]
 
   We give a direct proof of this fact. It is also possible to give a proof using [opyon_equiv_0gpd]; see PR#1769. *)
