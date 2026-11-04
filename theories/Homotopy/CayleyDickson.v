@@ -121,8 +121,8 @@ Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_susp_conjug_distr :: DistrOpp hspace_op (conjugate_susp A cdi_negate);
 }.
 
-Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
-  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate)
+Instance isunitpreserving_conjugate_susp {A} `(Negate A)
+  : @IsUnitPreserving _ _ pt pt (conjugate_susp A _)
   := idpath.
 
 (** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spheroid. *)
