@@ -165,23 +165,27 @@ Section ImaginaroidHSpace.
   Local Instance hspace_op' : SgOp (Susp A) := hspace_op.
   Local Instance hspace_unit' : MonUnit (Susp A) := hspace_mon_unit.
 
-  (** First we make some observations with the context we have. *)
-  Section Lemmata.
+  Local Definition cd_diamond_map_l (a c : Susp A)
+    := fun x => a * (c * -x).
+  Local Definition cd_diamond_map_r (b c : Susp A)
+    := fun y => c * (y * b).
+
+  Section ScalarBoundary.
 
     Context (a b c d : Susp A).
 
-    Local Definition f := (fun x => a * (c * -x)).
-    Local Definition g := (fun y => c * (y * b)).
-
-    Lemma lemma1 : f (- mon_unit) = a * c.
+    Lemma cd_diamond_map_l_neg_unit
+      : cd_diamond_map_l a c (- mon_unit) = a * c.
     Proof.
-      unfold f; apply ap.
+      unfold cd_diamond_map_l; apply ap.
       exact (hspace_right_identity c).
     Defined.
 
-    Lemma lemma2 : f (conj c * conj a * d * conj b) = (-d) * conj b.
+    Lemma cd_diamond_map_l_parameter
+      : cd_diamond_map_l a c (conj c * conj a * d * conj b)
+        = (-d) * conj b.
     Proof.
-      unfold f.
+      unfold cd_diamond_map_l.
       rewrite 2 factorneg_r.
       rewrite 3 simple_associativity.
       rewrite <- distropp.
@@ -191,15 +195,18 @@ Section ImaginaroidHSpace.
       apply factorneg_l.
     Defined.
 
-    Lemma lemma3 : g mon_unit = c * b.
+    Lemma cd_diamond_map_r_unit
+      : cd_diamond_map_r b c mon_unit = c * b.
     Proof.
-      unfold g; apply ap.
+      unfold cd_diamond_map_r; apply ap.
       apply left_identity.
     Defined.
 
-    Lemma lemma4 : g (conj c * conj a * d * conj b) = conj a * d.
+    Lemma cd_diamond_map_r_parameter
+      : cd_diamond_map_r b c (conj c * conj a * d * conj b)
+        = conj a * d.
     Proof.
-      unfold g.
+      unfold cd_diamond_map_r.
       rewrite 2 simple_associativity.
       rewrite <- simple_associativity.
       rewrite left_inverse.
@@ -210,10 +217,7 @@ Section ImaginaroidHSpace.
       apply left_identity.
     Defined.
 
-  End Lemmata.
-
-  Arguments f {_ _}.
-  Arguments g {_ _}.
+  End ScalarBoundary.
 
   (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)].  The following is the spherical form. *)
   #[export] Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).
@@ -229,13 +233,12 @@ Section ImaginaroidHSpace.
     - intros; symmetry; apply jglue.
     - intros a b c d; cbn beta.
       symmetry.
-      change (diamond (a * c) ((-d) * conj b)
-        (c * b) (conj a * d)).
-      rewrite <- (lemma1 a c).
-      rewrite <- (lemma2 a b c d).
-      rewrite <- (lemma3 b c).
-      rewrite <- (lemma4 a b c d).
-      napply (functor_diamond f g).
+      change (diamond (a * c) ((-d) * conj b) (c * b) (conj a * d)).
+      rewrite <- (cd_diamond_map_l_neg_unit a c).
+      rewrite <- (cd_diamond_map_l_parameter a b c d).
+      rewrite <- (cd_diamond_map_r_unit b c).
+      rewrite <- (cd_diamond_map_r_parameter a b c d).
+      napply (functor_diamond (cd_diamond_map_l a c) (cd_diamond_map_r b c)).
       apply diamond_susp.
   Defined.
 
