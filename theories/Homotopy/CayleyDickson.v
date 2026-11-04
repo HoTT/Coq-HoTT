@@ -235,12 +235,7 @@ Section ImaginaroidHSpace.
       rewrite <- (lemma2 a b c d).
       rewrite <- (lemma3 b c).
       rewrite <- (lemma4 a b c d).
-      lhs_V napply (Join_rec_beta_zigzag _ _
-        (fun x y => jglue (f x) (g y))).
-      rhs_V napply (Join_rec_beta_zigzag _ _
-        (fun x y => jglue (f x) (g y))).
-      napply (ap (ap (Join_rec (joinl o f) (joinr o g)
-        (fun x y => jglue (f x) (g y))))).
+      napply (functor_diamond f g).
       change (diamond (-mon_unit) (conj c * conj a * d * conj b)
         mon_unit (conj c * conj a * d * conj b)).
       generalize (conj c * conj a * d * conj b).

@@ -532,6 +532,20 @@ Section Diamond.
 
 End Diamond.
 
+(** Mapping both join factors preserves diamonds. *)
+Definition functor_diamond {A B C D : Type}
+  (f : A -> C) (g : B -> D) {a a' : A} {b b' : B} 
+  : diamond a a' b b' -> diamond (f a) (f a') (g b) (g b').
+Proof.
+  intros p.
+  pose (fg := Join_rec (joinl o f) (joinr o g) (fun x y => jglue (f x) (g y))).
+  refine ((Join_rec_beta_zigzag _ _
+    (fun x y => jglue (f x) (g y)) a a' b)^ @ _
+    @ Join_rec_beta_zigzag _ _
+      (fun x y => jglue (f x) (g y)) a a' b').
+  exact (ap (ap fg) p).
+Defined.
+
 Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
   : transport (fun x => diamond a' x a x) p
       (diamond_v a' a 1) = diamond_h a a' 1.
