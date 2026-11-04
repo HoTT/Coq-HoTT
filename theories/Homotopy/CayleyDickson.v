@@ -245,26 +245,17 @@ Section ImaginaroidHSpace.
   #[export] Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
-    snapply Join_ind_Flr.
-    1,2: exact (fun _ => ap _ (hspace_left_identity _)).
-    intros a b.
-    lhs napply whiskerR.
-    1: exact (Join_rec_beta_jglue _ _ _ a b).
-    symmetry.
-    apply join_natsq.
+    intro z.
+    lhs napply (functor2_join hspace_left_identity hspace_left_identity).
+    napply functor_join_idmap.
   Defined.
 
   #[export] Instance cd_op_right_identity
     : RightIdentity cd_op pt.
   Proof.
-    snapply Join_ind_Flr.
-    1: exact (fun _ => ap joinl (hspace_right_identity _)).
-    1: exact (fun _ => ap joinr (hspace_left_identity _)).
-    intros a b.
-    lhs napply whiskerR.
-    1: exact (Join_rec_beta_jglue _ _ _ a b).
-    simpl; symmetry.
-    apply join_natsq.
+    intro z.
+    lhs napply (functor2_join hspace_right_identity hspace_left_identity).
+    napply functor_join_idmap.
   Defined.
 
   #[export] Instance hspace_cdi_susp_assoc
