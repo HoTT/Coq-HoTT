@@ -1,5 +1,4 @@
 From HoTT Require Import Basics.
-Require Import Types.Paths.
 Require Import Classes.interfaces.abstract_algebra Classes.theory.groups.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
