@@ -186,8 +186,8 @@ Section ImaginaroidHSpace.
       lhs tapply (ap (a *.) (simple_associativity (f:=(.*.)) _ _ _)).
       lhs tapply (simple_associativity (f:=(.*.))).
       napply (ap (.* conj b)).
-      lhs tapply (ap (a *.) (sgop_inv_cancel_l c _)).
-      rapply sgop_inv_cancel_l.
+      lhs tapply (ap (a *.) (sgop_inv_g_Vg c _)).
+      rapply sgop_inv_g_Vg.
     Defined.
 
     Lemma cd_diamond_map_r_unit
@@ -202,8 +202,8 @@ Section ImaginaroidHSpace.
         = conj a * d.
     Proof.
       unfold cd_diamond_map_r.
-      lhs tapply (ap (c *.) (sgop_inv_cancel_r _ b)).
-      tapply sgop_inv_cancel_l.
+      lhs tapply (ap (c *.) (sgop_inv_gV_g _ b)).
+      tapply sgop_inv_g_Vg.
     Defined.
 
   End ScalarBoundary.

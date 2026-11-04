@@ -9,7 +9,7 @@ Generalizable Variables G H A B C f g.
 Section inverse_cancellation.
   Local Open Scope path_scope.
 
-  Definition sgop_inv_cancel_l {A : Type} `{op : SgOp A}
+  Definition sgop_inv_g_Vg {A : Type} `{op : SgOp A}
     {e : A} {i : A -> A}
     `{!Associative op, !LeftIdentity op e,
       !RightInverse op i e} (x y : A)
@@ -18,7 +18,7 @@ Section inverse_cancellation.
         @ ap (.* y) (right_inverse x)
         @ left_identity y.
 
-  Definition sgop_inv_cancel_l' {A : Type} `{op : SgOp A}
+  Definition sgop_inv_V_gg {A : Type} `{op : SgOp A}
     {e : A} {i : A -> A}
     `{!Associative op, !LeftIdentity op e,
       !LeftInverse op i e} (x y : A)
@@ -27,7 +27,7 @@ Section inverse_cancellation.
         @ ap (.* y) (left_inverse x)
         @ left_identity y.
 
-  Definition sgop_inv_cancel_r {A : Type} `{op : SgOp A}
+  Definition sgop_inv_gV_g {A : Type} `{op : SgOp A}
     {e : A} {i : A -> A}
     `{!Associative op, !RightIdentity op e,
       !LeftInverse op i e} (x y : A)
@@ -36,7 +36,7 @@ Section inverse_cancellation.
         @ ap (x *.) (left_inverse y)
         @ right_identity x.
 
-  Definition sgop_inv_cancel_r' {A : Type} `{op : SgOp A}
+  Definition sgop_inv_gg_V {A : Type} `{op : SgOp A}
     {e : A} {i : A -> A}
     `{!Associative op, !RightIdentity op e,
       !RightInverse op i e} (x y : A)
@@ -56,7 +56,7 @@ Section group_props.
   Proof.
     intros x.
     rhs_V rapply left_identity.
-    lhs_V rapply (sgop_inv_cancel_r _ x).
+    lhs_V rapply (sgop_inv_gV_g _ x).
     exact (ap (.* x) (left_inverse _)).
   Qed.
 
@@ -76,16 +76,16 @@ Section group_props.
   #[export] Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.
   Proof.
     intros z x y E.
-    rhs_V rapply (sgop_inv_cancel_l' z).
-    lhs_V rapply (sgop_inv_cancel_l' z).
+    rhs_V rapply (sgop_inv_V_gg z).
+    lhs_V rapply (sgop_inv_V_gg z).
     exact (ap _ E).
   Defined.
 
   #[export] Instance group_cancelR: forall z : G, RightCancellation (.*.) z.
   Proof.
     intros z x y E.
-    rhs_V rapply (sgop_inv_cancel_r' _ z).
-    lhs_V rapply (sgop_inv_cancel_r' _ z).
+    rhs_V rapply (sgop_inv_gg_V _ z).
+    lhs_V rapply (sgop_inv_gg_V _ z).
     exact (ap (.* z^) E).
   Qed.
 
@@ -95,7 +95,7 @@ Section group_props.
     lhs rapply right_inverse.
     symmetry.
     lhs rapply simple_associativity.
-    lhs rapply (ap (.* x^) (sgop_inv_cancel_r' _ _)).
+    lhs rapply (ap (.* x^) (sgop_inv_gg_V _ _)).
     apply right_inverse.
   Defined.
 
