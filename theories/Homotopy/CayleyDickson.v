@@ -97,7 +97,7 @@ Proof.
   exact involutive.
 Defined.
 
-(** [conjugate_susp A] is involutive as any composite of commuting involutions is an involution. *)
+(** [negate_susp A] is involutive as any composite of commuting involutions is an involution. *)
 Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
   : Involutive (negate_susp A (-)).
 Proof.
