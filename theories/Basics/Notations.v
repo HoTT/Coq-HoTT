@@ -100,9 +100,9 @@ Reserved Notation "p ~ 0" (at level 1, left associativity, format "p '~' '0'").
 Reserved Infix "⊕" (at level 40, left associativity).
 
 (** Pointed *)
-Reserved Infix "@*" (at level 30).
-Reserved Infix "@@*" (at level 30).
-Reserved Infix "<~>*" (at level 85).
+Reserved Infix "@*" (at level 30, left associativity).
+Reserved Infix "@@*" (at level 30, left associativity).
+Reserved Infix "<~>*" (at level 84).
 Reserved Infix "->*" (at level 99).
 Reserved Infix "->**" (at level 99).
 Reserved Infix "o*" (at level 40, left associativity).
@@ -120,10 +120,10 @@ Reserved Notation "x .2" (at level 1, format "x '.2'").
 
 (** Paths *)
 Reserved Notation "p ^" (at level 1, format "p '^'").
-Reserved Notation "p @ q" (at level 20).
+Reserved Notation "p @ q" (at level 20, left associativity).
 Reserved Notation "p # x" (right associativity, at level 65).
 Reserved Notation "p # x" (right associativity, at level 65).
-Reserved Notation "p @@ q" (at level 20).
+Reserved Notation "p @@ q" (at level 20, left associativity).
 Reserved Notation "p @' q" (at level 21, left associativity,
   format "'[v' p '/' '@''  q ']'").
 Reserved Notation "f == g" (at level 70, no associativity).
@@ -153,16 +153,16 @@ Reserved Notation "u .# A" (at level 3, format "u '.#' A").
 Reserved Infix "=n" (at level 70, no associativity).
 
 (** Wild cat *)
-Reserved Infix "$->" (at level 99).
+Reserved Infix "$->" (at level 98).
 Reserved Infix "$<~>" (at level 85).
 Reserved Infix "$o" (at level 40, left associativity).
 Reserved Infix "$oE" (at level 40, left associativity).
 Reserved Infix "$==" (at level 70).
-Reserved Infix "$o@" (at level 30).
-Reserved Infix "$@" (at level 30).
-Reserved Infix "$@L" (at level 30).
-Reserved Infix "$@R" (at level 30).
-Reserved Infix "$@@" (at level 30).
+Reserved Infix "$o@" (at level 30, left associativity).
+Reserved Infix "$@" (at level 30, left associativity).
+Reserved Infix "$@L" (at level 30, left associativity).
+Reserved Infix "$@R" (at level 30, left associativity).
+Reserved Infix "$@@" (at level 30, left associativity).
 Reserved Infix "$=>" (at level 99).
 Reserved Notation "T ^op" (at level 1, format "T ^op").
 Reserved Notation "f ^-1$" (at level 1, format "f '^-1$'").
@@ -178,21 +178,21 @@ Reserved Notation "s ^v$" (at level 1).
 
 (** Displayed wild cat *)
 Reserved Infix "$o'" (at level 40, left associativity).
-Reserved Infix "$@'" (at level 30).
-Reserved Infix "$@L'" (at level 30).
-Reserved Infix "$@R'" (at level 30).
-Reserved Infix "$@@'" (at level 30).
+Reserved Infix "$@'" (at level 30, left associativity).
+Reserved Infix "$@L'" (at level 30, left associativity).
+Reserved Infix "$@R'" (at level 30, left associativity).
+Reserved Infix "$@@'" (at level 30, left associativity).
 Reserved Infix "$oE'" (at level 40, left associativity).
 Reserved Notation "f ^$'" (at level 1, format "f '^$''").
 Reserved Notation "f ^-1$'" (at level 1, format "f '^-1$''").
 
 (** Cubical *)
-Reserved Infix "@@h" (at level 30).
-Reserved Infix "@@v" (at level 30).
-Reserved Infix "@lr" (at level 30).
-Reserved Notation "x '@Dp' y"  (at level 20).
-Reserved Notation "x '@Dr' y" (at level 20).
-Reserved Notation "x '@Dl' y" (at level 20).
+Reserved Infix "@@h" (at level 30, left associativity).
+Reserved Infix "@@v" (at level 30, left associativity).
+Reserved Infix "@lr" (at level 30, left associativity).
+Reserved Notation "x '@Dp' y"  (at level 20, left associativity).
+Reserved Notation "x '@Dr' y" (at level 20, left associativity).
+Reserved Notation "x '@Dl' y" (at level 20, left associativity).
 Reserved Notation "x '^D'" (at level 1).
 
 (** Lists *)
@@ -237,7 +237,7 @@ Reserved Notation "n -Type" (at level 1).
 Reserved Notation "p ..1" (at level 1).
 Reserved Notation "p ..2" (at level 1).
 Reserved Notation "!! P" (at level 35, right associativity).
-Reserved Notation "u ~~ v" (at level 30).
+Reserved Notation "u ~~ v" (at level 30, left associativity).
 Reserved Notation "! x" (at level 3, format "'!' x").
 Reserved Notation "x \\ F" (at level 40, left associativity).
 Reserved Notation "x // F" (at level 40, left associativity).
@@ -250,7 +250,7 @@ Reserved Notation "x -|-> y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x --> y" (at level 55, right associativity, y at level 55).
 Reserved Notation "x (-> y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x <> y  :>  T" (at level 70, y at next level, no associativity).
-Reserved Notation "Z ** W" (at level 30, right associativity).
+Reserved Notation "Z ** W" (at level 31, right associativity).
 
 Reserved Notation "'+N'" (at level 0).
 Reserved Notation "'+Z'" (at level 0).
@@ -265,9 +265,9 @@ Reserved Notation "b ^+f" (at level 1).
 
 (** Notations for the mathclasses library *)
 Reserved Notation "' x" (at level 20).
-Reserved Notation "// x" (at level 40, no associativity).
-Reserved Infix "?=" (at level 70, no associativity).
-Reserved Infix "=?" (at level 70, no associativity).
+Reserved Notation "// x" (at level 35, no associativity).
+Reserved Infix "?=" (at level 69, no associativity).
+Reserved Infix "=?" (at level 69, no associativity).
 Reserved Infix "<?" (at level 70, no associativity).
 Reserved Infix "<=?" (at level 70, no associativity).
 Reserved Notation "x < y < z" (at level 70, y at next level).

@@ -168,8 +168,8 @@ End Book_1_4.
 Section Book_1_5.
   Definition Book_1_5_sum (A B : Type) := { x : Bool & if x then A else B }.
 
-  Notation "'inl' a" := (true; a) (at level 0).
-  Notation "'inr' b" := (false; b) (at level 0).
+  Notation "'inl' a" := (true; a) (at level 0, a at level 0).
+  Notation "'inr' b" := (false; b) (at level 0, b at level 0).
 
   Definition Book_1_5_ind (A B : Type) (C : Book_1_5_sum A B -> Type) (f : forall a, C (inl a))
    (g : forall b, C (inr b)) : forall x : Book_1_5_sum A B, C x := fun x => match x with
@@ -201,8 +201,8 @@ Section Book_1_6.
               end.
 
   Notation "( a , b )" := (Book_1_6_mk_pair a b) (at level 0).
-  Notation "'pr1' p" := (p true) (at level 0).
-  Notation "'pr2' p" := (p false) (at level 0).
+  Notation "'pr1' p" := (p true) (at level 0, p at level 0).
+  Notation "'pr2' p" := (p false) (at level 0, p at level 0).
 
   Definition Book_1_6_eq {A B : Type} (p : Book_1_6_prod A B) : (pr1 p, pr2 p) == p
     := fun x => match x with
