@@ -13,23 +13,37 @@ Section inverse_cancellation.
     {e : A} {i : A -> A}
     `{!Associative op, !LeftIdentity op e,
       !RightInverse op i e} (x y : A)
-    : x * (i x * y) = y.
-  Proof.
-    exact (simple_associativity (f:=op) x (i x) y
-      @ ap (.* y) (right_inverse (op:=op) (inv:=i) (unit:=e) x)
-      @ left_identity (op:=op) (x:=e) y).
-  Defined.
+    : x * (i x * y) = y
+    := simple_associativity _ _ _
+        @ ap (.* y) (right_inverse x)
+        @ left_identity y.
+
+  Definition sgop_inv_cancel_l' {A : Type} `{op : SgOp A}
+    {e : A} {i : A -> A}
+    `{!Associative op, !LeftIdentity op e,
+      !LeftInverse op i e} (x y : A)
+    : i x * (x * y) = y
+    := simple_associativity _ _ _
+        @ ap (.* y) (left_inverse x)
+        @ left_identity y.
 
   Definition sgop_inv_cancel_r {A : Type} `{op : SgOp A}
     {e : A} {i : A -> A}
     `{!Associative op, !RightIdentity op e,
       !LeftInverse op i e} (x y : A)
-    : (x * i y) * y = x.
-  Proof.
-    exact ((simple_associativity (f:=op) x (i y) y)^
-      @ ap (x *.) (left_inverse (op:=op) (inv:=i) (unit:=e) y)
-      @ right_identity (op:=op) (y:=e) x).
-  Defined.
+    : (x * i y) * y = x
+    := (simple_associativity _ _ _)^
+        @ ap (x *.) (left_inverse y)
+        @ right_identity x.
+
+  Definition sgop_inv_cancel_r' {A : Type} `{op : SgOp A}
+    {e : A} {i : A -> A}
+    `{!Associative op, !RightIdentity op e,
+      !RightInverse op i e} (x y : A)
+    : (x * y) * i y = x
+    := (simple_associativity _ _ _)^
+        @ ap (x *.) (right_inverse y)
+        @ right_identity x.
 
 End inverse_cancellation.
 
@@ -41,16 +55,9 @@ Section group_props.
   #[export] Instance inverse_involutive : Involutive (^).
   Proof.
     intros x.
-    transitivity (mon_unit * x).
-    2: apply left_identity.
-    transitivity ((x^^ *  x^) * x).
-    2: apply (@ap _ _ (fun y => y * x)),
-          left_inverse.
-    transitivity (x^^ * (x^ * x)).
-    2: apply associativity.
-    transitivity (x^^ * mon_unit).
-    2: apply ap, symmetry, left_inverse.
-    apply symmetry, right_identity.
+    rhs_V rapply left_identity.
+    lhs_V rapply (sgop_inv_cancel_r _ x).
+    exact (ap (.* x) (left_inverse _)).
   Qed.
 
   #[export] Instance isinj_group_inverse : IsInjective (^).
@@ -62,47 +69,35 @@ Section group_props.
 
   Lemma inverse_mon_unit : mon_unit^ = mon_unit.
   Proof.
-    change ((fun x => mon_unit^ = x) mon_unit).
-    apply (transport _ (left_inverse mon_unit)).
+    rhs_V rapply (left_inverse mon_unit).
     apply symmetry, right_identity.
   Qed.
 
   #[export] Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.
   Proof.
     intros z x y E.
-    rhs_V rapply left_identity.
-    rhs_V exact (ap (.* y) (left_inverse z)).
-    rhs_V rapply simple_associativity.
-    rhs_V rapply (ap (-z *.) E).
-    symmetry.
-    lhs rapply simple_associativity.
-    lhs exact (ap (.* x) (left_inverse z)).
-    apply left_identity.
+    rhs_V rapply (sgop_inv_cancel_l' z).
+    lhs_V rapply (sgop_inv_cancel_l' z).
+    exact (ap _ E).
   Defined.
 
   #[export] Instance group_cancelR: forall z : G, RightCancellation (.*.) z.
   Proof.
     intros z x y E.
-    rewrite <-(right_identity x).
-    rewrite <-(right_inverse (unit:=mon_unit) z).
-    rewrite associativity.
-    rewrite E.
-    rewrite <-(associativity y ), right_inverse, right_identity.
-    reflexivity.
+    rhs_V rapply (sgop_inv_cancel_r' _ z).
+    lhs_V rapply (sgop_inv_cancel_r' _ z).
+    exact (ap (.* z^) E).
   Qed.
 
   Lemma inverse_sg_op x y : (x * y)^ = y^ * x^.
   Proof.
-    rewrite <- (left_identity (-y * -x)).
-    rewrite <- (left_inverse (unit:=mon_unit) (x * y)).
-    rewrite <- simple_associativity.
-    rewrite <- simple_associativity.
-    rewrite (associativity y).
-    rewrite right_inverse.
-    rewrite (left_identity (-x)).
-    rewrite right_inverse.
-    apply symmetry, right_identity.
-  Qed.
+    apply (group_cancelL (x * y)).
+    lhs rapply right_inverse.
+    symmetry.
+    lhs rapply simple_associativity.
+    lhs rapply (ap (.* x^) (sgop_inv_cancel_r' _ _)).
+    apply right_inverse.
+  Defined.
 
 End group_props.
 
