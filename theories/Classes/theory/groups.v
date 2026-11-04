@@ -33,6 +33,7 @@ Section inverse_cancellation.
 
 End inverse_cancellation.
 
+(** The properties in this section can also be proved without assuming that [G] is set-truncated, but currently typeclass inference can fail to find these results for rings if proved without the [IsGroup] hypothesis. *)
 Section group_props.
   Context `{IsGroup G}.
 
