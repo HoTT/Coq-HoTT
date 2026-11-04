@@ -532,19 +532,6 @@ Section Diamond.
 
 End Diamond.
 
-(** Mapping both join factors preserves diamonds. *)
-Definition functor_diamond {A B C D : Type}
-  (f : A -> C) (g : B -> D) {a a' : A} {b b' : B} 
-  : diamond a a' b b' -> diamond (f a) (f a') (g b) (g b').
-Proof.
-  intros p; unfold diamond.
-  refine ((Join_rec_beta_zigzag _ _
-    (fun x y => jglue (f x) (g y)) a a' b)^ @ _
-    @ Join_rec_beta_zigzag _ _
-      (fun x y => jglue (f x) (g y)) a a' b').
-  exact (ap (ap _) p).
-Defined.
-
 Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
   : transport (fun x => diamond a' x a x) p
       (diamond_v a' a 1) = diamond_h a a' 1.
@@ -575,6 +562,17 @@ Section FunctorJoin.
     (a a' : A) (b : B)
     : ap (functor_join f g) (zigzag a a' b) = zigzag (f a) (f a') (g b)
     := Join_rec_beta_zigzag _ _ _ a a' b.
+
+  (** Mapping both join factors preserves diamonds. *)
+  Definition functor_diamond {A B C D : Type}
+    (f : A -> C) (g : B -> D) {a a' : A} {b b' : B}
+    : diamond a a' b b' -> diamond (f a) (f a') (g b) (g b').
+  Proof.
+    intros p; unfold diamond.
+    refine ((functor_join_beta_zigzag f g a a' b)^ @ _
+      @ functor_join_beta_zigzag f g a a' b').
+    exact (ap (ap (functor_join f g)) p).
+  Defined.
 
   Definition functor_join_compose {A B C D E F}
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
