@@ -235,8 +235,8 @@ Section ImaginaroidHSpace.
   #[export] Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
-    intro z.
-    lhs napply (functor2_join hspace_left_identity hspace_left_identity).
+    intro z; simpl.
+    lhs exact (functor2_join hspace_left_identity hspace_left_identity z).
     napply functor_join_idmap.
   Defined.
 
@@ -244,6 +244,7 @@ Section ImaginaroidHSpace.
     : RightIdentity cd_op pt.
   Proof.
     intro z.
+    (* This one doesn't simplify to a nice term, but a similar proof works. *)
     lhs napply (functor2_join hspace_right_identity hspace_left_identity).
     napply functor_join_idmap.
   Defined.
