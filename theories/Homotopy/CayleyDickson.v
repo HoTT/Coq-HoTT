@@ -47,7 +47,7 @@ Section CayleyDicksonSpheroid_Properties.
   Context {X : pType} `(CayleyDicksonSpheroid X).
 
   Local Instance isequiv_cds_conjug : IsEquiv cds_conjug
-    := isequiv_adjointify cds_conjug cds_conjug cds_conjug_inv cds_conjug_inv.
+    := isequiv_involution cds_conjug cds_conjug_inv.
 
   #[export] Instance cds_factorneg_l : FactorNegLeft (-) (.*.).
   Proof.
