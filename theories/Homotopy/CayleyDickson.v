@@ -129,12 +129,6 @@ Instance isunitpreserving_conjugate_susp {A} `(Negate A)
 Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
   : CayleyDicksonSpheroid (psusp A) := {}.
 
-Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
-  : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
-Proof.
-  exact cds_conjug_left_inv.
-Defined.
-
 Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)
   : RightInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
 Proof.
