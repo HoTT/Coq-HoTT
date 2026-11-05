@@ -237,7 +237,7 @@ Reserved Notation "n -Type" (at level 1).
 Reserved Notation "p ..1" (at level 1).
 Reserved Notation "p ..2" (at level 1).
 Reserved Notation "!! P" (at level 35, right associativity).
-Reserved Notation "u ~~ v" (at level 30, left associativity).
+Reserved Notation "u ~~ v" (at level 32, no associativity).
 Reserved Notation "! x" (at level 3, format "'!' x").
 Reserved Notation "x \\ F" (at level 40, left associativity).
 Reserved Notation "x // F" (at level 40, left associativity).
