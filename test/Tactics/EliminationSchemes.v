@@ -43,3 +43,19 @@ Goal forall (A : Type) (x : SInt), A -> A.
 Proof.
   intros A x a; induction x; exact a.
 Qed.
+
+(* These Unit-valued goals force elimination into Type0, exercising the rec_dep registrations. *)
+Goal forall n : nat, Unit.
+Proof.
+  intro n; induction n; exact tt.
+Qed.
+
+Goal forall n m (p : (n <= m)%nat), Unit.
+Proof.
+  intros n m p; induction p; exact tt.
+Qed.
+
+Goal forall x : SInt, Unit.
+Proof.
+  intro x; induction x; exact tt.
+Qed.
