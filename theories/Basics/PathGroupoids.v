@@ -112,10 +112,7 @@ Definition concat_p_pp {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z =
 
 Definition concat_pp_p {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z = t) :
   (p @ q) @ r = p @ (q @ r) :=
-  match r with idpath =>
-    match q with idpath =>
-      match p with idpath => 1
-      end end end.
+  (concat_p_pp p q r)^.
 
 (** The left inverse law. *)
 Definition concat_pV {A : Type} {x y : A} (p : x = y) :
