@@ -62,7 +62,7 @@
           };
       in
       {
-        packages.default = pkgs.rocqPackages.mkRocqDerivation {
+        packages.default = pkgs.rocqPackages_9_2.mkRocqDerivation {
           pname = "hott";
           version = "9.0";
           opam-name = "coq-hott";
@@ -71,7 +71,7 @@
         };
 
         devShells = rec {
-          default = rocq_9_1;
+          default = rocq_9_2;
 
           rocq_9_3 = makeDevShell {
             rocq = pkgs.rocqPackages_9_3.rocq-core;
