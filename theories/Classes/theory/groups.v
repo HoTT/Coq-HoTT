@@ -49,7 +49,7 @@ End inverse_cancellation.
 
 (** ** Equations for an explicit operation *)
 
-(** The following lemmas take the operation as an explicit argument, rather than using [sg_op], so that they can be used to rewrite with operations such as [plus] and [mult], e.g., [rewrite (swap_middle (+))]. *)
+(** The following lemmas take the operation as an explicit argument, rather than using [sg_op], so that they can be used to rewrite with operations such as [plus] and [mult], e.g., [rewrite (swap_middle (+))]. The group lemmas assume [IsGroup] rather than the individual laws they use: on a concrete ring such as the field of fractions, typeclass search for a single law such as [Associative plus] can unfold [plus] to its definition, while [IsGroup] is found directly. *)
 
 Lemma swap_middle {A} (op : A -> A -> A) `{!Associative op, !Commutative op}
   (a b c d : A)
@@ -63,7 +63,7 @@ Qed.
 
 (** Cancelling a left inverse [op (inv y) y]. *)
 Lemma left_inverse_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
-  `{!Associative op, !LeftInverse op inv unit, !RightIdentity op unit} (x y : A)
+  `{!@IsGroup A op unit inv} (x y : A)
   : op (op x (inv y)) y = x.
 Proof.
   exact ((simple_associativity x (inv y) y)^ @ ap (op x) (left_inverse y) @ right_identity x).
@@ -71,14 +71,14 @@ Defined.
 
 (** Cancelling a right inverse [op y (inv y)]. *)
 Lemma right_inverse_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
-  `{!Associative op, !RightInverse op inv unit, !RightIdentity op unit} (x y : A)
+  `{!@IsGroup A op unit inv} (x y : A)
   : op (op x y) (inv y) = x.
 Proof.
   exact ((simple_associativity x y (inv y))^ @ ap (op x) (right_inverse y) @ right_identity x).
 Defined.
 
 Lemma inverse_telescope {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
-  `{!Associative op, !LeftInverse op inv unit, !RightIdentity op unit} (x y z : A)
+  `{!@IsGroup A op unit inv} (x y z : A)
   : op (op x (inv y)) (op y (inv z)) = op x (inv z).
 Proof.
   lhs rapply simple_associativity.
