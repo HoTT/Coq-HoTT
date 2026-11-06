@@ -114,11 +114,11 @@ Definition Susp_rec {X Y : Type}
 
 Global Arguments Susp_rec {X Y}%_type_scope H_N H_S H_merid%_function_scope _.
 
-Definition Susp_rec_beta_merid {X Y : Type}
+Definition Susp_rec_beta_merid@{u v} {X : Type@{u}} {Y : Type@{v}}
   {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x:X)
   : ap (Susp_rec H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
-  srapply Pushout_rec_beta_pglue.
+  napply Pushout_rec_beta_pglue@{v Set Set u u Set}.
 Defined.
 
 Definition Susp_rec_beta_zigzag {X Y : Type}

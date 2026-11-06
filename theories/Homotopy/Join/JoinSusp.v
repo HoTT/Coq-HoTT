@@ -89,3 +89,16 @@ Definition equiv_susp_join (A B : Type)
 Definition pequiv_psusp_join (A B : Type)
   : psusp (Join A B) <~>* pjoin (psusp A) B
   := Build_pEquiv' (equiv_susp_join A B) 1.
+
+(** * Diamonds in the self-join of a suspension *)
+
+(** This is used in CayleyDickson.v. *)
+Definition diamond_susp {A : Type} (t : Susp A)
+  : diamond South t North t.
+Proof.
+  revert t; snapply Susp_ind; cbn beta.
+  - exact (diamond_v South North 1).
+  - exact (diamond_h North South 1).
+  - intro a.
+    apply diamond_twist.
+Defined.

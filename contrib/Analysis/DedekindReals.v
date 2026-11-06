@@ -9,6 +9,7 @@ From HoTT.Classes Require Import
   interfaces.orders
   interfaces.rationals
   theory.apartness
+  theory.groups
   theory.rings
   theory.dec_fields
   theory.rationals
@@ -337,7 +338,7 @@ Section dedekind.
     Local Lemma lt_minus_swap (q r a b : Q) : b - a < r - q -> q - a < r - b.
     Proof.
       intros l.
-      rewrite <- (plus_minus_telescope q b a), <- (plus_minus_telescope r q b).
+      rewrite <- (inverse_telescope (+) q b a), <- (inverse_telescope (+) r q b).
       rewrite (plus_comm (q - b)).
       apply (strictly_order_preserving (+ (q - b))), l.
     Qed.
@@ -907,7 +908,7 @@ Section dedekind.
       - apply tr, inr, tr; exists I. apply tr; exists J. intros s t si it.
         assert (lt := close s t s0 t0 si it is0 it0).
         rewrite <- pm in lt. apply flip_lt_minus_l in lt.
-        apply (order_preserving (r - q +)) in lmq. rewrite minus_plus_cancel in lmq.
+        apply (order_preserving (r - q +)) in lmq. rewrite (left_inverse_cancel (+)) in lmq.
         rapply lt_le_trans; [exact lt|exact lmq].
       - apply tr, inl, tr; exists I. apply tr; exists J. exact (below q lqm).
     Qed.
@@ -1130,7 +1131,7 @@ Section dedekind.
     : StrictlyOrderPreserving (z +).
   Proof.
     intros x y l; apply lt_dedekindreals_iff_lower_minus.
-    rewrite plus_minus_plus_l. exact (fst (lt_dedekindreals_iff_lower_minus x y) l).
+    rewrite (common_left_cancel (+)). exact (fst (lt_dedekindreals_iff_lower_minus x y) l).
   Qed.
 
   Local Lemma lt_dedekindreals_minus_zero (a b : R) : a < b -> a - b < 0.
@@ -1148,7 +1149,7 @@ Section dedekind.
   Local Lemma lt_dedekindreals_from_minus (a b c : R) : a - b < c - b -> a < c.
   Proof.
     intros l; apply (strictly_order_preserving (b +) (a - b) (c - b)) in l.
-    rewrite !(plus_comm b), !minus_plus_cancel in l. exact l.
+    rewrite !(plus_comm b), !(left_inverse_cancel (+)) in l. exact l.
   Qed.
 
   Lemma pos_mult_dedekindreals (x y : R) : 0 < x -> 0 < y -> 0 < x * y.
@@ -1606,7 +1607,7 @@ Section complete.
         lhs' exact c.
         apply minus_pos2_lt.
       - assert (c := modulus_cut_lt e' (leq_lt lM) (leq_refl _) p p').
-        rewrite <- (plus_assoc (r - ' e')), (plus_comm (- ' d')), plus_assoc, minus_plus_cancel in c.
+        rewrite <- (plus_assoc (r - ' e')), (plus_comm (- ' d')), plus_assoc, (left_inverse_cancel (+)) in c.
         lhs' exact (lt_plus_pos2 q e d).
         lhs' exact c.
         apply pos_minus_lt_compat_r, pos_is_pos.
@@ -1617,10 +1618,10 @@ Section complete.
       split.
       - assert (a := cut_lower_inhabited (isdedekindcut Q (x (M 1)))). strip_truncations.
         destruct a as [a la]. apply tr; exists (a - ' 1 - ' 1). apply tr; exists 1. apply tr; exists 1.
-        rewrite 2!minus_plus_cancel. exact la.
+        rewrite 2!(left_inverse_cancel (+)). exact la.
       - assert (b := cut_upper_inhabited (isdedekindcut Q (x (M 1)))). strip_truncations.
         destruct b as [b ub]. apply tr; exists (b + ' 1 + ' 1). apply tr; exists 1. apply tr; exists 1.
-        rewrite 2!plus_minus_cancel. exact ub.
+        rewrite 2!(right_inverse_cancel (+)). exact ub.
       - exact limit_lower_rounded.
       - exact limit_upper_rounded.
       - exact limit_transitive.
@@ -1658,7 +1659,7 @@ Section complete.
       destruct lr' as [e' p]. strip_truncations; destruct p as [d' p].
       destruct (leq_dichotomy (M (e / 2)) (M e')) as [lM|lM].
       - apply (irreflexivity (<) (r + ' e' + ' d')). lhs' exact (modulus_cut_lt (e / 2) lM ln p lr).
-        rewrite minus_plus_cancel. apply lt_plus_pos2.
+        rewrite (left_inverse_cancel (+)). apply lt_plus_pos2.
       - apply (irreflexivity (<) (r + ' e' + ' d')).
         lhs' exact (modulus_cut_lt e' (leq_refl _) (leq_trans (leq_lt lM) ln) p lr).
         rhs_V' apply pos_plus_lt_compat_r, (pos_is_pos d').
@@ -1680,11 +1681,11 @@ Section complete.
       destruct (leq_dichotomy (M (e / 2)) (M e')) as [lM|lM].
       - apply (irreflexivity (<) r). lhs' exact (modulus_cut_lt (e / 2) ln lM lr' p).
         rapply lt_le_trans; [apply (strictly_order_preserving (+ ' (e / 2))), minus_pos2_lt|].
-        rewrite minus_plus_cancel. reflexivity.
+        rewrite (left_inverse_cancel (+)). reflexivity.
       - apply (irreflexivity (<) r).
         lhs' exact (modulus_cut_lt e' (leq_trans (leq_lt lM) ln) (leq_refl _) lr' p).
         rapply lt_le_trans; [apply (strictly_order_preserving (+ ' e')), pos_minus_lt_compat_r, pos_is_pos|].
-        rewrite minus_plus_cancel. apply lt_le, pos_minus_lt_compat_r, pos_is_pos.
+        rewrite (left_inverse_cancel (+)). apply lt_le, pos_minus_lt_compat_r, pos_is_pos.
     Qed.
 
     Lemma islimit_limit_dedekind : IsLimit Q R x limit_dedekind.

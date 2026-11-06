@@ -1,5 +1,6 @@
 From HoTT Require Import Basics Types WildCat.Core Truncations.Core Spaces.Int
-  AbelianGroup AbHom Centralizer AbProjective Groups.FreeGroup AbGroups.Z.
+  AbelianGroup AbHom Algebra.AbGroups.Centralizer AbProjective
+  Groups.FreeGroup AbGroups.Z.
 
 (** * The free group on one generator *)
 

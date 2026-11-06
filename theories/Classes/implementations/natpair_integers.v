@@ -613,7 +613,7 @@ Defined.
 #[export] Instance ishprop_Zlt : is_mere_relation _ Zlt.
 Proof. unfold Zlt;exact _. Qed.
 
-Lemma Zlt_def' : forall a b, ' a < ' b = PairT.Tlt a b.
+Lemma Zlt_def' : forall a b, (' a < ' b) = PairT.Tlt a b.
 Proof. reflexivity. Qed.
 
 (* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)

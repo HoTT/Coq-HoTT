@@ -19,6 +19,7 @@ From HoTT Require Import
   Classes.orders.naturals
   Classes.orders.lattices
   Classes.theory.apartness
+  Classes.theory.groups
   Classes.theory.rationals
   Classes.orders.fields
   Classes.orders.rationals
@@ -279,7 +280,7 @@ Section locator.
     Proof.
       unfold grid, start; change (nQ 1) with 1.
       rewrite mult_1_l.
-      apply minus_plus_cancel.
+      apply (left_inverse_cancel (+)).
     Qed.
 
     Local Lemma lt_grid (r : Q) : {n : nat & r < grid n}.
@@ -460,11 +461,11 @@ Section locator.
       destruct (tight_bound m e) as [u [ltuy ltyu]].
       assert (ltue : q - u < q - u + ' e) by apply pos_plus_lt_compat_r, pos_is_pos.
       destruct (l (q - u) (q - u + ' e) ltue) as [ltx|ltx].
-      - left. rewrite <- (minus_plus_cancel q u), (preserves_plus (f:=cast Q F)).
+      - left. rewrite <- (left_inverse_cancel (+) q u), (preserves_plus (f:=cast Q F)).
         apply plus_lt_compat; [exact ltx|exact ltuy].
       - right.
         assert (p : q - u + ' e + (u + ' e) = r).
-        { rewrite plus_swap_middle, minus_plus_cancel.
+        { rewrite (swap_middle (+)), (left_inverse_cancel (+)).
           rhs rapply (plus_conjugate_alt r q). apply (ap (q +)).
           exact (ap (cast (Qpos Q) Q) (pos_split2 (Qpos_diff q r ltqr)))^. }
         rewrite <- p, (preserves_plus (f:=cast Q F)).

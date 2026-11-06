@@ -9,6 +9,7 @@ From HoTT.Classes Require Import
   interfaces.naturals
   implementations.peano_naturals
   theory.apartness
+  theory.groups
   theory.rings
   theory.fields
   theory.dec_fields
@@ -112,7 +113,7 @@ Section nat_quotients.
   Local Lemma plus_quotient_identity (x y d1 d2 c1 c2 : F)
     : (x + y) * (d1 * d2) + (c1 * d2 + c2 * d1) = (x * d1 + c1) * d2 + (y * d2 + c2) * d1.
   Proof.
-    rewrite (plus_mult_distr_r x y), plus_swap_middle.
+    rewrite (plus_mult_distr_r x y), (swap_middle (+)).
     rewrite (plus_mult_distr_r (x * d1)), (plus_mult_distr_r (y * d2)).
     rewrite (mult_assoc x d1 d2), (mult_comm d1 d2), (mult_assoc y d2 d1).
     reflexivity.
@@ -156,7 +157,7 @@ Section nat_quotients.
     apply tr; exists (a1 * a2 + b1 * b2)%nat,
       (a1 * b2 + b1 * a2)%nat, (m2 + m1 * S m2)%nat.
     rewrite nF_mult_succ, !nF_plus, !nF_mult, <- E1, <- E2.
-    rewrite mult_swap_middle.
+    rewrite (swap_middle (.*.)).
     apply mult_quotient_identity.
   Qed.
 

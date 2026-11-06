@@ -86,4 +86,6 @@ Qed.
 
 (** ** Export hints *)
 
+(* TODO: Once the minimum Rocq version is 9.2, declare the [zero_morphism] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
+#[warning="-implicit-create-rewrite-hint-db"]
 Hint Rewrite @zero_morphism_left @zero_morphism_right : zero_morphism.

@@ -372,7 +372,8 @@ Section BinaryProductConstructors.
 
   Context {A : Type} `{Is1Cat A} {x y : A}
     (cat_binprod : A) (cat_pr1 : cat_binprod $-> x) (cat_pr2 : cat_binprod $-> y)
-    (cat_binprod_corec : forall z : A, z $-> x -> z $-> y -> z $-> cat_binprod)
+    (cat_binprod_corec : forall z : A,
+      (z $-> x) -> (z $-> y) -> z $-> cat_binprod)
     (cat_binprod_beta_pr1 : forall (z : A) (f : z $-> x) (g : z $-> y),
       cat_pr1 $o cat_binprod_corec z f g $== f)
     (cat_binprod_beta_pr2 : forall (z : A) (f : z $-> x) (g : z $-> y),

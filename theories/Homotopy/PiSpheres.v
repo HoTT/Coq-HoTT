@@ -3,7 +3,7 @@ From HoTT.WildCat Require Import Core Equiv NatTrans Yoneda.
 Require Import Pointed.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import HFiber.
-Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
+Require Import Spaces.Nat.Core Spaces.Int Spaces.Circle Spaces.Spheres.
 From HoTT.Algebra.AbGroups Require Import AbelianGroup Z.
 Require Import Algebra.Groups.ShortExactSequence.
 Require Import Homotopy.HomotopyGroup.
@@ -97,14 +97,10 @@ End PinSn.
 Section Pi3S2.
   Context `{Univalence}.
 
-  (** The 1-sphere is 1-truncated by [istrunc_s1], hence [n.+1]-truncated for any [n]. *)
-  Local Instance istrunc_psphere_1 (n : nat) : IsTrunc n.+1 (psphere 1)
-    := @istrunc_leq 1 n.+1 tt _ _.
-
   (** Therefore its homotopy groups vanish in degrees 2 and above. *)
   Local Instance contr_pi_succ_succ_psphere_1 (n : nat)
     : Contr (Pi n.+2 (psphere 1))
-    := contr_pi_succ_istrunc n (psphere 1).
+    := contr_pi_istrunc 1 (psphere 1).
 
   (** The Hopf construction on the circle gives a pointed family over [psusp (psphere 1)], which is definitionally [psphere 2].  The projection of its total space is the Hopf fibration. *)
   Definition hopf_pr1

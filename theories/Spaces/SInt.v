@@ -127,3 +127,5 @@ Defined.
 (** We record these so that they can be used with the [induction] tactic. *)
 Definition SInt_rect := SInt_ind.
 Definition SInt_rec := SInt_ind.
+Register Scheme SInt_rect as rect_dep for SInt.
+Register Scheme SInt_rec as rec_dep for SInt.

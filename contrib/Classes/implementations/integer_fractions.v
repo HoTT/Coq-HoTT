@@ -14,6 +14,7 @@ From HoTT.Classes Require Import
   implementations.peano_naturals
   implementations.field_of_fractions
   theory.apartness
+  theory.groups
   theory.rings
   theory.dec_fields
   theory.fields
@@ -36,7 +37,7 @@ Section ring_identities.
 
   Local Lemma minus_plus_minus (p q r s : R) : (p - q) + (r - s) = (p + r) - (q + s).
   Proof.
-    rewrite plus_swap_middle, negate_plus_distr. reflexivity.
+    rewrite (swap_middle (+)), negate_plus_distr. reflexivity.
   Qed.
 
   Local Lemma minus_mult_minus (p q r s : R) : (p - q) * (r - s) = (p * r + q * s) - (p * s + q * r).
@@ -124,8 +125,8 @@ Section contents.
     apply (pos_mult_rev_l _ (Frac.den x * Frac.den x)); [|apply den_square_pos].
     assert (p : (Frac.num y * Frac.den y) * (Frac.den x * Frac.den x)
                 = (Frac.num x * Frac.den x) * (Frac.den y * Frac.den y)).
-    { rewrite (mult_swap_middle (Frac.num y)), (mult_comm (Frac.den y) (Frac.den x)).
-      rewrite <- E, (mult_swap_middle (Frac.num x)).
+    { rewrite (swap_middle (.*.) (Frac.num y)), (mult_comm (Frac.den y) (Frac.den x)).
+      rewrite <- E, (swap_middle (.*.) (Frac.num x)).
       reflexivity. }
     rewrite p. apply pos_mult; [exact px|apply den_square_pos].
   Qed.
@@ -144,8 +145,8 @@ Section contents.
     : (a * e + b * d) * (d * e) = (a * d) * (e * e) + (b * e) * (d * d).
   Proof.
     rewrite plus_mult_distr_r.
-    rewrite (mult_swap_middle a e d e).
-    rewrite (mult_comm d e), (mult_swap_middle b d e d).
+    rewrite (swap_middle (.*.) a e d e).
+    rewrite (mult_comm d e), (swap_middle (.*.) b d e d).
     reflexivity.
   Qed.
 
@@ -161,7 +162,7 @@ Section contents.
   Proof.
     revert x y. srapply (FracField.F_ind2 (fun x y => _ -> _ -> _)).
     intros x y px py; apply frac_pos_spec. apply frac_pos_spec in px, py.
-    cbn; rewrite mult_swap_middle.
+    cbn; rewrite (swap_middle (.*.)).
     apply pos_mult; assumption.
   Qed.
 
@@ -236,7 +237,7 @@ Section contents.
       destruct (fracfield_lt_trichotomy x z) as [[ltxz|ltzx]|p].
       + left. exact ltxz.
       + right. unfold lt, fracfield_lt in *.
-        rewrite <- (plus_minus_telescope y x z).
+        rewrite <- (inverse_telescope (+) y x z).
         exact (is_pos_plus (y - x) (x - z) ltxy ltzx).
       + right. rewrite <- p. exact ltxy.
     - intros x y; split.
@@ -260,7 +261,7 @@ Section contents.
   Proof.
     apply from_full_pseudo_ring_order.
     - intros z x y; unfold lt, fracfield_lt.
-      rewrite plus_minus_plus_l. exact idmap.
+      rewrite (common_left_cancel (+)). exact idmap.
     - exact (dec_strong_binary_morphism (.*.)).
     - intros x y. unfold PropHolds, lt, fracfield_lt; rewrite !is_pos_minus_zero.
       exact (is_pos_mult x y).
@@ -442,7 +443,7 @@ Section contents.
       revert x y. srapply FracField.F_ind2. intros x y.
       napply (frac_to_field_unique (Frac.ml _ x y)).
       cbn [Frac.num Frac.den Frac.ml].
-      rewrite !(preserves_mult (f:=iZ)), mult_swap_middle.
+      rewrite !(preserves_mult (f:=iZ)), (swap_middle (.*.)).
       rewrite !frac_to_field_mult_den. reflexivity.
     Qed.
 

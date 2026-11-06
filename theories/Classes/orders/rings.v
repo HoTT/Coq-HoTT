@@ -366,7 +366,7 @@ Section symmetric_bounds.
   Local Lemma mult_minus_mult x y u w
     : x * y - u * w = x * (y - w) + (x - u) * w.
   Proof.
-    rewrite <- (plus_minus_telescope (x * y) (x * w) (u * w)).
+    rewrite <- (inverse_telescope (+) (x * y) (x * w) (u * w)).
     rewrite negate_mult_distr_r, <- plus_mult_distr_l.
     rewrite negate_mult_distr_l, <- plus_mult_distr_r.
     reflexivity.

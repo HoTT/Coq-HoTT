@@ -146,6 +146,7 @@ Require Export HoTT.Algebra.AbSES.
 Require Export HoTT.Algebra.Groups.
 Require Export HoTT.Algebra.Rings.
 Require Export HoTT.Algebra.Monoids.Monoid.
+Require Export HoTT.Algebra.Monoids.Centralizer.
 Require Export HoTT.Algebra.Categorical.MonoidObject.
 Require Export HoTT.Algebra.Universal.Algebra.
 Require Export HoTT.Algebra.Universal.Congruence.

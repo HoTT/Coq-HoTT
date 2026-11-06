@@ -63,11 +63,12 @@ Section with_type.
     := match l with one _ => nil | cons _ x => to_list x end.
 
   Lemma decomp_eq (l: ne_list): l = from_list (head l) (tail l).
-  Proof with auto.
-    induction l...
-    destruct l...
-    cbn in *.
-    rewrite IHl...
+  Proof.
+    induction l as [x|x l IHl].
+    - reflexivity.
+    - destruct l as [y|y l].
+      + reflexivity.
+      + exact (ap (cons x) IHl).
   Qed. 
 
   Definition last: ne_list → T := foldr1 (fun x y => y).
@@ -95,16 +96,20 @@ Section with_type.
     (Ptwo: ∀ x y, P (cons x (one y)))
     (Pmore: ∀ x y z, P z → (∀ y', P (cons y' z)) → P (cons x (cons y z)))
     : ∀ l, P l.
-  Proof with auto.
-   cut (∀ l, P l * ∀ x, P (cons x l)).
-   - intros. apply X.
-   - destruct l...
-     revert t.
-     induction l...
-     intros.
-     split.
-     + apply IHl.
-     + intro. apply Pmore; intros; apply IHl.
+  Proof.
+    cut (∀ l, P l * (∀ x, P (cons x l))).
+    - intros rect l.
+      exact (fst (rect l)).
+    - intro l.
+      induction l as [x|x l IHl].
+      + split.
+        * exact (Pone x).
+        * intro y. exact (Ptwo y x).
+      + destruct IHl as [Pl Pcons].
+        split.
+        * exact (Pcons x).
+        * intro y.
+          exact (Pmore y x l Pl Pcons).
   Qed.
 
   Lemma tail_length (l: ne_list)

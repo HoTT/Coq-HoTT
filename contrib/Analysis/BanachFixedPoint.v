@@ -13,6 +13,7 @@ From HoTT.Classes Require Import
   interfaces.archimedean
   theory.rationals
   implementations.peano_naturals
+  theory.groups
   theory.rings
   orders.orders
   orders.semirings
@@ -292,7 +293,7 @@ Section banach.
       rewrite mult_assoc, <- plus_mult_distr_r.
       apply (ap (.* d (T y) y)).
       rewrite plus_mult_distr_r, mult_1_l, <- negate_mult_distr_l.
-      rewrite plus_comm, plus_assoc, minus_plus_cancel. reflexivity.
+      rewrite plus_comm, plus_assoc, (left_inverse_cancel (+)). reflexivity.
   Qed.
 
   (** The distance from a point to its iterates is bounded in terms of its distance to its image. *)

@@ -41,9 +41,10 @@ Section Extensions.
   Defined.
   (** We called it [lift_extensionalong], but in fact it doesn't require the new universes to be bigger than the old ones, only that they both satisfy the max condition. *)
 
-  Definition equiv_path_extension `{Funext} {A B : Type} {f : A -> B}
-             {P : B -> Type} {d : forall x:A, P (f x)}
-             (ext ext' : ExtensionAlong f P d)
+  Definition equiv_path_extension@{a b p m} `{Funext}
+             {A : Type@{a}} {B : Type@{b}} {f : A -> B}
+             {P : B -> Type@{p}} {d : forall x:A, P (f x)}
+             (ext ext' : ExtensionAlong@{a b p m} f P d)
   : (ExtensionAlong f
                     (fun y => pr1 ext y = pr1 ext' y)
                     (fun x => pr2 ext x @ (pr2 ext' x)^))
@@ -60,7 +61,7 @@ Section Extensions.
               (fun a => g == a)
               (fun a b c => forall x:A, c (f x) = gd x @ (b x)^)
               g (fun y:B => idpath (g y))).
-    refine (contr_equiv' {p:g o f == d & gd == p} _). cbn.
+    refine (contr_equiv' (sig@{m m} (fun p : g o f == d => gd == p)) _). cbn.
     refine (equiv_functor_sigma_id _); intros p.
     refine (equiv_functor_forall_id _); intros x; cbn.
     refine (_ oE equiv_path_inverse _ _).
@@ -138,11 +139,11 @@ Section Extensions.
       intros []; reflexivity.
   Defined.
 
-  Definition isequiv_extendable `{Funext} (n : nat)
-             {A B : Type} {C : B -> Type} {f : A -> B}
-  : ExtendableAlong n.+2 f C
+  Definition isequiv_extendable@{i j k l} `{Funext} (n : nat)
+             {A : Type@{i}} {B : Type@{j}} {C : B -> Type@{k}} {f : A -> B}
+  : ExtendableAlong@{i j k l} n.+2 f C
     -> IsEquiv (fun g => g oD f)
-    := isequiv_pathsplit n o (equiv_extendable_pathsplit n.+2 C f).
+    := isequiv_pathsplit n o (equiv_extendable_pathsplit@{i j k l l l l l l l l} n.+2 C f).
 
   #[export] Instance ishprop_extendable `{Funext} (n : nat)
          {A B : Type} (C : B -> Type) (f : A -> B)
@@ -332,9 +333,9 @@ Section Extensions.
     := fun ext n => lift_extendablealong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2} n f P (ext n).
 
   (** We take part of the data from [ps 1] and part from [ps 2] so that the inverse chosen is the expected one. *)
-  Definition isequiv_ooextendable `{Funext}
-             {A B : Type} (C : B -> Type) (f : A -> B)
-  : ooExtendableAlong f C -> IsEquiv (fun g => g oD f)
+  Definition isequiv_ooextendable@{i j k l} `{Funext}
+             {A : Type@{i}} {B : Type@{j}} (C : B -> Type@{k}) (f : A -> B)
+  : ooExtendableAlong@{i j k l} f C -> IsEquiv (fun g => g oD f)
     := fun ps => isequiv_extendable 0 (fst (ps 1%nat), snd (ps 2)).
 
   Definition equiv_ooextendable_pathsplit `{Funext}

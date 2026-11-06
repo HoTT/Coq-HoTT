@@ -9,6 +9,7 @@ From HoTT.Classes Require Import
   interfaces.archimedean
   interfaces.cauchy
   implementations.peano_naturals
+  theory.groups
   theory.rings
   theory.rationals
   orders.orders
@@ -68,7 +69,7 @@ Section completeness.
   Proof.
     intros [lo hi] [lo' hi']; unfold rational_close.
     change (' (d + e)) with (' d + ' e).
-    rewrite <- (plus_minus_telescope a b c), negate_plus_distr.
+    rewrite <- (inverse_telescope (+) a b c), negate_plus_distr.
     split; apply plus_lt_compat; assumption.
   Qed.
 
@@ -135,7 +136,7 @@ Section completeness.
   Proof.
     intros c c'; unfold field_close.
     change (' (' (e + d))) with (' (' e + ' d) : F).
-    rewrite (preserves_plus (f:=cast Q F)), <- (plus_minus_telescope u v w).
+    rewrite (preserves_plus (f:=cast Q F)), <- (inverse_telescope (+) u v w).
     apply lt_bound_plus; [exact c|exact c'].
   Qed.
 
