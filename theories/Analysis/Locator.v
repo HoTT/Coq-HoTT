@@ -547,53 +547,29 @@ Section locator.
 
       Local Definition recip_nu := positive_apart_zero x xpos.
 
+      Local Lemma mult_dec_recip_cast (r : Q) (rpos : 0 < r) : ' r * ' (/ r) = 1.
+      Proof.
+        rewrite <- (preserves_mult (f:=cast Q F)), dec_recip_inverse.
+        - exact (preserves_1 (f:=cast Q F)).
+        - apply lt_ne_flip, rpos.
+      Qed.
+
       Definition locator_recip_pos : locator (// (x ; recip_nu)).
       Proof.
-        assert (recippos : 0 < // (x ; recip_nu))
-          by apply pos_recip_compat.
-        intros q r ltqr. destruct (trichotomy _ q 0) as [qneg|[qzero|qpos]].
-        + apply inl. refine (transitivity _ _).
-          * apply (strictly_order_preserving _). exact qneg.
-          * rewrite preserves_0; assumption.
-        + apply inl. rewrite qzero, preserves_0; assumption.
-        + assert (qap0 : q ≶ 0)
-            by exact (pseudo_order_lt_apart_flip _ _ qpos).
-          assert (rap0 : r ≶ 0).
-          {
-            refine (pseudo_order_lt_apart_flip _ _ _).
-            exact (transitivity qpos ltqr).
-          }
-          assert (ltrrrq : / r < / q)
-            by (apply flip_lt_dec_recip; assumption).
-          destruct (l (/r) (/q) ltrrrq) as [ltrrx|ltxrq].
-          * apply inr.
-            assert (rpos : 0 < r)
-              by (transitivity q; assumption).
-            assert (rpos' : 0 < ' r).
-            {
-              rewrite <- (@preserves_0 Q F _ _ _ _ _ _ _ _ _ _).
-              apply strictly_order_preserving; try exact _; assumption.
-            }
-            rewrite (dec_recip_to_recip r (positive_apart_zero ('r) rpos')) in ltrrx.
-            assert (ltxrr := flip_lt_recip_l x ('r) rpos' ltrrx).
-            cbn in ltxrr.
-            rewrite
-              (recip_irrelevant
-                 x
-                 (positive_apart_zero
-                    x
-                    (transitivity (pos_recip_compat (' r) rpos') ltrrx)) recip_nu) in ltxrr.
-            exact ltxrr.
-          * apply inl.
-            assert (qpos' : 0 < ' q).
-            {
-              rewrite <- (@preserves_0 Q F _ _ _ _ _ _ _ _ _ _).
-              apply strictly_order_preserving; try exact _; assumption.
-            }
-            rewrite (dec_recip_to_recip q (positive_apart_zero ('q) qpos')) in ltxrq.
-            assert (ltrqx := flip_lt_recip_r ('q) x qpos' xpos ltxrq).
-            rewrite (recip_irrelevant x (positive_apart_zero x xpos) recip_nu) in ltrqx.
-            exact ltrqx.
+        intros q r ltqr.
+        assert (recip_pos : 0 < // (x ; recip_nu)) by apply pos_recip_compat.
+        destruct (trichotomy (<) q 0) as [qneg|[qzero|qpos]].
+        - left. rhs_V' exact recip_pos.
+          rewrite <- (preserves_0 (f:=cast Q F)). apply (strictly_order_preserving (cast Q F)), qneg.
+        - left. rewrite qzero, (preserves_0 (f:=cast Q F)). exact recip_pos.
+        - assert (rpos := transitivity qpos ltqr).
+          destruct (l (/ r) (/ q) (flip_lt_dec_recip r q qpos ltqr)) as [ltrx|ltxq].
+          + right. apply char_recip_pos_right.
+            rewrite <- (mult_dec_recip_cast r rpos).
+            apply (strictly_order_preserving (' r *.)), ltrx.
+          + left. apply char_recip_pos_left.
+            rewrite <- (mult_dec_recip_cast q qpos).
+            apply (strictly_order_preserving (' q *.)), ltxq.
       Qed.
     End recip_pos.
 
