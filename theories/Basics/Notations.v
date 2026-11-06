@@ -2,10 +2,11 @@
 Declare Scope type_scope.
 Bind Scope type_scope with Sortclass.
 
-(** To reserve this notation, we must first bootstrap, and preserve the underlying [forall] notation *)
-Notation "'forall'  x .. y , P" := (forall x , .. (forall y, P) ..) (at level 200, x binder, y binder, right associativity).
+(** To reserve this notation, we must first bootstrap, and preserve the underlying [forall] notation. Binder notations use level 10, with their bodies extending to level 200. *)
+Notation "'forall'  x .. y , P" := (forall x , .. (forall y, P) ..)
+  (at level 10, x binder, y binder, P at level 200).
 Reserved Notation "'exists' x .. y , p"
-  (at level 200, x binder, right associativity,
+  (at level 10, x binder, p at level 200,
    format "'[' 'exists'  '/  ' x  ..  y ,  '/  ' p ']'").
 
 
@@ -112,7 +113,7 @@ Reserved Notation "f ^*" (at level 1, format "f '^*'").
 Reserved Notation "f ^-1*" (at level 1, format "f '^-1*'").
 Reserved Notation "g o*E f" (at level 40, left associativity).
 Reserved Notation "'ppforall'  x .. y , P"
-     (at level 200, x binder, y binder, right associativity).
+     (at level 10, x binder, y binder, P at level 200).
 
 (** Sigma type *)
 Reserved Notation "x .1" (at level 1, format "x '.1'").
@@ -229,7 +230,8 @@ Reserved Notation "F '_0' x" (at level 10, no associativity).
 Reserved Notation "F '_0' x" (at level 10, no associativity).
 Reserved Notation "F '_1' m" (at level 10, no associativity).
 Reserved Notation "F ^op" (at level 1, format "F ^op").
-Reserved Notation "'forall'  x .. y , P" (at level 200, x binder, y binder, right associativity).
+Reserved Notation "'forall'  x .. y , P"
+  (at level 10, x binder, y binder, P at level 200).
 Reserved Notation "g 'oD' f" (at level 40, left associativity).
 Reserved Notation "g 'o' f" (at level 40, left associativity).
 Reserved Notation "m <= n" (at level 70, no associativity).
