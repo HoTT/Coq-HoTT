@@ -49,6 +49,7 @@ def main():
     if not files:
         return 0
 
+    merging = subprocess.run(["git", "rev-parse", "-q", "--verify", "MERGE_HEAD"], capture_output=True).returncode == 0
     problems = []
     for f in files:
         old = subprocess.run(["git", "show", f"HEAD:{f}"], capture_output=True, text=True).stdout
@@ -57,7 +58,9 @@ def main():
             refs = forbid.added_thesis_refs([(old, new)])
             if refs:
                 problems.append(f"{f} adds thesis references ({', '.join(refs)}); they belong only in Booij2020Thesis.v.")
-        if padded_count(new) > padded_count(old):
+        # In a merge, padding that the merged branch already has (e.g. upstream code) is not added here.
+        merged = subprocess.run(["git", "show", f"MERGE_HEAD:{f}"], capture_output=True, text=True).stdout if merging else ""
+        if padded_count(new) > max(padded_count(old), padded_count(merged)):
             problems.append(f"{f} adds applications padded with underscores (e.g. `refine (f _ _ _ h)`); use napply, rapply or tapply instead, or lhs'/rhs_V' for transitivity steps (see CLAUDE.md, \"Proof tips\").")
         # As in forbid_axioms.py, an existing file must already have been a stub.
         stub = forbid.is_stub(old) if old else forbid.is_stub(new)
