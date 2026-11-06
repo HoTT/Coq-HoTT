@@ -1,9 +1,9 @@
 Reserved Notation "'∀'  x .. y , P"
-  (at level 200, x binder, y binder, right associativity).
+  (at level 10, x binder, y binder, P at level 200).
 Reserved Notation "'∃'  x .. y , P"
-  (at level 200, x binder, y binder, right associativity).
+  (at level 10, x binder, y binder, P at level 200).
 Reserved Notation "'λ'  x .. y , t"
-  (at level 200, x binder, y binder, right associativity).
+  (at level 10, x binder, y binder, t at level 200).
 
 Reserved Notation "x ∧ y" (at level 80, right associativity).
 Reserved Notation "x → y" (at level 99, y at level 200, right associativity).
