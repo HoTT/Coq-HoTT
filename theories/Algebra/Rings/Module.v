@@ -629,7 +629,8 @@ Defined.
 Definition rm_prod {R : Ring} : RightModule R -> RightModule R -> RightModule R
   := lm_prod (R:=rng_op R).
 
-Definition lm_prod_fst {R : Ring} {M N : LeftModule R} : lm_prod M N $-> M.
+Definition lm_prod_fst {R : Ring} {M N : LeftModule R}
+  : LeftModuleHomomorphism (lm_prod M N) M.
 Proof.
   snapply Build_LeftModuleHomomorphism.
   - exact grp_prod_pr1.
@@ -639,7 +640,8 @@ Defined.
 Definition rm_prod_fst {R : Ring} {M N : RightModule R} : rm_prod M N $-> M
   := lm_prod_fst (R:=rng_op R).
 
-Definition lm_prod_snd {R : Ring} {M N : LeftModule R} : lm_prod M N $-> N.
+Definition lm_prod_snd {R : Ring} {M N : LeftModule R}
+  : LeftModuleHomomorphism (lm_prod M N) N.
 Proof.
   snapply Build_LeftModuleHomomorphism.
   - exact grp_prod_pr2.

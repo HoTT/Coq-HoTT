@@ -268,7 +268,7 @@ Lemma Sierpinski_step (X : HSet) n :
   GCH -> infinite X -> powfix X -> InjectsInto (HN X) (power_iterated X n) -> InjectsInto X (HN X).
 Proof.
   intros gch H1 H2 Hi. induction n.
-  - by apply HN_ninject in Hi.
+  - exact (Empty_rec (HN_ninject X Hi)).
   - destruct (gch (Build_HSet (power_iterated X n)) (Build_HSet (power_iterated X n + HN X))) as [H|H].
     + by apply infinite_power_iterated.
     + apply tr. exists inl. intros x x'. apply path_sum_inl.
@@ -286,7 +286,9 @@ Proof.
   intros gch HX. eapply InjectsInto_trans; try apply tr, Injection_power; try apply X.
   apply (@Sierpinski_step (Build_HSet (X -> HProp)) HN_bound gch).
   - apply infinite_inject with X; trivial. apply Injection_power. apply X.
-  - intros n. cbn. rewrite !power_iterated_shift. eapply path_infinite_power. cbn. by apply infinite_power_iterated.
+  - intros n. cbn. rewrite !power_iterated_shift.
+    exact (path_infinite_power (Build_HSet (power_iterated X n))
+      (infinite_power_iterated X n HX)).
   - apply HN_inject.
 Qed.
 

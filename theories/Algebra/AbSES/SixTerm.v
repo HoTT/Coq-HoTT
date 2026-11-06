@@ -198,7 +198,8 @@ Local Definition ext_cyclic_exact@{u v w} `{Univalence}
   (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : IsExact@{v v v v v} (Tr (-1))
       (ab_mul (A:=A) n)
-      (abses_pushout_ext@{u w v} (abses_from_inclusion (Z1_mul_nat n))
+      (abses_pushout_ext@{u v w}
+         (abses_from_inclusion@{u v} (Z1_mul_nat n))
          o* (pequiv_groupisomorphism (equiv_Z1_hom A))^-1*).
 Proof.
   (* we first move [equiv_Z1_hom] across the total space *)
