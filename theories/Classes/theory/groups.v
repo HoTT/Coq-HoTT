@@ -66,7 +66,8 @@ Lemma left_inverse_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
   `{!@IsGroup A op unit inv} (x y : A)
   : op (op x (inv y)) y = x.
 Proof.
-  exact ((simple_associativity x (inv y) y)^ @ ap (op x) (left_inverse y) @ right_identity x).
+  exact (sgop_inv_gV_g (op:=op) (e:=unit) (i:=inv)
+           (RightIdentity0:=monoid_right_id A) (LeftInverse0:=inverse_l A) x y).
 Defined.
 
 (** Cancelling a right inverse [op y (inv y)]. *)
@@ -74,7 +75,8 @@ Lemma right_inverse_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
   `{!@IsGroup A op unit inv} (x y : A)
   : op (op x y) (inv y) = x.
 Proof.
-  exact ((simple_associativity x y (inv y))^ @ ap (op x) (right_inverse y) @ right_identity x).
+  exact (sgop_inv_gg_V (op:=op) (e:=unit) (i:=inv)
+           (RightIdentity0:=monoid_right_id A) (RightInverse0:=inverse_r A) x y).
 Defined.
 
 Lemma inverse_telescope {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
@@ -84,7 +86,6 @@ Proof.
   lhs rapply simple_associativity.
   exact (ap (fun w => op w (inv z)) (left_inverse_cancel op x y)).
 Qed.
-
 
 (** The properties in this section can also be proved without assuming that [G] is set-truncated, but currently typeclass inference can fail to find these results for rings if proved without the [IsGroup] hypothesis. *)
 Section group_props.
