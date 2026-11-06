@@ -191,7 +191,7 @@ Notation "x / y" := (x * /y) : mc_scope.
 
 Notation "// x" := (recip x) : mc_scope.
 Notation "(//)" := recip (only parsing) : mc_scope.
-Notation "x // y" := (x * //y) : mc_scope.
+Notation "x // y" := (x * (//y)) : mc_scope.
 
 Notation "⊤" := top : mc_scope.
 Notation "⊥" := bottom : mc_scope.

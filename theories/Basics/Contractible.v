@@ -119,5 +119,6 @@ Definition Contr_ind@{u v|} (A : Type@{u}) (P : Contr A -> Type@{v})
            end C0)
     with
     | Build_Contr center contr => H center contr
-    | istrunc_S _ _ => tt
+    (* TODO: Revisit after dropping Rocq 9.1: [istrunc_S _] works on 9.3; check the remaining supported versions before simplifying. *)
+    | @istrunc_S _ _ _ => tt
     end.

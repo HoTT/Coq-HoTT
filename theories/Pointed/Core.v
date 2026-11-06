@@ -938,7 +938,8 @@ Proof.
 Defined.
 
 (** Univalence for pointed types *)
-Definition equiv_path_ptype `{Univalence} (A B : pType@{u}) : A <~>* B <~> A = B.
+Definition equiv_path_ptype `{Univalence} (A B : pType@{u})
+  : (A <~>* B) <~> A = B.
 Proof.
   refine (equiv_path_from_contr A (fun C => A <~>* C) pequiv_pmap_idmap _ B).
   napply (contr_equiv' { X : Type@{u} & { f : A <~> X & {x : X & f pt = x} }}).

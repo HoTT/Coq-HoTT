@@ -1,5 +1,5 @@
 {
-  description = "A Coq library for Homotopy Type Theory";
+  description = "A Rocq library for Homotopy Type Theory";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/master";
@@ -16,59 +16,56 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        makeDevShell = { coq ? pkgs.coq, rocqPackages ? coq.passthru.rocqPackages or null }:
+        makeDevShell = { rocq, extraPackages ? [ ] }:
           let
-            coqPackages = pkgs.mkCoqPackages coq // {
-              __attrsFailEvaluation = true;
-            };
-            ocamlPackages = coq.passthru.ocamlPackages or pkgs.ocamlPackages;
+            ocamlPackages = rocq.ocamlPackages;
           in
-          { extraPackages ? [ coqPackages.coq-lsp ] }:
           pkgs.mkShell {
-            buildInputs =
-              [
-                dune.packages.${system}.default
-                ocamlPackages.ocaml
-                ocamlPackages.findlib
-                pkgs.pkg-config
-                (pkgs.python3.withPackages (ps: [
-                  ps.pygments
-                  ps.dominate
-                  ps.beautifulsoup4
-                  ps.docutils
-                ]))
-              ] ++ extraPackages ++ [ coq ]
-              ++ pkgs.lib.optionals (rocqPackages != null) [ rocqPackages.rocq-core ];
+            buildInputs = [
+              dune.packages.${system}.default
+              ocamlPackages.ocaml
+              ocamlPackages.findlib
+              pkgs.pkg-config
+              (pkgs.python3.withPackages (ps: [
+                ps.pygments
+                ps.dominate
+                ps.beautifulsoup4
+                ps.docutils
+              ]))
+              rocq
+            ] ++ extraPackages;
           };
       in
       {
-        packages.default = pkgs.coqPackages.mkCoqDerivation {
+        packages.default = pkgs.rocqPackages.mkRocqDerivation {
           pname = "hott";
           version = "9.0";
+          opam-name = "coq-hott";
           src = self;
           useDune = true;
         };
 
         devShells = rec {
-          default = coq_9_1;
+          default = rocq_9_1;
 
-          coq_9_2 =
-            makeDevShell
-              { coq = pkgs.coq_9_2; }
-              { extraPackages = [ ]; };
+          rocq_9_3 = makeDevShell {
+            rocq = pkgs.rocqPackages_9_3.rocq-core;
+          };
 
-          coq_9_1 =
-            makeDevShell
-              { coq = pkgs.coq_9_1; }
-              { };
+          rocq_9_2 = makeDevShell {
+            rocq = pkgs.rocqPackages_9_2.rocq-core;
+          };
+
+          rocq_9_1 = makeDevShell {
+            rocq = pkgs.rocqPackages_9_1.rocq-core;
+            # coq-lsp retains its upstream package name.
+            extraPackages = [ pkgs.rocqPackages_9_1.coq-lsp ];
+          };
 
           # To use, pass --impure to nix develop.
-          # The compatibility package still requests coqide-server from master;
-          # use the native runtime/prelude packages instead.
-          coq_master =
-            makeDevShell
-              { coq = pkgs.rocqPackages.rocq-core.override { version = "master"; }; }
-              { extraPackages = [ ]; };
+          rocq_master = makeDevShell {
+            rocq = pkgs.rocqPackages.rocq-core.override { version = "master"; };
+          };
         };
 
         formatter = pkgs.nixpkgs-fmt;
