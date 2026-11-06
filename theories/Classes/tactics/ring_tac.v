@@ -33,8 +33,8 @@ Qed.
 
 Lemma by_quoting `{Q : @Quoting.EqQuote R _ _ _ _ _ V l n m V' l'}
   `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}
-  : toPol (Quoting.expr_map inl (@Quoting.eqquote_l R _ _ _ _ _ _ _ _ _ _ _ Q))
-  =? toPol (@Quoting.eqquote_r R  _ _ _ _ _ _ _ _ _ _ _ Q) = true
+  : (toPol (Quoting.expr_map inl (@Quoting.eqquote_l R _ _ _ _ _ _ _ _ _ _ _ Q))
+  =? toPol (@Quoting.eqquote_r R  _ _ _ _ _ _ _ _ _ _ _ Q)) = true
   -> n = m.
 Proof.
 intros E.
@@ -51,7 +51,7 @@ trivial.
 Qed.
 
 Lemma prove_prequoted `{Trichotomy V Vlt} (a b : Quoting.Expr V) vs
-  : toPol a =? toPol b = true -> Quoting.eval _ vs a = Quoting.eval _ vs b.
+  : (toPol a =? toPol b) = true -> Quoting.eval _ vs a = Quoting.eval _ vs b.
 Proof.
 intros.
 apply normalize_prequoted.

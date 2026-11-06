@@ -95,6 +95,10 @@
     --no-externals
     --parse-comments)
    (flags -noinit -indices-matter -color on)))
+ ; Opt-in diagnostics: dune build --profile warnings-as-errors.
+ (warnings-as-errors
+  (rocq
+   (flags -noinit -indices-matter -color on -w +default)))
  (_
   (rocq
    (rocqdoc_flags

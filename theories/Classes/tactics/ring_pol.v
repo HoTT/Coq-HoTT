@@ -66,7 +66,7 @@ Proof.
 intros [|] [|];simpl;auto.
 Qed.
 
-Lemma eval_eqb' : forall P Q : Pol, P =? Q = true ->
+Lemma eval_eqb' : forall P Q : Pol, (P =? Q) = true ->
   forall vs : Vars V, eval vs P = eval vs Q.
 Proof.
 induction P as [c|P1 IHP1 v P2 IHP2];destruct Q as [d|Q1 w Q2];intros E vs;
@@ -84,7 +84,7 @@ Qed.
 Definition eval_eqb@{} := ltac:(first [exact eval_eqb'@{Ularge}|
                                        exact eval_eqb']).
 
-Lemma eval_0' : forall P, P =? 0 = true -> forall vs, eval vs P = 0.
+Lemma eval_0' : forall P, (P =? 0) = true -> forall vs, eval vs P = 0.
 Proof.
 induction P;simpl;intros E vs.
 - change eqb with Peqb in E;simpl in E.

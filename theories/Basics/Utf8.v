@@ -11,9 +11,9 @@ Reserved Notation "x ↔ y" (at level 95, no associativity).
 (*Notation "¬ x" (at level 75, right associativity).*)
 (*Notation "x ≠ y" (at level 70).*)
 
-Reserved Infix "∩" (at level 20).
-Reserved Infix "⋅" (at level 20).
-Reserved Infix "∙" (at level 20).
+Reserved Infix "∩" (at level 20, left associativity).
+Reserved Infix "⋅" (at level 20, left associativity).
+Reserved Infix "∙" (at level 20, left associativity).
 Reserved Infix "∘" (at level 40, left associativity).
 Reserved Infix "∘ˡ" (at level 40, left associativity).
 Reserved Infix "∘ʳ" (at level 40, left associativity).
@@ -41,7 +41,7 @@ Reserved Notation "F ₀ x" (at level 10, no associativity).
 Reserved Notation "g ∘ f" (at level 40, left associativity).
 Reserved Notation "g ∘ᴱ f" (at level 40, left associativity).
 Reserved Notation "m ≤ n" (at level 70, no associativity).
-Reserved Notation "p • q" (at level 20).
+Reserved Notation "p • q" (at level 20, left associativity).
 Reserved Notation "p •' q" (at level 21, left associativity, format "'[v' p '/' '•''  q ']'").
 #[warnings="-postfix-notation-not-level-1"]
 Reserved Notation "x ₁" (at level 10).
@@ -49,8 +49,8 @@ Reserved Notation "x ₂" (at level 1).
 Reserved Notation "¬ x" (at level 35, right associativity).
 Reserved Notation "x ⇓ F" (at level 40, left associativity).
 Reserved Notation "x ⇑ F" (at level 40, left associativity).
-Reserved Notation "x ∈ v" (at level 30).
-Reserved Notation "x ⊆ y" (at level 30).
+Reserved Notation "x ∈ v" (at level 32, no associativity).
+Reserved Notation "x ⊆ y" (at level 32, no associativity).
 Reserved Notation "x ≠ y" (at level 70).
 Reserved Notation "x ⇸ y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x ↠ y" (at level 99, right associativity, y at level 200).
