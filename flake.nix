@@ -52,6 +52,11 @@
         devShells = rec {
           default = coq_9_1;
 
+          coq_9_3 =
+            makeDevShell
+              { coq = pkgs.rocqPackages_9_3.rocq-core; }
+              { extraPackages = [ ]; };
+
           coq_9_2 =
             makeDevShell
               { coq = pkgs.coq_9_2; }
