@@ -176,7 +176,7 @@ jobs:
         echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
     - name: Build alectryon docs with dune
       run: |
-        nix develop .#coq_9_1 -c dune build @alectryon
+        nix develop .#rocq_9_1 -c dune build @alectryon
     - name: tar alectryon artifact
       run: tar -cf alectryon-html.tar -C _build/default alectryon-html
     - name: upload alectryon artifact
