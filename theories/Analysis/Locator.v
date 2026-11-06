@@ -1,5 +1,10 @@
 From HoTT Require Import
-  Basics DProp Misc.BoundedSearch Spaces.Finite.Fin ExcludedMiddle
+  Basics
+  DProp
+  Misc.BoundedSearch
+  Spaces.Finite.Fin
+  ExcludedMiddle
+  Modalities.ReflectiveSubuniverse
   Classes.interfaces.abstract_algebra
   Classes.interfaces.orders
   Classes.interfaces.rationals
@@ -513,13 +518,7 @@ Section locator.
 
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
-      assert (R : sig P).
-      {
-        apply minimal_n_alt_type.
-        - exact QQpos_eq.
-        - exact P_dec.
-        - exact P_inhab.
-      }
+      pose proof (R:=minimal_n_alt_type _ QQpos_eq _ P_dec P_inhab).
       unfold P in R.
       destruct R as [[q eps] [lleft mright]].
       exists q; split.

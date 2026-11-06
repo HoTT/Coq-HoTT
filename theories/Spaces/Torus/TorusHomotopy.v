@@ -24,11 +24,8 @@ Qed.
 
 (** The torus is 0-connected *)
 
-Instance isconnected_torus `{Univalence} : IsConnected 0 Torus.
-Proof.
-  srapply (isconnected_equiv' _ _ equiv_torus_prod_Circle^-1).
-  srapply (isconnected_equiv' _ _ (equiv_sigma_prod0 _ _)).
-Qed.
+Instance isconnected_torus `{Univalence} : IsConnected 0 Torus
+  := isconnected_equiv' _ _ equiv_torus_prod_Circle^-1 _.
 
 (** We give these notations for the pointed versions. *)
 Local Notation T := ([Torus, _]).

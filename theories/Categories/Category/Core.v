@@ -111,9 +111,11 @@ Create HintDb morphism discriminated.
 
 #[export]
 Hint Resolve left_identity right_identity associativity : category morphism.
-#[export]
+(* TODO: Once the minimum Rocq version is 9.2, declare the [category] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
+#[export, warning="-implicit-create-rewrite-hint-db"]
 Hint Rewrite left_identity right_identity : category.
-#[export]
+(* TODO: Once the minimum Rocq version is 9.2, declare the [morphism] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
+#[export, warning="-implicit-create-rewrite-hint-db"]
 Hint Rewrite left_identity right_identity : morphism.
 
 (** ** Simple laws about the identity morphism *)

@@ -144,7 +144,7 @@ Notation "⟨ x | F , .. , G ⟩" :=
       => F : FreeGroup (Fin _)) (ff 0%nat))
     .. (fscons ((fun (x : FreeGroup (Fin 1))
       => G : FreeGroup (Fin _)) (ff 0)) fsnil) ..))
-  (at level 200, x binder).
+  (at level 0, x binder).
 
 (** Two generators *)
 Notation "⟨ x , y | F , .. , G ⟩" :=
@@ -153,7 +153,7 @@ Notation "⟨ x , y | F , .. , G ⟩" :=
       => F : FreeGroup (Fin _)) (ff 0) (ff 1))
     .. (fscons ((fun (x y : FreeGroup (Fin 2))
       => G : FreeGroup (Fin _)) (ff 0) (ff 1)) fsnil) ..))
-  (at level 200, x binder, y binder).
+  (at level 0, x binder, y binder).
 
 (** Three generators *)
 Notation "⟨ x , y , z | F , .. , G ⟩" :=
@@ -162,4 +162,4 @@ Notation "⟨ x , y , z | F , .. , G ⟩" :=
       => F : FreeGroup (Fin _)) (ff 0) (ff 1) (ff 2))
     .. (fscons ((fun (x y z : FreeGroup (Fin 3))
       => G : FreeGroup (Fin _)) (ff 0) (ff 1) (ff 2)) fsnil) ..))
-  (at level 200, x binder, y binder, z binder).
+  (at level 0, x binder, y binder, z binder).

@@ -197,7 +197,7 @@ split; intro E.
 Qed.
 
 Lemma recip_distr_alt (x y : F) Px Py Pxy :
-  // (x * y ; Pxy) = // (x;Px) * // (y;Py).
+  // (x * y ; Pxy) = // (x;Px) * (// (y;Py)).
 Proof.
 apply (left_cancellation_ne_0 (.*.) (x * y)).
 - apply apart_ne;trivial.
@@ -233,7 +233,8 @@ Proof.
   exists (-x).
   exact ((apart_negate x Px)).
 Defined.
-Lemma recip_negate (x : F) (Px : x ≶ 0) : (-//(x;Px))=//(negate_apart(x;Px)).
+Lemma recip_negate (x : F) (Px : x ≶ 0)
+  : -(//(x;Px)) = //(negate_apart(x;Px)).
 Proof.
   apply (left_cancellation (.*.) x).
   rewrite <- negate_mult_distr_r.

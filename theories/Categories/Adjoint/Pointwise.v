@@ -68,6 +68,8 @@ Section AdjointPointwise.
     Defined.
 
     Create HintDb adjoint_pointwise discriminated.
+    (* TODO: Once the minimum Rocq version is 9.2, declare the [adjoint_pointwise] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
+    #[warning="-implicit-create-rewrite-hint-db"]
     Hint Rewrite
          identity_of left_identity right_identity
          eta_idtoiso composition_of idtoiso_functor
@@ -144,6 +146,8 @@ Section AdjointPointwise.
     Defined.
 
     Create HintDb adjoint_pointwise discriminated.
+    (* TODO: Once the minimum Rocq version is 9.2, declare the [adjoint_pointwise] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
+    #[warning="-implicit-create-rewrite-hint-db"]
     Hint Rewrite
          identity_of left_identity right_identity
          eta_idtoiso composition_of idtoiso_functor

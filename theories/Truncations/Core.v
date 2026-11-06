@@ -213,6 +213,28 @@ Proof.
   symmetry; rapply trunc_inhabited_iff_inhabited_stable.
 Defined.
 
+(** If [Tr n A] is decidable, then [Tr n (Decidable A)]. *)
+Definition trunc_decidable_decidable_trunc (n : trunc_index) (A : Type)
+  (d : Decidable (Tr n A))
+  : Tr n (Decidable A).
+Proof.
+  destruct d as [a|f].
+  - strip_truncations; apply tr.
+    exact (inl a).
+  - exact (tr (inr (fun x => f (tr x)))).
+Defined.
+
+(** The converse is true for [n >= -1] assuming [Funext]. *)
+Definition decidable_trunc_trunc_decidable `{Funext}
+  (n : trunc_index) (A : Type) (d : Tr n.+1 (Decidable A))
+  : Decidable (Tr n.+1 A).
+Proof.
+  refine (Trunc_rec (@decidable_trunc_decidable n _) d).
+  destruct n.
+  1: exact _.
+  rapply istrunc_sum.
+Defined.
+
 (** ** A few special things about the (-2)-truncation *)
 
 (** The type of contractible types is contractible. *)
@@ -403,20 +425,20 @@ Definition Trunc_min n m X : Tr (trunc_index_min n m) X <~> Tr n (Tr m X).
 Proof.
   destruct (trunc_index_min_path n m) as [p|q].
   + assert (l := trunc_index_min_leq_right n m).
-    destruct p^; clear p.
+    destruct (inverse@{Set} p); clear p.
     snapply (Build_Equiv _ _ (Trunc_functor _ tr)).
     napply O_inverts_conn_map.
     rapply (conn_map_O_leq _ (Tr m)).
     rapply O_leq_Tr_leq.
   + assert (l := trunc_index_min_leq_left n m).
-    destruct q^; clear q.
+    destruct (inverse@{Set} q); clear q.
     srapply equiv_tr.
     srapply istrunc_leq.
 Defined.
 
 Definition Trunc_swap n m X : Tr n (Tr m X) <~> Tr m (Tr n X).
 Proof.
-  refine (Trunc_min m n _ oE equiv_transport (fun k => Tr k _) _ oE (Trunc_min n m _)^-1).
+  refine (Trunc_min m n _ oE equiv_transport@{Set _} (fun k => Tr k _) _ oE (Trunc_min n m _)^-1).
   apply trunc_index_min_swap.
 Defined.
 

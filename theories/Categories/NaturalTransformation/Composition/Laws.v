@@ -47,7 +47,8 @@ End natural_transformation_identity.
 
 #[export]
 Hint Rewrite @left_identity @right_identity : category.
-#[export]
+(* TODO: Once the minimum Rocq version is 9.2, declare the [natural_transformation] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
+#[export, warning="-implicit-create-rewrite-hint-db"]
 Hint Rewrite @left_identity @right_identity : natural_transformation.
 
 Section whisker.

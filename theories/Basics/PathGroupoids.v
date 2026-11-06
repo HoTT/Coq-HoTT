@@ -1515,6 +1515,8 @@ Defined.
 
     The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as possible. *)
 
+Create HintDb path_hints.
+
 #[export]
 Hint Resolve
   inverse
@@ -1523,7 +1525,8 @@ Hint Resolve
   : path_hints.
 
 (* First try at a paths db.  We want the RHS of the equation to become strictly simpler. *)
-#[export]
+(* TODO: Once the minimum Rocq version is 9.2, declare the [paths] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
+#[export, warning="-implicit-create-rewrite-hint-db"]
 Hint Rewrite
   @concat_p1
   @concat_1p

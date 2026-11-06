@@ -25,7 +25,8 @@
 
 From HoTT Require Import Basics Types HProp HSet Projective
      TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
-     Misc.BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
+     Misc.BoundedSearch Equiv.BiInv Spaces.Nat.Core Spaces.Nat.Paths
+     Spaces.Torus.TorusEquivCircles
      Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties
      Metatheory.ImpredicativeTruncation Spaces.Finite.Fin ExcludedMiddle.
 
@@ -167,8 +168,9 @@ End Book_1_4.
 Section Book_1_5.
   Definition Book_1_5_sum (A B : Type) := { x : Bool & if x then A else B }.
 
-  Notation "'inl' a" := (true; a) (at level 0).
-  Notation "'inr' b" := (false; b) (at level 0).
+  (* Use ordinary application syntax for these abbreviations. TODO: Use [Abbreviation] once the minimum Rocq version is 9.2. *)
+  Local Notation inl a := (true; a).
+  Local Notation inr b := (false; b).
 
   Definition Book_1_5_ind (A B : Type) (C : Book_1_5_sum A B -> Type) (f : forall a, C (inl a))
    (g : forall b, C (inr b)) : forall x : Book_1_5_sum A B, C x := fun x => match x with
@@ -200,8 +202,9 @@ Section Book_1_6.
               end.
 
   Notation "( a , b )" := (Book_1_6_mk_pair a b) (at level 0).
-  Notation "'pr1' p" := (p true) (at level 0).
-  Notation "'pr2' p" := (p false) (at level 0).
+  (* TODO: Use [Abbreviation] once the minimum Rocq version is 9.2. *)
+  Local Notation pr1 p := (p true).
+  Local Notation pr2 p := (p false).
 
   Definition Book_1_6_eq {A B : Type} (p : Book_1_6_prod A B) : (pr1 p, pr2 p) == p
     := fun x => match x with

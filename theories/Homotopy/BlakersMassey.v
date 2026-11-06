@@ -68,20 +68,11 @@ Section GBM.
                    glue q0 @ (glue q1)^ = r } }
           <~> ap left s = r.
     Proof.
+      destruct s.
       refine (_ oE equiv_sigma_assoc' _ _).
-      refine (_ oE equiv_functor_sigma'
-                (Q := fun qt => glue qt.1 @ (glue q1)^ = r)
-                (equiv_functor_sigma_id
-                   (fun q0 : Q x0 y =>
-                      equiv_moveL_transport_V
-                        (fun x => Q x y) s q0 q1))
-                (fun qt => equiv_idmap)).
       refine (_ oE equiv_contr_sigma _); cbn.
-      rewrite (ap_transport s^ (fun x q => glue q) q1).
-      rewrite (transport_paths_FlFr s^ (glue q1)).
-      rewrite ap_V, inv_V, ap_const, concat_p1.
-      exact (equiv_concat_l (concat_pp_V _ _)^ _).
-      (** Although we proved this lemma with [rewrite], we make it transparent, not so that *we* can reason about it, but so that Coq can evaluate it. *)
+      exact (equiv_concat_l (concat_pV _)^ _).
+      (** We keep this transparent so that Coq can evaluate it below. *)
     Defined.
     (* But except in one place, we don't want it to try (otherwise things get really slow). *)
     Opaque frobnicate.
@@ -624,11 +615,11 @@ Defined.
 (** ** The Freudenthal Suspension Theorem *)
 
 (** The Freudenthal suspension theorem is a fairly trivial corollary of the Blakers-Massey theorem.  It says that [merid : X -> North = South] is highly connected. *)
-Instance freudenthal `{Univalence} (n : trunc_index)
+Instance freudenthal@{u v | u < v} `{Univalence} (n : trunc_index)
            (X : Type@{u}) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (@merid X).
 Proof.
   (* If we post-compose [merid : X -> North = South] with an equivalence [North = South <~> P], where [P] is the pullback of the inclusions [Unit -> Susp X] hitting [North] and [South], we get the canonical comparison map [X -> P] whose connectivity follows from the Blakers-Massey theorem. *)
   rapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_unit_paths _ _)^-1%equiv).
-  rapply (blakers_massey_po n n.+1).
+  rapply (blakers_massey_po@{u u u u u u u v u u u} n n.+1).
 Defined.

@@ -40,6 +40,7 @@ jobs:
         coq-version:
           - '9.1'
           - '9.2'
+          - '9.3'
           - 'dev'
         os:
           - ubuntu-latest
@@ -65,6 +66,7 @@ jobs:
         coq-version:
           - '9.1'
           - '9.2'
+          - '9.3'
           - 'dev'
         os:
           - ubuntu-latest
@@ -97,6 +99,7 @@ jobs:
         coq-version:
           - '9.1'
           - '9.2'
+          - '9.3'
         include:
           - coq-version: 'dev'
             extra-gh-reportify: '--warnings'
@@ -176,7 +179,7 @@ jobs:
         echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
     - name: Build alectryon docs with dune
       run: |
-        nix develop .#coq_9_1 -c dune build @alectryon
+        nix develop .#rocq_9_1 -c dune build @alectryon
     - name: tar alectryon artifact
       run: tar -cf alectryon-html.tar -C _build/default alectryon-html
     - name: upload alectryon artifact
@@ -374,6 +377,7 @@ jobs:
         coq-version:
           - '9.1'
           - '9.2'
+          - '9.3'
           - 'dev'
     runs-on: ubuntu-latest
     steps:
@@ -412,6 +416,7 @@ jobs:
         coq-version:
           - '9.1'
           - '9.2'
+          - '9.3'
           - 'dev'
     runs-on: ubuntu-latest
     steps:
@@ -523,6 +528,9 @@ jobs:
     - uses: geekyeggo/delete-artifact@v5
       with:
         name: workspace-9.2
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+        name: workspace-9.3
     - uses: geekyeggo/delete-artifact@v5
       with:
         name: workspace-dev

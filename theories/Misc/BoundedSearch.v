@@ -99,26 +99,22 @@ End bounded_search.
 Section bounded_search_alt_type.
 
   Context (X : Type)
-          (e : nat <~> X)
+          (e : nat -> X) {e_surj : IsSurjection e}
           (P : X -> Type)
           (P_dec : forall x, Decidable (P x))
           (P_inhab : hexists P).
 
-  (** Bounded search works for types equivalent to the naturals even without full univalence. *)
+  (** Bounded search works for every type with a surjection from the naturals. *)
   Definition minimal_n_alt_type : {x : X & P x}.
   Proof.
-    pose (P' n := P (e n)).
-    pose (P'_dec n := P_dec (e n) : Decidable (P' n)).
+    pose (P' := P o e).
     assert (P'_inhab : hexists P').
-    {
-      strip_truncations. apply tr.
-      destruct P_inhab as [x p].
-      exists (e ^-1 x).
-      unfold P'.
-      rewrite (eisretr e). exact p.
-    }
-    destruct (minimal_n P' P'_dec P'_inhab) as [n p'].
-    exact ((e n); p').
+    { strip_truncations; destruct P_inhab as [x p].
+      pose proof (@center _ (e_surj x)) as h.
+      strip_truncations; destruct h as [n q].
+      exact (tr (n; transport P q^ p)). }
+    destruct (minimal_n P' (P_dec o e) P'_inhab) as [n p].
+    exact (e n; p).
   Defined.
 
 End bounded_search_alt_type.

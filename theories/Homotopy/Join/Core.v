@@ -1,5 +1,4 @@
 From HoTT Require Import Basics Types.
-Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Homotopy.NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
@@ -460,22 +459,6 @@ Section JoinNatSq.
     apply concat_1p_p1.
   Defined.
 
-  Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
-    (p : a = a') (q : b = b')
-    : PathSquare (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
-  Proof.
-    destruct p, q.
-    apply sq_refl_v.
-  Defined.
-
-  Definition join_natsq_h {A B : Type} {a a' : A} {b b' : B}
-    (p : a = a') (q : b = b')
-    : PathSquare (jglue a b) (jglue a' b') (ap joinl p) (ap joinr q).
-  Proof.
-    destruct p, q.
-    apply sq_refl_h.
-  Defined.
-
 End JoinNatSq.
 
 (** The triangles that arise when one of the given paths is reflexivity. *)
@@ -527,44 +510,31 @@ Section Diamond.
 
   Context {A B : Type}.
 
-  Definition Diamond (a a' : A) (b b' : B)
-    := PathSquare (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
+  Definition diamond (a a' : A) (b b' : B)
+    := zigzag a a' b = zigzag a a' b'.
 
   Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
-    : zigzag a a' b = zigzag a a' b'.
+    : diamond a a' b b'.
   Proof.
     destruct p.
     exact (concat_pV _ @ (concat_pV _)^).
   Defined.
 
-  Definition diamond_h_sq {a a' : A} (b b' : B) (p : a = a')
-    : Diamond a a' b b'.
-  Proof.
-    by apply sq_path, diamond_h.
-  Defined.
-
   Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
-    : zigzag a a' b = zigzag a a' b'
+    : diamond a a' b b'
     := ap (zigzag a a') p.
 
-  Definition diamond_v_sq (a a' : A) {b b' : B} (p : b = b')
-    : Diamond a a' b b'.
-  Proof.
-    by apply sq_path, diamond_v.
-  Defined.
-
   Lemma diamond_symm (a : A) (b : B)
-    : diamond_v_sq a a 1 = diamond_h_sq b b 1.
+    : diamond_v a a 1 = diamond_h b b 1.
   Proof.
-    unfold diamond_v_sq, diamond_h_sq, diamond_v, diamond_h.
-    symmetry; apply ap, concat_pV.
+    symmetry; apply concat_pV.
   Defined.
 
 End Diamond.
 
 Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
-  : DPath (fun x => Diamond a' x a x) p
-    (diamond_v_sq a' a 1) (diamond_h_sq a a' 1).
+  : transport (fun x => diamond a' x a x) p
+      (diamond_v a' a 1) = diamond_h a a' 1.
 Proof.
   destruct p.
   apply diamond_symm.
@@ -578,19 +548,31 @@ Section FunctorJoin.
     : JoinRecData A B (Join C D)
     := {| jl := joinl o f; jr := joinr o g; jg := fun a b => jglue (f a) (g b); |}.
 
-  Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
+  Definition functor_join {A B C D : Type} (f : A -> C) (g : B -> D)
     : Join A B -> Join C D
-    := join_rec (functor_join_recdata f g).
+    := Join_rec (joinl o f) (joinr o g)
+         (fun a b => jglue (f a) (g b)).
 
   Definition functor_join_beta_jglue {A B C D : Type} (f : A -> C) (g : B -> D)
     (a : A) (b : B)
     : ap (functor_join f g) (jglue a b) = jglue (f a) (g b)
-    := join_rec_beta_jg _ a b.
+    := Join_rec_beta_jglue _ _ _ a b.
 
   Definition functor_join_beta_zigzag {A B C D : Type} (f : A -> C) (g : B -> D)
     (a a' : A) (b : B)
     : ap (functor_join f g) (zigzag a a' b) = zigzag (f a) (f a') (g b)
     := Join_rec_beta_zigzag _ _ _ a a' b.
+
+  (** Mapping both join factors preserves diamonds. *)
+  Definition functor_diamond {A B C D : Type}
+    (f : A -> C) (g : B -> D) {a a' : A} {b b' : B}
+    : diamond a a' b b' -> diamond (f a) (f a') (g b) (g b').
+  Proof.
+    intros p; unfold diamond.
+    refine ((functor_join_beta_zigzag f g a a' b)^ @ _
+      @ functor_join_beta_zigzag f g a a' b').
+    exact (ap (ap (functor_join f g)) p).
+  Defined.
 
   Definition functor_join_compose {A B C D E F}
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
@@ -871,9 +853,9 @@ Section JoinTrunc.
     - apply Trunc_rec, push.
   Defined.
 
-  (** Joins add connectivity *)
-  #[export] Instance isconnected_join `{Funext} {m n : trunc_index}
-         (A B : Type) `{IsConnected m A} `{IsConnected n B}
+  (** Joins add connectivity.  It's easy to generalize this to [A] and [B] in different universes, with the join in a supremum universe [w].  One just needs to add two lines of the form [change (IsConnected@{w} (Tr@{w} m) A) in ...] at the start of the proof, and adjust one annotation.  But then [w] is a free variable that adds to other universe variables when this is found by typeclass search, so for now we keep it this way. *)
+  #[export] Instance isconnected_join@{u} `{Funext} {m n : trunc_index}
+         (A B : Type@{u}) `{IsConnected m A} `{IsConnected n B}
     : IsConnected (m +2+ n) (Join A B).
   Proof.
     apply isconnected_from_elim; intros C ? k.
@@ -883,11 +865,11 @@ Section JoinTrunc.
       exact (ap k (jglue a b)). }
     assert (h : NullHomotopy f).
     { rapply (isconnected_elim m).
-      rapply (istrunc_extension_along_conn (n:=n)). }
+      rapply (istrunc_extension_along_conn@{u u u u} (n:=n)). }
     unfold NullHomotopy in *; destruct h as [[c g] h].
     exists (c tt).
     snapply Join_ind.
-    - intros a; cbn beta. exact (ap10 (h a)..1 tt).
+    - intros a; cbn beta. exact (ap10@{Set _ _} (h a)..1 tt).
     - intros b; cbn beta. exact (g b)^.
     - intros a b.
       transport_paths Fl.
