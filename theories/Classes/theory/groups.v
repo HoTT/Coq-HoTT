@@ -4,16 +4,43 @@ Require Import
 Local Open Scope mc_mult_scope.
 Generalizable Variables G H A B C f g.
 
-Section semigroup_props.
-  Context `{IsSemiGroup G} `{!Commutative (A:=G) sg_op}.
+(** ** Equations for an explicit operation *)
 
-  Lemma sg_op_swap_middle (a b c d : G) : (a * b) * (c * d) = (a * c) * (b * d).
-  Proof.
-    rewrite <- !simple_associativity. apply ap.
-    rewrite !simple_associativity. apply (ap (.* d)), commutativity.
-  Qed.
+(** The following lemmas take the operation as an explicit argument, rather than using [sg_op], so that they can be used to rewrite with operations such as [plus] and [mult], e.g., [rewrite (swap_middle (+))]. *)
 
-End semigroup_props.
+Lemma swap_middle {A} (op : A -> A -> A) `{!Associative op, !Commutative op}
+  (a b c d : A)
+  : op (op a b) (op c d) = op (op a c) (op b d).
+Proof.
+  rewrite <- !(simple_associativity (f:=op)).
+  apply ap.
+  rewrite !(simple_associativity (f:=op)).
+  apply (ap (fun w => op w d)), commutativity.
+Qed.
+
+(** Cancelling a left inverse [op (inv y) y]. *)
+Lemma left_inverse_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
+  `{!Associative op, !LeftInverse op inv unit, !RightIdentity op unit} (x y : A)
+  : op (op x (inv y)) y = x.
+Proof.
+  exact ((simple_associativity x (inv y) y)^ @ ap (op x) (left_inverse y) @ right_identity x).
+Defined.
+
+(** Cancelling a right inverse [op y (inv y)]. *)
+Lemma right_inverse_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
+  `{!Associative op, !RightInverse op inv unit, !RightIdentity op unit} (x y : A)
+  : op (op x y) (inv y) = x.
+Proof.
+  exact ((simple_associativity x y (inv y))^ @ ap (op x) (right_inverse y) @ right_identity x).
+Defined.
+
+Lemma inverse_telescope {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
+  `{!Associative op, !LeftInverse op inv unit, !RightIdentity op unit} (x y z : A)
+  : op (op x (inv y)) (op y (inv z)) = op x (inv z).
+Proof.
+  lhs rapply simple_associativity.
+  exact (ap (fun w => op w (inv z)) (left_inverse_cancel op x y)).
+Qed.
 
 Section group_props.
   Context `{IsGroup G}.
@@ -85,24 +112,6 @@ Section group_props.
     apply symmetry, right_identity.
   Qed.
 
-  Lemma sg_op_inverse_sg_op x y : x * y^ * y = x.
-  Proof.
-    rewrite <- simple_associativity, left_inverse.
-    apply right_identity.
-  Qed.
-
-  Lemma sg_op_sg_op_inverse x y : x * y * y^ = x.
-  Proof.
-    rewrite <- simple_associativity, right_inverse.
-    apply right_identity.
-  Qed.
-
-  Lemma sg_op_inverse_telescope x y z : (x * y^) * (y * z^) = x * z^.
-  Proof.
-    rewrite simple_associativity.
-    apply (ap (.* z^)), sg_op_inverse_sg_op.
-  Qed.
-
 End group_props.
 
 Section abgroup_props.
@@ -115,14 +124,19 @@ Section abgroup_props.
     - apply commutativity.
   Qed.
 
-  Lemma sg_op_negate_sg_op_l `{IsAbGroup G} x y z : (z + x) - (z + y) = x - y.
-  Proof.
-    rewrite negate_sg_op_distr, (commutativity (f := sg_op) z x), simple_associativity.
-    apply (ap (+ -y)), sg_op_sg_op_inverse.
-  Qed.
-
   Local Close Scope mc_add_scope.
 End abgroup_props.
+
+(** In an abelian group, [(z + x) - (z + y) = x - y]. *)
+Lemma common_left_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
+  `{!@IsAbGroup A op unit inv} (x y z : A)
+  : op (op z x) (inv (op z y)) = op x (inv y).
+Proof.
+  lhs exact (ap (op (op z x)) (@negate_sg_op_distr A op unit inv _ z y)).
+  lhs rapply swap_middle.
+  lhs exact (ap (fun w => op w (op x (inv y))) (right_inverse z)).
+  rapply left_identity.
+Qed.
 
 Section groupmor_props.
 
