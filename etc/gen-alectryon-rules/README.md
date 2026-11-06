@@ -1,6 +1,6 @@
 # Alectryon Rules Generator
 
-This tool generates dune rules for parallel Alectryon documentation processing.
+This tool generates Dune rules for parallel Alectryon documentation of the Rocq sources.
 
 ## Overview
 
@@ -20,9 +20,10 @@ because coq-lsp is designed for interactive editing with incremental
 compilation. For batch documentation generation, `fcc` is much faster as it's
 optimized for single-pass compilation.
 
-alectryon will normally ask coq-lsp for each goal separately which takes way
-too long. By getting fcc (the Coq compiler based on internals of coq-lsp) to
-dump all the goals, we can process them as something alectryon can understand.
+Alectryon would otherwise request each goal separately from coq-lsp. Instead,
+`fcc` dumps all goals in one batch, and the converter makes that output
+available to Alectryon. `fcc`, `coq-lsp.plugin.goaldump`, and the `coq.io.json`
+frontend are names supplied by those tools; they are not renamed to `rocq`.
 
 ## Generated Files
 
@@ -36,7 +37,10 @@ Files are output to `alectryon-html/` with flattened names (e.g.,
 ## Usage
 
 ```bash
-# Build all documentation
+# Initialize the documentation submodules once
+git submodule update --init etc/alectryon etc/coq-scripts
+
+# Build all documentation (fcc/goaldump must match the Rocq version)
 dune build @alectryon
 
 # Build documentation for a single file
@@ -46,7 +50,7 @@ dune build alectryon-html/HoTT.WildCat.Core.html
 ## Dependencies
 
 - `fcc` from coq-lsp with the goaldump plugin (`coq-lsp.plugin.goaldump`)
-- Python 3 with the Alectryon package (via `etc/alectryon/`)
+- Python 3 with Alectryon's dependencies and the initialized `etc/alectryon/` submodule
 - `goaldump-to-alectryon.py` converter script (in this directory)
 
 ## How It Works

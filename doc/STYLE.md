@@ -61,7 +61,7 @@
     - [12.5. Continuous Integration](#125-continuous-integration)
     - [12.6. Git rebase](#126-git-rebase)
     - [12.7. Timing scripts](#127-timing-scripts)
-  - [13. Bugs in Coq](#13-bugs-in-coq)
+  - [13. Bugs in Rocq](#13-bugs-in-rocq)
     - [13.1. Reporting bugs](#131-reporting-bugs)
     - [13.2. Minimizing bugs](#132-minimizing-bugs)
 
@@ -71,10 +71,10 @@
 
 ### 1.1. The Core library
 
-We do not use the Coq standard library, instead working from scratch.
-We do not use the Coq universes `Prop` and `SProp`.
+We do not use the Rocq standard library, instead working from scratch.
+We do not use the Rocq universes `Prop` and `SProp`.
 
-The Coq files of the HoTT library live in the `theories/` directory.
+The Rocq files of the HoTT library live in the `theories/` directory.
 Many are in subdirectories, and a subdirectory `Foo/` often has a
 corresponding file `Foo.v` that imports everything in the subdirectory.
 
@@ -220,7 +220,7 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 
 A dependency graph of all the files in the library can be found on the
 [wiki][wiki]; this may be helpful in avoiding circular dependencies.
-It is updated automatically by Travis (see below) on every push to the
+It is updated automatically by GitHub Actions (see below) on every push to the
 master branch.
 
 [wiki]: https://github.com/HoTT/HoTT/wiki
@@ -281,11 +281,11 @@ eliminator) should be named `thing_ind`, while its recursion principle
 (non-dependent eliminator) should be named `thing_rec`.
 
 However, by default, when you declare a (non-higher) inductive type,
-Coq automatically defines induction principles named `thing_rect`,
+Rocq automatically defines induction principles named `thing_rect`,
 `thing_rec`, and `thing_ind` that vary only in the sort of their
 target (`Type`, `Set`, or `Prop`). In order to turn this off, you
 must say `Local Unset Elimination Schemes` before defining an
-inductive type. You can then have Coq automatically generate the
+inductive type. You can then have Rocq automatically generate the
 correctly named induction principles with
 
 ```coq
@@ -293,14 +293,23 @@ Scheme thing_ind := Induction for thing Sort Type.
 Scheme thing_rec := Minimality for thing Sort Type.
 ```
 
-Unfortunately, Coq's built-in tactics `induction` and `elim` assume
-that the induction principles are named in Coq's default manner. We
-are hoping that this will be [fixed eventually][inductionbug], but in
-the meantime, to make those tactics work, you need to also say
+Register the principles used by `induction` and `elim` explicitly to avoid
+name-based lookup, which is deprecated in Rocq 9.2. Rocq 9.1 still needs
+the conventional `_rect` alias for some `Type`-valued induction, so keep
+that alias while 9.1 is supported:
 
 ```coq
 Definition thing_rect := thing_ind.
+Register Scheme thing_ind as rect_dep for thing.
+Register Scheme thing_ind as rec_dep for thing.
+Register Scheme thing_rec as rect_nodep for thing.
+Register Scheme thing_rec as rec_nodep for thing.
 ```
+
+The `rect` roles cover goals in `Type`, and the `rec` roles cover goals in
+`Set`. `Scheme` commands register their generated sort role automatically;
+the explicit registrations also describe what is needed for hand-written
+principles. See the [original name-lookup issue][inductionbug].
 
 (We have not turned on `Global Unset Elimination Schemes` because this
 would cause `induction` and `elim` to fail for all newly defined
@@ -352,7 +361,7 @@ as the underlying function of `equiv_foo`; see `path_equiv`, as an example.
 
 ## 3. Records, Structures, Typeclasses
 
-We use Coq Records when appropriate for important definitions. For
+We use Rocq Records when appropriate for important definitions. For
 instance, being an equivalence (`IsEquiv`) and equivalences (`Equiv`) are
 both Record types (in fact, the former is a typeclass). The file
 `Basics/Tactics` contains a tactic `issig` for proving semiautomatically
@@ -388,7 +397,7 @@ Here are some of the typeclasses we are using:
 
 When constructing terms in a typeclass record such as `IsEquiv`, `Contr`,
 or `IsTrunc`, one has the choice to declare it as an `Instance`, in which
-case it is added to the hint database that is searched when Coq tries
+case it is added to the hint database that is searched when Rocq tries
 to do typeclass instance resolution. Care must be taken with this, as
 indiscriminately adding theorems to this database can easily result in
 infinite loops (or at least very long loops).
@@ -396,7 +405,7 @@ infinite loops (or at least very long loops).
 In general, it seems to be better not to add instances which suggest
 an open-ended search. E.g. the theorem that truncation levels are
 closed under equivalence is a bad candidate for an `Instance`, because
-when Coq is searching for a proof of `Contr B` this theorem could
+when Rocq is searching for a proof of `Contr B` this theorem could
 cause it to look through all possible types A for an equivalence `A
 <~> B` and a proof of `Contr A`. Results of this sort should be
 proven as `Definition`s or `Theorem`s, not as `Instance`s. If you
@@ -413,7 +422,7 @@ defined. This way no one else will come along and helpfully change it
 back to an `Instance`.
 
 If a particular fact should not be made an ordinary instance, it can
-still be made an "immediate instance", meaning that Coq will use it
+still be made an "immediate instance", meaning that Rocq will use it
 automatically to solve a goal _if_ its hypotheses are already present
 in the context, but will not initiate an instance search for those
 hypotheses otherwise. This avoids infinite instance-search loops. To
@@ -443,7 +452,7 @@ When declaring an `Instance` you should prefer the `export` locality attribute
 to the `Global` locality attribute. Inside a section, you should
 explicitly annotate instance declarations as `Local` or `#[export]`
 to avoid ambiguity. Outside a section, you may omit the annotation,
-and in this case Coq defaults to the `export` attribute since 8.18.
+and in this case Rocq defaults to the `export` attribute since 8.18.
 
 ### 3.5. Using Typeclasses
 
@@ -451,7 +460,7 @@ Try to avoid ever giving a name to variables inhabiting typeclasses.
 When introducing such a variable, you can write `intros ?` to put it
 in the hypotheses without specifying a name for it. When using such a
 variable, typeclass resolution means you shouldn't even need to refer
-to it by name: you can write `_` in tactics such as `refine` and Coq
+to it by name: you can write `_` in tactics such as `refine` and Rocq
 will find typeclass instances from the context. Even `exact _` works.
 (You can usually also use `typeclasses eauto` or `eauto with
 typeclass_instances`, but `exact _` is preferable when it works, as it
@@ -459,15 +468,15 @@ is shorter and uses a tactic name the reader is presumably already
 familiar with.)
 
 Unfortunately, it is not currently possible to write `_` in a
-`refine`d term for an inhabitant of a typeclass and have Coq generate
-a subgoal if it can't find an instance; Coq will fail if it can't
+`refine`d term for an inhabitant of a typeclass and have Rocq generate
+a subgoal if it can't find an instance; Rocq will fail if it can't
 resolve a typeclass variable from the context. You have to `assert`
 or `pose` such an inhabitant first, or give an explicit term for it.
 
-Note that when you don't give a name to a variable, Coq often names it
+Note that when you don't give a name to a variable, Rocq often names it
 `H` or some modification thereof. For that reason, it's often better
 avoid using `H` for your own explicitly named variables, since if you
-do and later on someone introduces a new unnamed hypothesis that Coq
+do and later on someone introduces a new unnamed hypothesis that Rocq
 names `H`, your name will result in a conflict. Conversely, we
 sometimes give a hypothesis a name that won't be used, to preempt
 such conflicts, such as `{ua : Univalence}` or `{fs : Funext}`.
@@ -511,7 +520,7 @@ IsTrunc n (P a)`, and similarly for other data types. For instance,
 
 A ["coercion" from `A` to
 `B`](https://rocq-prover.org/refman/addendum/implicit-coercions.html)
-is a function that Coq will insert silently if given an `A` when it
+is a function that Rocq will insert silently if given an `A` when it
 expects a `B`, and which it doesn't display. For example, we have
 declared `equiv_fun` as a coercion from `A <~> B` to `A -> B`, so that
 we can use an equivalence as a function without needing to manually
@@ -544,7 +553,7 @@ notation](https://rocq-prover.org/refman/addendum/type-classes.html#substructure
 
 The "axioms" of `Univalence`, `Funext` (function extensionality) and
 `PropResizing` (propositional resizing) are typeclasses rather than
-Coq `Axiom`s. (But see the technical note below on universe
+Rocq `Axiom`s. (But see the technical note below on universe
 polymorphism.) In the core, we use these typeclasses to keep track
 of which theorems depend on the axioms and which don't.
 
@@ -639,7 +648,7 @@ Most higher inductive types are defined in the `HIT/`
 directory, but `Colimits/GraphQuotient` also uses a HIT.
 All are defined using [Dan Licata's "private inductive
 types" hack][hit-hack] which was
-[implemented in Coq](https://coq.inria.fr/files/coq5_submission_3.pdf)
+[implemented in Rocq](https://coq.inria.fr/files/coq5_submission_3.pdf)
 by Yves Bertot. This means the procedure for defining a HIT is:
 
 1. Wrap the entire definition in a module, which you will usually want
@@ -653,7 +662,7 @@ by Yves Bertot. This means the procedure for defining a HIT is:
 4. Define the induction principle, with all the correct hypotheses, by
    matching against the point-constructors. There is an important
    additional hack here. If the path-hypotheses are not "used"
-   anywhere in the `match`, then Coq will notice and will consider two
+   anywhere in the `match`, then Rocq will notice and will consider two
    invocations of the induction principle to be judgmentally equal if
    they have the same point-hypotheses, even if their path-hypotheses
    differ. Thus, it is important to "use" the path-hypotheses
@@ -693,14 +702,14 @@ the inductive principle) or making related definitions opaque.
 
 ## 6. Universe Polymorphism
 
-We have Coq's "universe polymorphism" feature turned on throughout
+We have Rocq's "universe polymorphism" feature turned on throughout
 the library. Thus, all definitions are universe polymorphic by
 default, i.e. they can be applied to types that live in any universe
 level.
 
-Usually, this is not something you have to worry about, as Coq tries
+Usually, this is not something you have to worry about, as Rocq tries
 to automatically make everything maximally polymorphic, but sometimes
-a bit of attention is required. If Coq is claiming that an instance
+a bit of attention is required. If Rocq is claiming that an instance
 is not found which is "obviously" present, or a term doesn't have a
 type that it "clearly" does (or, of course, if it complains about a
 universe inconsistency), then a universe problem may be the culprit.
@@ -709,12 +718,12 @@ universe inconsistency), then a universe problem may be the culprit.
 
 If you suspect a universe problem, usually the first thing to do is to
 turn on the display of universes with the command `Set Printing
-Universes`. This causes Coq to print the universe parameters of every
+Universes`. This causes Rocq to print the universe parameters of every
 occurrence of a definition when displaying the current proof state or
 when giving an error message, and also to print the universe
 parameters and the constraints imposed on them when displaying a
 definition with `Print` or `About` or a typechecking a term with
-`Check`. (Nowadays Coq is sometimes smart enough to display universes
+`Check`. (Nowadays Rocq is sometimes smart enough to display universes
 automatically when giving an error message that would otherwise look
 like "unable to unify `A` with `A`".) To display the current universe
 _constraints_ during a proof, use `Show Universes` (this is not to be
@@ -741,7 +750,7 @@ cause changes in the number or order of its universe parameters.
 Note that `Check foo` will often give a different list of universes
 than `Print foo` and `About foo`. This is because the latter two
 display information about `foo` as a _definition_, while `Check`
-treats its argument as a _term_ to be typechecked, and Coq is willing
+treats its argument as a _term_ to be typechecked, and Rocq is willing
 to collapse some universes during typechecking.
 
 ### 6.2. Universe annotations
@@ -755,7 +764,7 @@ universes, and be careful about the order in which they occur.
 
 It is very important to note that universe names such as `i` and `j`
 are _definition local_ and _implicitly declared_. This means that
-whenever you write `i` inside a universe annotation, Coq implicitly
+whenever you write `i` inside a universe annotation, Rocq implicitly
 declares a universe named `i`, and all occurrences of the universe `i`
 _in the same definition_ refer to the same universe. When the
 definition is complete, this universe will become one of its universe
@@ -783,7 +792,7 @@ There are several uses for universe annotations. One is to force a
 definition to have fewer universe parameters than it would otherwise.
 This can sometimes improve performance: if you know that in practice,
 several of the universes occurring in a definition will always be the
-same, then saving Coq the burden of carrying them all around
+same, then saving Rocq the burden of carrying them all around
 separately can sometimes make it run faster. Additionally, reducing
 the number of universe parameters in a definition can make it
 significantly easier to universe-annotate uses of that definition
@@ -791,7 +800,7 @@ later on.
 
 Another reason for universe annotations is to make a definition _more_
 universe polymorphic. In some situations, in the absence of
-annotations Coq will automatically collapse one or more universe
+annotations Rocq will automatically collapse one or more universe
 parameters which could be kept separate if annotated. It is not clear
 under exactly what situations this occurs, but one culprit appears to
 be section variables: if you declare a section variable which you need
@@ -803,18 +812,18 @@ least in some situations, writing `Definition foo {A B} ...` rather
 than `Definition foo {A B : Type} ...` can cause `A` and `B` to live
 in the same universe.)
 
-Finally, universe annotations can also be necessary to instruct Coq
+Finally, universe annotations can also be necessary to instruct Rocq
 how to instantiate the universes when using a definition. In some
-situations, Coq seems to make a default guess that doesn't work
+situations, Rocq seems to make a default guess that doesn't work
 (perhaps collapsing some universes that need to remain distinct) and
 then complains without trying anything else; an annotation can point
 it in the right direction.
 
-In Coq, the bottom universe is denoted `Set`, but this does not
+In Rocq, the bottom universe is denoted `Set`, but this does not
 mean that its elements 0-truncated. In `Basics/Overture`, we
 define a notation `Type0` for this universe.
 
-Coq also has universes `Prop` and `SProp` which we do not use in
+Rocq also has universes `Prop` and `SProp` which we do not use in
 the library.
 
 ### 6.3. Unexpected universes
@@ -867,7 +876,7 @@ primed versions `Lift'`, `lift'`, and `lower'` which allow the two
 universe levels to possibly be the same.
 
 In the past, `Lift` was used to force universe levels to be distinct,
-but now that Coq supports constraints between universe variables,
+but now that Rocq supports constraints between universe variables,
 this is no longer needed in practice.
 
 The file `Universes/Smallness` contains results allowing us to show
@@ -876,11 +885,11 @@ that a type lives in a certain universe.
 ### 6.5. Universes and HITs
 
 Another use for universe annotations is to force HITs to live in the
-correct universe. Coq assigns a universe level to an inductive type
+correct universe. Rocq assigns a universe level to an inductive type
 based on the levels of its indices and constructors, which is correct
 for ordinary inductive types. However, the universe level of a HIT
 should depend also on the levels of its path-constructors, but since
-these are not actually constructors of the `Private Inductive`, Coq
+these are not actually constructors of the `Private Inductive`, Rocq
 doesn't take them into account.
 
 We have not yet formulated a general method for resolving this. In
@@ -1016,16 +1025,16 @@ whitespace changes" so that no one bothers reading the diff carefully.
 ### 9.3. Line lengths and comments
 
 Lines of code should be of limited width; try to restrict yourself to
-not much more than 70 characters. Remember that when Coq code is
+not much more than 70 characters. Remember that when Rocq code is
 often edited in split-screen so that the screen width is cut in half,
 and that not everyone's screen is as wide as yours.
 
-[coqdoc](https://coq.inria.fr/refman/using/tools/coqdoc.html) is used
+[`rocq doc`](https://rocq-prover.org/doc/V9.1.0/refman/practical-tools/utilities.html) is used
 to produce a browsable
 [view of the library](https://hott.github.io/Coq-HoTT/coqdoc-html/toc.html).
-coqdoc treats comments specially, so comments should follow the
-conventions described on the coqdoc page. The most important ones are
-that Coq expressions within comments are surrounded by square brackets,
+`rocq doc` treats comments specially, so comments should follow the
+conventions described in its documentation. The most important ones are
+that Rocq expressions within comments are surrounded by square brackets,
 and that headings are indicated with comments of the form
 
 ```coq
@@ -1077,7 +1086,7 @@ implement a single idea or finish off a subgoal.
 
 For long proofs with multiple significant subgoals, use branching
 constructs such as bullets and braces to clarify the structure. See
-the section of the Coq Reference Manual entitled "Navigation in the
+the section of the Rocq Reference Manual entitled "Navigation in the
 proof tree".
 
 ### 9.5. Placement of Arguments and types
@@ -1169,7 +1178,7 @@ to finding it is to guess what file it should live in and look there;
 for instance, theorems about sigma-types are often in `Types/Sigma.v`,
 and so on.
 
-Another approach is to use Coq's command `Search` to display all the
+Another approach is to use Rocq's command `Search` to display all the
 theorems that relate to a particular definition. For example, `Search
 (IsHProp ?A)` will show all results in which the expression `IsHProp
 A` appears for some `A`, and `Search "ishprop"` will show all results
@@ -1219,7 +1228,7 @@ where they are defined.
   `rapply` is like `napply`, (`rapply` succeeds iff
   `napply` does) except that after it succeeds in unifying with the
   goal, it solves all typeclass goals it can. `tapply` is stronger
-  than `rapply`: if Coq cannot compute a type for `t` or successfully
+  than `rapply`: if Rocq cannot compute a type for `t` or successfully
   unify the type of `t` with the goal, it will elaborate all typeclass
   holes in `t` that it can, and then try again to compute the type of
   `t` and unify it with the goal. (Like `rapply`, `tapply` also
@@ -1461,19 +1470,19 @@ performance table.
 See the comments at the top of `make-pretty-timed-diff.sh` for more
 detailed instructions and caveats.
 
-## 13. Bugs in Coq
+## 13. Bugs in Rocq
 
-More often than we would like, we run across bugs in Coq. A sure sign
-of a bug in Coq is when you get a message about an "Anomaly", but a
+More often than we would like, we run across bugs in Rocq. A sure sign
+of a bug in Rocq is when you get a message about an "Anomaly", but a
 bug can also be unjustifiable behavior. If you aren't sure whether
-something is a bug in Coq, feel free to [open an issue][new issue]
+something is a bug in Rocq, feel free to [open an issue][new issue]
 about it on the Coq-HoTT GitHub project.
 
 [new issue]: https://github.com/HoTT/HoTT/issues/new
 
 ### 13.1. Reporting bugs
 
-Bugs in Coq should be reported on the [Coq bug tracker][bugs]. You
+Bugs in Rocq should be reported on the [Rocq bug tracker][bugs]. You
 should search the tracker first to see whether your bug has
 already been reported.
 
@@ -1482,7 +1491,7 @@ the HoTT library until the bug is fixed. In this case, please add a
 comment labeling this as a workaround and citing the bug report. That
 way when the bug is fixed, we can remove the workaround.
 
-[bugs]: https://coq.inria.fr/bugs
+[bugs]: https://github.com/rocq-prover/rocq/issues
 
 ### 13.2. Minimizing bugs
 
@@ -1508,16 +1517,16 @@ You will need to pass the bug-finder several arguments to tell it to
 pass the right flags and where to find the rest of the library;
 a common invocation would be something like
 
-    $ /path/to/find-bug.py --arg -noinit --arg -indices-matter -R . HoTT Path/To/Buggy.v bug_minimized.v
+    $ /path/to/find-bug.py --coqc rocq --coqc compile --coqtop rocq --coqtop repl --arg -noinit --arg -indices-matter -R . HoTT Path/To/Buggy.v bug_minimized.v
 
 When it exits, the minimized code producing the bug will be in
 `bug_minimized.v`.
 
-Note that sometimes `coqc` and
-`coqtop` can exhibit different behavior, and one may produce a bug
-while the other doesn't. The bug-finder normally uses
-both `coqc` and `coqtop`, but you can tell it to "fake" `coqc` using
-`coqtop` by passing the argument `--coqc-as-coqtop` instead of
-`--coqc`.
+`rocq compile` and `rocq repl` can exhibit different behavior. The
+bug-finder retains the option names `--coqc` and `--coqtop`; repeating an
+option supplies a command prefix, as above. To reproduce compilation
+through the interactive backend, use `--coqc rocq --coqc repl
+--coqc-is-coqtop`. These option names belong to coq-tools and are not
+renamed with the Rocq commands.
 
 [coq-tools]: https://github.com/JasonGross/coq-tools
