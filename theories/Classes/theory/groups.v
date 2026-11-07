@@ -47,9 +47,34 @@ Section inverse_cancellation.
 
 End inverse_cancellation.
 
-(** The properties in this section can also be proved without assuming that [G] is set-truncated, but currently typeclass inference can fail to find these results for rings if proved without the [IsGroup] hypothesis. *)
+(** ** Equations with minimal algebraic laws *)
+
+Lemma swap_middle {A} `{op : SgOp A}
+  `{!Associative op, !Commutative op} (a b c d : A)
+  : (a * b) * (c * d) = (a * c) * (b * d).
+Proof.
+  lhs_V rapply simple_associativity.
+  rhs_V rapply simple_associativity.
+  apply (ap (a *.)).
+  lhs rapply simple_associativity.
+  rhs rapply simple_associativity.
+  exact (ap (.* d) (commutativity b c)).
+Qed.
+
+Lemma inverse_telescope {A} `{op : SgOp A} {e : A} {i : A -> A}
+  `{!Associative op, !LeftInverse op i e, !RightIdentity op e}
+  (x y z : A)
+  : (x * i y) * (y * i z) = x * i z.
+Proof.
+  lhs rapply simple_associativity.
+  exact (ap (fun w => w * i z) (sgop_inv_gV_g x y)).
+Qed.
+
 Section group_props.
-  Context `{IsGroup G}.
+  Context {G : Type} `{op : SgOp G} `{unit : MonUnit G}
+    `{i : Inverse G} `{!Associative (.*.), !LeftIdentity (.*.) mon_unit,
+      !RightIdentity (.*.) mon_unit, !LeftInverse (.*.) (^) mon_unit,
+      !RightInverse (.*.) (^) mon_unit}.
 
   (** Group inverses are involutive *)
   #[export] Instance inverse_involutive : Involutive (^).
@@ -104,11 +129,22 @@ End group_props.
 Section abgroup_props.
   Local Open Scope mc_add_scope.
 
-  Lemma negate_sg_op_distr `{IsAbGroup G} x y : -(x + y) = -x + -y.
+  Context {G : Type} `{op : SgOp G} `{unit : MonUnit G}
+    `{i : Inverse G} `{!Associative (+), !Commutative (+),
+      !LeftIdentity (+) 0, !RightIdentity (+) 0,
+      !LeftInverse (+) (-) 0, !RightInverse (+) (-) 0}.
+
+  Lemma negate_sg_op_distr x y : -(x + y) = -x + -y.
   Proof.
-    path_via (-y + -x).
-    - rapply inverse_sg_op.
-    - apply commutativity.
+    exact (inverse_sg_op x y @ commutativity _ _).
+  Qed.
+
+  Lemma common_left_cancel (x y z : G) : (z + x) - (z + y) = x - y.
+  Proof.
+    lhs rapply (ap (sg_op (z + x)) (negate_sg_op_distr z y)).
+    lhs rapply swap_middle.
+    lhs exact (ap (fun w => w + (x - y)) (right_inverse z)).
+    rapply left_identity.
   Qed.
 
   Local Close Scope mc_add_scope.
