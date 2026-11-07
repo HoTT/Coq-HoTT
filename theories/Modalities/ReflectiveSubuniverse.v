@@ -1805,7 +1805,7 @@ Section ConnectedMaps.
     apply conn_map_from_extension_elim; intros P ? d.
     exists (conn_map_elim g P (conn_map_elim f (fun b => P (g b)) d)); intros a.
     exact (conn_map_comp g P _ _ @ conn_map_comp f (fun b => P (g b)) d a).
-  Defined.      
+  Defined.
 
   Definition cancelR_conn_map {A B C : Type} (f : A -> B) (g : B -> C)
          `{IsConnMap O _ _ f} `{IsConnMap O _ _ (g o f)}
