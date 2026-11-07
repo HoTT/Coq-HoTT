@@ -1,0 +1,280 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Numeral.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Numeral.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"n .+1\" := (S n) : nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"n .+2\" := (n.+1.+1)%nat   : nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"n .+3\" := (n.+1.+2)%nat   : nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"n .+4\" := (n.+1.+3)%nat   : nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"n .+5\" := (n.+1.+4)%nat   : nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n(** ** Tail-recursive versions of [add] and [mul] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint tail_add n m :=\n  match n with\n    | O => m\n    | S n => tail_add n (S m)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [tail_addmul r n m] is [r + n * m]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint tail_addmul r n m :=\n  match n with\n    | O => r\n    | S n => tail_addmul (tail_add m r) n m\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition tail_mul n m := tail_addmul O n m.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Conversion with a decimal representation for printing/parsing *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation ten := (S (S (S (S (S (S (S (S (S (S O)))))))))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint of_uint_acc (d:Decimal.uint)(acc:nat) :=\n  match d with\n  | Decimal.Nil => acc\n  | Decimal.D0 d => of_uint_acc d (tail_mul ten acc)\n  | Decimal.D1 d => of_uint_acc d (S (tail_mul ten acc))\n  | Decimal.D2 d => of_uint_acc d (S (S (tail_mul ten acc)))\n  | Decimal.D3 d => of_uint_acc d (S (S (S (tail_mul ten acc))))\n  | Decimal.D4 d => of_uint_acc d (S (S (S (S (tail_mul ten acc)))))\n  | Decimal.D5 d => of_uint_acc d (S (S (S (S (S (tail_mul ten acc))))))\n  | Decimal.D6 d => of_uint_acc d (S (S (S (S (S (S (tail_mul ten acc)))))))\n  | Decimal.D7 d => of_uint_acc d (S (S (S (S (S (S (S (tail_mul ten acc))))))))\n  | Decimal.D8 d => of_uint_acc d (S (S (S (S (S (S (S (S (tail_mul ten acc)))))))))\n  | Decimal.D9 d => of_uint_acc d (S (S (S (S (S (S (S (S (S (tail_mul ten acc))))))))))\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition of_uint (d:Decimal.uint) := of_uint_acc d O.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation sixteen := (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S O)))))))))))))))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint of_hex_uint_acc (d:Hexadecimal.uint)(acc:nat) :=\n  match d with\n  | Hexadecimal.Nil => acc\n  | Hexadecimal.D0 d => of_hex_uint_acc d (tail_mul sixteen acc)\n  | Hexadecimal.D1 d => of_hex_uint_acc d (S (tail_mul sixteen acc))\n  | Hexadecimal.D2 d => of_hex_uint_acc d (S (S (tail_mul sixteen acc)))\n  | Hexadecimal.D3 d => of_hex_uint_acc d (S (S (S (tail_mul sixteen acc))))\n  | Hexadecimal.D4 d => of_hex_uint_acc d (S (S (S (S (tail_mul sixteen acc)))))\n  | Hexadecimal.D5 d => of_hex_uint_acc d (S (S (S (S (S (tail_mul sixteen acc))))))\n  | Hexadecimal.D6 d => of_hex_uint_acc d (S (S (S (S (S (S (tail_mul sixteen acc)))))))\n  | Hexadecimal.D7 d => of_hex_uint_acc d (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))\n  | Hexadecimal.D8 d => of_hex_uint_acc d (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))\n  | Hexadecimal.D9 d => of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))\n  | Hexadecimal.Da d => of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))\n  | Hexadecimal.Db d => of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))\n  | Hexadecimal.Dc d => of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))))\n  | Hexadecimal.Dd d => of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))))\n  | Hexadecimal.De d => of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))))))\n  | Hexadecimal.Df d => of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))))))\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition of_hex_uint (d:Hexadecimal.uint) := of_hex_uint_acc d O.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition of_num_uint (d:Numeral.uint) :=\n  match d with\n  | Numeral.UIntDec d => of_uint d\n  | Numeral.UIntHex d => of_hex_uint d\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint to_little_uint n acc :=\n  match n with\n  | O => acc\n  | S n => to_little_uint n (Decimal.Little.succ acc)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition to_uint n :=\n  Decimal.rev (to_little_uint n Decimal.zero).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition to_num_uint n := Numeral.UIntDec (to_uint n).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition of_int (d:Decimal.int) : option nat :=\n  match Decimal.norm d with\n    | Decimal.Pos u => Some (of_uint u)\n    | _ => None\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition of_hex_int (d:Hexadecimal.int) : option nat :=\n  match Hexadecimal.norm d with\n    | Hexadecimal.Pos u => Some (of_hex_uint u)\n    | _ => None\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition of_num_int (d:Numeral.int) : option nat :=\n  match d with\n  | Numeral.IntDec d => of_int d\n  | Numeral.IntHex d => of_hex_int d\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition to_int n := Decimal.Pos (to_uint n).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition to_num_int n := Numeral.IntDec (to_int n).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments of_uint d%_dec_uint_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments of_int d%_dec_int_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Parsing / printing of [nat] numbers *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Number Notation nat of_num_uint to_num_uint (abstract after 5001) : nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    }
+  ]
+]

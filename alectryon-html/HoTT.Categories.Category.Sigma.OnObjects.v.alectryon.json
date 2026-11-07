@@ -1,0 +1,644 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * \u2211-categories on objects - a generalization of subcategories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core Category.Sigma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Composition.Core Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Functor.Identity.FunctorIdentityNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Functor.Composition.Core.FunctorCompositionCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation sig_type := Overture.sig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation pr1_type := Overture.pr1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section sig_obj.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pobj : A -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Definition of [sig_obj]-precategory *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sig_obj : PreCategory\n    := @Build_PreCategory\n         (sig_type Pobj)\n         (fun s d => morphism A (pr1_type s) (pr1_type d))\n         (fun x => @identity A (pr1_type x))\n         (fun s d d' m1 m2 => m1 o m2)%morphism\n         (fun _ _ _ _ => associativity A _ _ _ _)\n         (fun _ _ => left_identity A _ _)\n         (fun _ _ => right_identity A _ _)\n         _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** First projection functor *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pr1_obj : Functor sig_obj A\n    := Build_Functor\n         sig_obj A\n         (@pr1_type _ _)\n         (fun s d m => m)\n         (fun _ _ _ _ _ => idpath)\n         (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sig_obj_as_sig : PreCategory\n    := @sig A Pobj (fun _ _ _ => Unit) _ (fun _ => tt) (fun _ _ _ _ _ _ _ => tt).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sig_functor_obj : Functor sig_obj_as_sig sig_obj\n    := Build_Functor sig_obj_as_sig sig_obj\n                     (fun x => x)\n                     (fun _ _ => @pr1_type _ _)\n                     (fun _ _ _ _ _ => idpath)\n                     (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sig_functor_obj_inv : Functor sig_obj sig_obj_as_sig\n    := Build_Functor sig_obj sig_obj_as_sig\n                     (fun x => x)\n                     (fun _ _ m => exist _ m tt)\n                     (fun _ _ _ _ _ => idpath)\n                     (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma sig_obj_eq `{Funext}\n  : sig_functor_obj o sig_functor_obj_inv = 1\n    /\\ sig_functor_obj_inv o sig_functor_obj = 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(sig_functor_obj o sig_functor_obj_inv = 1) *\n(sig_functor_obj_inv o sig_functor_obj = 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(sig_functor_obj o sig_functor_obj_inv = 1) *\n(sig_functor_obj_inv o sig_functor_obj = 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; path_functor; trivial.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : sig_type Pobj -> sig_type Pobj =>\n   forall s d : sig_type Pobj,\n   sig_type (fun _ : morphism A (pr1_type s) (pr1_type d) => Unit) ->\n   sig_type (fun _ : morphism A (pr1_type (GO s)) (pr1_type (GO d)) => Unit))\n  1\n  (fun (s d : sig_type Pobj)\n     (m : sig_type (fun _ : morphism A (pr1_type s) (pr1_type d) => Unit)) =>\n   (pr1_type m; tt)) =\n(fun s d : sig_type Pobj => idmap)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall; intros [].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : sig_type Pobj -> sig_type Pobj =>\n   forall s d : sig_type Pobj,\n   sig_type (fun _ : morphism A (pr1_type s) (pr1_type d) => Unit) ->\n   sig_type (fun _ : morphism A (pr1_type (GO s)) (pr1_type (GO d)) => Unit))\n  1\n  (fun (s d : sig_type Pobj)\n     (m : sig_type (fun _ : morphism A (pr1_type s) (pr1_type d) => Unit)) =>\n   (pr1_type m; tt))\n  (proj1; proj2) =\n(fun d : sig_type Pobj => idmap)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "Pobj proj1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall; intros [].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : sig_type Pobj -> sig_type Pobj =>\n   forall s d : sig_type Pobj,\n   sig_type (fun _ : morphism A (pr1_type s) (pr1_type d) => Unit) ->\n   sig_type (fun _ : morphism A (pr1_type (GO s)) (pr1_type (GO d)) => Unit))\n  1\n  (fun (s d : sig_type Pobj)\n     (m : sig_type (fun _ : morphism A (pr1_type s) (pr1_type d) => Unit)) =>\n   (pr1_type m; tt))\n  (proj1; proj2) (proj0; proj3) =\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "Pobj proj1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj3"
+              ],
+              "body": null,
+              "type": "Pobj proj0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall; intros [? []].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : sig_type Pobj -> sig_type Pobj =>\n   forall s d : sig_type Pobj,\n   sig_type (fun _ : morphism A (pr1_type s) (pr1_type d) => Unit) ->\n   sig_type (fun _ : morphism A (pr1_type (GO s)) (pr1_type (GO d)) => Unit))\n  1\n  (fun (s d : sig_type Pobj)\n     (m : sig_type (fun _ : morphism A (pr1_type s) (pr1_type d) => Unit)) =>\n   (pr1_type m; tt))\n  (proj1; proj2) (proj0; proj3) (proj4; tt) =\n(proj4; tt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "Pobj proj1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj3"
+              ],
+              "body": null,
+              "type": "Pobj proj0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj4"
+              ],
+              "body": null,
+              "type": "morphism A (pr1_type (proj1; proj2)) (pr1_type (proj0; proj3))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sig_obj_compat : pr1_obj o sig_functor_obj = pr1'\n    := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End sig_obj.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments pr1_obj {A Pobj}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export CategorySigmaOnObjectsNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"{ x : A | P }\" := (sig_obj A (fun x => P)) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End CategorySigmaOnObjectsNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

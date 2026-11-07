@@ -1,0 +1,18 @@
+digraph HoTT_Colimits_Colimit_Sigma {
+  graph [ratio=0.5]
+  node [style=filled]
+Colimit_Sigma_sigma_diag_functor_equiv [label="sigma_diag_functor_equiv", URL=<Colimit_Sigma.html#sigma_diag_functor_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Sigma_sigma_diagram_functor [label="sigma_diagram_functor", URL=<Colimit_Sigma.html#sigma_diagram_functor>, fillcolor="#F070D1"] ;
+Colimit_Sigma_iscolimit_sigma [label="iscolimit_sigma", URL=<Colimit_Sigma.html#iscolimit_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Sigma_sigma_cocone [label="sigma_cocone", URL=<Colimit_Sigma.html#sigma_cocone>, fillcolor="#F070D1"] ;
+Colimit_Sigma_sigma_diagram_map [label="sigma_diagram_map", URL=<Colimit_Sigma.html#sigma_diagram_map>, fillcolor="#F070D1"] ;
+Colimit_Sigma_sigma_diagram [label="sigma_diagram", URL=<Colimit_Sigma.html#sigma_diagram>, fillcolor="#F070D1"] ;
+  Colimit_Sigma_sigma_diag_functor_equiv -> Colimit_Sigma_sigma_diagram_functor [] ;
+  Colimit_Sigma_sigma_diagram_functor -> Colimit_Sigma_sigma_diagram [] ;
+  Colimit_Sigma_iscolimit_sigma -> Colimit_Sigma_sigma_cocone [] ;
+  Colimit_Sigma_iscolimit_sigma -> Colimit_Sigma_sigma_diagram_map [] ;
+  Colimit_Sigma_sigma_cocone -> Colimit_Sigma_sigma_diagram [] ;
+  Colimit_Sigma_sigma_diagram_map -> Colimit_Sigma_sigma_diagram [] ;
+subgraph cluster_Colimit_Sigma { label="Colimit_Sigma"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Colimit_Sigma_sigma_diagram; Colimit_Sigma_sigma_diagram_map; Colimit_Sigma_sigma_cocone; Colimit_Sigma_iscolimit_sigma; Colimit_Sigma_sigma_diagram_functor; Colimit_Sigma_sigma_diag_functor_equiv; };
+} /* END */

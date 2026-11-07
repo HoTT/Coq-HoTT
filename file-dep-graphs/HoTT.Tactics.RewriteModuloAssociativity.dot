@@ -1,0 +1,9 @@
+digraph HoTT_Tactics_RewriteModuloAssociativity {
+  graph [ratio=0.5]
+  node [style=filled]
+RewriteModuloAssociativity_Compose_compose [label="compose", URL=<RewriteModuloAssociativity.html#Compose.compose>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_RewriteModuloAssociativity { label="RewriteModuloAssociativity"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_RewriteModuloAssociativity_Compose { label="Compose"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+RewriteModuloAssociativity_Compose_compose; };
+};
+} /* END */

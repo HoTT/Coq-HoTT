@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT_Tests.Tactics.EliminationSchemes</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT_Tests.Tactics.EliminationSchemes</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Basics</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Overture</span></a> <a class="idref" href="HoTT.Basics.Notations.html#"><span class="id" title="library">Notations</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Spaces</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Nat.Core</span></a> <a class="idref" href="HoTT.Spaces.Nat.Arithmetic.html#"><span class="id" title="library">Nat.Arithmetic</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#"><span class="id" title="library">SInt</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-unknown-warning".<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "+deprecated-lookup-elim-by-name".<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="binder, definition"><span id="n:1" class="id">n</span></span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">nat</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="binder, definition"><span id="A:2" class="id">A</span></span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="binder, definition"><span id="n:3" class="id">n</span></span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">nat</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">a</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">Empty</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">elim</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="binder, definition"><span id="A:4" class="id">A</span></span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Empty</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">elim</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="binder, definition"><span id="n:5" class="id">n</span></span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="binder, definition"><span id="m:6" class="id">m</span></span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">(</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="binder, definition"><span id="p:7" class="id">p</span></span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">(</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">≤</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">m</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">)%</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">nat</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">p</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="binder, definition"><span id="n:8" class="id">n</span></span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="binder, definition"><span id="m:9" class="id">m</span></span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">increasing_geq</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">m</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="binder, definition"><span id="x:10" class="id">x</span></span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">SInt</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">x</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">(</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="binder, definition"><span id="A:11" class="id">A</span></span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">(</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="binder, definition"><span id="x:12" class="id">x</span></span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">SInt</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">x</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">a</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;These&nbsp;Unit-valued&nbsp;goals&nbsp;force&nbsp;elimination&nbsp;into&nbsp;Type0,&nbsp;exercising&nbsp;the&nbsp;rec_dep&nbsp;registrations.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="binder, definition"><span id="n:13" class="id">n</span></span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">nat</span></a><a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="binder, definition"><span id="n:14" class="id">n</span></span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="binder, definition"><span id="m:15" class="id">m</span></span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">(</span></a><a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="binder, definition"><span id="p:16" class="id">p</span></span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">(</span></a><a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">≤</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">m</span></a><a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">)%</span></a><a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">nat</span></a><a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="binder, definition"><span id="x:17" class="id">x</span></span></a> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">SInt</span></a><a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.SetCategory.Core.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * Precategories [set_cat] and [prop_cat] *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Strict.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types TruncType.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">cat_of</span> obj :=
+  (@Build_PreCategory obj
+                      (<span class="k">fun</span> <span class="nv">x</span> <span class="nv">y</span> =&gt; x -&gt; y)
+                      (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">x</span> =&gt; x)
+                      (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">f</span> <span class="nv">g</span> =&gt; f o g)%core
+                      (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                      (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                      (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                      _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** There is a category [Set], where the objects are sets and the</span>
+<span class="sd">    morphisms are set morphisms *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">prop_cat</span> `{Funext} : PreCategory := cat_of HProp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">set_cat</span> `{Funext} : PreCategory := cat_of HSet.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** [Prop] is a strict category *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isstrict_prop_cat</span> `{Univalence}
+: IsStrictCategory prop_cat
+  := _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** Because, e.g., [@identity set_cat x ≡ x], and we want [rewrite] to</span>
+<span class="sd">    notice this, we must inform it that it can try treating [identity]</span>
+<span class="sd">    as [idmap]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">Declare Equivalent Keys identity idmap.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

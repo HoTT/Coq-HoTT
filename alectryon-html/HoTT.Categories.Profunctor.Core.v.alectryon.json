@@ -1,0 +1,154 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Profunctors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core Category.Prod Category.Dual SetCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope profunctor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope profunctor_scope with profunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section profunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Quoting nLab:\n\n      If [C] and [D] are categories, a profunctor from [C] to [D] is a functor [D\u1d52\u1d56 * C -> Set]. Such a profunctor is usually written as [F : C \u21f8 D].\n\n      Every functor [f : C -> D] induces two profunctors [D(1, f) : C \u21f8 D] and [D(f, 1) : D \u21f8 C], defined by [D(1,f)(d,c) = D(d, f(c))] and [D(f, 1)(c,d) = D(f(c), d)]. These profunctors are called representable (or sometimes one of them is corepresentable).\n\n      In particular the identity profunctor [Id : C \u21f8 C] is represented by the identity functor and hence is given by the hom-functor [C(\u2212, \u2212) : C\u1d52\u1d56 * C -> Set].\n\n      The notion generalizes to many other kinds of categories. For instance, if [C] and [D] are enriched over some symmetric closed monoidal category [V], then a profunctor from [C] to [D] is a [V]-functor [D\u1d52\u1d56 \u2297 C -> V]. If they are internal categories, then a profunctor [C \u21f8 D] is an internal diagram on [D\u1d52\u1d56 * C], and so on. There are also other equivalent definitions in each case; see below.\n\n      A profunctor is also sometimes called a (bi)module or a distributor or a correspondence, though the latter word is also used for a span. The term \u201cmodule\u201d tends to be common in Australia, especially in the enriched case; here the intuition is that for one-object [V]-categories, i.e. monoids in [V], profunctors really are the same as bimodules between such monoids in the usual sense. \u201cProfunctor\u201d is perhaps more common in the Set-based and internal cases (but is also used in the enriched case); here the intuition is that a profunctor is a generalization of a functor, via the construction of \u201crepresentable\u201d profunctors. Jean B\u00e9nabou, who invented the term and originally used \u201cprofunctor,\u201d now prefers \u201cdistributor,\u201d which is supposed to carry the intuition that a distributor generalizes a functor in a similar way to how a distribution generalizes a function.\n\n      Note that the convention that a profunctor is a functor [D\u1d52\u1d56 * C -> Set] is not universal; some authors reverse C and D and/or put the \u201cop\u201d on the other one. See the discussion below. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We capitalize [Profunctor] just like we capitalize [Functor]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Profunctor := Functor (D^op * C) set_cat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End profunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope profunctor_scope with Profunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export ProfunctorCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x -|-> y\" := (Profunctor x y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ProfunctorCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

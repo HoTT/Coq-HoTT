@@ -1,0 +1,130 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Numerals.Decimal Basics.Numerals.Hexadecimal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Numerals.Decimal Basics.Numerals.Hexadecimal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Decimal or Hexadecimal numbers *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variant uint : Type0 := UIntDec (u:Decimal.uint) | UIntHex (u:Hexadecimal.uint).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variant int : Type0 := IntDec (i:Decimal.int) | IntHex (i:Hexadecimal.int).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variant numeral : Type0 := Dec (d:Decimal.decimal) | Hex (h:Hexadecimal.hexadecimal).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register uint as num.num_uint.type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register int as num.num_int.type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register numeral as num.numeral.type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register numeral as num.number.type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Pseudo-conversion functions used when declaring\n    Numeral Notations on [uint] and [int]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition uint_of_uint (i:uint) := i.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition int_of_int (i:int) := i.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Parsing / printing of decimal numbers *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Number Notation uint uint_of_uint uint_of_uint : dec_uint_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Number Notation int int_of_int int_of_int : dec_int_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

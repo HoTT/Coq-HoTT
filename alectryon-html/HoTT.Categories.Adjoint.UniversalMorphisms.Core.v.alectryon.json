@@ -1,0 +1,1728 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Adjunctions as universal morphisms *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Identity Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Dual Category.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import UniversalProperties Comma.Dual InitialTerminalCategory.Core InitialTerminalCategory.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section adjunction_universal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** [F \u22a3 G] gives an initial object of [(Y / G)] for all [Y : C] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section initial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : F -| G.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Y : C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition initial_morphism__of__adjunction\n    : object (Y / G)\n      := @CommaCategory.Build_object\n           _ D C\n           (! Y) G\n           (center _)\n           (F Y)\n           ((unit A) Y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition is_initial_morphism__of__adjunction\n    : IsInitialMorphism initial_morphism__of__adjunction\n      := Build_IsInitialMorphism\n           _\n           _\n           _\n           _\n           ((A : AdjunctionUnit _ _).2 _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End initial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments initial_morphism__of__adjunction [C D F G] A Y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments is_initial_morphism__of__adjunction [C D F G] A Y _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** [F \u22a3 G] gives a terminal object of [(F / X)] for all [X : D] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section terminal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : F -| G.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition terminal_morphism__of__adjunction\n    : object (F / X)\n      := Eval simpl in\n          dual_functor\n            (! X)^op F^op\n            (initial_morphism__of__adjunction A^op X).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition is_terminal_morphism__of__adjunction\n    : IsTerminalMorphism terminal_morphism__of__adjunction\n      := is_initial_morphism__of__adjunction A^op X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End terminal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments terminal_morphism__of__adjunction [C D F G] A X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments is_terminal_morphism__of__adjunction [C D F G] A X _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End adjunction_universal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section adjunction_from_universal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** an initial object of [(Y / G)] for all [Y : C] gives a left adjoint to [G] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section initial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `(HM : forall Y, @IsInitialMorphism _ _ Y G (M Y)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation obj_of Y :=\n      (IsInitialMorphism_object (@HM Y))\n        (only parsing).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation mor_of Y0 Y1 f :=\n      (let etaY1 := IsInitialMorphism_morphism (@HM Y1) in\n       IsInitialMorphism_property_morphism (@HM Y0) _ (etaY1 o f))\n        (only parsing).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma identity_of Y : mor_of Y Y 1 = 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(let etaY1 := IsInitialMorphism_morphism (HM (Y:=Y)) in\n IsInitialMorphism_property_morphism (HM (Y:=Y))\n   (IsInitialMorphism_object (HM (Y:=Y))) (etaY1 o 1)) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y0 : C, IsInitialMorphism (M Y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(let etaY1 := IsInitialMorphism_morphism (HM (Y:=Y)) in\n IsInitialMorphism_property_morphism (HM (Y:=Y))\n   (IsInitialMorphism_object (HM (Y:=Y))) (etaY1 o 1)) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y0 : C, IsInitialMorphism (M Y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitialMorphism_property_morphism (HM (Y:=Y))\n  (IsInitialMorphism_object (HM (Y:=Y)))\n  (IsInitialMorphism_morphism (HM (Y:=Y)) o 1) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y0 : C, IsInitialMorphism (M Y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "erewrite IsInitialMorphism_property_morphism_unique; [ reflexivity | ].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "G _1 1 o IsInitialMorphism_morphism (HM (Y:=Y)) =\nIsInitialMorphism_morphism (HM (Y:=Y)) o 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y0 : C, IsInitialMorphism (M Y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ?identity_of, ?left_identity, ?right_identity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitialMorphism_morphism (HM (Y:=Y)) =\nIsInitialMorphism_morphism (HM (Y:=Y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y0 : C, IsInitialMorphism (M Y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma composition_of x y z g f\n    : mor_of _ _ (f o g) = mor_of y z f o mor_of x y g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(let etaY1 := IsInitialMorphism_morphism (HM (Y:=z)) in\n IsInitialMorphism_property_morphism (HM (Y:=x))\n   (IsInitialMorphism_object (HM (Y:=z))) (etaY1 o (f o g))) =\n(let etaY1 := IsInitialMorphism_morphism (HM (Y:=z)) in\n IsInitialMorphism_property_morphism (HM (Y:=y))\n   (IsInitialMorphism_object (HM (Y:=z))) (etaY1 o f))\no (let etaY1 := IsInitialMorphism_morphism (HM (Y:=y)) in\n   IsInitialMorphism_property_morphism (HM (Y:=x))\n     (IsInitialMorphism_object (HM (Y:=y))) (etaY1 o g))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x0 : C, (x0 / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C x y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C y z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(let etaY1 := IsInitialMorphism_morphism (HM (Y:=z)) in\n IsInitialMorphism_property_morphism (HM (Y:=x))\n   (IsInitialMorphism_object (HM (Y:=z))) (etaY1 o (f o g))) =\n(let etaY1 := IsInitialMorphism_morphism (HM (Y:=z)) in\n IsInitialMorphism_property_morphism (HM (Y:=y))\n   (IsInitialMorphism_object (HM (Y:=z))) (etaY1 o f))\no (let etaY1 := IsInitialMorphism_morphism (HM (Y:=y)) in\n   IsInitialMorphism_property_morphism (HM (Y:=x))\n     (IsInitialMorphism_object (HM (Y:=y))) (etaY1 o g))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x0 : C, (x0 / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C x y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C y z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitialMorphism_property_morphism (HM (Y:=x))\n  (IsInitialMorphism_object (HM (Y:=z)))\n  (IsInitialMorphism_morphism (HM (Y:=z)) o (f o g)) =\nIsInitialMorphism_property_morphism (HM (Y:=y))\n  (IsInitialMorphism_object (HM (Y:=z)))\n  (IsInitialMorphism_morphism (HM (Y:=z)) o f)\no IsInitialMorphism_property_morphism (HM (Y:=x))\n    (IsInitialMorphism_object (HM (Y:=y)))\n    (IsInitialMorphism_morphism (HM (Y:=y)) o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x0 : C, (x0 / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C x y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C y z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "erewrite IsInitialMorphism_property_morphism_unique; [ reflexivity | ].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "G\n_1 (IsInitialMorphism_property_morphism (HM (Y:=y))\n      (IsInitialMorphism_object (HM (Y:=z)))\n      (IsInitialMorphism_morphism (HM (Y:=z)) o f)\n    o IsInitialMorphism_property_morphism (HM (Y:=x))\n        (IsInitialMorphism_object (HM (Y:=y)))\n        (IsInitialMorphism_morphism (HM (Y:=y)) o g))\no IsInitialMorphism_morphism (HM (Y:=x)) =\nIsInitialMorphism_morphism (HM (Y:=z)) o (f o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x0 : C, (x0 / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C x y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C y z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ?composition_of.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "G\n_1 (IsInitialMorphism_property_morphism (HM (Y:=y))\n      (IsInitialMorphism_object (HM (Y:=z)))\n      (IsInitialMorphism_morphism (HM (Y:=z)) o f))\no G\n  _1 (IsInitialMorphism_property_morphism (HM (Y:=x))\n        (IsInitialMorphism_object (HM (Y:=y)))\n        (IsInitialMorphism_morphism (HM (Y:=y)) o g))\no IsInitialMorphism_morphism (HM (Y:=x)) =\nIsInitialMorphism_morphism (HM (Y:=z)) o (f o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x0 : C, (x0 / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C x y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C y z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat\n        try_associativity_quick\n        rewrite IsInitialMorphism_property_morphism_property.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitialMorphism_morphism (HM (Y:=z)) o f o g =\nIsInitialMorphism_morphism (HM (Y:=z)) o f o g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x0 : C, (x0 / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C x y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C y z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functor__of__initial_morphism : Functor C D\n      := Build_Functor\n           C D\n           (fun x => obj_of x)\n           (fun s d m => mor_of s d m)\n           composition_of\n           identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition adjunction__of__initial_morphism\n    : functor__of__initial_morphism -| G.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor__of__initial_morphism -| G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor__of__initial_morphism -| G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (adjunction_unit_counit__of__adjunction_unit _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AdjunctionUnit functor__of__initial_morphism G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eexists (Build_NaturalTransformation\n                1\n                (G o functor__of__initial_morphism)\n                (fun x => IsInitialMorphism_morphism (@HM x))\n                (fun s d m =>\n                   symmetry\n                     _ _\n                     (IsInitialMorphism_property_morphism_property (@HM s) _ _))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (c : C) (d : D) (f : morphism C c (G _0 d)%object),\nContr\n  {g : morphism D (functor__of__initial_morphism _0 c)%object d &\n  G _1 g\n  o Build_NaturalTransformation 1 (G o functor__of__initial_morphism)\n      (fun x : C => IsInitialMorphism_morphism (HM (Y:=x)))\n      (fun (s d0 : C) (m : morphism C s d0) =>\n       symmetry\n         (G\n          _1 (IsInitialMorphism_property_morphism \n                (HM (Y:=s)) (functor__of__initial_morphism _0 d0)\n                (IsInitialMorphism_morphism (HM (Y:=d0)) o 1 _1 m))\n          o IsInitialMorphism_morphism (HM (Y:=s)))\n         (IsInitialMorphism_morphism (HM (Y:=d0)) o 1 _1 m)\n         (IsInitialMorphism_property_morphism_property \n            (HM (Y:=s)) (functor__of__initial_morphism _0 d0)\n            (IsInitialMorphism_morphism (HM (Y:=d0)) o 1 _1 m)))\n      c =\n  f}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (c : C) (d : D) (f : morphism C c (G _0 d)%object),\nContr\n  {g : morphism D (IsInitialMorphism_object (HM (Y:=c))) d &\n  G _1 g o IsInitialMorphism_morphism (HM (Y:=c)) = f}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "forall x : C, (x / G)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "forall Y : C, IsInitialMorphism (M Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun c => @IsInitialMorphism_property _ _ c G (M c) (@HM c)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End initial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** a terminal object of [(F / X)] for all [X : D] gives a right adjoint to [F] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section terminal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `(HM : forall X, @IsTerminalMorphism _ _ F X (M X)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functor__of__terminal_morphism : Functor D C\n      := (@functor__of__initial_morphism\n            (D^op) (C^op)\n            (F^op)\n            (fun x : D => dual_functor F !x (M x)) HM)^op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition adjunction__of__terminal_morphism\n    : F -| functor__of__terminal_morphism\n      := ((@adjunction__of__initial_morphism\n             (D^op) (C^op)\n             (F^op)\n             (fun x : D => dual_functor F !x (M x)) HM)^op)%adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End terminal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End adjunction_from_universal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT_Tests.Algebra.Monoids.Centralizer</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT_Tests.Algebra.Monoids.Centralizer</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Basics</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Overture</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Algebra.Monoids</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Monoids.Monoid.html#"><span class="id" title="library">Monoid</span></a> <a class="idref" href="HoTT.Algebra.Monoids.Centralizer.html#"><span class="id" title="library">Centralizer</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="AssociativeOperation" class="idref" href="#AssociativeOperation"><span class="id" title="section">AssociativeOperation</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Universe</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="AssociativeOperation.A" class="idref" href="#AssociativeOperation.A"><span class="id" title="variable">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">u</span>}} {<a id="AssociativeOperation.Aop" class="idref" href="#AssociativeOperation.Aop"><span class="id" title="variable">Aop</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#SgOp"><span class="id" title="class">SgOp</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#A:1"><span class="id" title="variable">A</span></a>} `{!<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#Aop:2"><span class="id" title="variable">Aop</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Multiplicative closure does not require the carrier to be a set. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Definition</span> <a id="test" class="idref" href="#test"><span class="id" title="definition">test@</span></a>{|} (<a id="g:4" class="idref" href="#g:4"><span class="id" title="binder">g</span></a> <a id="h:5" class="idref" href="#h:5"><span class="id" title="binder">h</span></a> <a id="k:6" class="idref" href="#k:6"><span class="id" title="binder">k</span></a> : <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#AssociativeOperation.A"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="p:7" class="idref" href="#p:7"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Monoids.Centralizer.html#centralizer"><span class="id" title="definition">centralizer</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#g:4"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#h:5"><span class="id" title="variable">h</span></a>) (<a id="q:8" class="idref" href="#q:8"><span class="id" title="binder">q</span></a> : <a class="idref" href="HoTT.Algebra.Monoids.Centralizer.html#centralizer"><span class="id" title="definition">centralizer</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#g:4"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#k:6"><span class="id" title="variable">k</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Monoids.Centralizer.html#centralizer"><span class="id" title="definition">centralizer</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#g:4"><span class="id" title="variable">g</span></a> (<a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#AssociativeOperation.Aop"><span class="id" title="variable">Aop</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#h:5"><span class="id" title="variable">h</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#k:6"><span class="id" title="variable">k</span></a>) := <a class="idref" href="HoTT.Algebra.Monoids.Centralizer.html#centralizer_sgop"><span class="id" title="definition">centralizer_sgop</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#g:4"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#h:5"><span class="id" title="variable">h</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#k:6"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#p:7"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#q:8"><span class="id" title="variable">q</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#AssociativeOperation"><span class="id" title="section">AssociativeOperation</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="UnitalOperation" class="idref" href="#UnitalOperation"><span class="id" title="section">UnitalOperation</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Universe</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="UnitalOperation.A" class="idref" href="#UnitalOperation.A"><span class="id" title="variable">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">u</span>}} {<a id="UnitalOperation.Aop" class="idref" href="#UnitalOperation.Aop"><span class="id" title="variable">Aop</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#SgOp"><span class="id" title="class">SgOp</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#A:9"><span class="id" title="variable">A</span></a>} {<a id="UnitalOperation.Aunit" class="idref" href="#UnitalOperation.Aunit"><span class="id" title="variable">Aunit</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#MonUnit"><span class="id" title="class">MonUnit</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#A:9"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;`{!<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#Aop:10"><span class="id" title="variable">Aop</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>, !<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightIdentity"><span class="id" title="class">RightIdentity</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#Aop:10"><span class="id" title="variable">Aop</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Unit membership requires neither associativity nor setness. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Definition</span> <a id="test" class="idref" href="#test"><span class="id" title="definition">test@</span></a>{|} (<a id="g:14" class="idref" href="#g:14"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#UnitalOperation.A"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Monoids.Centralizer.html#centralizer"><span class="id" title="definition">centralizer</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#g:14"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a> := <a class="idref" href="HoTT.Algebra.Monoids.Centralizer.html#centralizer_unit"><span class="id" title="definition">centralizer_unit</span></a> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#g:14"><span class="id" title="variable">g</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT_Tests.Algebra.Monoids.Centralizer.html#UnitalOperation"><span class="id" title="section">UnitalOperation</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1644 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functors to cat are pseudofunctors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pseudofunctor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Morphisms NaturalTransformation.Isomorphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms NaturalTransformation.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.PathGroupoids Basics.Trunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Every functor to Cat is a pseudofunctor *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section of_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{HP : forall C D, P C -> P D -> IsHSet (Functor C D)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation cat := (@sub_pre_cat _ P HP).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C cat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_functor_helper A B (F1 F2 : Functor A B) (pf1 pf2 : F1 = F2)\n  : P A -> P B -> pf1 = pf2\n    := fun PA PB => @path_ishprop _ (@HP A B PA PB F1 F2) _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Hint Extern 0 (P ?x.1) => exact x.2 : core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Tactic Notation \"transitivity_idtoiso\" open_constr(hyp) :=\n    lazymatch goal with\n      | [ |- ?f (Category.Morphisms.idtoiso ?C _) = _ ] => etransitivity (f (Category.Morphisms.idtoiso C hyp));\n                                       [ do 2 refine (ap _ _); (* https://coq.inria.fr/bugs/show_bug.cgi?id=3626 *)\n                                         apply path_functor_helper;\n                                         simpl; trivial\n                                       | path_natural_transformation ]\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac pseudofunctor_t :=\n    intros;\n    unfold natural_transformation_of_natural_isomorphism;\n    rewrite ?idtoiso_whisker_r, ?idtoiso_whisker_l;\n    repeat (\n        let C := match goal with |- @paths (@NaturalTransformation ?C ?D ?F ?G) _ _ => constr:((C -> D)%category) end in\n        first [ eapply (@iso_moveL_pV C)\n              | eapply (@iso_moveL_Vp C)\n              | eapply (@iso_moveL_pM C)\n              | eapply (@iso_moveL_Mp C) ];\n        simpl\n      );\n    rewrite ?idtoiso_inv;\n    simpl;\n    change @NaturalTransformation.Composition.Core.compose\n    with (fun C D F G H => Category.Core.compose (C := C -> D) (s := F) (d := G) (d' := H));\n    cbv beta;\n    rewrite ?idtoiso_comp;\n    first [ transitivity_idtoiso (Functor.Composition.Laws.left_identity _)\n          | transitivity_idtoiso ((Functor.Composition.Laws.left_identity _)^)\n          | transitivity_idtoiso (Functor.Composition.Laws.right_identity _)\n          | transitivity_idtoiso ((Functor.Composition.Laws.right_identity _)^)\n          | transitivity_idtoiso (Functor.Composition.Laws.associativity _ _ _)\n          | transitivity_idtoiso ((Functor.Composition.Laws.associativity _ _ _)^) ];\n    rewrite eta_idtoiso;\n    simpl;\n    rewrite ?ap_V, ?Functor.Composition.Laws.left_identity_fst, ?Functor.Composition.Laws.right_identity_fst, ?Functor.Composition.Laws.associativity_fst;\n    try reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (* The following helpers were generated with\n<<\nintros.\n    repeat match goal with\n             | [ |- context[idtoiso ?C (?f ?x)] ] => generalize (f x); intro\n             | [ |- context[MorphismOf ?F ?f] ] => generalize dependent (MorphismOf F f); repeat (let x := fresh \"x\" in intro x)\n             | [ |- context[ObjectOf ?F ?f] ] => generalize dependent (ObjectOf F f); repeat (let x := fresh \"x\" in intro x)\n           end.\n    simpl in *.\n    unfold SubPreCatCat.\n    simpl in *.\n    clear.\n    destruct_head_hnf @sig.\n    simpl in *.\n    repeat match goal with\n             | [ H : _ |- _ ] => revert H\n           end.\n    intros H P.\n>> *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma pseudofunctor_of_functor__composition_of\n        {x0 x1 x2 x : PreCategory}\n        {x7 x11 : Functor x0 x1}\n        {x12 : x7 = x11}\n        {x6 : Functor x0 x2} {x9 : Functor x2 x1}\n        {x14 : x11 = (x9 o x6)%functor}\n        {x4 : Functor x0 x} {x5 : Functor x x1}\n        {x8 : x7 = (x5 o x4)%functor} {x10 : Functor x x2}\n        {x13 : x6 = (x10 o x4)%functor} {x15 : x5 = (x9 o x10)%functor}\n        (H0' : P x0) (H1' : P x1) (H2' : P x2) (H' : P x)\n  : ((associator_1 x9 x10 x4)\n       o ((idtoiso (x -> x1) x15 : morphism _ _ _)\n            oR x4\n            o (idtoiso (x0 -> x1) x8 : morphism _ _ _)))%natural_transformation\n    = (x9\n         oL (idtoiso (x0 -> x2) x13 : morphism _ _ _)\n         o ((idtoiso (x0 -> x1) x14 : morphism _ _ _)\n              o (idtoiso (x0 -> x1) x12 : morphism _ _ _)))%natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(associator_1 x9 x10 x4\n o ((idtoiso (x -> x1) x15 : morphism (x -> x1) x5 (x9 o x10)%functor) oR x4\n    o (idtoiso (x0 -> x1) x8 : morphism (x0 -> x1) x7 (x5 o x4)%functor)))%natural_transformation =\n(x9 oL (idtoiso (x0 -> x2) x13 : morphism (x0 -> x2) x6 (x10 o x4)%functor)\n o ((idtoiso (x0 -> x1) x14 : morphism (x0 -> x1) x11 (x9 o x6)%functor)\n    o (idtoiso (x0 -> x1) x12 : morphism (x0 -> x1) x7 x11)))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1",
+                "x2",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7",
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "x7 = x11"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "Functor x0 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "Functor x2 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "x11 = (x9 o x6)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "Functor x x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "x7 = (x5 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "x6 = (x10 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "x5 = (x9 o x10)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "P x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2'"
+              ],
+              "body": null,
+              "type": "P x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(associator_1 x9 x10 x4\n o ((idtoiso (x -> x1) x15 : morphism (x -> x1) x5 (x9 o x10)%functor) oR x4\n    o (idtoiso (x0 -> x1) x8 : morphism (x0 -> x1) x7 (x5 o x4)%functor)))%natural_transformation =\n(x9 oL (idtoiso (x0 -> x2) x13 : morphism (x0 -> x2) x6 (x10 o x4)%functor)\n o ((idtoiso (x0 -> x1) x14 : morphism (x0 -> x1) x11 (x9 o x6)%functor)\n    o (idtoiso (x0 -> x1) x12 : morphism (x0 -> x1) x7 x11)))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1",
+                "x2",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7",
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "x7 = x11"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "Functor x0 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "Functor x2 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "x11 = (x9 o x6)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "Functor x x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "x7 = (x5 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "x6 = (x10 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "x5 = (x9 o x10)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "P x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2'"
+              ],
+              "body": null,
+              "type": "P x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clear F.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(associator_1 x9 x10 x4\n o ((idtoiso (x -> x1) x15 : morphism (x -> x1) x5 (x9 o x10)%functor) oR x4\n    o (idtoiso (x0 -> x1) x8 : morphism (x0 -> x1) x7 (x5 o x4)%functor)))%natural_transformation =\n(x9 oL (idtoiso (x0 -> x2) x13 : morphism (x0 -> x2) x6 (x10 o x4)%functor)\n o ((idtoiso (x0 -> x1) x14 : morphism (x0 -> x1) x11 (x9 o x6)%functor)\n    o (idtoiso (x0 -> x1) x12 : morphism (x0 -> x1) x7 x11)))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1",
+                "x2",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7",
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "x7 = x11"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "Functor x0 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "Functor x2 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "x11 = (x9 o x6)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "Functor x x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "x7 = (x5 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "x6 = (x10 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "x5 = (x9 o x10)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "P x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2'"
+              ],
+              "body": null,
+              "type": "P x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; simpl; pseudofunctor_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma pseudofunctor_of_functor__left_identity_of\n        {x0 x : PreCategory}\n        {x2 : Functor x x} {x3 : x2 = 1%functor}\n        {x4 x5 : Functor x0 x} {x6 : x4 = x5} {x7 : x4 = (x2 o x5)%functor}\n        (H0' : P x0) (H' : P x)\n  : ((Category.Morphisms.idtoiso (x -> x) x3 : morphism _ _ _)\n       oR x5\n       o (Category.Morphisms.idtoiso (x0 -> x) x7 : morphism _ _ _))%natural_transformation\n    = ((NaturalTransformation.Composition.Laws.left_identity_natural_transformation_2 x5)\n         o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((idtoiso (x -> x) x3 : morphism (x -> x) x2 1%functor) oR x5\n o (idtoiso (x0 -> x) x7 : morphism (x0 -> x) x4 (x2 o x5)%functor))%natural_transformation =\n(left_identity_natural_transformation_2 x5\n o (idtoiso (x0 -> x) x6 : morphism (x0 -> x) x4 x5))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "Functor x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "x2 = 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4",
+                "x5"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "x4 = x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "x4 = (x2 o x5)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((idtoiso (x -> x) x3 : morphism (x -> x) x2 1%functor) oR x5\n o (idtoiso (x0 -> x) x7 : morphism (x0 -> x) x4 (x2 o x5)%functor))%natural_transformation =\n(left_identity_natural_transformation_2 x5\n o (idtoiso (x0 -> x) x6 : morphism (x0 -> x) x4 x5))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "Functor x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "x2 = 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4",
+                "x5"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "x4 = x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "x4 = (x2 o x5)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clear F.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((idtoiso (x -> x) x3 : morphism (x -> x) x2 1%functor) oR x5\n o (idtoiso (x0 -> x) x7 : morphism (x0 -> x) x4 (x2 o x5)%functor))%natural_transformation =\n(left_identity_natural_transformation_2 x5\n o (idtoiso (x0 -> x) x6 : morphism (x0 -> x) x4 x5))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "Functor x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "x2 = 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4",
+                "x5"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "x4 = x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "x4 = (x2 o x5)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl; pseudofunctor_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma pseudofunctor_of_functor__right_identity_of\n        {x0 x : PreCategory}\n        {x4 : Functor x0 x0} {x5 : x4 = 1%functor}\n        {x2 x3 : Functor x0 x} {x6 : x2 = x3} {x7 : x2 = (x3 o x4)%functor}\n        (H0' : P x0) (H' : P x)\n  : (x3\n       oL (Category.Morphisms.idtoiso (x0 -> x0) x5 : morphism _ _ _)\n       o (Category.Morphisms.idtoiso (x0 -> x) x7 : morphism _ _ _))%natural_transformation\n    = ((NaturalTransformation.Composition.Laws.right_identity_natural_transformation_2 x3)\n         o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x3 oL (idtoiso (x0 -> x0) x5 : morphism (x0 -> x0) x4 1%functor)\n o (idtoiso (x0 -> x) x7 : morphism (x0 -> x) x2 (x3 o x4)%functor))%natural_transformation =\n(right_identity_natural_transformation_2 x3\n o (idtoiso (x0 -> x) x6 : morphism (x0 -> x) x2 x3))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "x4 = 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2",
+                "x3"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "x2 = x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "x2 = (x3 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x3 oL (idtoiso (x0 -> x0) x5 : morphism (x0 -> x0) x4 1%functor)\n o (idtoiso (x0 -> x) x7 : morphism (x0 -> x) x2 (x3 o x4)%functor))%natural_transformation =\n(right_identity_natural_transformation_2 x3\n o (idtoiso (x0 -> x) x6 : morphism (x0 -> x) x2 x3))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C cat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "x4 = 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2",
+                "x3"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "x2 = x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "x2 = (x3 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clear F.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x3 oL (idtoiso (x0 -> x0) x5 : morphism (x0 -> x0) x4 1%functor)\n o (idtoiso (x0 -> x) x7 : morphism (x0 -> x) x2 (x3 o x4)%functor))%natural_transformation =\n(right_identity_natural_transformation_2 x3\n o (idtoiso (x0 -> x) x6 : morphism (x0 -> x) x2 x3))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HP"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "x4 = 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2",
+                "x3"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "x2 = x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "x2 = (x3 o x4)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl; pseudofunctor_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pseudofunctor_of_functor : Pseudofunctor C\n    := Build_Pseudofunctor\n         C\n         (fun x => pr1 (F x))\n         (fun s d m => F _1 m)\n         (fun s d d' m0 m1 => Category.Morphisms.idtoiso (_ -> _) (composition_of F _ _ _ m1 m0))\n         (fun x => Category.Morphisms.idtoiso (_ -> _) (identity_of F x))\n         (fun w x y z _ _ _ => pseudofunctor_of_functor__composition_of (F w).2 (F z).2 (F y).2 (F x).2)\n         (fun x y _ => pseudofunctor_of_functor__left_identity_of (F x).2 (F y).2)\n         (fun x y _ => pseudofunctor_of_functor__right_identity_of (F x).2 (F y).2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End of_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition FunctorToCat `{Funext} {C} `{HP : forall C D, P C -> P D -> IsHSet (Functor C D)}\n  := Functor C (@sub_pre_cat _ P HP).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Identity Coercion functor_to_cat_id : FunctorToCat >-> Functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pseudofunctor_of_functor_to_cat `(F : @FunctorToCat H C P HP)\n  := @pseudofunctor_of_functor _ C P HP F.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

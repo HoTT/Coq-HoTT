@@ -1,0 +1,104 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functor category *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** Since there are only notations in [FunctorCategory.Notations], we can just export those. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export FunctorCategory.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Morphisms in a functor category *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Functoriality of [(_ \u2192 _)] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require FunctorCategory.Functorial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Opposite functor [(C \u2192 D) \u2192 (C\u1d52\u1d56 \u2192 D\u1d52\u1d56)\u1d52\u1d56] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require FunctorCategory.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include FunctorCategory.Functorial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include FunctorCategory.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** We don't want to make UTF-8 notations the default, so we don't export them. *)\n"
+    }
+  ]
+]

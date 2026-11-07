@@ -1,0 +1,7 @@
+digraph HoTT_Algebra_Aut {
+  graph [ratio=0.5]
+  node [style=filled]
+Aut_Aut [label="Aut", URL=<Aut.html#Aut>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_Aut { label="Aut"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Aut_Aut; };
+} /* END */

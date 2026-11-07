@@ -1,0 +1,6337 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types HFiber Truncations.Core",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types HFiber Truncations.Core\n  Truncations.SeparatedTrunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.WildCat Require Import Core PointedCat Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import AbelianGroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import AbSES.Core AbSES.Ext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Universes.Smallness.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Homotopy Require Import HomotopyGroup EMSpace ExactSequence Hopf\n  WhiteheadsPrinciple.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Groups.Group.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Equiv.BiInv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Modalities.Identity Modalities.Descent.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Modalities.ReflectiveSubuniverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Classification of short exact sequences *)\n\n(** Short exact sequences [A -> E -> B] of abelian groups are classified by pointed maps [K(B,n.+2) ->* K(A,n.+3)], for any [n : nat].  This is Christensen and Flaten, \"Ext groups in homotopy type theory\", Theorem 2.2.2, and the following comment.  Here we prove it for general [n] from the start. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Applying [(K-, n.+1)] to a short exact sequence of an abelian groups gives a fiber sequence *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section EMFiberSequence.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence} (n : nat) {B A : AbGroup@{u}} (E : AbSES B A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The identifications [equiv_g_pi_n_em] carry [Pi n.+1] of the sequence [K(-, n.+1)] applied to [E] back to [E] itself, so that sequence is exact. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition isexact_pi_em_abses\n    : IsExact (Tr (-1))\n        (fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)))\n        (fmap (Pi n.+1) (fmap (K' n.+1) (projection E))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) (fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)))\n  (fmap (Pi n.+1) (fmap (K' n.+1) (projection E)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) (fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)))\n  (fmap (Pi n.+1) (fmap (K' n.+1) (projection E)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (isexact_square_if _ (i := inclusion E) (f := projection E)\n      (grp_iso_inverse (equiv_g_pi_n_em A n))\n      (grp_iso_inverse (equiv_g_pi_n_em E n))\n      (grp_iso_inverse (equiv_g_pi_n_em B n))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_iso_inverse (equiv_g_pi_n_em E n)\no* fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)) ==*\ninclusion E o* grp_iso_inverse (equiv_g_pi_n_em A n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_iso_inverse (equiv_g_pi_n_em B n)\no* fmap (Pi n.+1) (fmap (K' n.+1) (projection E)) ==*\nprojection E o* grp_iso_inverse (equiv_g_pi_n_em E n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) (inclusion E) (projection E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: srapply phomotopy_homotopy_hset; intro x;\n           apply moveR_equiv_V; apply pi_em_fmap'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) (inclusion E) (projection E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** [K(-, n.+1)] sends short exact sequences of abelian groups to fiber sequences of Eilenberg-Mac Lane spaces.  The hypotheses of [isexact_purely_isexact_pi] are found by typeclass search: the spaces are [n]-connected and [n.+1]-truncated, [fmap (K' n.+1)] of the projection is [n]-connected since the projection is surjective, and [fmap (K' n.+1)] of the inclusion is an embedding on [Pi n.+1] since the inclusion is an embedding. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isexact_em_abses\n    : IsExact purely (fmap (K' n.+1) (inclusion E))\n        (fmap (K' n.+1) (projection E))\n    := isexact_purely_isexact_pi n\n        (fmap_iscomplex (K' n.+1) (iscomplex_abses E))\n        isexact_pi_em_abses.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End EMFiberSequence.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The classifying map of a short exact sequence *)\n\n(** We associate to each short exact sequence [A -> E -> B] the connecting map of the fiber sequence [K(A,n.+3) -> K(E,n.+3) -> K(B,n.+3)], expressed as a pointed map [K(B,n.+2) ->* K(A,n.+3)]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_classifying_map `{Univalence} (n : nat) {B A : AbGroup@{u}}\n  (E : AbSES B A)\n  : K(B, n.+2) ->* K(A, n.+3)\n  := connecting_map (fmap (K' n.+3) (inclusion E))\n       (fmap (K' n.+3) (projection E))\n     o* pequiv_loops_em_em B n.+2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The short exact sequence of a pointed map *)\n\n(** Conversely, a pointed map [f : K(B,n.+2) ->* K(A,n.+3)] yields a short exact sequence [A -> Pi n.+2 (pfiber f) -> B], by rotating the fiber sequence of [f] and taking homotopy groups. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section AbSESPfiber.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence} {n : nat} {B A : AbGroup@{u}}\n    (f : K(B, n.+2) ->* K(A, n.+3)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The inclusion of the short exact sequence is given by the composite of the identification of [A] with [Pi n.+2 (loops K(A, n.+3))] and [Pi n.+2] applied to the connecting map [loops K(A,n+3) -> pfiber f] of the fiber sequence. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_pfiber_incl : A $-> abgroup_pi n (pfiber f)\n    := fmap (Pi n.+2) (connecting_map (pfib f) f)\n        $o equiv_g_pi_n_loops_em A n.+1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The projection is similarly induced by the fiber inclusion of [f]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_pfiber_proj : abgroup_pi n (pfiber f) $-> B\n    := grp_iso_inverse (equiv_g_pi_n_em B n.+1)\n        $o fmap (Pi n.+2) (pfib f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The two homotopy groups neighbouring the sequence vanish: [Pi n.+2 K(A, n.+3)] lies below the connectivity of [K(A, n.+3)], and [Pi n.+3 K(B, n.+2)] lies above the truncation level of [K(B, n.+2)]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance contr_pi_em_below : Contr (Pi n.+2 K(A, n.+3))\n    := contr_pi_isconnected n.+2 K(A, n.+3).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance contr_pi_em_above : Contr (Pi n.+3 K(B, n.+2))\n    := contr_pi_istrunc n.+2 K(B, n.+2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The three conditions defining a short exact sequence therefore come from the long exact sequences of the fiber sequence of [f] and of its rotation. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance isembedding_abses_pfiber_incl : IsEmbedding abses_pfiber_incl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding abses_pfiber_incl",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding abses_pfiber_incl",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (istruncmap_compose (-1) (equiv_g_pi_n_loops_em A n.+1)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (fmap (Pi n.+2) (connecting_map (pfib f) f))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (equiv_g_pi_n_loops_em A n.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: rapply istruncmap_mapinO_tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (fmap (Pi n.+2) (connecting_map (pfib f) f))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (isembedding_fmap_pi_isexact (connecting_map (pfib f) f) (pfib f)\n             n.+1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance issurjection_abses_pfiber_proj\n    : IsSurjection abses_pfiber_proj.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) abses_pfiber_proj",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) abses_pfiber_proj",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply conn_map_compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (fmap (Pi n.+2) (pfib f))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (grp_iso_inverse (equiv_g_pi_n_em B n.+1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: rapply conn_map_isequiv.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (fmap (Pi n.+2) (pfib f))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (issurj_fmap_pi_isexact (pfib f) f n.+2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance isexact_abses_pfiber\n    : IsExact (Tr (-1)) abses_pfiber_incl abses_pfiber_proj.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) abses_pfiber_incl abses_pfiber_proj",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) abses_pfiber_incl abses_pfiber_proj",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (isexact_square_if _ (equiv_g_pi_n_loops_em A n.+1)\n      pequiv_pmap_idmap (equiv_g_pi_n_em B n.+1)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_pmap_idmap o* abses_pfiber_incl ==*\n?Goal o* equiv_g_pi_n_loops_em A n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_g_pi_n_em B n.+1 o* abses_pfiber_proj ==* ?Goal0 o* pequiv_pmap_idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) ?Goal ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "3: exact (isexact_pi_total (connecting_map (pfib f) f) (pfib f) n.+2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_pmap_idmap o* abses_pfiber_incl ==*\nfmap (pPi n.+2) (connecting_map (pfib f) f) o* equiv_g_pi_n_loops_em A n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_g_pi_n_em B n.+1 o* abses_pfiber_proj ==*\nfmap (pPi n.+2) (pfib f) o* pequiv_pmap_idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* The first square commutes by definition.  We give the term, since [reflexivity] is very slow here. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: srapply phomotopy_homotopy_hset; intro x;\n         exact (idpath (abses_pfiber_incl x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_g_pi_n_em B n.+1 o* abses_pfiber_proj ==*\nfmap (pPi n.+2) (pfib f) o* pequiv_pmap_idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply phomotopy_homotopy_hset; intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(equiv_g_pi_n_em B n.+1 o* abses_pfiber_proj) x =\n(fmap (pPi n.+2) (pfib f) o* pequiv_pmap_idmap) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "abgroup_pi n (pfiber f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (eisretr (equiv_g_pi_n_em B n.+1) _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The short exact sequence associated to [f]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_pfiber : AbSES B A\n    := Build_AbSES (abgroup_pi n (pfiber f)) abses_pfiber_incl abses_pfiber_proj\n         _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End AbSESPfiber.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** [abses_pfiber] composed with [abses_classifying_map] is the identity *)\n\n(** In other words, the short exact sequence extracted from the classifying map of [E] is [E] itself. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section ClassifyingRoundTrip.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence} (n : nat) {B A : AbGroup@{u}} (E : AbSES B A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** This square arises three times below, so we state it as a local result.  The RHS is just the definition [abses_classifying_map], so the only difference is the postcomposition of the pointed identity map. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition square_classifying_map\n    : pequiv_pmap_idmap o* abses_classifying_map n E\n      ==* connecting_map (fmap (K' n.+3) (inclusion E))\n            (fmap (K' n.+3) (projection E))\n          o* pequiv_loops_em_em B n.+2\n    := pmap_postcompose_idmap _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The fiber of the classifying map is [loops K(E,n.+3)].  Precomposing with the loop identification of [K(B,n.+2)] does not change the fiber, so it is the fiber of the connecting map, which [pequiv_pfiber_connecting_map] identifies with [loops K(E,n.+3)]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition pequiv_pfiber_classifying_map\n    : pfiber (abses_classifying_map n E) <~>* loops K(E, n.+3)\n    := pequiv_pfiber_connecting_map _ _ o*E pequiv_pfiber _ _ square_classifying_map.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Through this identification, the fiber inclusion of the classifying map is [loops] of the projection. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition square_pfib_classifying_map\n    : pequiv_loops_em_em B n.+2 o* pfib (abses_classifying_map n E)\n      ==* fmap loops (fmap (K' n.+3) (projection E))\n          o* pequiv_pfiber_classifying_map.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_loops_em_em B n.+2 o* pfib (abses_classifying_map n E) ==*\nfmap loops (fmap (K' n.+3) (projection E)) o* pequiv_pfiber_classifying_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_loops_em_em B n.+2 o* pfib (abses_classifying_map n E) ==*\nfmap loops (fmap (K' n.+3) (projection E)) o* pequiv_pfiber_classifying_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (square_pequiv_pfiber _ _ square_classifying_map).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfib\n  (connecting_map (fmap (K' n.+3) (inclusion E))\n     (fmap (K' n.+3) (projection E)))\no* pequiv_pfiber (pequiv_loops_em_em B n.+2) pequiv_pmap_idmap\n     square_classifying_map ==*\nfmap loops (fmap (K' n.+3) (projection E)) o* pequiv_pfiber_classifying_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (pmap_prewhisker _ (pfib_connecting_map _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (fmap (K' n.+3) (projection E))\no* pequiv_pfiber_connecting_map (fmap (K' n.+3) (inclusion E))\n     (fmap (K' n.+3) (projection E))\no* pequiv_pfiber (pequiv_loops_em_em B n.+2) pequiv_pmap_idmap\n     square_classifying_map ==*\nfmap loops (fmap (K' n.+3) (projection E)) o* pequiv_pfiber_classifying_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply pmap_compose_assoc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Through the same identification, the connecting map of the fiber sequence of the classifying map is [loops] of the inclusion. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition connecting_map_classifying_map\n    : pequiv_pfiber_classifying_map\n      o* connecting_map (pfib (abses_classifying_map n E))\n           (abses_classifying_map n E)\n      ==* fmap loops (fmap (K' n.+3) (inclusion E)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_pfiber_classifying_map\no* connecting_map (pfib (abses_classifying_map n E))\n     (abses_classifying_map n E) ==*\nfmap loops (fmap (K' n.+3) (inclusion E))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_pfiber_classifying_map\no* connecting_map (pfib (abses_classifying_map n E))\n     (abses_classifying_map n E) ==*\nfmap loops (fmap (K' n.+3) (inclusion E))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply pmap_compose_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_pfiber_connecting_map (fmap (K' n.+3) (inclusion E))\n  (fmap (K' n.+3) (projection E))\no* (pequiv_pfiber (pequiv_loops_em_em B n.+2) pequiv_pmap_idmap\n      square_classifying_map\n    o* connecting_map (pfib (abses_classifying_map n E))\n         (abses_classifying_map n E)) ==*\nfmap loops (fmap (K' n.+3) (inclusion E))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (pmap_postwhisker _\n      (connecting_map_natural_idmap square_classifying_map)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_pfiber_connecting_map (fmap (K' n.+3) (inclusion E))\n  (fmap (K' n.+3) (projection E))\no* connecting_map\n     (pfib\n        (connecting_map (fmap (K' n.+3) (inclusion E))\n           (fmap (K' n.+3) (projection E))))\n     (connecting_map (fmap (K' n.+3) (inclusion E))\n        (fmap (K' n.+3) (projection E))) ==*\nfmap loops (fmap (K' n.+3) (inclusion E))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply connecting_map_pfib_connecting_map.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The middle isomorphism of the round trip. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition grp_iso_pi_pfiber_classifying_map\n    : GroupIsomorphism (abgroup_pi n (pfiber (abses_classifying_map n E))) E\n    := grp_iso_compose (grp_iso_inverse (equiv_g_pi_n_loops_em E n.+1))\n         (groupiso_pi_functor n.+1 pequiv_pfiber_classifying_map).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** It commutes with the inclusions. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition grp_iso_pi_pfiber_classifying_map_inclusion (a : A)\n    : grp_iso_pi_pfiber_classifying_map\n        (abses_pfiber_incl (abses_classifying_map n E) a)\n      = inclusion E a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_iso_pi_pfiber_classifying_map\n  (abses_pfiber_incl (abses_classifying_map n E) a) =\ninclusion E a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_iso_pi_pfiber_classifying_map\n  (abses_pfiber_incl (abses_classifying_map n E) a) =\ninclusion E a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_equiv_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "groupiso_pi_functor n.+1 pequiv_pfiber_classifying_map\n  (abses_pfiber_incl (abses_classifying_map n E) a) =\nequiv_g_pi_n_loops_em E n.+1 (inclusion E a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V exact (fmap_comp (Pi n.+2)\n      (connecting_map (pfib (abses_classifying_map n E)) _)\n      pequiv_pfiber_classifying_map (equiv_g_pi_n_loops_em A n.+1 a)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+2)\n  (pequiv_pfiber_classifying_map $o\n   connecting_map (pfib (abses_classifying_map n E))\n     (abses_classifying_map n E))\n  (equiv_g_pi_n_loops_em A n.+1 a) =\nequiv_g_pi_n_loops_em E n.+1 (inclusion E a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs tapply (fmap2 (Pi n.+2) connecting_map_classifying_map).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+2) (fmap loops (fmap (K' n.+3) (inclusion E)))\n  (equiv_g_pi_n_loops_em A n.+1 a) =\nequiv_g_pi_n_loops_em E n.+1 (inclusion E a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply pi_loops_em_fmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** It commutes with the projections. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition grp_iso_pi_pfiber_classifying_map_projection\n    (x : Pi n.+2 (pfiber (abses_classifying_map n E)))\n    : abses_pfiber_proj (abses_classifying_map n E) x\n      = projection E (grp_iso_pi_pfiber_classifying_map x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_pfiber_proj (abses_classifying_map n E) x =\nprojection E (grp_iso_pi_pfiber_classifying_map x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_pfiber_proj (abses_classifying_map n E) x =\nprojection E (grp_iso_pi_pfiber_classifying_map x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_equiv_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+2) (pfib (abses_classifying_map n E)) x =\nequiv_g_pi_n_em B n.+1 (projection E (grp_iso_pi_pfiber_classifying_map x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_inj (groupiso_pi_functor n.+1 (pequiv_loops_em_em B n.+2))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "groupiso_pi_functor n.+1 (pequiv_loops_em_em B n.+2)\n  (fmap (Pi n.+2) (pfib (abses_classifying_map n E)) x) =\ngroupiso_pi_functor n.+1 (pequiv_loops_em_em B n.+2)\n  (equiv_g_pi_n_em B n.+1\n     (projection E (grp_iso_pi_pfiber_classifying_map x)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* The left side, through the pointed square. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V tapply (fmap_comp (Pi n.+2)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+2)\n  (pequiv_loops_em_em B n.+2 $o pfib (abses_classifying_map n E)) x =\ngroupiso_pi_functor n.+1 (pequiv_loops_em_em B n.+2)\n  (equiv_g_pi_n_em B n.+1\n     (projection E (grp_iso_pi_pfiber_classifying_map x)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs tapply (fmap2 (Pi n.+2) square_pfib_classifying_map).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+2)\n  (fmap loops (fmap (K' n.+3) (projection E))\n   o* pequiv_pfiber_classifying_map)\n  x =\ngroupiso_pi_functor n.+1 (pequiv_loops_em_em B n.+2)\n  (equiv_g_pi_n_em B n.+1\n     (projection E (grp_iso_pi_pfiber_classifying_map x)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs tapply (fmap_comp (Pi n.+2)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fmap (Pi n.+2) (fmap loops (fmap (K' n.+3) (projection E))) $o\n fmap (Pi n.+2) pequiv_pfiber_classifying_map) x =\ngroupiso_pi_functor n.+1 (pequiv_loops_em_em B n.+2)\n  (equiv_g_pi_n_em B n.+1\n     (projection E (grp_iso_pi_pfiber_classifying_map x)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* The right side, by naturality of [equiv_g_pi_n_loops_em]. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V napply (pi_loops_em_fmap (projection E) n.+1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fmap (Pi n.+2) (fmap loops (fmap (K' n.+3) (projection E))) $o\n fmap (Pi n.+2) pequiv_pfiber_classifying_map) x =\nfmap (Pi n.+2) (fmap loops (fmap (K' n.+3) (projection E)))\n  (equiv_g_pi_n_loops_em E n.+1 (grp_iso_pi_pfiber_classifying_map x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "tapply (ap (fmap (Pi n.+2) (fmap loops (fmap (K' n.+3) (projection E))))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+2) pequiv_pfiber_classifying_map x =\nequiv_g_pi_n_loops_em E n.+1 (grp_iso_pi_pfiber_classifying_map x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (pfiber (abses_classifying_map n E))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; napply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The short exact sequence extracted from the classifying map of [E] is [E]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_pfiber_abses_classifying_map\n    : abses_pfiber (abses_classifying_map n E) = E\n    := path_abses (E := abses_pfiber (abses_classifying_map n E)) (F := E)\n         grp_iso_pi_pfiber_classifying_map\n         grp_iso_pi_pfiber_classifying_map_inclusion\n         grp_iso_pi_pfiber_classifying_map_projection.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ClassifyingRoundTrip.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The classifying map of the sequence of a delooped map *)\n\n(** Rather than proving that the other composite is the identity, we will define an a priori different section of [abses_classifying_map].  To do this, we first show that for [psi : K(B,n.+3) ->* K(A,n.+4)], the classifying map [K(B,n.+2) ->* K(A,n.+3)] of [abses_pfiber psi] is [fmap loops psi] (with corrected endpoints) precomposed with negation on [K(B,n.+2)].  Since every map [K(B,n.+2) ->* K(A,n.+3)] can be delooped to such a [psi], this will give a section of [abses_classifying_map] in [abses_classifying_section] below. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section PfiberDeloop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence} {n : nat} {B A : AbGroup@{u}}\n    (psi : K(B, n.+3) ->* K(A, n.+4)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The fiber of a map from an [n.+2]-connected type to an [n.+3]-connected type is [n.+2]-connected. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance isconnected_pfiber_em : IsConnected n.+2 (pfiber psi)\n    := OO_isconnected_hfiber (Tr (n.+3)%nat) (Tr (n.+2)%nat) psi pt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The fiber of [psi] is the Eilenberg-Mac Lane space of its homotopy group in degree [n.+3], by [pequiv_em_connected_truncated].  On [Pi n.+3], that identification is the inverse of [equiv_g_pi_n_em]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition fmap_pi_pequiv_em_pfiber\n    (x : Pi n.+3 K(abgroup_pi n.+1 (pfiber psi), n.+3))\n    : fmap (Pi n.+3) (pequiv_em_connected_truncated (pfiber psi) n.+2) x\n      = (equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2)^-1 x\n    := fmap_pi_pequiv_em_connected_truncated (pfiber psi) n.+2 x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Through that identification, [fmap (K' n.+3)] of the projection is the fiber inclusion of [psi]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition phomotopy_em_proj_pfib\n    : fmap (K' n.+3) (abses_pfiber_proj psi)\n      ==* pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (K' n.+3) (abses_pfiber_proj psi) ==*\npfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (K' n.+3) (abses_pfiber_proj psi) ==*\npfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (phomotopy_pmap_pi_connected n.+2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+3) (fmap (K' n.+3) (abses_pfiber_proj psi)) ==\nfmap (Pi n.+3) (pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+3) (fmap (K' n.+3) (abses_pfiber_proj psi)) x =\nfmap (Pi n.+3) (pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2)\n  x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 (abgroup_pi n.+1 (pfiber psi)))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs tapply (pi_em_fmap' (abses_pfiber_proj psi) n.+2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_g_pi_n_em B n.+2\n  (abses_pfiber_proj psi\n     ((equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2)^-1 x)) =\nfmap (Pi n.+3) (pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2)\n  x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 (abgroup_pi n.+1 (pfiber psi)))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply (eisretr (equiv_g_pi_n_em B n.+2)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+3) (pfib psi)\n  ((equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2)^-1 x) =\nfmap (Pi n.+3) (pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2)\n  x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 (abgroup_pi n.+1 (pfiber psi)))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs tapply (fmap_comp (Pi n.+3)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+3) (pfib psi)\n  ((equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2)^-1 x) =\n(fmap (Pi n.+3) (pfib psi) $o\n fmap (Pi n.+3) (pequiv_em_connected_truncated (pfiber psi) n.+2)) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 (abgroup_pi n.+1 (pfiber psi)))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "tapply (ap _ (fmap_pi_pequiv_em_pfiber x)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Through that identification, [fmap (K' n.+3)] of the inclusion is the connecting map of [psi], modulo the loop identification of [K(A,n.+3)]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition phomotopy_em_incl_pfib\n    : pequiv_em_connected_truncated (pfiber psi) n.+2\n        o* fmap (K' n.+3) (abses_pfiber_incl psi)\n      ==* connecting_map (pfib psi) psi\n        o* pequiv_loops_em_em A n.+3.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_em_connected_truncated (pfiber psi) n.+2\no* fmap (K' n.+3) (abses_pfiber_incl psi) ==*\nconnecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_em_connected_truncated (pfiber psi) n.+2\no* fmap (K' n.+3) (abses_pfiber_incl psi) ==*\nconnecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (phomotopy_pmap_pi_connected n.+2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+3)\n  (pequiv_em_connected_truncated (pfiber psi) n.+2\n   o* fmap (K' n.+3) (abses_pfiber_incl psi)) ==\nfmap (Pi n.+3) (connecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+3)\n  (pequiv_em_connected_truncated (pfiber psi) n.+2\n   o* fmap (K' n.+3) (abses_pfiber_incl psi))\n  x =\nfmap (Pi n.+3) (connecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 A)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs tapply (fmap_comp (Pi n.+3)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fmap (Pi n.+3) (pequiv_em_connected_truncated (pfiber psi) n.+2) $o\n fmap (Pi n.+3) (fmap (K' n.+3) (abses_pfiber_incl psi))) x =\nfmap (Pi n.+3) (connecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 A)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs tapply (ap _ (pi_em_fmap' (abses_pfiber_incl psi) n.+2 x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (Pi n.+3) (pequiv_em_connected_truncated (pfiber psi) n.+2)\n  (equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2\n     (abses_pfiber_incl psi ((equiv_g_pi_n_em A n.+2)^-1 x))) =\nfmap (Pi n.+3) (connecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 A)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply fmap_pi_pequiv_em_pfiber.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2)^-1\n  (equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2\n     (abses_pfiber_incl psi ((equiv_g_pi_n_em A n.+2)^-1 x))) =\nfmap (Pi n.+3) (connecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 A)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply eissect.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_pfiber_incl psi ((equiv_g_pi_n_em A n.+2)^-1 x) =\nfmap (Pi n.+3) (connecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 A)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs tapply (fmap_comp (Pi n.+3)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_pfiber_incl psi ((equiv_g_pi_n_em A n.+2)^-1 x) =\n(fmap (Pi n.+3) (connecting_map (pfib psi) psi) $o\n fmap (Pi n.+3) (pequiv_loops_em_em A n.+3)) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 A)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold abses_pfiber_incl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fmap (Pi n.+3) (connecting_map (pfib psi) psi) $o\n equiv_g_pi_n_loops_em A n.+2) ((equiv_g_pi_n_em A n.+2)^-1 x) =\n(fmap (Pi n.+3) (connecting_map (pfib psi) psi) $o\n fmap (Pi n.+3) (pequiv_loops_em_em A n.+3)) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Pi n.+3 (K' n.+3 A)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* This is faster than using [_] for [F]. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "match goal with |- _ = ?F x =>\n                      exact (ap F (eisretr (equiv_g_pi_n_em A n.+2) x)) end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* A bit slow. *)\n\n  (** The projection triangle enlarged to a square. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition square_em_proj_pfib\n    : pequiv_pmap_idmap o* fmap (K' n.+3) (projection (abses_pfiber psi))\n      ==* pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2\n    := pmap_postcompose_idmap _ @* phomotopy_em_proj_pfib.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The two squares above form a map from the fiber sequence of Eilenberg-Mac Lane spaces of the extracted sequence to the fiber sequence of [pfib psi] in the sense required by [connecting_map_natural_isexact]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition phomotopy_cxfib_em_pfib\n    : functor_pfiber square_em_proj_pfib\n      o* pequiv_cxfib (i := fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n           (f := fmap (K' n.+3) (projection (abses_pfiber psi)))\n      ==* pequiv_cxfib (i := pfib (pfib psi)) (f := pfib psi)\n          o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_pfiber square_em_proj_pfib o* pequiv_cxfib ==*\npequiv_cxfib o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_pfiber square_em_proj_pfib o* pequiv_cxfib ==*\npequiv_cxfib o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (phomotopy_functor_pfiber_cxfib n.+2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_em_connected_truncated (pfiber psi) n.+2\no* fmap (K' n.+3) (inclusion (abses_pfiber psi)) ==*\npfib (pfib psi) o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V' napply pmap_compose_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_em_connected_truncated (pfiber psi) n.+2\no* fmap (K' n.+3) (inclusion (abses_pfiber psi)) ==*\npfib (pfib psi) o* (pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V' napply (pmap_prewhisker _ (connecting_map_pfib psi)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_em_connected_truncated (pfiber psi) n.+2\no* fmap (K' n.+3) (inclusion (abses_pfiber psi)) ==*\nconnecting_map (pfib psi) psi o* pequiv_loops_em_em A n.+3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact phomotopy_em_incl_pfib.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Through the loop identification of [K(A,n.+3)], the connecting map of the extracted fiber sequence is [loops psi], twisted by loop inversion. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition connecting_map_em_loops\n    : connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n        (fmap (K' n.+3) (projection (abses_pfiber psi)))\n      ==* (pequiv_loops_em_em A n.+3)^-1*\n        o* (fmap loops psi o* loops_inv K(B, n.+3)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n  (fmap (K' n.+3) (projection (abses_pfiber psi))) ==*\n(pequiv_loops_em_em A n.+3)^-1* o* (fmap loops psi o* loops_inv K( B, n.+3))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n  (fmap (K' n.+3) (projection (abses_pfiber psi))) ==*\n(pequiv_loops_em_em A n.+3)^-1* o* (fmap loops psi o* loops_inv K( B, n.+3))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply moveL_pequiv_Vf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_loops_em_em A n.+3\no* connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n     (fmap (K' n.+3) (projection (abses_pfiber psi))) ==*\nfmap loops psi o* loops_inv K( B, n.+3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* By [connecting_map_pfib2], it suffices to compare with the connecting map of the fiber sequence of [pfib psi], which we do by naturality. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V' napply (connecting_map_pfib2 psi).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pequiv_loops_em_em A n.+3\no* connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n     (fmap (K' n.+3) (projection (abses_pfiber psi))) ==*\npfiber2_loops psi o* connecting_map (pfib (pfib psi)) (pfib psi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply moveL_pequiv_Mf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pfiber2_loops psi)^-1*\no* (pequiv_loops_em_em A n.+3\n    o* connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n         (fmap (K' n.+3) (projection (abses_pfiber psi)))) ==*\nconnecting_map (pfib (pfib psi)) (pfib psi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V' napply pmap_compose_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3\no* connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n     (fmap (K' n.+3) (projection (abses_pfiber psi))) ==*\nconnecting_map (pfib (pfib psi)) (pfib psi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (connecting_map_natural_isexact phomotopy_cxfib_em_pfib).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (pfib (pfib psi)) (pfib psi) o* fmap loops pequiv_pmap_idmap ==*\nconnecting_map (pfib (pfib psi)) (pfib psi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' tapply (pmap_postwhisker _ (fmap_id loops _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (pfib (pfib psi)) (pfib psi) o* Id (loops (K' n.+3 B)) ==*\nconnecting_map (pfib (pfib psi)) (pfib psi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply pmap_precompose_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Negation on [K(B,n.+2)], as loop inversion conjugated by the loop identification.  It should agree with [fmap (K' n.+2) ab_homo_negation], since both act by inversion on [Pi n.+2], but we do not need that here. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition pequiv_neg_em : K(B, n.+2) <~>* K(B, n.+2)\n    := (pequiv_loops_em_em B n.+2)^-1*\n       o*E (loops_inv K(B, n.+3) o*E pequiv_loops_em_em B n.+2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Under the loop identification, [pequiv_neg_em] is loop inversion. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition pequiv_neg_em_loops\n    : pequiv_loops_em_em B n.+2 o* pequiv_neg_em\n      ==* loops_inv K(B, n.+3) o* pequiv_loops_em_em B n.+2\n    := moveR_pequiv_Mf _ _ _ (reflexivity _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The classifying map of the extracted sequence is [equiv_loops_em_pmap] applied to [psi], twisted by [pequiv_neg_em].  Recall that [equiv_loops_em_pmap] is [fmap loops] conjugated by the loop identifications. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition abses_classifying_pfiber_loop\n    : abses_classifying_map n (abses_pfiber psi)\n      ==* equiv_loops_em_pmap B A n.+2 n.+3 psi o* pequiv_neg_em.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_classifying_map n (abses_pfiber psi) ==*\nequiv_loops_em_pmap B A n.+2 n.+3 psi o* pequiv_neg_em",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_classifying_map n (abses_pfiber psi) ==*\nequiv_loops_em_pmap B A n.+2 n.+3 psi o* pequiv_neg_em",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold abses_classifying_map, equiv_loops_em_pmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n  (fmap (K' n.+3) (projection (abses_pfiber psi)))\no* pequiv_loops_em_em B n.+2 ==*\n(pequiv_pequiv_postcompose (pequiv_loops_em_em A n.+3)^-1*\n o*E pequiv_pequiv_precompose (pequiv_loops_em_em B n.+2)\n o*E pequiv_fmap_loops_pmap K( B, n.+3) K( A, n.+4)) psi\no* pequiv_neg_em",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs' napply (pmap_compose_assoc _ _ _\n                 @* pmap_postwhisker _ (pmap_compose_assoc _ _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))\n  (fmap (K' n.+3) (projection (abses_pfiber psi)))\no* pequiv_loops_em_em B n.+2 ==*\n(pequiv_loops_em_em A n.+3)^-1*\no* (pequiv_fmap_loops_pmap K( B, n.+3) K( A, n.+4) psi\n    o* (pequiv_loops_em_em B n.+2 o* pequiv_neg_em))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (pmap_prewhisker _ connecting_map_em_loops).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pequiv_loops_em_em A n.+3)^-1* o* (fmap loops psi o* loops_inv K( B, n.+3))\no* pequiv_loops_em_em B n.+2 ==*\n(pequiv_loops_em_em A n.+3)^-1*\no* (pequiv_fmap_loops_pmap K( B, n.+3) K( A, n.+4) psi\n    o* (pequiv_loops_em_em B n.+2 o* pequiv_neg_em))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply pmap_compose_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pequiv_loops_em_em A n.+3)^-1*\no* (fmap loops psi o* loops_inv K( B, n.+3) o* pequiv_loops_em_em B n.+2) ==*\n(pequiv_loops_em_em A n.+3)^-1*\no* (pequiv_fmap_loops_pmap K( B, n.+3) K( A, n.+4) psi\n    o* (pequiv_loops_em_em B n.+2 o* pequiv_neg_em))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pequiv_loops_em_em A n.+3)^-1*\no* (fmap loops psi o* (loops_inv K( B, n.+3) o* pequiv_loops_em_em B n.+2)) ==*\n(pequiv_loops_em_em A n.+3)^-1*\no* (pequiv_fmap_loops_pmap K( B, n.+3) K( A, n.+4) psi\n    o* (pequiv_loops_em_em B n.+2 o* pequiv_neg_em))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply pmap_postwhisker.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops psi o* (loops_inv K( B, n.+3) o* pequiv_loops_em_em B n.+2) ==*\npequiv_fmap_loops_pmap K( B, n.+3) K( A, n.+4) psi\no* (pequiv_loops_em_em B n.+2 o* pequiv_neg_em)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply pmap_postwhisker.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "loops_inv K( B, n.+3) o* pequiv_loops_em_em B n.+2 ==*\npequiv_loops_em_em B n.+2 o* pequiv_neg_em",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "K( B, n.+3) ->* K( A, n.+4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; exact pequiv_neg_em_loops.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End PfiberDeloop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The classification theorem *)\n\n(** [abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section ClassificationTheorem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We declare [u] so that it refers to the same universe in the [Context] and in [equiv_ext_classifying]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Universe u.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence} (n : nat) {B A : AbGroup@{u}}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A section of the classifying map. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition abses_classifying_section (f : K(B, n.+2) ->* K(A, n.+3))\n    : abses_classifying_map n\n        (abses_pfiber ((equiv_loops_em_pmap B A n.+2 n.+3)^-1\n           (f o* pequiv_neg_em^-1*)))\n      = f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_classifying_map n\n  (abses_pfiber\n     ((equiv_loops_em_pmap B A n.+2 n.+3)^-1 (f o* pequiv_neg_em^-1*))) =\nf",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_classifying_map n\n  (abses_pfiber\n     ((equiv_loops_em_pmap B A n.+2 n.+3)^-1 (f o* pequiv_neg_em^-1*))) =\nf",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_pforall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_classifying_map n\n  (abses_pfiber\n     ((equiv_loops_em_pmap B A n.+2 n.+3)^-1 (f o* pequiv_neg_em^-1*))) ==*\nf",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply abses_classifying_pfiber_loop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_loops_em_pmap B A n.+2 n.+3\n  ((equiv_loops_em_pmap B A n.+2 n.+3)^-1 (f o* pequiv_neg_em^-1*))\no* pequiv_neg_em ==* f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (pmap_prewhisker _\n      (phomotopy_path (eisretr (equiv_loops_em_pmap B A n.+2 n.+3) _))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o* pequiv_neg_em^-1* o* pequiv_neg_em ==* f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply pmap_compose_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o* (pequiv_neg_em^-1* o* pequiv_neg_em) ==* f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (pmap_postwhisker _ (peissect pequiv_neg_em)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o* pmap_idmap ==* f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "K( B, n.+2) ->* K( A, n.+3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply pmap_precompose_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The map [abses_classifying_map] has a retraction [abses_pfiber] by [abses_pfiber_abses_classifying_map] and a section by [abses_classifying_section].  Therefore it is an equivalence.  This proof uses [abses_pfiber] as the inverse. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isequiv_abses_classifying_map\n    : IsEquiv (abses_classifying_map (A:=A) (B:=B) n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (abses_classifying_map n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (abses_classifying_map n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply isequiv_isbiinv.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv (abses_classifying_map n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Build_IsBiInv _ _ _ _ _ abses_classifying_section\n             (abses_pfiber_abses_classifying_map n)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Short exact sequences [A -> E -> B] are classified by pointed maps [K(B,n.+2) ->* K(A,n.+3)]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_abses_classifying_map\n    : AbSES B A <~> (K(B, n.+2) ->* K(A, n.+3))\n    := Build_Equiv _ _ (abses_classifying_map n) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Consequently [Ext B A] is the set of path components of the classifying mapping type.  Since [Trunc] is cumulative, we can take the truncation in the universe [u] of [B] and [A], rather than in the larger universe of [Ext B A]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_ext_classifying\n    : Ext B A <~> Tr@{u} 0 (K(B, n.+2) ->* K(A, n.+3))\n    := Trunc_functor_equiv 0 equiv_abses_classifying_map.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ClassificationTheorem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Smallness *)\n\n(** [AbSES B A] is essentially small, and so is [Ext B A].  We use the case [n = 0] of the classification. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Smallness.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Universe u.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence} {B A : AbGroup@{u}}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance issmall_abses : IsSmall@{u _} (AbSES B A)\n    := Build_IsSmall _ _ (equiv_abses_classifying_map 0)^-1%equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance issmall_ext : IsSmall@{u _} (Ext B A)\n    := Build_IsSmall _ _ (equiv_ext_classifying 0)^-1%equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Smallness.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Naturality of the classifying map *)\n\n(** A morphism of short exact sequences induces a commuting square relating the two classifying maps. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Naturality.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence} (n : nat) {B A Y X : AbGroup@{u}}\n    {E : AbSES B A} {F : AbSES Y X} (phi : AbSESMorphism E F).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** [K(-,n.+3)] of the projection square of [phi]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition em_proj_square\n    : fmap (K' n.+3) (projection F) o* fmap (K' n.+3) (component2 phi)\n      ==* fmap (K' n.+3) (component3 phi) o* fmap (K' n.+3) (projection E)\n    := (fmap_comp (K' n.+3) _ _)^* @* fmap2 (K' n.+3) (right_square phi)\n       @* fmap_comp (K' n.+3) _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** [K(-,n.+3)] of the inclusion square of [phi]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition em_incl_square\n    : fmap (K' n.+3) (component2 phi) o* fmap (K' n.+3) (inclusion E)\n      ==* fmap (K' n.+3) (inclusion F) o* fmap (K' n.+3) (component1 phi)\n    := (fmap_comp (K' n.+3) _ _)^*\n       @* fmap2 (K' n.+3) (fun a => (left_square phi a)^)\n       @* fmap_comp (K' n.+3) _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The two squares above form a map between the fiber sequences of Eilenberg-Mac Lane spaces. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition phomotopy_cxfib_em\n    : functor_pfiber (em_proj_square^* )\n      o* pequiv_cxfib (i := fmap (K' n.+3) (inclusion E))\n           (f := fmap (K' n.+3) (projection E))\n      ==* pequiv_cxfib (i := fmap (K' n.+3) (inclusion F))\n            (f := fmap (K' n.+3) (projection F))\n          o* fmap (K' n.+3) (component1 phi)\n    := phomotopy_functor_pfiber_cxfib n.+2 em_incl_square (em_proj_square^* ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A morphism of short exact sequences induces a commuting square of classifying maps, by naturality of the connecting map and of the loop identification. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_classifying_map_natural\n    : fmap (K' n.+3) (component1 phi) o* abses_classifying_map n E\n      ==* abses_classifying_map n F o* fmap (K' n.+2) (component3 phi).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (K' n.+3) (component1 phi) o* abses_classifying_map n E ==*\nabses_classifying_map n F o* fmap (K' n.+2) (component3 phi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A",
+                "Y",
+                "X"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES Y X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (K' n.+3) (component1 phi) o* abses_classifying_map n E ==*\nabses_classifying_map n F o* fmap (K' n.+2) (component3 phi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A",
+                "Y",
+                "X"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES Y X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V' napply pmap_compose_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (K' n.+3) (component1 phi)\no* connecting_map (fmap (K' n.+3) (inclusion E))\n     (fmap (K' n.+3) (projection E))\no* pequiv_loops_em_em B n.+2 ==*\nabses_classifying_map n F o* fmap (K' n.+2) (component3 phi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A",
+                "Y",
+                "X"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES Y X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (pmap_prewhisker _\n      (connecting_map_natural_isexact phomotopy_cxfib_em)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (fmap (K' n.+3) (inclusion F)) (fmap (K' n.+3) (projection F))\no* fmap loops (fmap (K' n.+3) (component3 phi)) o* \npequiv_loops_em_em B n.+2 ==*\nabses_classifying_map n F o* fmap (K' n.+2) (component3 phi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A",
+                "Y",
+                "X"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES Y X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply pmap_compose_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (fmap (K' n.+3) (inclusion F)) (fmap (K' n.+3) (projection F))\no* (fmap loops (fmap (K' n.+3) (component3 phi)) o* pequiv_loops_em_em B n.+2) ==*\nabses_classifying_map n F o* fmap (K' n.+2) (component3 phi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A",
+                "Y",
+                "X"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES Y X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' napply (pmap_postwhisker _\n      (em_fmap_loops_natural (component3 phi) n.+2)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "connecting_map (fmap (K' n.+3) (inclusion F)) (fmap (K' n.+3) (projection F))\no* (pequiv_loops_em_em Y n.+2 o* fmap (K' n.+2) (component3 phi)) ==*\nabses_classifying_map n F o* fmap (K' n.+2) (component3 phi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "A",
+                "Y",
+                "X"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES Y X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (pmap_compose_assoc _ _ _)^*.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Naturality.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

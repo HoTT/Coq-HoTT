@@ -1,0 +1,44 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Full Subcategories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** We reuse the generalization given by \u2211-precategories; a full subcategory has a sigma type as its objects. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Sigma.OnObjects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation full := sig_obj.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"{ x : A | P }\" := (full A (fun x => P)) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

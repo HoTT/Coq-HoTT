@@ -1,0 +1,1255 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Notions of Structure *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types HSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Structures *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope structure_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope long_structure_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope structure_scope with structure.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope long_structure_scope with long_structure.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope structure_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting the Homotopy Type Theory Book (with slight changes for\n    notational consistency): *)\n\n(** ** 9.8 The structure identity principle\n\n    The _structure identity principle_ is an informal principle that\n    expresses that isomorphic structures are identical. We aim to\n    prove a general abstract result which can be applied to a wide\n    family of notions of structure, where structures may be\n    many-sorted or even dependently-sorted, in-finitary, or even\n    higher order.\n\n    The simplest kind of single-sorted structure consists of a type\n    with no additional structure. The univalence axiom expresses the\n    structure identity principle for that notion of structure in a\n    strong form: for types [A], [B], the canonical function [(A = B) \u2192\n    (A \u2243 B)] is an equivalence.  We start with a precategory [X]. In\n    our application to single-sorted first order structures, [X] will\n    be the category of [U]-small sets, where [U] is a univalent type\n    universe. *)\n\n(** *** Notion of Structure *)\n(** Definition: A _notion of structure_ [(P,H)] over [X] consists of\n    the following.  We use [X\u2080] to denote the objects of [X], and\n    [hom\u2093(x, y)] to denote the morphisms [morphism X x y] of [X].\n\n    (i) A type family [P : X\u2080 \u2192 Type].  For each [x : X\u2080] the elements\n        of [P x] are called _[(P, H)]-structures_ on [x].\n\n    (ii) For [x y : X\u2080] and [\u03b1 : P x], [\u03b2 : P y], to each [f : hom\u2093(x,\n         y)] a mere proposition [H_{\u03b1\u03b2}(f)].\n\n         If [H_{\u03b1\u03b2}(f)] is true, we say that [f] is a _[(P,\n         H)]-homomorphism_ from [\u03b1] to [\u03b2].\n\n    (iii) For [x : X\u2080] and [\u03b1 : P x], we have [H_{\u03b1\u03b1}(1\u2093)].\n\n    (iv) For [x y z : X\u2080] and [\u03b1 : P x], [\u03b2 : P y], [\u03b3 : P z], if [f :\n         hom\u2093(x, y)], we have\n\n         [H_{\u03b1\u03b2}(f)\u2192 H_{\u03b2\u03b3}(g) \u2192 H_{\u03b1\u03b3}(g \u2218 f)].\n *)\n\n(** Note: We rearrange some parameters to [H] to ease Coq's\n    unification engine and typeclass machinery. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record NotionOfStructure (X : PreCategory) :=\n  {\n    structure :> X -> Type;\n    is_structure_homomorphism : forall x y\n                                       (f : morphism X x y)\n                                       (a : structure x) (b : structure y),\n                               Type;\n    istrunc_is_structure_homomorphism : forall x y a b f,\n                                          IsHProp (@is_structure_homomorphism x y a b f);\n    is_structure_homomorphism_identity : forall x (a : structure x),\n                                           is_structure_homomorphism (identity x) a a;\n    is_structure_homomorphism_composition : forall x y z\n                                                   (a : structure x)\n                                                   (b : structure y)\n                                                   (c : structure z)\n                                                   (f : morphism X x y)\n                                                   (g : morphism X y z),\n                                              is_structure_homomorphism f a b\n                                              -> is_structure_homomorphism g b c\n                                              -> is_structure_homomorphism (g o f) a c\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** It would be nice to make this a class, but we can't:\n\n<<\n    Existing Class is_structure_homomorphism.\n>>\n\n    gives\n\n<<\n    Toplevel input, characters 0-41:\n    Anomaly: Mismatched instance and context when building universe substitution.\n    Please report.\n>>\n\n    When we move to polyproj, it won't anymore. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Existing Instance istrunc_is_structure_homomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb structure_homomorphisms discriminated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Resolve is_structure_homomorphism_identity is_structure_homomorphism_composition : structure_homomorphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** When [(P, H)] is a notion of structure, for [\u03b1 \u03b2 : P x] we define\n\n    [(\u03b1 \u2264\u2093 \u03b2) := H_{\u03b1\u03b2}(1\u2093)].\n\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"a <=_{ x } b\" := (is_structure_homomorphism _ x x (identity x) a b) : long_structure_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"a <= b\" := (a <=_{ _ } b)%long_structure : structure_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** By (iii) and (iv), this is a preorder with [P x] its type of objects. *)\n(** *** Being a structure homomorphism is a preorder *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance preorder_is_structure_homomorphism\n       X (P : NotionOfStructure X) x\n: PreOrder (is_structure_homomorphism P x x (identity x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreOrder (is_structure_homomorphism P x x 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreOrder (is_structure_homomorphism P x x 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; repeat intro; eauto with structure_homomorphisms.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x0 <= z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "x0 <= y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X1"
+              ],
+              "body": null,
+              "type": "y <= z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- identity_identity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_structure_homomorphism P x x (1 o 1) x0 z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "x0 <= y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X1"
+              ],
+              "body": null,
+              "type": "y <= z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eauto with structure_homomorphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Standard notion of structure *)\n(** We say that [(P, H)] is a _standard notion of structure_ if this\n    preorder is in fact a partial order, for all [x : X]. *)\n\n(** A partial order is an antisymmetric preorder, i.e., we must have\n    [a <= b <= a -> a = b]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsStandardNotionOfStructure X (P : NotionOfStructure X) :=\n  antisymmetry_structure : forall x (a b : P x),\n                             a <= b -> b <= a -> a = b.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Note that for a standard notion of structure, each type [P x] must\n    actually be a set. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance istrunc_homomorphism_standard_notion_of_structure\n       X P `{@IsStandardNotionOfStructure X P} x\n: IsHSet (P x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (P x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (P x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply (@ishset_hrel_subpaths\n            _ (fun a b => (a <= b) * (b <= a)));\n  try typeclasses eauto.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Reflexive (fun a b : P x => (a <= b) * (b <= a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x0 y : P x, (x0 <= y) * (y <= x0) -> x0 = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Reflexive (fun a b : P x => (a <= b) * (b <= a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat intro; split; apply reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x0 y : P x, (x0 <= y) * (y <= x0) -> x0 = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ? ? [? ?]; apply antisymmetry_structure; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Precategory of structures *)\n(** We now define, for any notion of structure [(P, H)], a\n    _precategory of [(P, H)]-structures_,\n\n    [A = Str_{(P, H)}(X)].\n\n    - The type of objects of [A] is the type [A\u2080 := \u2211\u2093 P x].  If [a \u2261\n      (x; \u03b1)], we may write [|a| := x].\n\n    - For [(x; \u03b1) : A\u2080] and [(y; \u03b2) : A\u2080], we define\n\n      [hom_A((x; \u03b1), (y; \u03b2)) := { f : x \u2192 y | H_{\u03b1\u03b2}(f) }].\n\n    The composition and identities are inherited from [X]; conditions\n    (iii) and (iv) ensure that these lift to [A]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module PreCategoryOfStructures.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section precategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** We use [Records] because they are faster than sigma types. *)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : NotionOfStructure X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation object := { x : X | P x }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (*Lemma issig_object\n    : { x : X | P x } <~> object.\n    Proof.\n      issig Build_object x a.\n    Defined.\n\n    Lemma path_object\n    : forall xa yb (H : x xa = x yb),\n        transport P H (a xa) = a yb\n        -> xa = yb.\n    Proof.\n      intros [? ?] [? ?] H H'; simpl in *; path_induction; reflexivity.\n    Defined.*)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record morphism (xa yb : object) :=\n      { f : Category.Core.morphism X xa.1 yb.1;\n        h : is_structure_homomorphism _ _ _ f xa.2 yb.2 }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma issig_morphism (xa yb : object)\n    : { f : Category.Core.morphism X xa.1 yb.1\n      | is_structure_homomorphism _ _ _ f xa.2 yb.2 }\n        <~> morphism xa yb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f0 : Core.morphism X xa.1 yb.1 &\nis_structure_homomorphism P xa.1 yb.1 f0 xa.2 yb.2} <~> \nmorphism xa yb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "{x : X & P x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f0 : Core.morphism X xa.1 yb.1 &\nis_structure_homomorphism P xa.1 yb.1 f0 xa.2 yb.2} <~> \nmorphism xa yb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "{x : X & P x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "issig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_morphism\n    : forall xa yb (fh gi : morphism xa yb),\n        f fh = f gi -> fh = gi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (xa yb : {x : X & P x}) (fh gi : morphism xa yb),\nf fh = f gi -> fh = gi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (xa yb : {x : X & P x}) (fh gi : morphism xa yb),\nf fh = f gi -> fh = gi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ? ? [? ?] [? ?] H; simpl in *; path_induction; apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h0 = h1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "{x : X & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f0"
+              ],
+              "body": null,
+              "type": "Core.morphism X xa.1 yb.1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h0",
+                "h1"
+              ],
+              "body": null,
+              "type": "is_structure_homomorphism P xa.1 yb.1 f0 xa.2 yb.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End precategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (*Global Arguments path_object {X P xa yb} H _.*)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments path_morphism {X P xa yb fh gi} H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End PreCategoryOfStructures.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section precategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import PreCategoryOfStructures.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition precategory_of_structures X (P : NotionOfStructure X) : PreCategory.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategory",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategory",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@Build_PreCategory\n              _\n              (@morphism _ P)\n              (fun xa => {| f := identity xa.1;\n                            h := is_structure_homomorphism_identity _ _ xa.2 |})\n              (fun xa yb zc gi fh => {| f := (f gi) o (f fh);\n                                        h := is_structure_homomorphism_composition _ _ _ _ _ _ _ _ _ (h fh) (h gi) |})\n              _\n              _\n              _\n              (fun s d => istrunc_equiv_istrunc _ (issig_morphism P s d)));\n    simpl;\n    abstract (\n        repeat match goal with\n                 | |- @morphism _ P _ _ -> _ => intros [? ?]; simpl in *\n                 | |- _ -> _ => intro\n               end;\n        first [ apply path_morphism; exact (associativity _ _ _ _ _ _ _ _)\n              | apply path_morphism; exact (left_identity _ _ _ _)\n              | apply path_morphism; exact (right_identity _ _ _ _) ]\n      ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End precategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export StructureCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"a <=_{ x } b\" := (is_structure_homomorphism _ x x (identity x) a b) : long_structure_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"a <= b\" := (a <=_{ _ } b)%long_structure : structure_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End StructureCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

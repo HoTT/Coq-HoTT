@@ -1,0 +1,15 @@
+digraph HoTT_Modalities_Closed {
+  graph [ratio=0.5]
+  node [style=filled]
+Closed_Cl_ [label="Cl'", URL=<Closed.html#Cl'>, peripheries=3, fillcolor="#F070D1"] ;
+Closed_lex_closed [label="lex_closed", URL=<Closed.html#lex_closed>, peripheries=3, fillcolor="#F070D1"] ;
+Closed_topological_closed [label="topological_closed", URL=<Closed.html#topological_closed>, fillcolor="#F070D1"] ;
+Closed_accmodality_closed [label="accmodality_closed", URL=<Closed.html#accmodality_closed>, fillcolor="#F070D1"] ;
+Closed_Cl [label="Cl", URL=<Closed.html#Cl>, fillcolor="#F070D1"] ;
+Closed_equiv_inO_closed [label="equiv_inO_closed", URL=<Closed.html#equiv_inO_closed>, peripheries=3, fillcolor="#F070D1"] ;
+  Closed_lex_closed -> Closed_topological_closed [] ;
+  Closed_topological_closed -> Closed_accmodality_closed [] ;
+  Closed_accmodality_closed -> Closed_Cl [] ;
+subgraph cluster_Closed { label="Closed"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Closed_equiv_inO_closed; Closed_Cl; Closed_accmodality_closed; Closed_topological_closed; Closed_lex_closed; Closed_Cl_; };
+} /* END */

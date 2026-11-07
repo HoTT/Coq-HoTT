@@ -1,0 +1,793 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Limits and Colimits *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import ExponentialLaws.Law1.Functors FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import KanExtensions.Core InitialTerminalCategory.Core NatCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The diagonal or \"constant diagram\" functor \u0394 *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section diagonal_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (**\n     Quoting Dwyer and Spalinski:\n\n     There is a diagonal or ``constant diagram'' functor\n\n<<\n     \u0394 : C \u2192 C\u1d30,\n>>\n\n     which carries an object [X : C] to the constant functor [\u0394 X : D\n     -> C] (by definition, this ``constant functor'' sends each object\n     of [D] to [X] and each morphism of [D] to [Identity X]). The\n     functor \u0394 assigns to each morphism [f : X -> X'] of [C] the\n     constant natural transformation [t(f) : \u0394 X -> \u0394 X'] determined\n     by the formula [t(f) d = f] for each object [d] of [D].  **)\n\n  (** We use [C\u00b9] rather than [C] for judgemental compatibility with\n      Kan extensions. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition diagonal_functor : Functor (1 -> C) (D -> C)\n    := @pullback_along _ D 1 C (Functors.to_terminal _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition diagonal_functor' : Functor C (D -> C)\n    := diagonal_functor o ExponentialLaws.Law1.Functors.inverse _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section convert.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma diagonal_functor_diagonal_functor' X\n    : diagonal_functor X = diagonal_functor' (X (center _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(diagonal_functor _0 X)%object =\n(diagonal_functor' _0 (X _0 (center 1)))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(1 -> C)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(diagonal_functor _0 X)%object =\n(diagonal_functor' _0 (X _0 (center 1)))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(1 -> C)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : D -> C =>\n   forall s d : D, morphism D s d -> morphism C (GO s) (GO d))\n  1 (fun (s d : D) (_ : morphism D s d) => (X _1 (center Unit))%morphism) =\n(fun (s d : D) (_ : morphism D s d) => 1%morphism)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(1 -> C)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun (s d : D) (_ : morphism D s d) => (X _1 (center Unit))%morphism) =\n(fun (s d : D) (_ : morphism D s d) => 1%morphism)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(1 -> C)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat (apply path_forall || intro).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(X _1 (center Unit))%morphism = 1%morphism",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(1 -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "morphism D x x0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End convert.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End diagonal_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments diagonal_functor : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section diagonal_functor_lemmas.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D D' : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma compose_diagonal_functor x (F : Functor D' D)\n  : diagonal_functor C D x o F = diagonal_functor _ _ x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((diagonal_functor C D) _0 x)%object o F =\n((diagonal_functor C D') _0 x)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(1 -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor D' D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((diagonal_functor C D) _0 x)%object o F =\n((diagonal_functor C D') _0 x)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(1 -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor D' D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition compose_diagonal_functor_natural_transformation\n             x (F : Functor D' D)\n  : NaturalTransformation (diagonal_functor C D x o F) (diagonal_functor _ _ x)\n    := Build_NaturalTransformation\n         (diagonal_functor C D x o F)\n         (diagonal_functor _ _ x)\n         (fun z => identity _)\n         (fun _ _ _ => transitivity\n                         (left_identity _ _ _ _)\n                         (symmetry\n                            _ _\n                            (right_identity _ _ _ _))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End diagonal_functor_lemmas.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Rewrite @compose_diagonal_functor : category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Limit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Definition of Limit *)\n  (**\n     Quoting Dwyer and Spalinski:\n\n     Let [D] be a small category and [F : D -> C] a functor. A limit\n     for [F] is an object [L] of [C] together with a natural\n     transformation [t : \u0394 L -> F] such that for every object [X] of\n     [C] and every natural transformation [s : \u0394 X -> F], there exists\n     a unique map [s' : X -> L] in [C] such that [t (\u0394 s') = s].  **)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsLimit\n    := @IsRightKanExtensionAlong _ D 1 C (Functors.to_terminal _) F.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (*Definition IsLimit' := @IsTerminalMorphism (_ -> _) (_ -> _) (diagonal_functor C D) F.*)\n  (*  Definition Limit (L : C) :=\n    { t : SmallNaturalTransformation ((diagonal_functor C D) L) F &\n      forall X : C, forall s : SmallNaturalTransformation ((diagonal_functor C D) X) F,\n        { s' : C.(Morphism) X L |\n          unique\n          (fun s' => SNTComposeT t ((diagonal_functor C D).(MorphismOf) s') = s)\n          s'\n        }\n    }.*)\n\n  (**\n     Quoting Dwyer and Spalinski:\n\n     Let [D] be a small category and [F : D -> C] a functor. A colimit\n     for [F] is an object [c] of [C] together with a natural\n     transformation [t : F -> \u0394 c] such that for every object [X] of\n     [C] and every natural transformation [s : F -> \u0394 X], there exists\n     a unique map [s' : c -> X] in [C] such that [(\u0394 s') t = s].  **)\n\n  (** ** Definition of Colimit *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsColimit\n    := @IsLeftKanExtensionAlong _ D 1 C (Functors.to_terminal _) F.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (*Definition IsColimit' := @IsInitialMorphism (_ -> _) (_ -> _) F (diagonal_functor C D).*)\n  (*  Definition Colimit (c : C) :=\n    { t : SmallNaturalTransformation F ((diagonal_functor C D) c) &\n      forall X : C, forall s : SmallNaturalTransformation F ((diagonal_functor C D) X),\n        { s' : C.(Morphism) c X | is_unique s' /\\\n          SNTComposeT ((diagonal_functor C D).(MorphismOf) s') t = s\n        }\n    }.*)\n  (** TODO(JasonGross): Figure out how to get good introduction and elimination rules working, which don't mention spurious identities. *)\n  (*Section AbstractionBarrier.\n    Section Limit.\n      Set Printing  Implicit.\n      Section IntroductionAbstractionBarrier.\n        Local Open Scope morphism_scope.\n\n        Definition Build_IsLimit\n                 (lim_obj : C)\n                 (lim_mor : morphism (D -> C)\n                                     (diagonal_functor' C D lim_obj)\n                                     F)\n                 (lim := CommaCategory.Build_object\n                           (diagonal_functor C D)\n                           !(F : object (_ -> _))\n                           !lim_obj\n                           (center _)\n                           lim_mor)\n                 (UniversalProperty\n                  : forall (lim_obj' : C)\n                           (lim_mor' : morphism (D -> C)\n                                                (diagonal_functor' C D lim_obj')\n                                                F),\n                      Contr { m : morphism C lim_obj' lim_obj\n                            | lim_mor o morphism_of (diagonal_functor' C D) m = lim_mor' })\n        : IsTerminalMorphism lim.\n        Proof.\n          apply Build_IsTerminalMorphism.\n          intros A' p'.\n          specialize (UniversalProperty (A' (center _))).*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Limit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** TODO(JasonGross): Port MorphismsBetweenLimits from catdb *)\n"
+    }
+  ]
+]

@@ -1,0 +1,68 @@
+digraph HoTT_WildCat_HomologicalAlgebra {
+  graph [ratio=0.5]
+  node [style=filled]
+HomologicalAlgebra_baby_dragon_mono [label="baby_dragon_mono", URL=<HomologicalAlgebra.html#baby_dragon_mono>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_baby_dragon_aux_right [label="baby_dragon_aux_right", URL=<HomologicalAlgebra.html#baby_dragon_aux_right>, fillcolor="#F070D1"] ;
+HomologicalAlgebra_baby_dragon_epi [label="baby_dragon_epi", URL=<HomologicalAlgebra.html#baby_dragon_epi>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_baby_dragon_aux_left [label="baby_dragon_aux_left", URL=<HomologicalAlgebra.html#baby_dragon_aux_left>, fillcolor="#F070D1"] ;
+HomologicalAlgebra_baby_dragon_trunc_right [label="baby_dragon_trunc_right", URL=<HomologicalAlgebra.html#baby_dragon_trunc_right>, fillcolor="#F070D1"] ;
+HomologicalAlgebra_baby_dragon_trunc_left [label="baby_dragon_trunc_left", URL=<HomologicalAlgebra.html#baby_dragon_trunc_left>, fillcolor="#F070D1"] ;
+HomologicalAlgebra_exact_l [label="exact_l", URL=<HomologicalAlgebra.html#exact_l>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_exact_r [label="exact_r", URL=<HomologicalAlgebra.html#exact_r>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_sq [label="sq", URL=<HomologicalAlgebra.html#sq>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_bot_r [label="bot_r", URL=<HomologicalAlgebra.html#bot_r>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_bot_l [label="bot_l", URL=<HomologicalAlgebra.html#bot_l>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_top_r [label="top_r", URL=<HomologicalAlgebra.html#top_r>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_top_l [label="top_l", URL=<HomologicalAlgebra.html#top_l>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_bot [label="bot", URL=<HomologicalAlgebra.html#bot>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_mid [label="mid", URL=<HomologicalAlgebra.html#mid>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_top [label="top", URL=<HomologicalAlgebra.html#top>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_BabyDragon_sind [label="BabyDragon_sind", URL=<HomologicalAlgebra.html#BabyDragon_sind>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_BabyDragon_rec [label="BabyDragon_rec", URL=<HomologicalAlgebra.html#BabyDragon_rec>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_BabyDragon_ind [label="BabyDragon_ind", URL=<HomologicalAlgebra.html#BabyDragon_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+HomologicalAlgebra_BabyDragon_rect [label="BabyDragon_rect", URL=<HomologicalAlgebra.html#BabyDragon_rect>, fillcolor="#F070D1"] ;
+HomologicalAlgebra_Build_BabyDragon [label="Build_BabyDragon", URL=<HomologicalAlgebra.html#Build_BabyDragon>, fillcolor="#7FAAFF"] ;
+HomologicalAlgebra_BabyDragon [label="BabyDragon", URL=<HomologicalAlgebra.html#BabyDragon>, fillcolor="#E2CDFA"] ;
+HomologicalAlgebra_diamond_lemma_epi [label="diamond_lemma_epi", URL=<HomologicalAlgebra.html#diamond_lemma_epi>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_diamond_lemma_mono [label="diamond_lemma_mono", URL=<HomologicalAlgebra.html#diamond_lemma_mono>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_two_by_three_mono [label="two_by_three_mono", URL=<HomologicalAlgebra.html#two_by_three_mono>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_two_by_three_epi [label="two_by_three_epi", URL=<HomologicalAlgebra.html#two_by_three_epi>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_incomplete_snail [label="incomplete_snail", URL=<HomologicalAlgebra.html#incomplete_snail>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_spider_epi [label="spider_epi", URL=<HomologicalAlgebra.html#spider_epi>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_spider_mono [label="spider_mono", URL=<HomologicalAlgebra.html#spider_mono>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_middle_three_by_three_epi [label="middle_three_by_three_epi", URL=<HomologicalAlgebra.html#middle_three_by_three_epi>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_middle_three_by_three_ex [label="middle_three_by_three_ex", URL=<HomologicalAlgebra.html#middle_three_by_three_ex>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_middle_three_by_three_mono [label="middle_three_by_three_mono", URL=<HomologicalAlgebra.html#middle_three_by_three_mono>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_three_by_three_epi [label="three_by_three_epi", URL=<HomologicalAlgebra.html#three_by_three_epi>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_three_by_three_ex [label="three_by_three_ex", URL=<HomologicalAlgebra.html#three_by_three_ex>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_three_by_three_monic [label="three_by_three_monic", URL=<HomologicalAlgebra.html#three_by_three_monic>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_weak_four_mono [label="weak_four_mono", URL=<HomologicalAlgebra.html#weak_four_mono>, peripheries=3, fillcolor="#F070D1"] ;
+HomologicalAlgebra_weak_four_epi [label="weak_four_epi", URL=<HomologicalAlgebra.html#weak_four_epi>, peripheries=3, fillcolor="#F070D1"] ;
+  HomologicalAlgebra_baby_dragon_mono -> HomologicalAlgebra_baby_dragon_aux_right [] ;
+  HomologicalAlgebra_baby_dragon_aux_right -> HomologicalAlgebra_baby_dragon_trunc_right [] ;
+  HomologicalAlgebra_baby_dragon_epi -> HomologicalAlgebra_baby_dragon_aux_left [] ;
+  HomologicalAlgebra_baby_dragon_aux_left -> HomologicalAlgebra_baby_dragon_trunc_left [] ;
+  HomologicalAlgebra_baby_dragon_trunc_right -> HomologicalAlgebra_Build_BabyDragon [] ;
+  HomologicalAlgebra_baby_dragon_trunc_right -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_baby_dragon_trunc_left -> HomologicalAlgebra_Build_BabyDragon [] ;
+  HomologicalAlgebra_baby_dragon_trunc_left -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_exact_l -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_exact_r -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_sq -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_bot_r -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_bot_l -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_top_r -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_top_l -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_bot -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_mid -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_top -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_BabyDragon_sind -> HomologicalAlgebra_Build_BabyDragon [] ;
+  HomologicalAlgebra_BabyDragon_sind -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_BabyDragon_rec -> HomologicalAlgebra_BabyDragon_rect [] ;
+  HomologicalAlgebra_BabyDragon_ind -> HomologicalAlgebra_Build_BabyDragon [] ;
+  HomologicalAlgebra_BabyDragon_ind -> HomologicalAlgebra_BabyDragon [] ;
+  HomologicalAlgebra_BabyDragon_rect -> HomologicalAlgebra_Build_BabyDragon [] ;
+  HomologicalAlgebra_BabyDragon_rect -> HomologicalAlgebra_BabyDragon [] ;
+subgraph cluster_HomologicalAlgebra { label="HomologicalAlgebra"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+HomologicalAlgebra_weak_four_epi; HomologicalAlgebra_weak_four_mono; HomologicalAlgebra_three_by_three_monic; HomologicalAlgebra_three_by_three_ex; HomologicalAlgebra_three_by_three_epi; HomologicalAlgebra_middle_three_by_three_mono; HomologicalAlgebra_middle_three_by_three_ex; HomologicalAlgebra_middle_three_by_three_epi; HomologicalAlgebra_spider_mono; HomologicalAlgebra_spider_epi; HomologicalAlgebra_incomplete_snail; HomologicalAlgebra_two_by_three_epi; HomologicalAlgebra_two_by_three_mono; HomologicalAlgebra_diamond_lemma_mono; HomologicalAlgebra_diamond_lemma_epi; HomologicalAlgebra_BabyDragon; HomologicalAlgebra_Build_BabyDragon; HomologicalAlgebra_BabyDragon_rect; HomologicalAlgebra_BabyDragon_ind; HomologicalAlgebra_BabyDragon_rec; HomologicalAlgebra_BabyDragon_sind; HomologicalAlgebra_top; HomologicalAlgebra_mid; HomologicalAlgebra_bot; HomologicalAlgebra_top_l; HomologicalAlgebra_top_r; HomologicalAlgebra_bot_l; HomologicalAlgebra_bot_r; HomologicalAlgebra_sq; HomologicalAlgebra_exact_r; HomologicalAlgebra_exact_l; HomologicalAlgebra_baby_dragon_trunc_left; HomologicalAlgebra_baby_dragon_trunc_right; HomologicalAlgebra_baby_dragon_aux_left; HomologicalAlgebra_baby_dragon_epi; HomologicalAlgebra_baby_dragon_aux_right; HomologicalAlgebra_baby_dragon_mono; };
+} /* END */

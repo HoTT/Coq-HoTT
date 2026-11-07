@@ -1,0 +1,5587 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functoriality of the comma category construction with projection functors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Prod Functor.Prod.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Dual Functor.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors NatCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Comma.InducedFunctors Comma.Projection.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require ProductLaws ExponentialLaws.Law1.Functors ExponentialLaws.Law4.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Forall PathGroupoids HoTT.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Functor from [(A \u2192 C)\u1d52\u1d56 \u00d7 (B \u2192 C)] to [cat / (A \u00d7 B)] *)\n(** It sends [S : A \u2192 C \u2190 B : T] to the category [(S / T)] and its projection functor to [A \u00d7 B]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section comma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : PreCategory -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation Cat := (@sub_pre_cat _ P HF).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A B C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis PAB : P (A * B).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis P_comma : forall (S : Functor A C) (T : Functor B C),\n                         P (S / T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition comma_category_projection_functor_object_of\n             (ST : object ((A -> C)^op * (B -> C)))\n  : Cat / !((A * B; PAB) : Cat).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Cat / !((A * B; PAB) : Cat)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ST"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Cat / !((A * B; PAB) : Cat)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ST"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (Basics.Overture.fst ST / Basics.Overture.snd ST; P_comma _ _) (center _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism Cat\n  (Cat\n   _0 (Overture.fst ST / Overture.snd ST;\n      P_comma (Overture.fst ST) (Overture.snd ST)))%object\n  (!(A * B; PAB) _0 (center 1%category))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ST"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (comma_category_projection (Basics.Overture.fst ST) (Basics.Overture.snd ST)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition comma_category_projection_functor_morphism_of\n             s d (m : morphism ((A -> C)^op * (B -> C)) s d)\n  : morphism (Cat / !((A * B; PAB) : Cat))\n             (comma_category_projection_functor_object_of s)\n             (comma_category_projection_functor_object_of d).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism (Cat / !((A * B; PAB) : Cat))\n  (comma_category_projection_functor_object_of s)\n  (comma_category_projection_functor_object_of d)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism (Cat / !((A * B; PAB) : Cat))\n  (comma_category_projection_functor_object_of s)\n  (comma_category_projection_functor_object_of d)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "CommaCategory.morphism (comma_category_projection_functor_object_of s)\n  (comma_category_projection_functor_object_of d)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (CommaCategory.Build_morphism\n              (comma_category_projection_functor_object_of s)\n              (comma_category_projection_functor_object_of d)\n              (comma_category_induced_functor m)\n              (center _)\n              _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "!(A * B; PAB)\n_1 (center\n      (morphism 1\n         (CommaCategory.b (comma_category_projection_functor_object_of s))\n         (CommaCategory.b (comma_category_projection_functor_object_of d))))\no CommaCategory.f (comma_category_projection_functor_object_of s) =\nCommaCategory.f (comma_category_projection_functor_object_of d)\no Cat _1 (comma_category_induced_functor m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Identity.identity (A * B)\n o comma_category_projection (Overture.fst s) (Overture.snd s))%functor =\n(comma_category_projection (Overture.fst d) (Overture.snd d)\n o comma_category_induced_functor m)%functor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct_head_hnf Basics.Overture.prod.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Identity.identity (A * B) o comma_category_projection fst1 snd1)%functor =\n(comma_category_projection fst0 snd0\n o comma_category_induced_functor (fst, snd)%core)%functor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fst1"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "snd1"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fst0"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "snd0"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fst"
+              ],
+              "body": null,
+              "type": "Core.NaturalTransformation fst0 fst1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "snd"
+              ],
+              "body": null,
+              "type": "Core.NaturalTransformation snd1 snd0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac comma_laws_t :=\n    repeat (apply path_forall || intro);\n    simpl;\n    rewrite !transport_forall_constant;\n    transport_path_forall_hammer;\n    simpl;\n    destruct_head Basics.Overture.prod;\n    simpl in *;\n    apply CommaCategory.path_morphism;\n    simpl;\n    repeat match goal with\n             | [ |- context[?f _ _ _ _ _ _ _ (transport ?P ?p ?z)] ]\n               => simpl rewrite (@ap_transport\n                                   _ P _ _ _ p\n                                   (fun _ => f _ _ _ _ _ _ _)\n                                   z)\n             | [ |- context[transport (fun y => ?f (?fa _ _ _ _ _ y) ?x)] ]\n               => rewrite (fun a b => @transport_compose _ _ a b (fun y => f y x) (fa _ _ _ _ _))\n             | [ |- context[transport (fun y => ?f ?x (?fa _ _ _ _ _ y))] ]\n               => rewrite (fun a b => @transport_compose _ _ a b (fun y => f x y) (fa _ _ _ _ _))\n           end;\n    unfold comma_category_induced_functor_object_of_identity;\n    unfold comma_category_induced_functor_object_of_compose;\n    simpl;\n    rewrite ?CommaCategory.ap_a_path_object', ?CommaCategory.ap_b_path_object';\n    try reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma comma_category_projection_functor_identity_of x\n  : comma_category_projection_functor_morphism_of (Category.Core.identity x)\n    = 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comma_category_projection_functor_morphism_of 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comma_category_projection_functor_morphism_of 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply CommaCategory.path_morphism; simpl; [ | reflexivity ].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comma_category_induced_functor\n  (NaturalTransformation.Identity.identity (Overture.fst x),\n  NaturalTransformation.Identity.identity (Overture.snd x)) =\nIdentity.identity (Overture.fst x / Overture.snd x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{HO\n: comma_category_induced_functor_object_of\n    (NaturalTransformation.Identity.identity (Overture.fst x),\n    NaturalTransformation.Identity.identity (Overture.snd x)) =\n  idmap\n&\ntransport\n  (fun\n     GO : CommaCategory.object (Overture.fst x) (Overture.snd x) ->\n          CommaCategory.object (Overture.fst x) (Overture.snd x) =>\n   forall s d : CommaCategory.object (Overture.fst x) (Overture.snd x),\n   CommaCategory.morphism s d -> CommaCategory.morphism (GO s) (GO d))\n  HO\n  (comma_category_induced_functor_morphism_of\n     (NaturalTransformation.Identity.identity (Overture.fst x),\n     NaturalTransformation.Identity.identity (Overture.snd x))) =\n(fun s d : CommaCategory.object (Overture.fst x) (Overture.snd x) => idmap)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (path_forall _ _ (comma_category_induced_functor_object_of_identity _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun\n     GO : CommaCategory.object (Overture.fst x) (Overture.snd x) ->\n          CommaCategory.object (Overture.fst x) (Overture.snd x) =>\n   forall s d : CommaCategory.object (Overture.fst x) (Overture.snd x),\n   CommaCategory.morphism s d -> CommaCategory.morphism (GO s) (GO d))\n  (path_forall (comma_category_induced_functor_object_of 1) idmap\n     (comma_category_induced_functor_object_of_identity x))\n  (comma_category_induced_functor_morphism_of\n     (NaturalTransformation.Identity.identity (Overture.fst x),\n     NaturalTransformation.Identity.identity (Overture.snd x))) =\n(fun s d : CommaCategory.object (Overture.fst x) (Overture.snd x) => idmap)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "comma_laws_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma comma_category_projection_functor_composition_of s d d' m m'\n  : comma_category_projection_functor_morphism_of\n      (@Category.Core.compose _ s d d' m' m)\n    = (comma_category_projection_functor_morphism_of m')\n        o (comma_category_projection_functor_morphism_of m).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comma_category_projection_functor_morphism_of (m' o m) =\ncomma_category_projection_functor_morphism_of m'\no comma_category_projection_functor_morphism_of m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) d d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comma_category_projection_functor_morphism_of (m' o m) =\ncomma_category_projection_functor_morphism_of m'\no comma_category_projection_functor_morphism_of m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) d d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply CommaCategory.path_morphism; simpl; [ | reflexivity ].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comma_category_induced_functor\n  (Core.compose (Overture.fst m) (Overture.fst m'),\n  Core.compose (Overture.snd m') (Overture.snd m)) =\n(comma_category_induced_functor m' o comma_category_induced_functor m)%functor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) d d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{HO\n: comma_category_induced_functor_object_of\n    (Core.compose (Overture.fst m) (Overture.fst m'),\n    Core.compose (Overture.snd m') (Overture.snd m)) =\n  (fun c : CommaCategory.object (Overture.fst s) (Overture.snd s) =>\n   comma_category_induced_functor_object_of m'\n     (comma_category_induced_functor_object_of m c))\n&\ntransport\n  (fun\n     GO : CommaCategory.object (Overture.fst s) (Overture.snd s) ->\n          CommaCategory.object (Overture.fst d') (Overture.snd d') =>\n   forall s0 d0 : CommaCategory.object (Overture.fst s) (Overture.snd s),\n   CommaCategory.morphism s0 d0 -> CommaCategory.morphism (GO s0) (GO d0))\n  HO\n  (comma_category_induced_functor_morphism_of\n     (Core.compose (Overture.fst m) (Overture.fst m'),\n     Core.compose (Overture.snd m') (Overture.snd m))) =\n(fun (s0 d0 : CommaCategory.object (Overture.fst s) (Overture.snd s))\n   (m0 : CommaCategory.morphism s0 d0) =>\n comma_category_induced_functor_morphism_of m'\n   (comma_category_induced_functor_morphism_of m m0))}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) d d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{HO\n: comma_category_induced_functor_object_of\n    (Core.compose (Overture.fst m) (Overture.fst m'),\n    Core.compose (Overture.snd m') (Overture.snd m)) =\n  (fun c : CommaCategory.object (Overture.fst s) (Overture.snd s) =>\n   comma_category_induced_functor_object_of m'\n     (comma_category_induced_functor_object_of m c))\n&\ntransport\n  (fun\n     GO : CommaCategory.object (Overture.fst s) (Overture.snd s) ->\n          CommaCategory.object (Overture.fst d') (Overture.snd d') =>\n   forall s0 d0 : CommaCategory.object (Overture.fst s) (Overture.snd s),\n   CommaCategory.morphism s0 d0 -> CommaCategory.morphism (GO s0) (GO d0))\n  HO\n  (comma_category_induced_functor_morphism_of\n     (Core.compose (Overture.fst m) (Overture.fst m'),\n     Core.compose (Overture.snd m') (Overture.snd m))) =\n(fun (s0 d0 : CommaCategory.object (Overture.fst s) (Overture.snd s))\n   (m0 : CommaCategory.morphism s0 d0) =>\n comma_category_induced_functor_morphism_of m'\n   (comma_category_induced_functor_morphism_of m m0))}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) d d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (path_forall _ _ (comma_category_induced_functor_object_of_compose m' m)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun\n     GO : CommaCategory.object (Overture.fst s) (Overture.snd s) ->\n          CommaCategory.object (Overture.fst d') (Overture.snd d') =>\n   forall s0 d0 : CommaCategory.object (Overture.fst s) (Overture.snd s),\n   CommaCategory.morphism s0 d0 -> CommaCategory.morphism (GO s0) (GO d0))\n  (path_forall (comma_category_induced_functor_object_of (m' o m))\n     (fun x : Overture.fst s / Overture.snd s =>\n      comma_category_induced_functor_object_of m'\n        (comma_category_induced_functor_object_of m x))\n     (comma_category_induced_functor_object_of_compose m' m))\n  (comma_category_induced_functor_morphism_of\n     (Core.compose (Overture.fst m) (Overture.fst m'),\n     Core.compose (Overture.snd m') (Overture.snd m))) =\n(fun (s0 d0 : CommaCategory.object (Overture.fst s) (Overture.snd s))\n   (m0 : CommaCategory.morphism s0 d0) =>\n comma_category_induced_functor_morphism_of m'\n   (comma_category_induced_functor_morphism_of m m0))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D : PreCategory, P C0 -> P D -> IsHSet (Functor C0 D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PAB"
+              ],
+              "body": null,
+              "type": "P (A * B)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor A C) (T : Functor B C), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "((A -> C)^op * (B -> C))%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "morphism ((A -> C)^op * (B -> C)) d d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "comma_laws_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition comma_category_projection_functor\n  : Functor ((A -> C)^op * (B -> C))\n            (Cat / !((A * B; PAB) : Cat))\n    := Build_Functor ((A -> C)^op * (B -> C))\n                     (Cat / !((A * B; PAB) : Cat))\n                     comma_category_projection_functor_object_of\n                     comma_category_projection_functor_morphism_of\n                     comma_category_projection_functor_composition_of\n                     comma_category_projection_functor_identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End comma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section slice_category_projection_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : PreCategory -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation Cat := (@sub_pre_cat _ P HF).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis P1C : P (1 * C).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis PC1 : P (C * 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis PC : P C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis P_comma : forall (S : Functor C D) (T : Functor 1 D), P (S / T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis P_comma' : forall (S : Functor 1 D) (T : Functor C D), P (S / T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation inv D := (@ExponentialLaws.Law1.Functors.inverse _ terminal_category _ _ _ D).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Functor [(C \u2192 D)\u1d52\u1d56 \u2192 D \u2192 (cat / C)] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition slice_category_projection_functor\n  : object (((C -> D)^op) -> (D -> (Cat / ((C; PC) : Cat)))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D)^op -> D -> Cat / ((C; PC) : Cat))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D)^op -> D -> Cat / ((C; PC) : Cat))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D)^op * D -> Cat / (C; PC))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o (Functor.Identity.identity (C -> D)^op,\n                 inv D)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor ((C -> D)^op * (1 -> D)) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (Cat / !(C * 1; PC1)) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cat_over_induced_functor _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism Cat (C * 1; PC1) (C; PC)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (C * 1; PC1).1 (C; PC).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ProductLaws.Law1.functor _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition coslice_category_projection_functor\n  : object ((C -> D)^op -> (D -> (Cat / ((C; PC) : Cat)))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D)^op -> D -> Cat / ((C; PC) : Cat))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D)^op -> D -> Cat / ((C; PC) : Cat))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D)^op * D -> Cat / (C; PC))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o (Functor.Identity.identity (C -> D)^op,\n                 inv D)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor ((C -> D)^op * (1 -> D)) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (Cat / !(C * 1; PC1)) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cat_over_induced_functor _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism Cat (C * 1; PC1) (C; PC)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (C * 1; PC1).1 (C; PC).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ProductLaws.Law1.functor _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Functor [(C \u2192 D) \u2192 D\u1d52\u1d56 \u2192 (cat / C)] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition slice_category_projection_functor'\n  : object ((C -> D) -> (D^op -> (Cat / ((C; PC) : Cat)))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D) -> D^op -> Cat / ((C; PC) : Cat))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D) -> D^op -> Cat / ((C; PC) : Cat))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D) * D^op -> Cat / (C; PC))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o (Functor.Identity.identity (C -> D),\n                 (inv D)^op)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor ((C -> D) * (1 -> D)^op) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o ProductLaws.Swap.functor _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor ((1 -> D)^op * (C -> D)) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o @comma_category_projection_functor _ P HF 1 C D P1C P_comma').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (Cat / !(1 * C; P1C)) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cat_over_induced_functor _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism Cat (1 * C; P1C) (C; PC)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (1 * C; P1C).1 (C; PC).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ProductLaws.Law1.functor' _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition coslice_category_projection_functor'\n  : object ((C -> D) -> (D^op -> (Cat / ((C; PC) : Cat)))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D) -> D^op -> Cat / ((C; PC) : Cat))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D) -> D^op -> Cat / ((C; PC) : Cat))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((C -> D) * D^op -> Cat / (C; PC))%category",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o (Functor.Identity.identity (C -> D),\n                 (inv D)^op)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor ((C -> D) * (1 -> D)^op) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o ProductLaws.Swap.functor _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor ((1 -> D)^op * (C -> D)) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o @comma_category_projection_functor _ P HF 1 C D P1C P_comma').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (Cat / !(1 * C; P1C)) (Cat / (C; PC))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cat_over_induced_functor _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism Cat (1 * C; P1C) (C; PC)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (1 * C; P1C).1 (C; PC).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C0 D0 : PreCategory, P C0 -> P D0 -> IsHSet (Functor C0 D0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P1C"
+              ],
+              "body": null,
+              "type": "P (1 * C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC1"
+              ],
+              "body": null,
+              "type": "P (C * 1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PC"
+              ],
+              "body": null,
+              "type": "P C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma"
+              ],
+              "body": null,
+              "type": "forall (S : Functor C D) (T : Functor 1 D), P (S / T)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_comma'"
+              ],
+              "body": null,
+              "type": "forall (S : Functor 1 D) (T : Functor C D), P (S / T)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ProductLaws.Law1.functor' _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End slice_category_projection_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

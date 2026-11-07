@@ -1,0 +1,3528 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * The Structure Identity Principle *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Category.Univalent Category.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Structure.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Sigma Trunc Equivalences.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Iff Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope structure_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting the Homotopy Type Theory Book (with slight changes for\n    notational consistency): *)\n\n(** Theorem (Structure identity principle): If [X] is a category and\n    [(P, H)] is a standard notion of structure over [X], then the\n    precategory [Str_{(P, H)}(X)] is a category. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section sip.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : NotionOfStructure X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{IsCategory X}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{@IsStandardNotionOfStructure X P}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let StrX := @precategory_of_structures X P.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sip_isotoid_helper (xa yb : StrX)\n             (f : xa <~=~> yb)\n  : xa.1 <~=~> yb.1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "xa.1 <~=~> yb.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "xa.1 <~=~> yb.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (PreCategoryOfStructures.f (f : morphism _ _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism (PreCategoryOfStructures.f f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (PreCategoryOfStructures.f f^-1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategoryOfStructures.f f^-1 o PreCategoryOfStructures.f f = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategoryOfStructures.f f o PreCategoryOfStructures.f f^-1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategoryOfStructures.f f^-1 o PreCategoryOfStructures.f f = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (@PreCategoryOfStructures.f _ _ _ _) (@left_inverse _ _ _ _ f)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategoryOfStructures.f f o PreCategoryOfStructures.f f^-1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (@PreCategoryOfStructures.f _ _ _ _) (@right_inverse _ _ _ _ f)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma sip_isotoid_helper_refl (xa : StrX)\n  : @sip_isotoid_helper xa xa (reflexivity _) = reflexivity _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sip_isotoid_helper (reflexivity xa) = reflexivity xa.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sip_isotoid_helper (reflexivity xa) = reflexivity xa.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold sip_isotoid_helper, reflexivity, isomorphic_refl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  morphism_isomorphic :=\n    PreCategoryOfStructures.f\n      {|\n        morphism_isomorphic := 1;\n        isisomorphism_isomorphic := isisomorphism_identity StrX xa\n      |};\n  isisomorphism_isomorphic :=\n    {|\n      morphism_inverse :=\n        PreCategoryOfStructures.f\n          {|\n            morphism_isomorphic := 1;\n            isisomorphism_isomorphic := isisomorphism_identity StrX xa\n          |}^-1;\n      left_inverse := ap (PreCategoryOfStructures.f (yb:=xa)) left_inverse;\n      right_inverse := ap (PreCategoryOfStructures.f (yb:=xa)) right_inverse\n    |}\n|} =\n{|\n  morphism_isomorphic := 1;\n  isisomorphism_isomorphic := isisomorphism_identity X xa.1\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  morphism_inverse :=\n    PreCategoryOfStructures.f\n      {|\n        morphism_isomorphic := 1;\n        isisomorphism_isomorphic := isisomorphism_identity StrX xa\n      |}^-1;\n  left_inverse := ap (PreCategoryOfStructures.f (yb:=xa)) left_inverse;\n  right_inverse := ap (PreCategoryOfStructures.f (yb:=xa)) right_inverse\n|} = isisomorphism_identity X xa.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma sip_helper x y (p : x = y) (a : P x) (b : P y)\n  : transport P p a = b\n    <-> is_structure_homomorphism P _ _ (idtoiso X p) a b *\n        is_structure_homomorphism P _ _ (idtoiso X p)^-1 b a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport P p a = b <->\nis_structure_homomorphism P x y (idtoiso X p) a b *\nis_structure_homomorphism P y x (idtoiso X p)^-1 b a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport P p a = b <->\nis_structure_homomorphism P x y (idtoiso X p) a b *\nis_structure_homomorphism P y x (idtoiso X p)^-1 b a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport P p a = b ->\nis_structure_homomorphism P x y (idtoiso X p) a b *\nis_structure_homomorphism P y x (idtoiso X p)^-1 b a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_structure_homomorphism P x y (idtoiso X p) a b *\nis_structure_homomorphism P y x (idtoiso X p)^-1 b a -> \ntransport P p a = b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport P p a = b ->\nis_structure_homomorphism P x y (idtoiso X p) a b *\nis_structure_homomorphism P y x (idtoiso X p)^-1 b a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; path_induction; split; apply reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_structure_homomorphism P x y (idtoiso X p) a b *\nis_structure_homomorphism P y x (idtoiso X p)^-1 b a -> \ntransport P p a = b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [H0 H1]; path_induction; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a = b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "a <= b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "b <= a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply antisymmetry_structure; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sip_isotoid (xa yb : StrX)\n             (f : xa <~=~> yb)\n  : xa = yb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "xa = yb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "xa = yb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (path_sigma_uncurried\n              _ _ _\n              (isotoid\n                 X\n                 xa.1\n                 yb.1\n                 (sip_isotoid_helper f);\n               _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : X => P x) (isotoid X xa.1 yb.1 (sip_isotoid_helper f))\n  xa.2 =\nyb.2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply sip_helper; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_structure_homomorphism P xa.1 yb.1\n  (idtoiso X (isotoid X xa.1 yb.1 (sip_isotoid_helper f))) xa.2 yb.2 *\nis_structure_homomorphism P yb.1 xa.1\n  (idtoiso X (isotoid X xa.1 yb.1 (sip_isotoid_helper f)))^-1 yb.2 xa.2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split;\n      lazymatch goal with\n        | [ |- context[idtoiso ?X ((isotoid ?X ?x ?y) ?m)] ]\n          => pose proof (eisretr (@idtoiso X x y) m) as H';\n             pattern (idtoiso X ((isotoid X x y) m))\n      end;\n      refine (transport _ H'^ _); clear H'; simpl;\n      apply PreCategoryOfStructures.h.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma sip_isotoid_refl xa\n  : @sip_isotoid xa xa (reflexivity _) = reflexivity _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sip_isotoid (reflexivity xa) = reflexivity xa",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sip_isotoid (reflexivity xa) = reflexivity xa",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ eta_path_sigma_uncurried _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sip_isotoid (reflexivity xa) =\npath_sigma_uncurried (fun x : X => P x) xa xa\n  ((reflexivity xa) ..1; (reflexivity xa) ..2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (path_sigma_uncurried _ _ _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(isotoid X xa.1 xa.1 (sip_isotoid_helper (reflexivity xa));\nlet X0 :=\n  fun (x y : X) (p : x = y) (a : P x) (b : P y) => snd (sip_helper p a b) in\nX0 xa.1 xa.1 (isotoid X xa.1 xa.1 (sip_isotoid_helper (reflexivity xa))) xa.2\n  xa.2\n  (let H' :=\n     eisretr (idtoiso X (y:=xa.1)) (sip_isotoid_helper (reflexivity xa)) in\n   transport\n     (fun i : xa.1 <~=~> xa.1 =>\n      is_structure_homomorphism P xa.1 xa.1 i xa.2 xa.2)\n     H'^ (PreCategoryOfStructures.h (reflexivity xa)),\n  let H' :=\n    eisretr (idtoiso X (y:=xa.1)) (sip_isotoid_helper (reflexivity xa)) in\n  transport\n    (fun i : xa.1 <~=~> xa.1 =>\n     is_structure_homomorphism P xa.1 xa.1 i^-1 xa.2 xa.2)\n    H'^ (PreCategoryOfStructures.h (reflexivity xa)^-1))) =\n((reflexivity xa) ..1; (reflexivity xa) ..2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_path_sigma_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(isotoid X xa.1 xa.1 (sip_isotoid_helper (reflexivity xa));\nlet X0 :=\n  fun (x y : X) (p : x = y) (a : P x) (b : P y) => snd (sip_helper p a b) in\nX0 xa.1 xa.1 (isotoid X xa.1 xa.1 (sip_isotoid_helper (reflexivity xa))) xa.2\n  xa.2\n  (let H' :=\n     eisretr (idtoiso X (y:=xa.1)) (sip_isotoid_helper (reflexivity xa)) in\n   transport\n     (fun i : xa.1 <~=~> xa.1 =>\n      is_structure_homomorphism P xa.1 xa.1 i xa.2 xa.2)\n     H'^ (PreCategoryOfStructures.h (reflexivity xa)),\n  let H' :=\n    eisretr (idtoiso X (y:=xa.1)) (sip_isotoid_helper (reflexivity xa)) in\n  transport\n    (fun i : xa.1 <~=~> xa.1 =>\n     is_structure_homomorphism P xa.1 xa.1 i^-1 xa.2 xa.2)\n    H'^ (PreCategoryOfStructures.h (reflexivity xa)^-1))).1 =\n((reflexivity xa) ..1; (reflexivity xa) ..2).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "isotoid X xa.1 xa.1 (sip_isotoid_helper (isomorphic_refl StrX xa)) = 1%path",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ eisretr (isotoid X xa.1 xa.1) 1%path).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "isotoid X xa.1 xa.1 (sip_isotoid_helper (isomorphic_refl StrX xa)) =\nisotoid X xa.1 xa.1 ((isotoid X xa.1 xa.1)^-1%function 1%path)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sip_isotoid_helper (isomorphic_refl StrX xa) =\n(isotoid X xa.1 xa.1)^-1%function 1%path",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa"
+              ],
+              "body": null,
+              "type": "StrX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply sip_isotoid_helper_refl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_f_idtoiso_precategory_of_structures xa yb (p : xa = yb)\n  : PreCategoryOfStructures.f (idtoiso (precategory_of_structures P) p : morphism _ _ _)\n    = idtoiso X p..1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategoryOfStructures.f\n  (idtoiso (precategory_of_structures P) p\n   :\n   morphism (precategory_of_structures P) xa yb) =\nidtoiso X p ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "precategory_of_structures P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "xa = yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategoryOfStructures.f\n  (idtoiso (precategory_of_structures P) p\n   :\n   morphism (precategory_of_structures P) xa yb) =\nidtoiso X p ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "precategory_of_structures P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "xa = yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction p; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma structure_identity_principle_helper\n        (xa yb : StrX)\n        (x : xa <~=~> yb)\n  : PreCategoryOfStructures.f\n      (idtoiso (precategory_of_structures P) (sip_isotoid x) : morphism _ _ _)\n    = PreCategoryOfStructures.f (x : morphism _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategoryOfStructures.f\n  (idtoiso (precategory_of_structures P) (sip_isotoid x)\n   :\n   morphism (precategory_of_structures P) xa yb) =\nPreCategoryOfStructures.f (x : morphism StrX xa yb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategoryOfStructures.f\n  (idtoiso (precategory_of_structures P) (sip_isotoid x)\n   :\n   morphism (precategory_of_structures P) xa yb) =\nPreCategoryOfStructures.f (x : morphism StrX xa yb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (path_f_idtoiso_precategory_of_structures _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "idtoiso X (sip_isotoid x) ..1 = PreCategoryOfStructures.f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap _ (ap _ _))\n              @ (ap (@morphism_isomorphic _ _ _)\n                    (eisretr (@idtoiso X xa.1 yb.1) (sip_isotoid_helper _)))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(sip_isotoid x) ..1 = isotoid X xa.1 yb.1 (sip_isotoid_helper x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "StrX"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (pr1_path_sigma_uncurried _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance structure_identity_principle\n  : IsCategory (precategory_of_structures P).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCategory (precategory_of_structures P)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCategory (precategory_of_structures P)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros xa yb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (idtoiso (precategory_of_structures P) (y:=yb))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "precategory_of_structures P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (isequiv_adjointify\n              _ (@sip_isotoid xa yb)\n              _ _);\n      intro; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "idtoiso (precategory_of_structures P) (sip_isotoid x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "{x0 : X & P x0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sip_isotoid (idtoiso (precategory_of_structures P) x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "{x0 : X & P x0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "xa = yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "idtoiso (precategory_of_structures P) (sip_isotoid x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "{x0 : X & P x0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "xa <~=~> yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (\n          apply path_isomorphic; simpl;\n          apply PreCategoryOfStructures.path_morphism;\n          apply structure_identity_principle_helper\n        ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sip_isotoid (idtoiso (precategory_of_structures P) x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "NotionOfStructure X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCategory0"
+              ],
+              "body": null,
+              "type": "IsCategory X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsStandardNotionOfStructure P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "StrX"
+              ],
+              "body": "precategory_of_structures P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xa",
+                "yb"
+              ],
+              "body": null,
+              "type": "{x0 : X & P x0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "xa = yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (induction x; apply sip_isotoid_refl).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End sip.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

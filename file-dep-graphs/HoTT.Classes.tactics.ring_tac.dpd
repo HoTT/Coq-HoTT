@@ -1,0 +1,16 @@
+N: 9 "by_quoting" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 6 "default_almostneg" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 5 "negate_almostneg" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 10 "normalize_eq" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 8 "normalize_prequoted" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 7 "prove_prequoted" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 3 "ring_almostring" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 1 "ring_mor_almostring_mor" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 4 "semiring_almostring" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+N: 2 "sr_mor_almostring_mor" [body=yes, kind=cnst, prop=no, path="ring_tac", ];
+E: 1 5 [weight=8, ];
+E: 2 6 [weight=8, ];
+E: 3 5 [weight=6, ];
+E: 4 6 [weight=6, ];
+E: 7 8 [weight=1, ];
+E: 9 10 [weight=1, ];

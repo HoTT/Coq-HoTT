@@ -1,0 +1,9 @@
+N: 4 "ab_pullback" [body=yes, kind=cnst, prop=no, path="AbPullback", ];
+N: 5 "ab_pullback_commutative" [body=yes, kind=cnst, prop=no, path="AbPullback", ];
+N: 3 "haspullbacks_abgroup" [body=yes, kind=cnst, prop=no, path="AbPullback", ];
+N: 1 "isabepistable_abgroup" [body=yes, kind=cnst, prop=no, path="AbPullback", ];
+N: 2 "isepistable_abgroup" [body=yes, kind=cnst, prop=no, path="AbPullback", ];
+E: 1 2 [weight=1, ];
+E: 2 3 [weight=5, ];
+E: 3 4 [weight=1, ];
+E: 4 5 [weight=1, ];

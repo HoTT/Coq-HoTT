@@ -1,0 +1,20 @@
+digraph HoTT_Algebra_Rings_Z {
+  graph [ratio=0.5]
+  node [style=filled]
+Z_isinitial_cring_Z [label="isinitial_cring_Z", URL=<Z.html#isinitial_cring_Z>, peripheries=3, fillcolor="#F070D1"] ;
+Z_rng_homo_int [label="rng_homo_int", URL=<Z.html#rng_homo_int>, fillcolor="#F070D1"] ;
+Z_issemigrouppreserving_mult_rng_int_mult [label="issemigrouppreserving_mult_rng_int_mult", URL=<Z.html#issemigrouppreserving_mult_rng_int_mult>, fillcolor="#F070D1"] ;
+Z_rng_int_mult_dist_l [label="rng_int_mult_dist_l", URL=<Z.html#rng_int_mult_dist_l>, fillcolor="#F070D1"] ;
+Z_rng_int_mult_dist_r [label="rng_int_mult_dist_r", URL=<Z.html#rng_int_mult_dist_r>, peripheries=3, fillcolor="#F070D1"] ;
+Z_rng_int_mult [label="rng_int_mult", URL=<Z.html#rng_int_mult>, fillcolor="#F070D1"] ;
+Z_cring_Z [label="cring_Z", URL=<Z.html#cring_Z>, fillcolor="#F070D1"] ;
+  Z_isinitial_cring_Z -> Z_rng_homo_int [] ;
+  Z_rng_homo_int -> Z_issemigrouppreserving_mult_rng_int_mult [] ;
+  Z_issemigrouppreserving_mult_rng_int_mult -> Z_rng_int_mult_dist_l [] ;
+  Z_rng_int_mult_dist_l -> Z_rng_int_mult [] ;
+  Z_rng_int_mult_dist_l -> Z_cring_Z [] ;
+  Z_rng_int_mult_dist_r -> Z_rng_int_mult [] ;
+  Z_rng_int_mult_dist_r -> Z_cring_Z [] ;
+subgraph cluster_Z { label="Z"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Z_cring_Z; Z_rng_int_mult; Z_rng_int_mult_dist_r; Z_rng_int_mult_dist_l; Z_issemigrouppreserving_mult_rng_int_mult; Z_rng_homo_int; Z_isinitial_cring_Z; };
+} /* END */

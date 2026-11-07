@@ -1,0 +1,10 @@
+digraph HoTT_Modalities_Topological {
+  graph [ratio=0.5]
+  node [style=filled]
+Topological_topological_lex_trunc_acc [label="topological_lex_trunc_acc", URL=<Topological.html#topological_lex_trunc_acc>, peripheries=3, fillcolor="#F070D1"] ;
+Topological_lex_nullification [label="lex_nullification", URL=<Topological.html#lex_nullification>, peripheries=3, fillcolor="#F070D1"] ;
+Topological_lex_topological [label="lex_topological", URL=<Topological.html#lex_topological>, fillcolor="#F070D1"] ;
+  Topological_lex_nullification -> Topological_lex_topological [] ;
+subgraph cluster_Topological { label="Topological"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Topological_lex_topological; Topological_lex_nullification; Topological_topological_lex_trunc_acc; };
+} /* END */

@@ -1,0 +1,1986 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Universal morphisms *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Dual Functor.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Objects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Trunc Types.Sigma HoTT.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section UniversalMorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Quoting Wikipedia:\n\n      Suppose that [U : D \u2192 C] is a functor from a category [D] to a\n      category [C], and let [X] be an object of [C].  Consider the\n      following dual (opposite) notions: *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac univ_hprop_t UniversalProperty :=\n    apply @istrunc_succ in UniversalProperty;\n    eapply @istrunc_sigma;\n    first [ intro;\n            simpl;\n            match goal with\n              | [ |- context[?m o 1] ]\n                => simpl rewrite (right_identity _ _ _ m)\n              | [ |- context[1 o ?m] ]\n                => simpl rewrite (left_identity _ _ _ m)\n            end;\n            assumption\n          | by typeclasses eauto ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Initial morphisms *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section InitialMorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** *** Definition *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable U : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** An initial morphism from [X] to [U] is an initial object in\n        the category [(X \u2193 U)] of morphisms from [X] to [U].  In other\n        words, it consists of a pair [(A, \u03c6)] where [A] is an object\n        of [D] and [\u03c6: X \u2192 U A] is a morphism in [C], such that the\n        following initial property is satisfied:\n\n       - Whenever [Y] is an object of [D] and [f : X \u2192 U Y] is a\n         morphism in [C], then there exists a unique morphism [g : A\n         \u2192 Y] such that the following diagram commutes:\n\n<<\n             \u03c6\n         X -----> U A       A\n          \\        .        .\n            \\      . U g    . g\n           f  \\    .        .\n               \u2198   \u2193        \u2193\n                 U Y        Y\n>>\n       *)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsInitialMorphism (Ap : object (X / U)) :=\n      IsInitialObject (X / U) Ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** *** Introduction rule *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section IntroductionAbstractionBarrier.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsInitialMorphism\n                 (*(Ap : Object (X \u2193 U))*)\n                 (A : D)(* := CCO_b Ap*)\n                 (p : morphism C X (U A))(*:= CCO_f Ap*)\n                 (Ap := CommaCategory.Build_object !X U tt A p)\n                 (UniversalProperty\n                  : forall (A' : D) (p' : morphism C X (U A')),\n                      Contr { m : morphism D A A'\n                            | U _1 m o p = p' })\n      : IsInitialMorphism Ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitialMorphism Ap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "forall (A' : D) (p' : morphism C X (U _0 A')%object),\nContr {m : morphism D A A' & U _1 m o p = p'}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitialMorphism Ap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "forall (A' : D) (p' : morphism C X (U _0 A')%object),\nContr {m : morphism D A A' & U _1 m o p = p'}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (morphism (X / U) Ap x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "forall (A' : D) (p' : morphism C X (U _0 A')%object),\nContr {m : morphism D A A' & U _1 m o p = p'}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "specialize (UniversalProperty (CommaCategory.b x) (CommaCategory.f x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (morphism (X / U) Ap x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        (** We want to preserve the computation rules for the morphisms, even though they're unique up to unique isomorphism. *)\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply istrunc_equiv_istrunc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?A <~> morphism (X / U) Ap x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr ?A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?A <~> morphism (X / U) Ap x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply CommaCategory.issig_morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr\n  {g\n  : morphism (NatCategory.Core.nat_category (S O)) \n      (CommaCategory.a Ap) (CommaCategory.a x)\n  &\n  {h : morphism D (CommaCategory.b Ap) (CommaCategory.b x) &\n  U _1 h o CommaCategory.f Ap = CommaCategory.f x o X _1 g}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply contr_inhabited_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp\n  {g\n  : morphism (NatCategory.Core.nat_category (S O)) \n      (CommaCategory.a Ap) (CommaCategory.a x)\n  &\n  {h : morphism D (CommaCategory.b Ap) (CommaCategory.b x) &\n  U _1 h o CommaCategory.f Ap = CommaCategory.f x o X _1 g}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g\n: morphism (NatCategory.Core.nat_category (S O)) (CommaCategory.a Ap)\n    (CommaCategory.a x)\n&\n{h : morphism D (CommaCategory.b Ap) (CommaCategory.b x) &\nU _1 h o CommaCategory.f Ap = CommaCategory.f x o X _1 g}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp\n  {g\n  : morphism (NatCategory.Core.nat_category (S O)) \n      (CommaCategory.a Ap) (CommaCategory.a x)\n  &\n  {h : morphism D (CommaCategory.b Ap) (CommaCategory.b x) &\n  U _1 h o CommaCategory.f Ap = CommaCategory.f x o X _1 g}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract univ_hprop_t UniversalProperty.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g\n: morphism (NatCategory.Core.nat_category (S O)) (CommaCategory.a Ap)\n    (CommaCategory.a x)\n&\n{h : morphism D (CommaCategory.b Ap) (CommaCategory.b x) &\nU _1 h o CommaCategory.f Ap = CommaCategory.f x o X _1 g}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "(exists tt).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h : morphism D (CommaCategory.b Ap) (CommaCategory.b x) &\nU _1 h o CommaCategory.f Ap = CommaCategory.f x o X _1 tt}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n            "
+    },
+    {
+      "_type": "sentence",
+      "contents": "(exists (@center _ UniversalProperty).1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "U\n_1 (center\n      {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}).1\no CommaCategory.f Ap = CommaCategory.f x o X _1 tt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "morphism C X (U _0 A)%object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ap"
+              ],
+              "body": "{| CommaCategory.a := tt; CommaCategory.b := A; CommaCategory.f := p |}",
+              "type": "CommaCategory.object !X U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(X / U)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UniversalProperty"
+              ],
+              "body": null,
+              "type": "Contr {m : morphism D A (CommaCategory.b x) & U _1 m o p = CommaCategory.f x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n            "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (progress rewrite ?right_identity, ?left_identity;\n                      exact (@center _ UniversalProperty).2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsInitialMorphism_curried\n                 (A : D)\n                 (p : morphism C X (U A))\n                 (Ap := CommaCategory.Build_object !X U tt A p)\n                 (m : forall (A' : D) (p' : morphism C X (U A')),\n                        morphism D A A')\n                 (H : forall (A' : D) (p' : morphism C X (U A')),\n                        U _1 (m A' p') o p = p')\n                 (H' : forall (A' : D) (p' : morphism C X (U A')) m',\n                         U _1 m' o p = p'\n                         -> m A' p' = m')\n      : IsInitialMorphism Ap\n        := Build_IsInitialMorphism\n             A\n             p\n             (fun A' p' =>\n                Build_Contr _ (m A' p'; H A' p')\n                              (fun m' => path_sigma\n                                 _\n                                 (m A' p'; H A' p')\n                                 m'\n                                 (H' A' p' m'.1 m'.2)\n                                 (center _))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      (** Projections from nested sigmas are currently rather slow.  We should just be able to do\n\n<<\n      Definition Build_IsInitialMorphism_uncurried\n                 (univ\n                  : { A : D\n                    | { p : morphism C X (U A)\n                       | let Ap := CommaCategory.Build_object !X U tt A p in\n                         forall (A' : D) (p' : morphism C X (U A')),\n                           { m : morphism D A A'\n                           | { H : U _1 m o p = p'\n                             | forall m',\n                                 U _1 m' o p = p'\n                                 -> m = m' }}}})\n        := @Build_IsInitialMorphism_curried\n             (univ.1)\n             (univ.2.1)\n             (fun A' p' => (univ.2.2 A' p').1)\n             (fun A' p' => (univ.2.2 A' p').2.1)\n             (fun A' p' => (univ.2.2 A' p').2.2).\n>>\n\n      But that's currently too slow.  (About 6-8 seconds, on my machine.)  So instead we factor out all of the type parts by hand, and then apply them after. *)\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let make_uncurried A' B' C' D' E'0\n          (E'1 : forall a a' b b' (c : C' a a'), D' a a' b b' c -> E'0 a a' -> Type)\n          (E' : forall a a' b b' (c : C' a a'), D' a a' b b' c -> E'0 a a' -> Type)\n          F'\n          (f : forall (a : A')\n                      (b : B' a)\n                      (c : forall (a' : A') (b' : B' a'),\n                             C' a a')\n                      (d : forall (a' : A') (b' : B' a'),\n                             D' a a' b b' (c a' b'))\n                      (e : forall (a' : A') (b' : B' a')\n                                  (e0 : E'0 a a')\n                                  (e1 : E'1 a a' b b' (c a' b') (d a' b') e0),\n                             E' a a' b b' (c a' b') (d a' b') e0),\n                 F' a b)\n          (univ\n           : { a : A'\n             | { b : B' a\n               | forall (a' : A') (b' : B' a'),\n                   { c : C' a a'\n                   | { d : D' a a' b b' c\n                     | forall (e0 : E'0 a a')\n                              (e1 : E'1 a a' b b' c d e0),\n                         E' a a' b b' c d e0 }}}})\n      : F' univ.1 univ.2.1\n        := f\n             (univ.1)\n             (univ.2.1)\n             (fun A' p' => (univ.2.2 A' p').1)\n             (fun A' p' => (univ.2.2 A' p').2.1)\n             (fun A' p' => (univ.2.2 A' p').2.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsInitialMorphism_uncurried\n      : forall (univ\n                : { A : D\n                  | { p : morphism C X (U A)\n                    | let Ap := CommaCategory.Build_object !X U tt A p in\n                      forall (A' : D) (p' : morphism C X (U A')),\n                        { m : morphism D A A'\n                        | { H : U _1 m o p = p'\n                          | forall m',\n                              U _1 m' o p = p'\n                              -> m = m' }}}}),\n          IsInitialMorphism (CommaCategory.Build_object !X U tt univ.1 univ.2.1)\n        := @make_uncurried\n             _ _ _ _ _ _ _ _\n             (@Build_IsInitialMorphism_curried).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End IntroductionAbstractionBarrier.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments Build_IsInitialMorphism : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments Build_IsInitialMorphism_curried : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments Build_IsInitialMorphism_uncurried : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** *** Elimination rule *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section EliminationAbstractionBarrier.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Ap : object (X / U).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsInitialMorphism_object (M : IsInitialMorphism Ap) : D\n        := CommaCategory.b Ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsInitialMorphism_morphism (M : IsInitialMorphism Ap)\n      : morphism C X (U (IsInitialMorphism_object M))\n        := CommaCategory.f Ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsInitialMorphism_property_morphism (M : IsInitialMorphism Ap)\n                 (Y : D) (f : morphism C X (U Y))\n      : morphism D (IsInitialMorphism_object M) Y\n        := CommaCategory.h\n             (@center _ (M (CommaCategory.Build_object !X U tt Y f))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsInitialMorphism_property_morphism_property\n                 (M : IsInitialMorphism Ap)\n                 (Y : D) (f : morphism C X (U Y))\n      : (U _1 (IsInitialMorphism_property_morphism M Y f))\n          o IsInitialMorphism_morphism M = f\n        := concat\n             (CommaCategory.p\n                (@center _ (M (CommaCategory.Build_object !X U tt Y f))))\n             (right_identity _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsInitialMorphism_property_morphism_unique\n                 (M : IsInitialMorphism Ap)\n                 (Y : D) (f : morphism C X (U Y))\n                 m'\n                 (H : U _1 m' o IsInitialMorphism_morphism M = f)\n      : IsInitialMorphism_property_morphism M Y f = m'\n        := ap\n             (@CommaCategory.h _ _ _ _ _ _ _)\n             (@contr _\n                     (M (CommaCategory.Build_object !X U tt Y f))\n                     (CommaCategory.Build_morphism\n                        Ap (CommaCategory.Build_object !X U tt Y f)\n                        tt m' (H @ (right_identity _ _ _ _)^)%path)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsInitialMorphism_property\n                 (M : IsInitialMorphism Ap)\n                 (Y : D) (f : morphism C X (U Y))\n      : Contr { m : morphism D (IsInitialMorphism_object M) Y\n              | U _1 m o IsInitialMorphism_morphism M = f }\n        := Build_Contr _ (IsInitialMorphism_property_morphism M Y f;\n                         IsInitialMorphism_property_morphism_property M Y f)\n              (fun m' => path_sigma\n                            _\n                            (IsInitialMorphism_property_morphism M Y f;\n                             IsInitialMorphism_property_morphism_property M Y f)\n                            m'\n                            (@IsInitialMorphism_property_morphism_unique M Y f m'.1 m'.2)\n                            (center _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End EliminationAbstractionBarrier.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments IsInitialMorphism_object : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments IsInitialMorphism_morphism : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments IsInitialMorphism_property : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments IsInitialMorphism_property_morphism : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments IsInitialMorphism_property_morphism_property : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments IsInitialMorphism_property_morphism_unique : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End InitialMorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Terminal morphisms *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section TerminalMorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** *** Definition *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable U : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** A terminal morphism from [U] to [X] is a terminal object in\n       the comma category [(U \u2193 X)] of morphisms from [U] to [X].  In\n       other words, it consists of a pair [(A, \u03c6)] where [A] is an\n       object of [D] and [\u03c6 : U A -> X] is a morphism in [C], such\n       that the following terminal property is satisfied:\n\n       - Whenever [Y] is an object of [D] and [f : U Y -> X] is a\n         morphism in [C], then there exists a unique morphism [g : Y\n         -> A] such that the following diagram commutes:\n\n<<\n         Y      U Y\n         .       . \\\n       g .   U g .   \\  f\n         .       .     \\\n         \u2193       \u2193       \u2198\n         A      U A -----> X\n                      \u03c6\n>>\n       *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation op_object Ap\n      := (CommaCategory.Build_object\n            (Functors.from_terminal C^op X) (U^op)\n            (CommaCategory.b (Ap : object (U / X)))\n            (CommaCategory.a (Ap : object (U / X)))\n            (CommaCategory.f (Ap : object (U / X)))\n          : object ((X : object C^op) / U^op)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsTerminalMorphism (Ap : object (U / X)) : Type\n      := @IsInitialMorphism\n           (C^op)\n           _\n           X\n           (U^op)\n           (op_object Ap).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** *** Introduction rule *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section IntroductionAbstractionBarrier.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsTerminalMorphism\n      : forall\n          (*(Ap : Object (U \u2193 X))*)\n          (A : D)(* := CommaCategory.a Ap*)\n          (p : morphism C (U A) X)(*:= CommaCategory.f Ap*)\n          (Ap := CommaCategory.Build_object U !X A tt p)\n          (UniversalProperty\n           : forall (A' : D) (p' : morphism C (U A') X),\n               Contr { m : morphism D A' A\n                     | p o U _1 m = p' }),\n          IsTerminalMorphism Ap\n        := @Build_IsInitialMorphism\n             (C^op)\n             (D^op)\n             X\n             (U^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsTerminalMorphism_curried\n      : forall\n          (A : D)\n          (p : morphism C (U A) X)\n          (Ap := CommaCategory.Build_object U !X A tt p)\n          (m : forall (A' : D) (p' : morphism C (U A') X),\n                 morphism D A' A)\n          (H : forall (A' : D) (p' : morphism C (U A') X),\n                 p o U _1 (m A' p') = p')\n          (H' : forall (A' : D) (p' : morphism C (U A') X) m',\n                  p o U _1 m' = p'\n                  -> m A' p' = m'),\n          IsTerminalMorphism Ap\n        := @Build_IsInitialMorphism_curried\n             (C^op)\n             (D^op)\n             X\n             (U^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsTerminalMorphism_uncurried\n      : forall\n          (univ : { A : D\n                  | { p : morphism C (U A) X\n                    | let Ap := CommaCategory.Build_object U !X A tt p in\n                      forall (A' : D) (p' : morphism C (U A') X),\n                        { m : morphism D A' A\n                        | { H : p o U _1 m = p'\n                          | forall m',\n                              p o U _1 m' = p'\n                              -> m = m' }}}}),\n          IsTerminalMorphism (CommaCategory.Build_object U !X univ.1 tt univ.2.1)\n        := @Build_IsInitialMorphism_uncurried\n             (C^op)\n             (D^op)\n             X\n             (U^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End IntroductionAbstractionBarrier.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** *** Elimination rule *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section EliminationAbstractionBarrier.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Ap : object (U / X).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable M : IsTerminalMorphism Ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsTerminalMorphism_object : D :=\n        @IsInitialMorphism_object C^op D^op X U^op (op_object Ap) M.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsTerminalMorphism_morphism\n      : morphism C (U IsTerminalMorphism_object) X\n        := @IsInitialMorphism_morphism C^op D^op X U^op (op_object Ap) M.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsTerminalMorphism_property\n      : forall (Y : D) (f : morphism C (U Y) X),\n          Contr { m : morphism D Y IsTerminalMorphism_object\n                | IsTerminalMorphism_morphism o U _1 m = f }\n        := @IsInitialMorphism_property C^op D^op X U^op (op_object Ap) M.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsTerminalMorphism_property_morphism\n      : forall (Y : D) (f : morphism C (U Y) X),\n          morphism D Y IsTerminalMorphism_object\n        := @IsInitialMorphism_property_morphism\n             C^op D^op X U^op (op_object Ap) M.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsTerminalMorphism_property_morphism_property\n      : forall (Y : D) (f : morphism C (U Y) X),\n          IsTerminalMorphism_morphism\n            o (U _1 (IsTerminalMorphism_property_morphism Y f))\n          = f\n        := @IsInitialMorphism_property_morphism_property\n             C^op D^op X U^op (op_object Ap) M.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsTerminalMorphism_property_morphism_unique\n      : forall (Y : D) (f : morphism C (U Y) X)\n               m'\n               (H : IsTerminalMorphism_morphism o U _1 m' = f),\n          IsTerminalMorphism_property_morphism Y f = m'\n        := @IsInitialMorphism_property_morphism_unique\n             C^op D^op X U^op (op_object Ap) M.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End EliminationAbstractionBarrier.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End TerminalMorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section UniversalMorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** The term universal morphism refers either to an initial\n        morphism or a terminal morphism, and the term universal\n        property refers either to an initial property or a terminal\n        property.  In each definition, the existence of the morphism\n        [g] intuitively expresses the fact that [(A, \u03c6)] is ``general\n        enough'', while the uniqueness of the morphism ensures that\n        [(A, \u03c6)] is ``not too general''.  *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End UniversalMorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End UniversalMorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments Build_IsInitialMorphism [C D] X U A p UniversalProperty _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments Build_IsTerminalMorphism [C D] U X A p UniversalProperty _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

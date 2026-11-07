@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Utf8.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> HoTT.Basics.Utf8.</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> HoTT.Basics.Utf8.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> HoTT.Utf8Minimal.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Modalities.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Spaces.Circle Spaces.TwoSphere HoTT.Truncations Homotopy.Suspension.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** Some Unicode symbols that we don't use within the library.  See also Utf8Minimal.v for a small number of symbols uses in the Classes library. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">Type₀</span> := Type0.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">pr₁</span> := pr1.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">pr₂</span> := pr2.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> fibration_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="c">(*Notation "f → g" := (f -&gt; g)%equiv : equiv_scope.*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"x ₁"</span> := (x.<span class="mi">1</span>) : fibration_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"x ₂"</span> := (x.<span class="mi">2</span>) : fibration_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"g ∘ f"</span> := (g o f)%function : function_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="c">(* Notation "g ∘ᴱ f" := (g oE f)%equiv : equiv_scope. *)</span>
+<span class="c">(* Notation "f *ᴱ g" := (f *E g)%equiv : equiv_scope. *)</span>
+<span class="c">(* Notation "f ×ᴱ g" := (f *E g)%equiv : equiv_scope. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"A × B"</span> := (A * B)%type : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"f +ᴱ g"</span> := (f +E g)%equiv : equiv_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** We copy the HoTT-Agda library with regard to path concatenation. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"p • q"</span> := (p @ q)%path : path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"p '⁻¹'"</span> := (p^)%path : path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"p •' q"</span> := (p @ q)%path : long_path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** Add error messages so people aren't intensely confused by using an almost identical character. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">"∙"</span> := <span class="kp">ltac</span>:(<span class="kp">fail</span> <span class="s2">"You used '∙' (BULLET OPERATOR, #x2219) when you probably meant to use '•' (BULLET, #x2022)"</span>) (<span class="kn">only parsing</span>) : path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="c">(*Notation "p # x" := (transport _ p x) : path_scope.*)</span>
+<span class="c">(*Notation "f == g" := (pointwise_paths f g) : type_scope.*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"A ≃ B"</span> := (A &lt;~&gt; B) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"f '⁻¹'"</span> := (f^-<span class="mi">1</span>)%function : function_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"f '⁻¹'"</span> := (f^-<span class="mi">1</span>)%equiv : equiv_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"¬ x"</span> := (~x) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"x ≠ y"</span> := (x &lt;&gt; y) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="c">(*Notation "p @@ q" := (concat2 p q)%path  : path_scope.*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"m ≤ n"</span> := (m &lt;= n)%trunc : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="c">(*Infix "||" := orb : bool_scope.*)</span>
+<span class="c">(*Infix "&amp;&amp;" := andb : bool_scope.*)</span>
+<span class="c">(*Notation "p ..1" := (pr1_path p) : fibration_scope.*)</span>
+<span class="c">(*Notation "p ..2" := (pr2_path p) : fibration_scope.*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"'S¹'"</span> := Circle.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"'S²'"</span> := TwoSphere.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"∥ A ∥₋₂"</span> := (Trunc (-<span class="mi">2</span>) A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"❘ a ❘₋₂"</span> := (@tr (-<span class="mi">2</span>) _ a) : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"∥ A ∥"</span> := (Trunc (-<span class="mi">1</span>) A) (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"∥ A ∥₋₁"</span> := (Trunc (-<span class="mi">1</span>) A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"❘ a ❘₋₁"</span> := (@tr (-<span class="mi">1</span>) _ a) : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"x ∨ y"</span> := (hor x y) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="c">(* Notation "x ⊔ y" := (sum x y) : type_scope. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"∥ A ∥₀"</span> := (Trunc <span class="mi">0</span> A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"❘ a ❘₀"</span> := (@tr <span class="mi">0</span> _ a) : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"∥ A ∥₁"</span> := (Trunc <span class="mi">1</span> A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"❘ a ❘₁"</span> := (@tr <span class="mi">1</span> _ a) : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"∥ A ∥₂"</span> := (Trunc <span class="mi">2</span> A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"❘ a ❘₂"</span> := (@tr <span class="mi">2</span> _ a) : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">"∞"</span> := purely.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">Σ</span> := Susp.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

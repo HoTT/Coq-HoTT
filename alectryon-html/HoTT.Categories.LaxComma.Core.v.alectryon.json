@@ -1,0 +1,1168 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Lax Comma Category *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import InitialTerminalCategory.Core InitialTerminalCategory.Pseudofunctors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Pseudofunctor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Strict.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pseudofunctor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require LaxComma.CoreLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Functor.Identity.FunctorIdentityNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Pseudofunctor.Identity.PseudofunctorIdentityNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import LaxComma.CoreLaws.LaxCommaCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting David Spivak:\n\n    David: ok\n       so an object of [FC \u21d3 D] is a pair [(X, G)], where [X] is a\n       finite category (or a small category or whatever you wanted)\n       and [G : X --> D] is a functor.\n       a morphism in [FC \u21d3 D] is a ``natural transformation diagram''\n       (as opposed to a commutative diagram, in which the natural\n       transformation would be ``identity'')\n       so a map in [FC \u21d3 D] from [(X, G)] to [(X', G')] is a pair\n       [(F, \u03b1)] where [F : X --> X'] is a functor and\n       [\u03b1 : G --> G' \u2218 F] is a natural transformation\n       and the punchline is that there is a functor\n       [colim : FC \u21d3 D --> D]\n\n     David: consider for yourself the case where [F : X --> X'] is\n       identity ([X = X']) and (separately) the case where\n       [\u03b1 : G --> G \u2218 F] is identity.\n       the point is, you've already done the work to get this colim\n       functor.\n       because every map in [FC \u21d3 D] can be written as a composition\n       of two maps, one where the [F]-part is identity and one where\n       the [\u03b1]-part is identity.\n       and you've worked both of those cases out already.\n       *)\n\n(** ** Definition of Lax Comma Category *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lax_comma_category `{Funext} A B\n           (S : Pseudofunctor A) (T : Pseudofunctor B)\n           `{forall a b, IsHSet (Functor (S a) (T b))}\n: PreCategory\n  := @Build_PreCategory\n       (@object _ _ _ S T)\n       (@morphism _ _ _ S T)\n       (@identity _ _ _ S T)\n       (@compose _ _ _ S T)\n       (@associativity _ _ _ S T)\n       (@left_identity _ _ _ S T)\n       (@right_identity _ _ _ S T)\n       _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition oplax_comma_category `{Funext} A B\n           (S : Pseudofunctor A) (T : Pseudofunctor B)\n           `{forall a b, IsHSet (Functor (S a) (T b))}\n: PreCategory\n  := (lax_comma_category S T)^op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isstrict_lax_comma_category `{Funext} A B\n       (S : Pseudofunctor A) (T : Pseudofunctor B)\n       `{IsStrictCategory A, IsStrictCategory B}\n       `{forall a b, IsHSet (Functor (S a) (T b))}\n: IsStrictCategory (@lax_comma_category _ A B S T _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsStrictCategory (lax_comma_category S T)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsStrictCategory0"
+              ],
+              "body": null,
+              "type": "IsStrictCategory A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsStrictCategory1"
+              ],
+              "body": null,
+              "type": "IsStrictCategory B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsStrictCategory (lax_comma_category S T)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsStrictCategory0"
+              ],
+              "body": null,
+              "type": "IsStrictCategory A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsStrictCategory1"
+              ],
+              "body": null,
+              "type": "IsStrictCategory B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "typeclasses eauto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isstrict_oplax_comma_category `{fs : Funext} A B S T HA HB H\n: IsStrictCategory (@oplax_comma_category fs A B S T H)\n  := @isstrict_lax_comma_category fs A B S T HA HB H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*  Section category.\n    Context `{IsCategory A, IsCategory B}.\n    (*Context `{Funext}. *)\n\n    Definition comma_category_isotoid (x y : comma_category)\n    : x \u2245 y -> x = y.\n    Proof.\n      intro i.\n      destruct i as [i [i' ? ?]].\n      hnf in *.\n      destruct i, i'.\n      simpl in *.\n    #[export] Instance comma_category_IsCategory `{IsCategory A, IsCategory B}\n    : IsCategory comma_category.\n    Proof.\n      hnf.\n      unfold IsStrictCategory in *.\n      typeclasses eauto.\n    Qed.\n  End category.\n *)\n\n(** ** Definition of Lax (Co)Slice Category *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section lax_slice_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A a : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable S : Pseudofunctor A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{forall a0, IsHSet (Functor (S a0) a)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{forall a0, IsHSet (Functor a (S a0))}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lax_slice_category : PreCategory := lax_comma_category S !a.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lax_coslice_category : PreCategory := lax_comma_category !a S.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition oplax_slice_category : PreCategory := oplax_comma_category S !a.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition oplax_coslice_category : PreCategory := oplax_comma_category !a S.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [x \u2193 F] is a coslice category; [F \u2193 x] is a slice category; [x \u2193 F] deals with morphisms [x -> F y]; [F \u2193 x] has morphisms [F y -> x] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End lax_slice_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments lax_slice_category {_} [A] a S {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments lax_coslice_category {_} [A] a S {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments oplax_slice_category {_} [A] a S {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments oplax_coslice_category {_} [A] a S {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition of Lax (Co)Slice Category Over *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section lax_slice_category_over.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : PreCategory -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation cat := (@sub_pre_cat _ P HF).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable a : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{forall a0 : cat, IsHSet (Functor a0.1 a)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{forall a0 : cat, IsHSet (Functor a a0.1)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lax_slice_category_over : PreCategory := @lax_slice_category _ cat a (Pseudofunctor.Identity.identity P) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lax_coslice_category_over : PreCategory := @lax_coslice_category _ cat a (Pseudofunctor.Identity.identity P) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition oplax_slice_category_over : PreCategory := @oplax_slice_category _ cat a (Pseudofunctor.Identity.identity P) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition oplax_coslice_category_over : PreCategory := @oplax_coslice_category _ cat a (Pseudofunctor.Identity.identity P) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End lax_slice_category_over.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments lax_slice_category_over {_} P {HF} a {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments lax_coslice_category_over {_} P {HF} a {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments oplax_slice_category_over {_} P {HF} a {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments oplax_coslice_category_over {_} P {HF} a {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition of Lax (Co)Slice Arrow Category *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section lax_arrow_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : PreCategory -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation cat := (@sub_pre_cat _ P HF).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lax_arrow_category : PreCategory := @lax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (fun C D => HF C.2 D.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition oplax_arrow_category : PreCategory := @oplax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (fun C D => HF C.2 D.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End lax_arrow_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments lax_arrow_category {_} P {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments oplax_arrow_category {_} P {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export LaxCommaCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We play some games to get nice notations for lax comma categories. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section tc_notation_boiler_plate.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class LCC_Builder {A B C} (x : A) (y : B) (z : C) : Set := lcc_builder_dummy : Unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition get_LCC `{@LCC_Builder A B C x y z} : C := z.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments get_LCC / {A B C} x y {z} {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance LCC_comma `{Funext} A B\n           (S : Pseudofunctor A) (T : Pseudofunctor B)\n           {_ : forall a b, IsHSet (Functor (S a) (T b))}\n    : LCC_Builder S T (lax_comma_category S T) | 1000\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance LCC_slice `{Funext} A x (F : Pseudofunctor A)\n           `{forall a0, IsHSet (Functor (F a0) x)}\n    : LCC_Builder F x (lax_slice_category x F) | 100\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance LCC_coslice `{Funext} A x (F : Pseudofunctor A)\n           `{forall a0, IsHSet (Functor x (F a0))}\n    : LCC_Builder x F (lax_coslice_category x F) | 100\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance LCC_slice_over `{Funext}\n           P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}\n           a\n           `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a0.1 a)}\n    : LCC_Builder a (@sub_pre_cat _ P HF) (@lax_slice_category_over _ P HF a _) | 10\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance LCC_coslice_over `{Funext}\n           P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}\n           a\n           `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a a0.1)}\n    : LCC_Builder (@sub_pre_cat _ P HF) a (@lax_coslice_category_over _ P HF a _) | 10\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class OLCC_Builder {A B C} (x : A) (y : B) (z : C) : Set := olcc_builder_dummy : Unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition get_OLCC `{@OLCC_Builder A B C x y z} : C := z.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments get_OLCC / {A B C} x y {z} {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance OLCC_comma `{Funext} A B\n           (S : Pseudofunctor A) (T : Pseudofunctor B)\n           {_ : forall a b, IsHSet (Functor (S a) (T b))}\n    : OLCC_Builder S T (lax_comma_category S T) | 1000\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance OLCC_slice `{Funext} A x (F : Pseudofunctor A)\n           `{forall a0, IsHSet (Functor (F a0) x)}\n    : OLCC_Builder F x (lax_slice_category x F) | 100\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance OLCC_coslice `{Funext} A x (F : Pseudofunctor A)\n           `{forall a0, IsHSet (Functor x (F a0))}\n    : OLCC_Builder x F (lax_coslice_category x F) | 100\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance OLCC_slice_over `{Funext}\n           P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}\n           a\n           `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a0.1 a)}\n    : OLCC_Builder a (@sub_pre_cat _ P HF) (@lax_slice_category_over _ P HF a _) | 10\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance OLCC_coslice_over `{Funext}\n           P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}\n           a\n           `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a a0.1)}\n    : OLCC_Builder (@sub_pre_cat _ P HF) a (@lax_coslice_category_over _ P HF a _) | 10\n      := tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End tc_notation_boiler_plate.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We really want to use infix [\u21d3] and [\u21d1] for lax comma categories, but that's Unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [//] of [\u21d3] and [\\\\] for [\u21d1]. *)\n  (** Set some notations for printing *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"'CAT' // a\" := (@lax_slice_category_over _ _ _ a _) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"a // 'CAT'\" := (@lax_coslice_category_over _ _ _ a _) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x // F\" := (lax_coslice_category x F) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"F // x\" := (lax_slice_category x F) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"S // T\" := (lax_comma_category S T) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"S // T\" := (get_LCC S T) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"'CAT' \\\\ a\" := (@oplax_slice_category_over _ _ _ a _) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"a \\\\ 'CAT'\" := (@oplax_coslice_category_over _ _ _ a _) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \\\\ F\" := (oplax_coslice_category x F) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"F \\\\ x\" := (oplax_slice_category x F) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"S \\\\ T\" := (oplax_comma_category S T) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"S \\\\ T\" := (get_OLCC S T) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End LaxCommaCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

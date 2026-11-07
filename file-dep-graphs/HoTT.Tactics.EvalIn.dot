@@ -1,0 +1,19 @@
+digraph HoTT_Tactics_EvalIn {
+  graph [ratio=0.5]
+  node [style=filled]
+EvalIn_dummy_sind [label="dummy_sind", URL=<EvalIn.html#dummy_sind>, peripheries=3, fillcolor="#F070D1"] ;
+EvalIn_dummy_rec [label="dummy_rec", URL=<EvalIn.html#dummy_rec>, peripheries=3, fillcolor="#F070D1"] ;
+EvalIn_dummy_ind [label="dummy_ind", URL=<EvalIn.html#dummy_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+EvalIn_dummy_rect [label="dummy_rect", URL=<EvalIn.html#dummy_rect>, fillcolor="#F070D1"] ;
+EvalIn_adummy [label="adummy", URL=<EvalIn.html#adummy>, fillcolor="#7FAAFF"] ;
+EvalIn_dummy [label="dummy", URL=<EvalIn.html#dummy>, fillcolor="#E2CDFA"] ;
+  EvalIn_dummy_sind -> EvalIn_adummy [] ;
+  EvalIn_dummy_sind -> EvalIn_dummy [] ;
+  EvalIn_dummy_rec -> EvalIn_dummy_rect [] ;
+  EvalIn_dummy_ind -> EvalIn_adummy [] ;
+  EvalIn_dummy_ind -> EvalIn_dummy [] ;
+  EvalIn_dummy_rect -> EvalIn_adummy [] ;
+  EvalIn_dummy_rect -> EvalIn_dummy [] ;
+subgraph cluster_EvalIn { label="EvalIn"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+EvalIn_dummy; EvalIn_adummy; EvalIn_dummy_rect; EvalIn_dummy_ind; EvalIn_dummy_rec; EvalIn_dummy_sind; };
+} /* END */

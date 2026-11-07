@@ -1,0 +1,42 @@
+digraph HoTT_Algebra_AbGroups_AbPushout {
+  graph [ratio=0.5]
+  node [style=filled]
+AbPushout_ab_pushout_surjection_inr [label="ab_pushout_surjection_inr", URL=<AbPushout.html#ab_pushout_surjection_inr>, peripheries=3, fillcolor="#F070D1"] ;
+AbPushout_functor_ab_pushout [label="functor_ab_pushout", URL=<AbPushout.html#functor_ab_pushout>, peripheries=3, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_embedding_inl [label="ab_pushout_embedding_inl", URL=<AbPushout.html#ab_pushout_embedding_inl>, peripheries=3, fillcolor="#F070D1"] ;
+AbPushout_path_ab_pushout [label="path_ab_pushout", URL=<AbPushout.html#path_ab_pushout>, fillcolor="#F070D1"] ;
+AbPushout_isequiv_ab_pushout_rec [label="isequiv_ab_pushout_rec", URL=<AbPushout.html#isequiv_ab_pushout_rec>, peripheries=3, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_rec_beta_right [label="ab_pushout_rec_beta_right", URL=<AbPushout.html#ab_pushout_rec_beta_right>, peripheries=3, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_rec_beta_left [label="ab_pushout_rec_beta_left", URL=<AbPushout.html#ab_pushout_rec_beta_left>, peripheries=3, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_rec_beta [label="ab_pushout_rec_beta", URL=<AbPushout.html#ab_pushout_rec_beta>, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_commsq [label="ab_pushout_commsq", URL=<AbPushout.html#ab_pushout_commsq>, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_inr [label="ab_pushout_inr", URL=<AbPushout.html#ab_pushout_inr>, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_inl [label="ab_pushout_inl", URL=<AbPushout.html#ab_pushout_inl>, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_rec_uncurried [label="ab_pushout_rec_uncurried", URL=<AbPushout.html#ab_pushout_rec_uncurried>, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_rec [label="ab_pushout_rec", URL=<AbPushout.html#ab_pushout_rec>, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout [label="ab_pushout", URL=<AbPushout.html#ab_pushout>, fillcolor="#F070D1"] ;
+AbPushout_ab_pushout_subgroup [label="ab_pushout_subgroup", URL=<AbPushout.html#ab_pushout_subgroup>, fillcolor="#F070D1"] ;
+  AbPushout_ab_pushout_surjection_inr -> AbPushout_ab_pushout_commsq [] ;
+  AbPushout_functor_ab_pushout -> AbPushout_ab_pushout_commsq [] ;
+  AbPushout_functor_ab_pushout -> AbPushout_ab_pushout_rec [] ;
+  AbPushout_ab_pushout_embedding_inl -> AbPushout_path_ab_pushout [] ;
+  AbPushout_ab_pushout_embedding_inl -> AbPushout_ab_pushout_inl [] ;
+  AbPushout_path_ab_pushout -> AbPushout_ab_pushout [] ;
+  AbPushout_isequiv_ab_pushout_rec -> AbPushout_ab_pushout_rec_beta [] ;
+  AbPushout_isequiv_ab_pushout_rec -> AbPushout_ab_pushout_rec_uncurried [] ;
+  AbPushout_ab_pushout_rec_beta_right -> AbPushout_ab_pushout_inr [] ;
+  AbPushout_ab_pushout_rec_beta_right -> AbPushout_ab_pushout_rec [] ;
+  AbPushout_ab_pushout_rec_beta_left -> AbPushout_ab_pushout_inl [] ;
+  AbPushout_ab_pushout_rec_beta_left -> AbPushout_ab_pushout_rec [] ;
+  AbPushout_ab_pushout_rec_beta -> AbPushout_ab_pushout_commsq [] ;
+  AbPushout_ab_pushout_rec_beta -> AbPushout_ab_pushout_rec [] ;
+  AbPushout_ab_pushout_commsq -> AbPushout_ab_pushout_inr [] ;
+  AbPushout_ab_pushout_commsq -> AbPushout_ab_pushout_inl [] ;
+  AbPushout_ab_pushout_inr -> AbPushout_ab_pushout [] ;
+  AbPushout_ab_pushout_inl -> AbPushout_ab_pushout [] ;
+  AbPushout_ab_pushout_rec_uncurried -> AbPushout_ab_pushout_rec [] ;
+  AbPushout_ab_pushout_rec -> AbPushout_ab_pushout [] ;
+  AbPushout_ab_pushout -> AbPushout_ab_pushout_subgroup [] ;
+subgraph cluster_AbPushout { label="AbPushout"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+AbPushout_ab_pushout_subgroup; AbPushout_ab_pushout; AbPushout_ab_pushout_rec; AbPushout_ab_pushout_rec_uncurried; AbPushout_ab_pushout_inl; AbPushout_ab_pushout_inr; AbPushout_ab_pushout_commsq; AbPushout_ab_pushout_rec_beta; AbPushout_ab_pushout_rec_beta_left; AbPushout_ab_pushout_rec_beta_right; AbPushout_isequiv_ab_pushout_rec; AbPushout_path_ab_pushout; AbPushout_ab_pushout_embedding_inl; AbPushout_functor_ab_pushout; AbPushout_ab_pushout_surjection_inr; };
+} /* END */

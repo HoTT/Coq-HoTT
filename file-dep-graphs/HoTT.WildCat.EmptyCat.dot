@@ -1,0 +1,16 @@
+digraph HoTT_WildCat_EmptyCat {
+  graph [ratio=0.5]
+  node [style=filled]
+EmptyCat_is1cat_empty [label="is1cat_empty", URL=<EmptyCat.html#is1cat_empty>, peripheries=3, fillcolor="#F070D1"] ;
+EmptyCat_is2graph_empty [label="is2graph_empty", URL=<EmptyCat.html#is2graph_empty>, fillcolor="#F070D1"] ;
+EmptyCat_is0gpd_empty [label="is0gpd_empty", URL=<EmptyCat.html#is0gpd_empty>, peripheries=3, fillcolor="#F070D1"] ;
+EmptyCat_is01cat_empty [label="is01cat_empty", URL=<EmptyCat.html#is01cat_empty>, fillcolor="#F070D1"] ;
+EmptyCat_isgraph_empty [label="isgraph_empty", URL=<EmptyCat.html#isgraph_empty>, fillcolor="#F070D1"] ;
+  EmptyCat_is1cat_empty -> EmptyCat_is2graph_empty [] ;
+  EmptyCat_is1cat_empty -> EmptyCat_is01cat_empty [] ;
+  EmptyCat_is2graph_empty -> EmptyCat_isgraph_empty [] ;
+  EmptyCat_is0gpd_empty -> EmptyCat_is01cat_empty [] ;
+  EmptyCat_is01cat_empty -> EmptyCat_isgraph_empty [] ;
+subgraph cluster_EmptyCat { label="EmptyCat"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+EmptyCat_isgraph_empty; EmptyCat_is01cat_empty; EmptyCat_is0gpd_empty; EmptyCat_is2graph_empty; EmptyCat_is1cat_empty; };
+} /* END */

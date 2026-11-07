@@ -1,0 +1,10 @@
+N: 1 "field_split2" [body=yes, kind=cnst, prop=no, path="fields", ];
+N: 4 "flip_lt_recip" [body=yes, kind=cnst, prop=no, path="fields", ];
+N: 3 "flip_lt_recip_l" [body=yes, kind=cnst, prop=no, path="fields", ];
+N: 2 "flip_lt_recip_r" [body=yes, kind=cnst, prop=no, path="fields", ];
+N: 5 "neg_recip_compat" [body=yes, kind=cnst, prop=no, path="fields", ];
+N: 6 "pos_recip_compat" [body=yes, kind=cnst, prop=no, path="fields", ];
+E: 2 3 [weight=1, ];
+E: 2 6 [weight=4, ];
+E: 3 4 [weight=1, ];
+E: 3 6 [weight=19, ];

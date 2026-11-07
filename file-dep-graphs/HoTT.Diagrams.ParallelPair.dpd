@@ -1,0 +1,6 @@
+N: 1 "Build_parallel_pair_cocone" [body=yes, kind=cnst, prop=no, path="ParallelPair", ];
+N: 2 "parallel_pair" [body=yes, kind=cnst, prop=no, path="ParallelPair", ];
+N: 3 "parallel_pair_graph" [body=yes, kind=cnst, prop=no, path="ParallelPair", ];
+E: 1 2 [weight=35, ];
+E: 1 3 [weight=14, ];
+E: 2 3 [weight=14, ];

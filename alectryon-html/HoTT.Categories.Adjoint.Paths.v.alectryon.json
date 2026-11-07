@@ -1,0 +1,1232 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Classify the path space of adjunctions *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.UnitCounit Adjoint.Core NaturalTransformation.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types Trunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section path_adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation adjunction_sig :=\n    { eta : NaturalTransformation 1 (G o F)\n    | { eps : NaturalTransformation (F o G) 1\n      | { equ1 : forall Y : C, (eps (F Y) o F _1 (eta Y))%morphism = 1%morphism\n        | forall X : D, (G _1 (eps X) o eta (G X))%morphism = 1%morphism }}}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Equivalence between record and nested sigma for unit+counit adjunctions *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma equiv_sig_adjunction\n  : adjunction_sig <~> (F -| G).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{eta : NaturalTransformation 1 (G o F) &\n{eps : NaturalTransformation (F o G) 1 &\n{_ : forall Y : C, eps (F _0 Y)%object o F _1 (eta Y) = 1 &\nforall X : D, G _1 (eps X) o eta (G _0 X)%object = 1}}} <~> \nF -| G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{eta : NaturalTransformation 1 (G o F) &\n{eps : NaturalTransformation (F o G) 1 &\n{_ : forall Y : C, eps (F _0 Y)%object o F _1 (eta Y) = 1 &\nforall X : D, G _1 (eps X) o eta (G _0 X)%object = 1}}} <~> \nF -| G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "issig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Adjunctions are an hSet *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance trunc_adjunction : IsHSet (F -| G).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (F -| G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (F -| G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply istrunc_equiv_istrunc; [ exact equiv_sig_adjunction | ].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet\n  {eta : NaturalTransformation 1 (G o F) &\n  {eps : NaturalTransformation (F o G) 1 &\n  {_ : forall Y : C, eps (F _0 Y)%object o F _1 (eta Y) = 1 &\n  forall X : D, G _1 (eps X) o eta (G _0 X)%object = 1}}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "typeclasses eauto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Equality of adjunctions follows from equality of unit+counit *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_adjunction' (A A' : F -| G)\n  : unit A = unit A'\n    -> counit A = counit A'\n    -> A = A'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "unit A = unit A' -> counit A = counit A' -> A = A'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "F -| G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "unit A = unit A' -> counit A = counit A' -> A = A'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "F -| G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = A'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "F -| G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "unit A = unit A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "counit A = counit A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct A, A'; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  unit := unit;\n  counit := counit;\n  unit_counit_equation_1 := unit_counit_equation_1;\n  unit_counit_equation_2 := unit_counit_equation_2\n|} =\n{|\n  unit := unit0;\n  counit := counit0;\n  unit_counit_equation_1 := unit_counit_equation_0;\n  unit_counit_equation_2 := unit_counit_equation_3\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit"
+              ],
+              "body": null,
+              "type": "NaturalTransformation 1 (G o F)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "counit"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (F o G) 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit_counit_equation_1"
+              ],
+              "body": null,
+              "type": "forall Y : C, counit (F _0 Y)%object o F _1 (unit Y) = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit_counit_equation_2"
+              ],
+              "body": null,
+              "type": "forall X1 : D, G _1 (counit X1) o unit (G _0 X1)%object = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit0"
+              ],
+              "body": null,
+              "type": "NaturalTransformation 1 (G o F)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "counit0"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (F o G) 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit_counit_equation_0"
+              ],
+              "body": null,
+              "type": "forall Y : C, counit0 (F _0 Y)%object o F _1 (unit0 Y) = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit_counit_equation_3"
+              ],
+              "body": null,
+              "type": "forall X1 : D, G _1 (counit0 X1) o unit0 (G _0 X1)%object = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "unit = unit0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "counit = counit0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_induction.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  unit := unit;\n  counit := counit;\n  unit_counit_equation_1 := unit_counit_equation_1;\n  unit_counit_equation_2 := unit_counit_equation_2\n|} =\n{|\n  unit := unit;\n  counit := counit;\n  unit_counit_equation_1 := unit_counit_equation_0;\n  unit_counit_equation_2 := unit_counit_equation_3\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit"
+              ],
+              "body": null,
+              "type": "NaturalTransformation 1 (G o F)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "counit"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (F o G) 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit_counit_equation_1"
+              ],
+              "body": null,
+              "type": "forall Y : C, counit (F _0 Y)%object o F _1 (unit Y) = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit_counit_equation_2"
+              ],
+              "body": null,
+              "type": "forall X : D, G _1 (counit X) o unit (G _0 X)%object = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit_counit_equation_0"
+              ],
+              "body": null,
+              "type": "forall Y : C, counit (F _0 Y)%object o F _1 (unit Y) = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unit_counit_equation_3"
+              ],
+              "body": null,
+              "type": "forall X : D, G _1 (counit X) o unit (G _0 X)%object = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap;\n      exact (center _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Equality of adjunctions follows from equality of action of unit+counit on objects *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_adjunction (A A' : F -| G)\n  : components_of (unit A) == components_of (unit A')\n    -> components_of (counit A) == components_of (counit A')\n    -> A = A'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "unit A == unit A' -> counit A == counit A' -> A = A'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "F -| G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "unit A == unit A' -> counit A == counit A' -> A = A'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "F -| G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = A'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "F -| G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "unit A == unit A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "counit A == counit A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_adjunction';\n    apply path_natural_transformation;\n    assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** In fact, it suffices to show that either the units are equal, or\n      the counits are equal, by the UMP of the (co)unit.  And if we\n      are working in a [Category], rather than a [PreCategory], then\n      [Adjunction] is, in fact, an hProp, because the (co)unit is\n      unique up to unique isomorphism.\n\n      TODO: Formalize this. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End path_adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac path_adjunction :=\n  repeat match goal with\n           | _ => intro\n           | _ => reflexivity\n           | _ => apply path_adjunction; simpl\n         end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

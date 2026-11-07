@@ -1,0 +1,15 @@
+findlib: [WARNING] cannot read directory /home/runner/work/Coq-HoTT/Coq-HoTT/_build/install/default/lib: No such file or directory
+[message] Configuration loaded from ./_CoqProject
+ - findlib: 40 search paths active
+   + findlib config: /nix/store/bh6xp6nab9y7xkqvidr79c5iq4ar2kp0-ocaml4.14.4-findlib-1.9.8/etc/findlib.conf
+   + findlib default location: /home/runner/work/Coq-HoTT/Coq-HoTT/outputs/out/lib/ocaml/4.14.4/site-lib/
+ - coqlib is at: /nix/store/w32xiz5l2wjgn8zmf6b9lkahs0sh6hxa-rocq-9.1.1/lib/coq
+   + 8 Coq path directory bindings in scope
+   + Modules [] will be loaded by default
+[message] compiling file ./theories/Homotopy/Join/JoinSusp.v
+[message] [goaldump plugin] dumping goals for ./theories/Homotopy/Join/JoinSusp.v ...
+[message] [goaldump plugin] dumping ast for ./theories/Homotopy/Join/JoinSusp.v was completed!
+[perfdata]
+{ num sentences: 87
+; stats: hashing: 0.000714 | parsing: 0.011028 | exec: 0.499082; cache: 
+   0 w 

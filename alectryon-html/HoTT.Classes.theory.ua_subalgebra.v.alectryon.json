@@ -1,0 +1,3663 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Universes.HProp\n  HoTT.Types\n  HoTT.Classes.theory.ua_homomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import algebra_notations ne_list.notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section closed_under_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext} {\u03c3} (A : Algebra \u03c3) (P : \u2200 s, A s \u2192 Type).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Let [\u03b1 : A s1 \u2192 A s2 \u2192 ... \u2192 A sn \u2192 A t] be an algebra\n      operation. Then [P] satisfies [ClosedUnderOp \u03b1] iff\n      for [x1 : A s1], [x2 : A s2], ..., [xn : A sn],\n\n<<\n      P s1 x1 \u2227 P s2 x2 \u2227 ... \u2227 P sn xn\n>>\n\n    implies\n\n<<\n      P t (\u03b1 x1 x2 ... xn)\n>>\n  *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint ClosedUnderOp {w : SymbolType \u03c3} : Operation A w \u2192 Type :=\n    match w with\n    | [:s:] => P s\n    | s ::: w' => \u03bb (\u03b1 : A s \u2192 Operation A w'),\n                    \u2200 (x : A s), P s x \u2192 ClosedUnderOp (\u03b1 x)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance trunc_closed_under_op {n} `{\u2200 s x, IsTrunc n (P s x)}\n    {w : SymbolType \u03c3} (\u03b1 : Operation A w)\n    : IsTrunc n (ClosedUnderOp \u03b1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n (ClosedUnderOp \u03b1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), IsTrunc n (P s x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "SymbolType \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A w"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n (ClosedUnderOp \u03b1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), IsTrunc n (P s x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "SymbolType \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A w"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction w; cbn; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsClosedUnderOps : Type\n    := \u2200 (u : Symbol \u03c3), ClosedUnderOp u.#A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance trunc_is_closed_under_ops\n    {n} `{\u2200 s x, IsTrunc n (P s x)}\n    : IsTrunc n IsClosedUnderOps.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n IsClosedUnderOps",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), IsTrunc n (P s x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n IsClosedUnderOps",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), IsTrunc n (P s x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply istrunc_forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End closed_under_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [P : \u2200 s, A s \u2192 Type] is a subalgebra predicate if it is closed\n    under operations [IsClosedUnderOps A P] and [P s x] is an h-prop. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section subalgebra_predicate.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context  {\u03c3} (A : Algebra \u03c3) (P : \u2200 s, A s \u2192 Type).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsSubalgebraPredicate\n    := BuildIsSubalgebraPredicate\n    { hprop_subalgebra_predicate :: \u2200 s x, IsHProp (P s x);\n      is_closed_under_ops_subalgebra_predicate : IsClosedUnderOps A P }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance hprop_is_subalgebra_predicate `{Funext}\n    : IsHProp IsSubalgebraPredicate.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp IsSubalgebraPredicate",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp IsSubalgebraPredicate",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_allpath.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : IsSubalgebraPredicate, x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [x1 x2] [y1 y2].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  hprop_subalgebra_predicate := x1;\n  is_closed_under_ops_subalgebra_predicate := x2\n|} =\n{|\n  hprop_subalgebra_predicate := y1;\n  is_closed_under_ops_subalgebra_predicate := y2\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), IsHProp (P s x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "IsClosedUnderOps A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y1"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), IsHProp (P s x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y2"
+              ],
+              "body": null,
+              "type": "IsClosedUnderOps A P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by destruct (path_ishprop x1 y1), (path_ishprop x2 y2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End subalgebra_predicate.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments BuildIsSubalgebraPredicate {\u03c3 A P hprop_subalgebra_predicate}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The next section defines subalgebra. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context\n    {\u03c3 : Signature} (A : Algebra \u03c3)\n    (P : \u2200 s, A s \u2192 Type) `{!IsSubalgebraPredicate A P}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The subalgebra carriers is the family of subtypes defined by [P]. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition carriers_subalgebra : Carriers \u03c3\n    := \u03bb (s : Sort \u03c3), {x | P s x}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Let [\u03b1 : A s1 \u2192 ... \u2192 A sn \u2192 A t] be an operation and let [C :\n    ClosedUnderOp A P \u03b1]. The corresponding subalgebra operation\n    [op_subalgebra \u03b1 C : (A&P) s1 \u2192 ... \u2192 (A&P) sn \u2192 (A&P) t] is\n    given by\n\n<<\n      op_subalgebra \u03b1 C (x1; p1) ... (xn; pn) =\n        (\u03b1 x1 ... xn; C x1 p1 x2 p2 ... xn pn).\n>>\n*)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint op_subalgebra {w : SymbolType \u03c3}\n    : \u2200 (\u03b1 : Operation A w),\n      ClosedUnderOp A P \u03b1 \u2192 Operation carriers_subalgebra w\n    := match w with\n       | [:t:] => \u03bb \u03b1 c, (\u03b1; c)\n       | s ::: w' => \u03bb \u03b1 c x, op_subalgebra (\u03b1 x.1) (c x.1 x.2)\n       end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The subalgebra operations [ops_subalgebra] are defined in terms of\n    [op_subalgebra]. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ops_subalgebra (u : Symbol \u03c3)\n    : Operation carriers_subalgebra (\u03c3 u)\n    := op_subalgebra u.#A (is_closed_under_ops_subalgebra_predicate A P u).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Subalgebra : Algebra \u03c3\n    := BuildAlgebra carriers_subalgebra ops_subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance trunc_subalgebra {n : trunc_index}\n    `{!IsTruncAlgebra n.+1 A}\n    : IsTruncAlgebra n.+1 Subalgebra.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTruncAlgebra n.+1 Subalgebra",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTruncAlgebra n.+1 Subalgebra",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (hprop_subalgebra_predicate A P).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTruncAlgebra n.+1 Subalgebra",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), IsHProp (P s x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 (Subalgebra s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), IsHProp (P s0 x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply @istrunc_sigma.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 (A s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), IsHProp (P s0 x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : A s, IsTrunc n.+1 (P s a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), IsHProp (P s0 x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 (A s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), IsHProp (P s0 x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : A s, IsTrunc n.+1 (P s a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), IsHProp (P s0 x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 (P s a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), IsHProp (P s0 x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module subalgebra_notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"A && P\" := (Subalgebra A P) : Algebra_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End subalgebra_notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import subalgebra_notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The following section defines the inclusion homomorphism\n    [Homomorphism (A&P) A], and some related results. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section hom_inc_subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context\n    {\u03c3 : Signature} (A : Algebra \u03c3)\n    (P : \u2200 s, A s \u2192 Type) `{!IsSubalgebraPredicate A P}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition def_inc_subalgebra (s : Sort \u03c3) : (A&&P) s \u2192 A s\n    := pr1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma oppreserving_inc_subalgebra {w : SymbolType \u03c3}\n    (\u03b1 : Operation A w) (C : ClosedUnderOp A P \u03b1)\n    : OpPreserving def_inc_subalgebra (op_subalgebra A P \u03b1 C) \u03b1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "OpPreserving def_inc_subalgebra (op_subalgebra A P \u03b1 C) \u03b1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "SymbolType \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A w"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "ClosedUnderOp A P \u03b1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "OpPreserving def_inc_subalgebra (op_subalgebra A P \u03b1 C) \u03b1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "SymbolType \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A w"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "ClosedUnderOp A P \u03b1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction w.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "OpPreserving def_inc_subalgebra (op_subalgebra A P \u03b1 C) \u03b1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A [:t:]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "ClosedUnderOp A P \u03b1"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "OpPreserving def_inc_subalgebra (op_subalgebra A P \u03b1 C) \u03b1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "ne_list (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A (t ::: w)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "ClosedUnderOp A P \u03b1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHw"
+              ],
+              "body": null,
+              "type": "forall (\u03b10 : Operation A w) (C0 : ClosedUnderOp A P \u03b10),\nOpPreserving def_inc_subalgebra (op_subalgebra A P \u03b10 C0) \u03b10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "OpPreserving def_inc_subalgebra (op_subalgebra A P \u03b1 C) \u03b1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A [:t:]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "ClosedUnderOp A P \u03b1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "OpPreserving def_inc_subalgebra (op_subalgebra A P \u03b1 C) \u03b1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "ne_list (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A (t ::: w)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "ClosedUnderOp A P \u03b1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHw"
+              ],
+              "body": null,
+              "type": "forall (\u03b10 : Operation A w) (C0 : ClosedUnderOp A P \u03b10),\nOpPreserving def_inc_subalgebra (op_subalgebra A P \u03b10 C0) \u03b10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "OpPreserving def_inc_subalgebra (op_subalgebra A P \u03b1 C x)\n  (\u03b1 (def_inc_subalgebra t x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "ne_list (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03b1"
+              ],
+              "body": null,
+              "type": "Operation A (t ::: w)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "ClosedUnderOp A P \u03b1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHw"
+              ],
+              "body": null,
+              "type": "forall (\u03b10 : Operation A w) (C0 : ClosedUnderOp A P \u03b10),\nOpPreserving def_inc_subalgebra (op_subalgebra A P \u03b10 C0) \u03b10"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(A && P) t"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IHw.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance is_homomorphism_inc_subalgebra\n    : IsHomomorphism def_inc_subalgebra.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHomomorphism def_inc_subalgebra",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHomomorphism def_inc_subalgebra",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "OpPreserving def_inc_subalgebra u.#(A && P) u.#A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "Symbol \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply oppreserving_inc_subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hom_inc_subalgebra : Homomorphism (A&&P) A\n    := BuildHomomorphism def_inc_subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma is_isomorphism_inc_improper_subalgebra\n    (improper : \u2200 s (x : A s), P s x)\n    : IsIsomorphism hom_inc_subalgebra.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism hom_inc_subalgebra",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), P s x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsIsomorphism hom_inc_subalgebra",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), P s x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (hom_inc_subalgebra s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), P s0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (isequiv_adjointify _ (\u03bb x, (x; improper s x)) _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(\u03bb x : A s, hom_inc_subalgebra s (x; improper s x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), P s0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(\u03bb x : {x : _ & P s x},\n (hom_inc_subalgebra s x; improper s (hom_inc_subalgebra s x))) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), P s0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(\u03bb x : A s, hom_inc_subalgebra s (x; improper s x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), P s0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hom_inc_subalgebra s (x; improper s x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x0 : A s0), P s0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(\u03bb x : {x : _ & P s x},\n (hom_inc_subalgebra s x; improper s (hom_inc_subalgebra s x))) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x : A s0), P s0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(hom_inc_subalgebra s x; improper s (hom_inc_subalgebra s x)) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSubalgebraPredicate0"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "improper"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x0 : A s0), P s0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "{x : _ & P s x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply path_sigma_hprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End hom_inc_subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The next section provides paths between subalgebras. These paths\n    are convenient to have because the implicit type-class argument\n    [IsClosedUnderOps] of [Subalgebra] is complicating things. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section path_subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context\n    {\u03c3 : Signature} (A : Algebra \u03c3)\n    (P : \u2200 s, A s \u2192 Type) {CP : IsSubalgebraPredicate A P}\n    (Q : \u2200 s, A s \u2192 Type) {CQ : IsSubalgebraPredicate A Q}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_subalgebra `{Funext} (p : P = Q) : A&&P = A&&Q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A && P = A && Q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CP"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CQ"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P = Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A && P = A && Q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CP"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CQ"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P = Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by destruct p, (path_ishprop CP CQ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_subalgebra_iff `{Univalence} (R : \u2200 s x, P s x <-> Q s x)\n    : A&&P = A&&Q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A && P = A && Q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CP"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CQ"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), P s x <-> Q s x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A && P = A && Q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CP"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CQ"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), P s x <-> Q s x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_subalgebra.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P = Q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CP"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, A s -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CQ"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x : A s), P s x <-> Q s x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext s x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P s x = Q s x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CP"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CQ"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x0 : A s0), P s0 x0 <-> Q s0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (@path_universe _ _ _ (fst (R s x))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fst (R s x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CP"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall s0 : Sort \u03c3, A s0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CQ"
+              ],
+              "body": null,
+              "type": "IsSubalgebraPredicate A Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall (s0 : Sort \u03c3) (x0 : A s0), P s0 x0 <-> Q s0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_equiv_iff_hprop _ _ (R s x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End path_subalgebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]
