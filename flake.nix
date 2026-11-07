@@ -16,6 +16,31 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        # TODO: Use the packaged 9.2 LSP once nixpkgs provides the upstream port.
+        rocqLsp92 =
+          let
+            rev = "f49d7b391c8dc6599a00d126d7bfedc9efbdc2e7";
+            scope = pkgs.mkRocqPackages
+              (pkgs.rocqPackages_9_2.rocq-core // { dontFilter = true; });
+          in
+          (scope.coq-lsp.override {
+            version = {
+              version = "dev";
+              location = {
+                owner = "rocq-community";
+                repo = "rocq-lsp";
+                inherit rev;
+                hash = "sha256-VJLe7zNcvbUN0QsA/cKuhyr6kHKGWDf9Wp8uFhHQGvw=";
+              };
+            };
+          }).overrideAttrs (old: {
+            postPatch = (old.postPatch or "") + ''
+              rm -rf vendor
+            '';
+            meta = (old.meta or { }) // {
+              changelog = "https://github.com/rocq-community/rocq-lsp/blob/${rev}/CHANGES.md";
+            };
+          });
         makeDevShell = { rocq, extraPackages ? [ ] }:
           let
             ocamlPackages = rocq.ocamlPackages;
@@ -37,7 +62,7 @@
           };
       in
       {
-        packages.default = pkgs.rocqPackages.mkRocqDerivation {
+        packages.default = pkgs.rocqPackages_9_2.mkRocqDerivation {
           pname = "hott";
           version = "9.0";
           opam-name = "coq-hott";
@@ -46,7 +71,7 @@
         };
 
         devShells = rec {
-          default = rocq_9_1;
+          default = rocq_9_2;
 
           rocq_9_3 = makeDevShell {
             rocq = pkgs.rocqPackages_9_3.rocq-core;
@@ -54,6 +79,7 @@
 
           rocq_9_2 = makeDevShell {
             rocq = pkgs.rocqPackages_9_2.rocq-core;
+            extraPackages = [ rocqLsp92 ];
           };
 
           rocq_9_1 = makeDevShell {
