@@ -47,49 +47,34 @@ Section inverse_cancellation.
 
 End inverse_cancellation.
 
-(** ** Equations for an explicit operation *)
+(** ** Equations with minimal algebraic laws *)
 
-(** The following lemmas take the operation as an explicit argument, rather than using [sg_op], so that they can be used to rewrite with operations such as [plus] and [mult], e.g., [rewrite (swap_middle (+))]. The group lemmas assume [IsGroup] rather than the individual laws they use: on a concrete ring such as the field of fractions, typeclass search for a single law such as [Associative plus] can unfold [plus] to its definition, while [IsGroup] is found directly. *)
-
-Lemma swap_middle {A} (op : A -> A -> A) `{!Associative op, !Commutative op}
-  (a b c d : A)
-  : op (op a b) (op c d) = op (op a c) (op b d).
+Lemma swap_middle {A} `{op : SgOp A}
+  `{!Associative op, !Commutative op} (a b c d : A)
+  : (a * b) * (c * d) = (a * c) * (b * d).
 Proof.
-  rewrite <- !(simple_associativity (f:=op)).
-  apply ap.
-  rewrite !(simple_associativity (f:=op)).
-  apply (ap (fun w => op w d)), commutativity.
+  lhs_V rapply simple_associativity.
+  rhs_V rapply simple_associativity.
+  apply (ap (a *.)).
+  lhs rapply simple_associativity.
+  rhs rapply simple_associativity.
+  exact (ap (.* d) (commutativity b c)).
 Qed.
 
-(** Cancelling a left inverse [op (inv y) y]. *)
-Lemma left_inverse_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
-  `{!@IsGroup A op unit inv} (x y : A)
-  : op (op x (inv y)) y = x.
-Proof.
-  exact (sgop_inv_gV_g (op:=op) (e:=unit) (i:=inv)
-           (RightIdentity0:=monoid_right_id A) (LeftInverse0:=inverse_l A) x y).
-Defined.
-
-(** Cancelling a right inverse [op y (inv y)]. *)
-Lemma right_inverse_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
-  `{!@IsGroup A op unit inv} (x y : A)
-  : op (op x y) (inv y) = x.
-Proof.
-  exact (sgop_inv_gg_V (op:=op) (e:=unit) (i:=inv)
-           (RightIdentity0:=monoid_right_id A) (RightInverse0:=inverse_r A) x y).
-Defined.
-
-Lemma inverse_telescope {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
-  `{!@IsGroup A op unit inv} (x y z : A)
-  : op (op x (inv y)) (op y (inv z)) = op x (inv z).
+Lemma inverse_telescope {A} `{op : SgOp A} {e : A} {i : A -> A}
+  `{!Associative op, !LeftInverse op i e, !RightIdentity op e}
+  (x y z : A)
+  : (x * i y) * (y * i z) = x * i z.
 Proof.
   lhs rapply simple_associativity.
-  exact (ap (fun w => op w (inv z)) (left_inverse_cancel op x y)).
+  exact (ap (fun w => w * i z) (sgop_inv_gV_g x y)).
 Qed.
 
-(** The properties in this section can also be proved without assuming that [G] is set-truncated, but currently typeclass inference can fail to find these results for rings if proved without the [IsGroup] hypothesis. *)
 Section group_props.
-  Context `{IsGroup G}.
+  Context {G : Type} `{op : SgOp G} `{unit : MonUnit G}
+    `{i : Inverse G} `{!Associative (.*.), !LeftIdentity (.*.) mon_unit,
+      !RightIdentity (.*.) mon_unit, !LeftInverse (.*.) (^) mon_unit,
+      !RightInverse (.*.) (^) mon_unit}.
 
   (** Group inverses are involutive *)
   #[export] Instance inverse_involutive : Involutive (^).
@@ -144,26 +129,26 @@ End group_props.
 Section abgroup_props.
   Local Open Scope mc_add_scope.
 
-  Lemma negate_sg_op_distr `{IsAbGroup G} x y : -(x + y) = -x + -y.
+  Context {G : Type} `{op : SgOp G} `{unit : MonUnit G}
+    `{i : Inverse G} `{!Associative (+), !Commutative (+),
+      !LeftIdentity (+) 0, !RightIdentity (+) 0,
+      !LeftInverse (+) (-) 0, !RightInverse (+) (-) 0}.
+
+  Lemma negate_sg_op_distr x y : -(x + y) = -x + -y.
   Proof.
-    path_via (-y + -x).
-    - rapply inverse_sg_op.
-    - apply commutativity.
+    exact (inverse_sg_op x y @ commutativity _ _).
+  Qed.
+
+  Lemma common_left_cancel (x y z : G) : (z + x) - (z + y) = x - y.
+  Proof.
+    lhs rapply (ap (sg_op (z + x)) (negate_sg_op_distr z y)).
+    lhs rapply swap_middle.
+    lhs exact (ap (fun w => w + (x - y)) (right_inverse z)).
+    rapply left_identity.
   Qed.
 
   Local Close Scope mc_add_scope.
 End abgroup_props.
-
-(** In an abelian group, [(z + x) - (z + y) = x - y]. *)
-Lemma common_left_cancel {A} (op : A -> A -> A) {inv : A -> A} {unit : A}
-  `{!@IsAbGroup A op unit inv} (x y z : A)
-  : op (op z x) (inv (op z y)) = op x (inv y).
-Proof.
-  lhs exact (ap (op (op z x)) (@negate_sg_op_distr A op unit inv _ z y)).
-  lhs rapply swap_middle.
-  lhs exact (ap (fun w => op w (op x (inv y))) (right_inverse z)).
-  rapply left_identity.
-Qed.
 
 Section groupmor_props.
 
