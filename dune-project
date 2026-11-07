@@ -25,4 +25,4 @@
   "\|   -arg -indices-matter
  )
  (depends
-  (rocq-core (>= 9.1.0))))
+  (rocq-core (>= 9.2.0))))

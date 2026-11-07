@@ -33,5 +33,5 @@ dev-repo: "git+https://github.com/HoTT/HoTT.git"
 x-maintenance-intent: ["(latest)"]
 depends: [
   "dune" {>= "3.21"}
-  "rocq-core" {>= "9.1"}
+  "rocq-core" {>= "9.2.0"}
 ]
