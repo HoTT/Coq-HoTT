@@ -82,12 +82,6 @@
             extraPackages = [ rocqLsp92 ];
           };
 
-          rocq_9_1 = makeDevShell {
-            rocq = pkgs.rocqPackages_9_1.rocq-core;
-            # coq-lsp retains its upstream package name.
-            extraPackages = [ pkgs.rocqPackages_9_1.coq-lsp ];
-          };
-
           # To use, pass --impure to nix develop.
           rocq_master = makeDevShell {
             rocq = pkgs.rocqPackages.rocq-core.override { version = "master"; };
