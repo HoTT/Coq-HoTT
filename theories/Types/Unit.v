@@ -73,7 +73,7 @@ Definition equiv_unit_rec `{Funext} (A : Type)
   := (Build_Equiv _ _ (@Unit_ind (fun _ => A)) _).
 
 (* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)
-Notation unit_name x := (fun (_ : Unit) => x).
+Abbreviation unit_name x := (fun (_ : Unit) => x).
 
 Instance isequiv_unit_name@{i j} `{Funext} (A : Type@{i})
 : @IsEquiv@{i j} _ (Unit -> _) (fun (a:A) => unit_name a).

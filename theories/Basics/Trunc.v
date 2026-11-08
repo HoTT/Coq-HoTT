@@ -415,7 +415,7 @@ Definition istrunc_equiv_istrunc A {B} (f : A <~> B) `{IsTrunc n A}
 Class IsTruncMap (n : trunc_index) {X Y : Type} (f : X -> Y)
   := istruncmap_fiber :: forall y:Y, IsTrunc n (hfiber f y).
 
-Notation IsEmbedding := (IsTruncMap (-1)).
+Abbreviation IsEmbedding := (IsTruncMap (-1)).
 
 (** ** Universes of truncated types *)
 
@@ -433,11 +433,11 @@ Arguments trunctype_istrunc [_] _.
 Coercion trunctype_type : TruncType >-> Sortclass.
 
 Notation "n -Type" := (TruncType n) : type_scope.
-Notation HProp := (-1)-Type.
-Notation HSet := 0-Type.
+Abbreviation HProp := (-1)-Type.
+Abbreviation HSet := 0-Type.
 
-Notation Build_HProp := (Build_TruncType (-1)).
-Notation Build_HSet := (Build_TruncType 0).
+Abbreviation Build_HProp := (Build_TruncType (-1)).
+Abbreviation Build_HSet := (Build_TruncType 0).
 
 (** This is (as of October 2014) the only [Canonical Structure] in the library.  It would be nice to do without it, in the interests of minimizing the number of fancy Coq features that the reader needs to know about. *)
 Canonical Structure default_TruncType := fun n T P => (@Build_TruncType n T P).
@@ -450,7 +450,7 @@ Proof.
   apply (@istrunc_equiv_istrunc _ _ (equiv_smalltype P)^-1 n _).
 Defined.
 
-Notation smallhprop := (smallntype (-1)).
+Abbreviation smallhprop := (smallntype (-1)).
 
 (** ** Facts about hprops *)
 
