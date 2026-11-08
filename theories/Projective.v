@@ -14,11 +14,11 @@ Definition IsOProjective (O : Modality) (X : Type) : Type
 
 (** (oo,-1)-projectivity. *)
 
-Notation IsProjective := (IsOProjective purely).
+Abbreviation IsProjective := (IsOProjective purely).
 
 (** (n,-1)-projectivity. *)
 
-Notation IsTrProjective n := (IsOProjective (Tr n)).
+Abbreviation IsTrProjective n := (IsOProjective (Tr n)).
 
 (** A type X is projective if and only if surjections into X merely split. *)
 Proposition iff_isoprojective_surjections_split
@@ -62,11 +62,11 @@ Class HasOChoice (O : Modality) (A : Type) :=
 
 (** (oo,-1)-choice. *)
 
-Notation HasChoice := (HasOChoice purely).
+Abbreviation HasChoice := (HasOChoice purely).
 
 (** (n,-1)-choice. *)
 
-Notation HasTrChoice n := (HasOChoice (Tr n)).
+Abbreviation HasTrChoice n := (HasOChoice (Tr n)).
 
 Instance hasochoice_sigma
   `{Funext} {A : Type} {B : A -> Type} (O : Modality)

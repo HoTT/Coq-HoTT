@@ -17,7 +17,7 @@ Local Open Scope nat_scope.
 (** *** Iteration *)
 
 (** [n]th iteration of the function [f : A -> A].  We have definitional equalities [nat_iter 0 f x = x] and [nat_iter n.+1 f x = f (nat_iter n f x)].  We make this a notation, so it doesn't add a universe variable for the universe containing [A]. *)
-Notation nat_iter n f x
+Abbreviation nat_iter n f x
   := ((fix F (m : nat)
       := match m with
         | 0 => x
@@ -27,7 +27,7 @@ Notation nat_iter n f x
 (** *** Successor and predecessor *)
 
 (** [nat_succ n] is the successor of a natural number [n]. We defined a notation [x.+1] for it in Overture.v. *)
-Notation nat_succ := S (only parsing).
+Abbreviation nat_succ := S (only parsing).
 
 (** [nat_pred n] is the predecessor of a natural number [n]. When [n] is [0] we return [0]. *)
 Definition nat_pred n : nat :=

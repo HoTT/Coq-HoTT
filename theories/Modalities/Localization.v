@@ -358,7 +358,7 @@ Proof.
 Defined.
 
 (** Here is the "real" definition of the notation [IsLocal].  Defining it this way allows it to inherit typeclass inference from [In], unlike (for instance) the slightly annoying case of [IsTrunc n] versus [In (Tr n)]. *)
-Notation IsLocal f := (In (Loc f)).
+Abbreviation IsLocal f := (In (Loc f)).
 
 Section LocalTypes.
   Context (f : LocalGenerators).

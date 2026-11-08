@@ -116,7 +116,7 @@ Defined.
 (** ** Modalities  *)
 
 (** A modality is a reflective subuniverse with a dependent universal property with respect to itself. *)
-Notation IsModality O := (O << O).
+Abbreviation IsModality O := (O << O).
 
 (** However, it's not clear what the best bundled definition of modality is.  The obvious one [{ O : ReflectiveSubuniverse & IsModality O}] has the advantage that bundling a reflective subuniverse into a modality and then unbundling it is definitionally the identity; but it is redundant, since the dependent universal property implies the non-dependent one, and in practice most modalities are constructed directly with a dependent eliminator.  Thus, for now at least, we take the following definition, which in RSS is called a "uniquely eliminating modality".  *)
 Record Modality@{i} := Build_Modality'

@@ -48,8 +48,8 @@ Infix "[-]" := (concat_square_vert) (at level 60).
 Infix "[I]" := (concat_square_hor) (at level 60).
 
 (** We give custom names to the following equivalences: *)
-Notation rlucancel := equiv_p1_1q.
-Notation lrucancel := equiv_1p_q1.
+Abbreviation rlucancel := equiv_p1_1q.
+Abbreviation lrucancel := equiv_1p_q1.
 
 (** We also need this inverse.  Using a Notation slows things down a lot. *)
 Definition rlucancel_inv {X} {a b : X} {p q : a = b} := (@rlucancel X a b p q)^-1.

@@ -28,8 +28,8 @@ Instance isconnected_torus `{Univalence} : IsConnected 0 Torus
   := isconnected_equiv' _ _ equiv_torus_prod_Circle^-1 _.
 
 (** We give these notations for the pointed versions. *)
-Local Notation T := ([Torus, _]).
-Local Notation S1 := ([Circle, _]).
+Local Abbreviation T := ([Torus, _]).
+Local Abbreviation S1 := ([Circle, _]).
 
 (** A pointed version of the equivalence from TorusEquivCircles.v. *)
 (** TODO: If [Funext] is removed from there, remove it from here as well. *)
