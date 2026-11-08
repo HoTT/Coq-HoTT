@@ -62,7 +62,7 @@ Module Import CommaCategory.
     Global Arguments b _ / .
     Global Arguments f _ / .
 
-    Local Notation object_sig_T :=
+    Local Abbreviation object_sig_T :=
       ({ a : A
        | { b : B
          | morphism C (S a) (T b) }}).
@@ -132,12 +132,12 @@ Module Import CommaCategory.
     Global Arguments p _ _ _ / .
     Global Arguments p_sym _ _ _ / .
 
-    Local Notation morphism_sig_T abf a'b'f' :=
+    Local Abbreviation morphism_sig_T abf a'b'f' :=
       ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))
        | { h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b))
          | T _1 h o abf.(f) = a'b'f'.(f) o S _1 g }}).
 
-    Local Notation morphism_sig_T' abf a'b'f' :=
+    Local Abbreviation morphism_sig_T' abf a'b'f' :=
       ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))
        | { h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b))
          | { _ : T _1 h o abf.(f) = a'b'f'.(f) o S _1 g

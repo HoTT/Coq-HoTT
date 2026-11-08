@@ -19,8 +19,8 @@ Local Open Scope category_scope.
 (** We don't want access to all of the internals of this category at top level. *)
 Module HomotopyPreCategoryInternals.
   Section homotopy_precategory.
-    Local Notation object := Type (only parsing).
-    Local Notation morphism s d := (Trunc 0 (s -> d)) (only parsing).
+    Local Abbreviation object := Type (only parsing).
+    Local Abbreviation morphism s d := (Trunc 0 (s -> d)) (only parsing).
 
     Definition compose s d d' (m : morphism d d') (m' : morphism s d)
     : morphism s d'.

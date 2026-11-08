@@ -21,7 +21,7 @@ Section of_functor.
   Variable C : PreCategory.
   Context `{HP : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P HP).
+  Local Abbreviation cat := (@sub_pre_cat _ P HP).
 
   Variable F : Functor C cat.
 

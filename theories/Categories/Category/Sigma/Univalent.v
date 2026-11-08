@@ -7,7 +7,7 @@ Require Import HoTT.Types HoTT.Basics.
 Set Implicit Arguments.
 Generalizable All Variables.
 
-Local Notation pr1_type := Overture.pr1 (only parsing).
+Local Abbreviation pr1_type := Overture.pr1 (only parsing).
 
 Local Open Scope path_scope.
 Local Open Scope morphism_scope.
@@ -48,7 +48,7 @@ Section onmorphisms.
   Variable A : PreCategory.
   Variable Pmor : forall s d, morphism A s d -> Type.
 
-  Local Notation mor s d := { m : _ | Pmor s d m }.
+  Local Abbreviation mor s d := { m : _ | Pmor s d m }.
   Context `(HPmor : forall s d, IsHSet (mor s d)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -57,8 +57,8 @@ Section onmorphisms.
                         -> @Pmor s d m2
                         -> @Pmor s d' (m1 o m2).
 
-  Local Notation identity x := (@identity A x; @Pidentity x).
-  Local Notation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
+  Local Abbreviation identity x := (@identity A x; @Pidentity x).
+  Local Abbreviation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
 
   Hypothesis P_associativity
   : forall x1 x2 x3 x4 (m1 : mor x1 x2) (m2 : mor x2 x3) (m3 : mor x3 x4),
@@ -72,7 +72,7 @@ Section onmorphisms.
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
-  Local Notation A' := (@sig_mor' A Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity).
+  Local Abbreviation A' := (@sig_mor' A Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity).
 
   (** To have any hope of relating [IsCategory A] with [IsCategory
       A'], we assume that [Pmor] is automatically and uniquely true on
@@ -146,11 +146,11 @@ Section on_both.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
-  Local Notation obj := { x : _ | Pobj x } (only parsing).
+  Local Abbreviation obj := { x : _ | Pobj x } (only parsing).
 
   Variable Pmor : forall s d : obj, morphism A s.1 d.1 -> Type.
 
-  Local Notation mor s d := { m : _ | Pmor s d m } (only parsing).
+  Local Abbreviation mor s d := { m : _ | Pmor s d m } (only parsing).
   Context `(HPmor : forall s d, IsHSet (mor s d)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -159,8 +159,8 @@ Section on_both.
                         -> @Pmor s d m2
                         -> @Pmor s d' (m1 o m2).
 
-  Local Notation identity x := (@identity A x.1; @Pidentity x).
-  Local Notation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
+  Local Abbreviation identity x := (@identity A x.1; @Pidentity x).
+  Local Abbreviation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
 
   Hypothesis P_associativity
   : forall x1 x2 x3 x4 (m1 : mor x1 x2) (m2 : mor x2 x3) (m3 : mor x3 x4),
@@ -174,7 +174,7 @@ Section on_both.
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
-  Local Notation A' := (@sig' A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity).
+  Local Abbreviation A' := (@sig' A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity).
 
   (** We must assume some relation on the properties; we assume that
       the path space of the extra data on objects is classified by

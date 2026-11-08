@@ -130,7 +130,7 @@ Section lax_slice_category_over.
   Variable P : PreCategory -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation cat := (@sub_pre_cat _ P HF).
 
   Variable a : PreCategory.
   Context `{forall a0 : cat, IsHSet (Functor a0.1 a)}.
@@ -155,7 +155,7 @@ Section lax_arrow_category.
   Variable P : PreCategory -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation cat := (@sub_pre_cat _ P HF).
 
   Definition lax_arrow_category : PreCategory := @lax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (fun C D => HF C.2 D.2).
   Definition oplax_arrow_category : PreCategory := @oplax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (fun C D => HF C.2 D.2).

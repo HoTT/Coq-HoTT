@@ -6,9 +6,9 @@ Generalizable All Variables.
 
 Local Open Scope functor_scope.
 
-Local Notation fst_type := Basics.Overture.fst.
-Local Notation snd_type := Basics.Overture.snd.
-Local Notation pair_type := Basics.Overture.pair.
+Local Abbreviation fst_type := Basics.Overture.fst.
+Local Abbreviation snd_type := Basics.Overture.snd.
+Local Abbreviation pair_type := Basics.Overture.pair.
 
 Section law2.
   Context `{Funext}.

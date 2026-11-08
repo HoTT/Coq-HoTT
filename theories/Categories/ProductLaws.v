@@ -8,10 +8,10 @@ Generalizable All Variables.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.
 
-Local Notation prod_type := Basics.Overture.prod.
-Local Notation fst_type := Basics.Overture.fst.
-Local Notation snd_type := Basics.Overture.snd.
-Local Notation pair_type := Basics.Overture.pair.
+Local Abbreviation prod_type := Basics.Overture.prod.
+Local Abbreviation fst_type := Basics.Overture.fst.
+Local Abbreviation snd_type := Basics.Overture.snd.
+Local Abbreviation pair_type := Basics.Overture.pair.
 
 (** ** Swap functor [C × D → D × C] *)
 Module Swap.

@@ -7,9 +7,9 @@ Generalizable All Variables.
 
 Local Open Scope natural_transformation_scope.
 
-Local Notation fst_type := Basics.Overture.fst.
-Local Notation snd_type := Basics.Overture.snd.
-Local Notation pair_type := Basics.Overture.pair.
+Local Abbreviation fst_type := Basics.Overture.fst.
+Local Abbreviation snd_type := Basics.Overture.snd.
+Local Abbreviation pair_type := Basics.Overture.pair.
 
 (** ** Construction of product of functors as a functor - [_×_ : (C → D) × (C → D') → (C → D × D')] *)
 Section functorial.

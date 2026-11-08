@@ -279,7 +279,7 @@ Section UniversalMorphism.
                       φ
 >>
        *)
-    Local Notation op_object Ap
+    Local Abbreviation op_object Ap
       := (CommaCategory.Build_object
             (Functors.from_terminal C^op X) (U^op)
             (CommaCategory.b (Ap : object (U / X)))

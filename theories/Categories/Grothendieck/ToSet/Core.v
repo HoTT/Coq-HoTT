@@ -45,7 +45,7 @@ Section Grothendieck.
     issig.
   Defined.
 
-  Local Notation morphism s d :=
+  Local Abbreviation morphism s d :=
     { f : morphism C s.(c) d.(c)
     | F _1 f s.(x) = d.(x) }.
 

@@ -169,7 +169,7 @@ Section cat_over_induced_functor.
   Variable P : PreCategory -> Type.
   Context `{H0 : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P H0).
+  Local Abbreviation cat := (@sub_pre_cat _ P H0).
 
   Definition cat_over_induced_functor a a' (m : morphism cat a a')
   : Functor (cat / a) (cat / a')

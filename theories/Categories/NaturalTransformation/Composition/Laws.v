@@ -101,8 +101,8 @@ Section associativity.
     Variable G : Functor C D.
     Variable H : Functor B C.
 
-    Local Notation F0 := ((F o G) o H)%functor.
-    Local Notation F1 := (F o (G o H))%functor.
+    Local Abbreviation F0 := ((F o G) o H)%functor.
+    Local Abbreviation F1 := (F o (G o H))%functor.
 
     Definition associator_1 : NaturalTransformation F0 F1
       := Eval simpl in

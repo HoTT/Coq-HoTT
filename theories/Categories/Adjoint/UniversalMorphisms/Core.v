@@ -75,11 +75,11 @@ Section adjunction_from_universal.
     Variable G : Functor D C.
     Context `(HM : forall Y, @IsInitialMorphism _ _ Y G (M Y)).
 
-    Local Notation obj_of Y :=
+    Local Abbreviation obj_of Y :=
       (IsInitialMorphism_object (@HM Y))
         (only parsing).
 
-    Local Notation mor_of Y0 Y1 f :=
+    Local Abbreviation mor_of Y0 Y1 f :=
       (let etaY1 := IsInitialMorphism_morphism (@HM Y1) in
        IsInitialMorphism_property_morphism (@HM Y0) _ (etaY1 o f))
         (only parsing).

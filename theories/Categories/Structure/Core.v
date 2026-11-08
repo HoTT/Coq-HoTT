@@ -176,7 +176,7 @@ Module PreCategoryOfStructures.
     Variable X : PreCategory.
     Variable P : NotionOfStructure X.
 
-    Local Notation object := { x : X | P x }.
+    Local Abbreviation object := { x : X | P x }.
 
     (*Lemma issig_object
     : { x : X | P x } <~> object.

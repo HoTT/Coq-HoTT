@@ -2,7 +2,7 @@
 Require Import Adjoint.UnitCounit.
 Require Import Basics.Notations.
 
-Notation Adjunction := AdjunctionUnitCounit.
+Abbreviation Adjunction := AdjunctionUnitCounit.
 
 Module Export AdjointCoreNotations.
   Infix "-|" := Adjunction : type_scope.

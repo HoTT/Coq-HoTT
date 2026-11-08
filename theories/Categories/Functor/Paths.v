@@ -14,7 +14,7 @@ Section path_functor.
 
   Variables C D : PreCategory.
 
-  Local Notation functor_sig_T :=
+  Local Abbreviation functor_sig_T :=
     { OO : C -> D
     | { MO : forall s d, morphism C s d -> morphism D (OO s) (OO d)
       | { FCO : forall s d d' (m1 : morphism C s d) (m2 : morphism C d d'),
@@ -32,7 +32,7 @@ Section path_functor.
 
   (** We could leave it at that and be done with it, but we want a more convenient form for actually constructing paths between functors.  For this, we write a trimmed down version of something equivalent to the type of paths between functors. *)
 
-  Local Notation path_functor'_T F G
+  Local Abbreviation path_functor'_T F G
     := { HO : object_of F = object_of G
        | transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d))
                    HO

@@ -7,10 +7,10 @@ Require Import Basics.Tactics.
 Set Implicit Arguments.
 Generalizable All Variables.
 
-Local Notation fst_type := Basics.Overture.fst.
-Local Notation snd_type := Basics.Overture.snd.
-Local Notation pair_type := Basics.Overture.pair.
-Local Notation prod_type := Basics.Overture.prod.
+Local Abbreviation fst_type := Basics.Overture.fst.
+Local Abbreviation snd_type := Basics.Overture.snd.
+Local Abbreviation pair_type := Basics.Overture.pair.
+Local Abbreviation prod_type := Basics.Overture.prod.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.

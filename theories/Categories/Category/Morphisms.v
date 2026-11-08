@@ -44,7 +44,7 @@ Section iso_contr.
   Variable C : PreCategory.
   Variables s d : C.
 
-  Local Notation IsIsomorphism_sig_T m :=
+  Local Abbreviation IsIsomorphism_sig_T m :=
     { inverse : morphism C d s
     | { _ : inverse o m = identity _
       | m o inverse = identity _ } } (only parsing).
@@ -90,7 +90,7 @@ Section iso_contr.
     Qed.
   End IsIsomorphism.
 
-  Local Notation Isomorphic_sig_T :=
+  Local Abbreviation Isomorphic_sig_T :=
     { m : morphism C s d
     | IsIsomorphism m } (only parsing).
 
@@ -101,7 +101,7 @@ Section iso_contr.
     issig.
   Defined.
 
-  Local Notation Isomorphic_full_sig_T :=
+  Local Abbreviation Isomorphic_full_sig_T :=
     { m : morphism C s d
     | IsIsomorphism_sig_T m } (only parsing).
 

@@ -8,8 +8,8 @@ From HoTT Require Import Basics.Overture Basics.Tactics.
 From HoTT.Categories Require Import Category.Core.
 From HoTT.Categories.Additive Require Import ZeroObjects.
 
-Local Notation fst_type := Basics.Overture.fst.
-Local Notation snd_type := Basics.Overture.snd.
+Local Abbreviation fst_type := Basics.Overture.fst.
+Local Abbreviation snd_type := Basics.Overture.snd.
 
 Local Open Scope morphism_scope.
 

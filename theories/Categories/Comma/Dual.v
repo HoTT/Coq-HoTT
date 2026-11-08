@@ -21,11 +21,11 @@ Section opposite.
     Variable S : Functor A C.
     Variable T : Functor B C.
 
-    Local Notation obj_of x
+    Local Abbreviation obj_of x
       := (CommaCategory.Build_object (T^op) (S^op) _ _ (CommaCategory.f x)
           : object ((T^op / S^op)^op)).
 
-    Local Notation mor_of s d m
+    Local Abbreviation mor_of s d m
       := (CommaCategory.Build_morphism'
             (obj_of d) (obj_of s)
             (CommaCategory.h m%morphism)

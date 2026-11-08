@@ -25,7 +25,7 @@ Section identity.
   Variable P : PreCategory -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation cat := (@sub_pre_cat _ P HF).
 
   Local Ltac t :=
     path_natural_transformation;

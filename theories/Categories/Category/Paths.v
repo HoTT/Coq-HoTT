@@ -18,7 +18,7 @@ Section path_category.
       convenient for use, but more annoying for proofs).  We add two
       primes to denote the even less convenient version, which
       requires an identity equality proof. *)
-  Local Notation path_precategory''_T C D
+  Local Abbreviation path_precategory''_T C D
     := { Hobj : object C = object D
        | { Hmor : transport (fun obj => obj -> obj -> Type)
                             Hobj
@@ -41,7 +41,7 @@ Section path_category.
                                     (@identity C))
               = @identity D }}.
 
-  Local Notation path_precategory'_T C D
+  Local Abbreviation path_precategory'_T C D
     := { Hobj : object C = object D
        | { Hmor : transport (fun obj => obj -> obj -> Type)
                             Hobj

@@ -56,7 +56,7 @@ Section composition.
     Variable T' : NaturalTransformation F' F''.
     Variable T : NaturalTransformation F F'.
 
-    Local Notation CO c := (T' c o T c).
+    Local Abbreviation CO c := (T' c o T c).
 
     Definition compose_commutes s d (m : morphism C s d)
     : CO d o F _1 m = F'' _1 m o CO s
@@ -95,7 +95,7 @@ Section composition.
       Variables G G' : Functor C D.
       Variable T : NaturalTransformation G G'.
 
-      Local Notation CO c := (F _1 (T c)).
+      Local Abbreviation CO c := (F _1 (T c)).
 
       Definition whisker_l_commutes s d (m : morphism C s d)
       : F _1 (T d) o (F o G) _1 m = (F o G') _1 m o F _1 (T s)
@@ -125,7 +125,7 @@ Section composition.
       Variable T : NaturalTransformation F F'.
       Variable G : Functor C D.
 
-      Local Notation CO c := (T (G c)).
+      Local Abbreviation CO c := (T (G c)).
 
       Definition whisker_r_commutes s d (m : morphism C s d)
       : T (G d) o (F o G) _1 m = (F' o G) _1 m o T (G s)

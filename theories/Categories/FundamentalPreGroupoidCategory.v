@@ -23,8 +23,8 @@ Module FundamentalPreGroupoidCategoryInternals.
   Section fundamental_pregroupoid_category.
     Variable X : Type.
 
-    Local Notation object := X (only parsing).
-    Local Notation morphism s d := (Trunc 0 (s = d :> X)) (only parsing).
+    Local Abbreviation object := X (only parsing).
+    Local Abbreviation morphism s d := (Trunc 0 (s = d :> X)) (only parsing).
 
     Definition compose s d d' (m : morphism d d') (m' : morphism s d)
     : morphism s d'.

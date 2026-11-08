@@ -9,9 +9,9 @@ Local Open Scope morphism_scope.
 
 (** A category is a precategory for which [idtoiso] is an equivalence. *)
 
-Notation IsCategory C := (forall s d : object C, IsEquiv (@idtoiso C s d)).
+Abbreviation IsCategory C := (forall s d : object C, IsEquiv (@idtoiso C s d)).
 
-Notation isotoid C s d := (@equiv_inv _ _ (@idtoiso C s d) _).
+Abbreviation isotoid C s d := (@equiv_inv _ _ (@idtoiso C s d) _).
 
 (** *** The objects of a category are a 1-type *)
 
