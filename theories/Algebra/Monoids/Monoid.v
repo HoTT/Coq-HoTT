@@ -150,7 +150,7 @@ Instance isgraph_monoid : IsGraph Monoid
 Instance is01cat_monoid : Is01Cat Monoid
   := Build_Is01Cat Monoid _ (@mnd_homo_id) (@mnd_homo_compose).
 
-Local Notation mnd_homo_map' M N
+Local Abbreviation mnd_homo_map' M N
   := (@mnd_homo_map M N : _ -> (monoid_type M $-> _)).
 
 Instance is2graph_monoid : Is2Graph Monoid

@@ -99,7 +99,7 @@ Section CycleConstruction.
       apply braid_nat.
   Defined.
 
-  Local Notation α := associator_cycle.
+  Local Abbreviation α := associator_cycle.
 
   Definition associator_cycle_unfold a b c
     : cate_fun (α a b c) $== braid c (cat_tensor a b) $o cycle a b c
