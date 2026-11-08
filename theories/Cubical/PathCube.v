@@ -53,15 +53,13 @@ Cumulative Inductive PathCube {A}
 
 Arguments PathCube {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
 Scheme PathCube_ind := Induction for PathCube Sort Type.
-Arguments PathCube_ind {A} P f
-  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} : rename.
+Arguments PathCube_ind {A} P _
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
 Scheme PathCube_rec := Minimality for PathCube Sort Type.
-Arguments PathCube_rec {A} P f
-  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} : rename.
+Arguments PathCube_rec {A} P _
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
 (* These notations make it easier to write our lemmas *)
 Local Abbreviation hr := (sq_refl_h _).
