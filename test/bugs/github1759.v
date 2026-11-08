@@ -11,7 +11,7 @@ And the third section shows that it does depend on [dlt_r]. *)
 Section Foo.
   Universe i.
   Context {S : OptionSort@{i}}.
-  Notation GenNo := (GenNo S).
+  Abbreviation GenNo := (GenNo S).
   Local Open Scope surreal_scope.
   Context
     (A : GenNo -> Type)
@@ -174,7 +174,7 @@ End Foo.
 Section Foo2.
   Universe i.
   Context {S : OptionSort@{i}}.
-  Notation GenNo := (GenNo S).
+  Abbreviation GenNo := (GenNo S).
   Local Open Scope surreal_scope.
   Context
     (A : GenNo -> Type)
@@ -270,7 +270,7 @@ End Foo2.
 Section Foo3.
   Universe i.
   Context (S : OptionSort@{i}).
-  Notation GenNo := (GenNo S).
+  Abbreviation GenNo := (GenNo S).
   Local Open Scope surreal_scope.
   Context
     (A : GenNo -> Type)
