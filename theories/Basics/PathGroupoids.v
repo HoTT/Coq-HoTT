@@ -1525,8 +1525,9 @@ Hint Resolve
   : path_hints.
 
 (* First try at a paths db.  We want the RHS of the equation to become strictly simpler. *)
-(* TODO: Once the minimum Rocq version is 9.2, declare the [paths] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
-#[export, warning="-implicit-create-rewrite-hint-db"]
+(** The declaration stays local; importing the exported hints makes the database available to clients. *)
+Local Create Rewrite HintDb paths.
+#[export]
 Hint Rewrite
   @concat_p1
   @concat_1p

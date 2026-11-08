@@ -106,16 +106,17 @@ Definition Build_PreCategory
 
 (** create a hint db for all category theory things *)
 Create HintDb category discriminated.
+(** Keep rewrite-database declarations local so that [Include] does not redeclare them; the exported hints make the databases available to clients. *)
+Local Create Rewrite HintDb category.
 (** create a hint db for morphisms in categories *)
 Create HintDb morphism discriminated.
+Local Create Rewrite HintDb morphism.
 
 #[export]
 Hint Resolve left_identity right_identity associativity : category morphism.
-(* TODO: Once the minimum Rocq version is 9.2, declare the [category] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
-#[export, warning="-implicit-create-rewrite-hint-db"]
+#[export]
 Hint Rewrite left_identity right_identity : category.
-(* TODO: Once the minimum Rocq version is 9.2, declare the [morphism] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
-#[export, warning="-implicit-create-rewrite-hint-db"]
+#[export]
 Hint Rewrite left_identity right_identity : morphism.
 
 (** ** Simple laws about the identity morphism *)
