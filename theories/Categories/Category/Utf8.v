@@ -1,8 +1,6 @@
 (** * Unicode notations for categories *)
 Require Import Category.Morphisms Category.Dual Category.Sum Category.Pi.
-Local Set Warnings "-notation-overridden".
 Require Export Category.Notations.
-Local Set Warnings "notation-overridden".
 Require Import Basics.Utf8.
 
 Infix "∘" := compose : morphism_scope.
