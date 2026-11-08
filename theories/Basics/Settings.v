@@ -51,11 +51,6 @@ Global Set Keyed Unification.
 
 (** ** Typeclasses and Hint settings *)
 
-(** This tells Rocq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. This is the only behavior in Rocq 9.2 and later, where the option has been removed. *)
-(* TODO: Remove this setting and its warning suppression once the minimum Rocq version is 9.2. *)
-#[warning="-unknown-option"]
-Global Set Loose Hint Behavior "Strict".
-
 Create HintDb core.
 Create HintDb rewrite discriminated.
 #[export] Hint Variables Opaque : rewrite.
