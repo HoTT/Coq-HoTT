@@ -74,8 +74,3 @@ Register reverse_coercion as core.coercion.reverse_coercion.
 
 (** Keywords for blacklisting from search function *)
 Add Search Blacklist "_admitted" "_subproof" "Private_".
-
-(** ** Warnings *)
-
-(** Rocq 9.2 complains if you use "Notation" when you could use "Abbreviation".  However, Rocq 9.1 doesn't support the Abbreviation command, so unless Rocq 9.2 is our minimum, we will continue to use "Notation".  This suppresses the resulting warnings. *)
-Global Set Warnings "-notation-for-abbreviation".
