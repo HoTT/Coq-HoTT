@@ -462,8 +462,8 @@ End iso_lemmas.
 Hint Extern 1 (@IsIsomorphism _ _ _ (@morphism_of ?C ?D ?F ?s ?d ?m))
 => apply (@iso_functor C D F s d m) : typeclass_instances.
 
-(* TODO: Once the minimum Rocq version is 9.2, declare the [core] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
-#[export, warning="-implicit-create-rewrite-hint-db"]
+Local Create Rewrite HintDb core.
+#[export]
 Hint Rewrite idtoiso_of_transport idtoiso_inv idtoiso_comp idtoiso_functor.
 
 (** ** Lemmas about how to move isomorphisms around equalities, following [HoTT.PathGroupoids] *)
