@@ -146,7 +146,7 @@ Section third_isomorphism.
     by exists (class_of (Ψ s) x).
   Qed.
 
-  Local Notation Θ := (cong_quotient Φ Ψ subrel).
+  Local Abbreviation Θ := (cong_quotient Φ Ψ subrel).
 
   Lemma path_quotient_algebras_third_surjection
     : A/Ψ / cong_ker hom_third_surjection = A/Ψ / Θ.

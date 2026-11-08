@@ -14,7 +14,7 @@ Section contents.
   Context `{Univalence}.
 
   (* We use this notation because [hor] can accept arguments of type [Type], which leads to minor confusion in the instances below *)
-  Notation lor := (hor : HProp -> HProp -> HProp).
+  Abbreviation lor := (hor : HProp -> HProp -> HProp).
 
   (* This tactic attempts to destruct a truncated sum (disjunction) *)
   Local Ltac hor_intros :=

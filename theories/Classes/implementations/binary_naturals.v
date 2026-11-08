@@ -109,8 +109,8 @@ Section binary_equiv.
 
 End binary_equiv.
 
-Notation equiv_unary  := equiv_binary ^-1.
-Notation unary := equiv_unary.
+Abbreviation equiv_unary  := equiv_binary ^-1.
+Abbreviation unary := equiv_unary.
 
 Section semiring_struct.
 
@@ -365,9 +365,9 @@ Section naturals.
     Universe U.
     Context {R:Type} `{IsSemiCRing R}.
 
-    Notation toR := (naturals_to_semiring binnat R).
-    Notation toR_fromnat := (naturals_to_semiring nat R).
-    Notation toR_vianat := (toR_fromnat ∘ unary).
+    Abbreviation toR := (naturals_to_semiring binnat R).
+    Abbreviation toR_fromnat := (naturals_to_semiring nat R).
+    Abbreviation toR_vianat := (toR_fromnat ∘ unary).
 
     Definition f_suc (m : binnat) : toR (Succ m) = (toR m)+1.
     Proof.

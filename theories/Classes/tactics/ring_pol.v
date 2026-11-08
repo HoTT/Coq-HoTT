@@ -52,7 +52,7 @@ Universe UR.
 Context {R : Type@{UR} } `{AlmostRing R}
   (phi : C -> R) `{!AlmostRingPreserving phi}.
 
-Notation Vars V := (V -> R).
+Abbreviation Vars V := (V -> R).
 
 Fixpoint eval (vs : Vars V) (P : Pol) : R :=
   match P with

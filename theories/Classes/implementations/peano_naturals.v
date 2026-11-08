@@ -27,7 +27,7 @@ Defined.
 
 #[export] Instance nat_plus: Plus@{N} nat := Nat.Core.nat_add.
 
-Notation mul := Nat.Core.nat_mul.
+Abbreviation mul := Nat.Core.nat_mul.
 
 #[export] Instance nat_mult: Mult@{N} nat := Nat.Core.nat_mul.
 
@@ -605,7 +605,7 @@ Section for_another_semiring.
   Universe U.
   Context {R:Type@{U} } `{IsSemiCRing@{U} R}.
 
-  Notation toR := (naturals_to_semiring nat R).
+  Abbreviation toR := (naturals_to_semiring nat R).
 
 (*   Add Ring R: (rings.stdlib_semiring_theory R). *)
 

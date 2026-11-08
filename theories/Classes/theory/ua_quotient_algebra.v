@@ -61,13 +61,13 @@ Section quotient_algebra.
          ap_operation g (map_family_prod (λ s, class_of (Φ s)) a)
          = class_of (Φ (cod_symboltype w)) (ap_operation f a).
 
-  Local Notation QuotOp w :=
+  Local Abbreviation QuotOp w :=
     (∀ (f : Operation A w),
      OpCompatible A Φ f →
      ∃ g : Operation carriers_quotient_algebra w,
      ComputeOpQuotient f g) (only parsing).
 
-  Local Notation op_qalg_cons q f P x :=
+  Local Abbreviation op_qalg_cons q f P x :=
     (q _ (f x) (op_compatible_cons Φ _ _ f x P)).1 (only parsing).
 
   Lemma op_quotient_algebra_well_def

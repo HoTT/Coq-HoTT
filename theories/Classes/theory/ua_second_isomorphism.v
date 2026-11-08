@@ -15,7 +15,7 @@ Import
   subalgebra_notations
   isomorphic_notations.
 
-Local Notation i := (hom_inc_subalgebra _ _).
+Local Abbreviation i := (hom_inc_subalgebra _ _).
 
 (** This section defines [cong_trace] and proves that it is a
     congruence, the restriction of a congruence to a subalgebra. *)
@@ -138,9 +138,9 @@ Section second_isomorphism.
     (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}
     (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
-  Local Notation Ψ := (cong_trace P Φ).
+  Local Abbreviation Ψ := (cong_trace P Φ).
 
-  Local Notation Q := (is_subalgebra_class P Φ).
+  Local Abbreviation Q := (is_subalgebra_class P Φ).
 
   Definition def_second_isomorphism (s : Sort σ)
     : ((A&&P) / Ψ) s → ((A/Φ) && Q) s

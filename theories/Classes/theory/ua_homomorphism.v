@@ -294,7 +294,7 @@ Section path_isomorphism.
     equivalences, then by function extensionality composed with
     univalence there is a path [F = G]. *)
 
-  Local Notation path_equiv_family f
+  Local Abbreviation path_equiv_family f
     := (path_forall _ _ (λ i, path_universe (f i))).
 
 (** Given a family of equivalences [f : ∀ (s : Sort σ), A s <~> B s]

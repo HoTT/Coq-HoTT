@@ -171,7 +171,7 @@ Fixpoint zip {A B: Type} (l: ne_list A) (m: ne_list B)
 
   Module notations.
 
-    Global Notation ne_list := ne_list.
+    Global Abbreviation ne_list := ne_list.
 
     Global Notation "[: x :]" := (one x) : ne_list_scope.
 
