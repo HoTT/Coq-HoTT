@@ -464,7 +464,8 @@ Hint Extern 1 (@IsIsomorphism _ _ _ (@morphism_of ?C ?D ?F ?s ?d ?m))
 
 Local Create Rewrite HintDb core.
 #[export]
-Hint Rewrite idtoiso_of_transport idtoiso_inv idtoiso_comp idtoiso_functor.
+Hint Rewrite idtoiso_of_transport idtoiso_inv idtoiso_comp idtoiso_functor
+  : core.
 
 (** ** Lemmas about how to move isomorphisms around equalities, following [HoTT.PathGroupoids] *)
 Section iso_concat_lemmas.
