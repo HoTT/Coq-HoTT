@@ -51,9 +51,9 @@ Notation "1" := sq_id : square_scope.
 
 (** [register=no] prevents the schemes from confusing the [make_equiv] tactic. *)
 #[register=no] Scheme PathSquare_ind := Induction for PathSquare Sort Type.
-Arguments PathSquare_ind {A} P _ {_ _ _ _ _ _ _ _} _.
+Arguments PathSquare_ind {A} P sq_id {_ _ _ _ _ _ _ _} _.
 #[register=no] Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
-Arguments PathSquare_rec {A} P _ {_ _ _ _ _ _ _ _} _.
+Arguments PathSquare_rec {A} P sq_id {_ _ _ _ _ _ _ _} _.
 
 (** [PathSquare_ind] is an equivalence, similar to how [paths_ind] is. *)
 Instance isequiv_PathSquare_ind `{Funext} {A}

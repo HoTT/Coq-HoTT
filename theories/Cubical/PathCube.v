@@ -54,11 +54,11 @@ Cumulative Inductive PathCube {A}
 Arguments PathCube {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
 Scheme PathCube_ind := Induction for PathCube Sort Type.
-Arguments PathCube_ind {A} P _
+Arguments PathCube_ind {A} P idcube
   {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
 Scheme PathCube_rec := Minimality for PathCube Sort Type.
-Arguments PathCube_rec {A} P _
+Arguments PathCube_rec {A} P idcube
   {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
 (* These notations make it easier to write our lemmas *)
