@@ -38,7 +38,7 @@ Fixpoint V_ind@{U' U u | U < U'} (P : V@{U' U} -> Type@{u})
   (v : V)
 : P v
 := (match v with
-     (* TODO: Revisit after dropping Rocq 9.1: use [set f] and [H_set _ f] when supported by the remaining Rocq versions. *)
+     (* TODO: When Rocq 9.3 is our minimum, use [set f] and [H_set _ f]. Rocq 9.2 still requires the explicit type-argument pattern. *)
      | @set A f => fun _ _ => H_set A f (fun a => V_ind P H_0trunc H_set H_setext (f a))
     end) H_setext H_0trunc.
 
