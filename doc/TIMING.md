@@ -102,7 +102,7 @@ Other timing methods:
 
   to see a nice summary of the user time for each file, sorted.  Saved in time-of-build.log and time-of-build-pretty.log.  Add `TIMING_REAL=1` to see real time instead.  Can also compare revisions, etc.  See
 
-    https://rocq-prover.org/doc/V9.2.0/refman/practical-tools/utilities.html#timing-targets-and-performance-testing
+    https://rocq-prover.org/doc/master/refman/practical-tools/utilities.html#timing-targets-and-performance-testing
 
 - To find the slowest lines in the whole library:
 
@@ -114,4 +114,4 @@ Other timing methods:
 
 Locations are indicated by character position within the file.  In Emacs, you can use `M-x goto-char NNN RET` to find the spot.
 
-Currently, most fine-grained timing tests have to be done using `make` instead of `dune`.  See https://github.com/ocaml/dune/issues/11587 for a feature request to add this support to dune.
+For fine-grained timing with Dune, see the discussion in https://github.com/ocaml/dune/issues/11587.

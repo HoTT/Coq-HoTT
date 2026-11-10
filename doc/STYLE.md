@@ -293,9 +293,8 @@ Scheme thing_ind := Induction for thing Sort Type.
 Scheme thing_rec := Minimality for thing Sort Type.
 ```
 
-Register the principles used by `induction` and `elim` explicitly to avoid
-name-based lookup, which is deprecated since Rocq 9.2. With our minimum
-version of 9.2, no conventional `_rect` compatibility alias is needed:
+Register the principles used by `induction` and `elim` explicitly rather
+than relying on conventional eliminator names:
 
 ```coq
 Register Scheme thing_ind as rect_dep for thing.
@@ -450,7 +449,7 @@ When declaring an `Instance` you should prefer the `export` locality attribute
 to the `Global` locality attribute. Inside a section, you should
 explicitly annotate instance declarations as `Local` or `#[export]`
 to avoid ambiguity. Outside a section, you may omit the annotation,
-and in this case Rocq defaults to the `export` attribute since 8.18.
+and in this case the default locality is `export`.
 
 ### 3.5. Using Typeclasses
 
@@ -1025,7 +1024,7 @@ not much more than 70 characters. Remember that when Rocq code is
 often edited in split-screen so that the screen width is cut in half,
 and that not everyone's screen is as wide as yours.
 
-[`rocq doc`](https://rocq-prover.org/doc/V9.2.0/refman/practical-tools/utilities.html) is used
+[`rocq doc`](https://rocq-prover.org/doc/master/refman/practical-tools/utilities.html) is used
 to produce a browsable
 [view of the library](https://hott.github.io/Coq-HoTT/coqdoc-html/toc.html).
 `rocq doc` treats comments specially, so comments should follow the
