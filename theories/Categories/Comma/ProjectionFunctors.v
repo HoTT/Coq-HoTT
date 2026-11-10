@@ -8,9 +8,7 @@ Require Import FunctorCategory.Core.
 Require Import Cat.Core.
 Require Import Functor.Paths.
 Require Comma.Core.
-Local Set Warnings "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
-Local Set Warnings "notation-overridden".
 Require Import Comma.InducedFunctors Comma.Projection.
 Require ProductLaws ExponentialLaws.Law1.Functors ExponentialLaws.Law4.Functors.
 Require Import Types.Forall PathGroupoids HoTT.Tactics.
@@ -29,7 +27,7 @@ Section comma.
   Variable P : PreCategory -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation Cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation Cat := (@sub_pre_cat _ P HF).
 
   Variables A B C : PreCategory.
 
@@ -134,7 +132,7 @@ Section slice_category_projection_functor.
   Variable P : PreCategory -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation Cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation Cat := (@sub_pre_cat _ P HF).
 
   Variables C D : PreCategory.
 
@@ -147,7 +145,7 @@ Section slice_category_projection_functor.
   Local Open Scope functor_scope.
   Local Open Scope category_scope.
 
-  Local Notation inv D := (@ExponentialLaws.Law1.Functors.inverse _ terminal_category _ _ _ D).
+  Local Abbreviation inv D := (@ExponentialLaws.Law1.Functors.inverse _ terminal_category _ _ _ D).
 
   (** ** Functor [(C → D)ᵒᵖ → D → (cat / C)] *)
   Definition slice_category_projection_functor

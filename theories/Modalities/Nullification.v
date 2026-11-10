@@ -62,7 +62,7 @@ Proof.
 Defined.
 
 (** And here is the "real" definition of the notation [IsNull]. *)
-Notation IsNull f := (In (Nul f)).
+Abbreviation IsNull f := (In (Nul f)).
 
 (** ** Nullification and Accessibility *)
 

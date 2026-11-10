@@ -130,7 +130,7 @@ Defined.
 
 *)
 
-Local Notation apcs := (ap_compose_sq _ _ _).
+Local Abbreviation apcs := (ap_compose_sq _ _ _).
 
 Definition sq_ap011_compose {A B C D : Type} (f : A -> B -> C) (g : C -> D)
   {a a' : A} (p : a = a') {b b' : B} (q : b = b')

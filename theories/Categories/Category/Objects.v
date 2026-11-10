@@ -18,7 +18,7 @@ Definition unique_up_to_unique_isomorphism (C : PreCategory) (P : C -> Type) :=
 (** ** Terminal objects *)
 (** A terminal object is an object with a unique morphism from every
     other object. *)
-Notation IsTerminalObject C x :=
+Abbreviation IsTerminalObject C x :=
   (forall x' : object C, Contr (morphism C x' x)).
 
 Class TerminalObject (C : PreCategory) :=
@@ -32,7 +32,7 @@ Coercion object_terminal : TerminalObject >-> object.
 (** ** Initial objects *)
 (** An initial object is an object with a unique morphism from every
     other object. *)
-Notation IsInitialObject C x :=
+Abbreviation IsInitialObject C x :=
   (forall x' : object C, Contr (morphism C x x')).
 
 Class InitialObject (C : PreCategory) :=

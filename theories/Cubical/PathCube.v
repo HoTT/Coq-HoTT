@@ -53,21 +53,19 @@ Cumulative Inductive PathCube {A}
 
 Arguments PathCube {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
 Scheme PathCube_ind := Induction for PathCube Sort Type.
-Arguments PathCube_ind {A} P f
-  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} : rename.
+Arguments PathCube_ind {A} P idcube
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
 Scheme PathCube_rec := Minimality for PathCube Sort Type.
-Arguments PathCube_rec {A} P f
-  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} : rename.
+Arguments PathCube_rec {A} P idcube
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
 (* These notations make it easier to write our lemmas *)
-Local Notation hr := (sq_refl_h _).
-Local Notation vr := (sq_refl_v _).
-Local Notation tr := sq_tr.
-Local Notation fv := sq_flip_v.
+Local Abbreviation hr := (sq_refl_h _).
+Local Abbreviation vr := (sq_refl_v _).
+Local Abbreviation tr := sq_tr.
+Local Abbreviation fv := sq_flip_v.
 
 (** [PathCube]s form a path of squares up to retyping *)
 Definition equiv_cu_path {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
@@ -106,7 +104,7 @@ Proof.
   by destruct X.
 Defined.
 
-Notation cu_path := equiv_cu_path.
+Abbreviation cu_path := equiv_cu_path.
 
 Section Reflexivity.
 
@@ -176,18 +174,18 @@ Section PathCubeRewriting.
 
 End PathCubeRewriting.
 
-Notation cu_GGGGGG := equiv_cu_GGGGGG.
-Notation cu_Gccccc := equiv_cu_Gccccc.
-Notation cu_cGcccc := equiv_cu_cGcccc.
-Notation cu_ccGccc := equiv_cu_ccGccc.
-Notation cu_cccGcc := equiv_cu_cccGcc.
-Notation cu_ccccGc := equiv_cu_ccccGc.
-Notation cu_cccccG := equiv_cu_cccccG.
-Notation cu_ccGGGG := equiv_cu_ccGGGG.
-Notation cu_GGGGcc := equiv_cu_GGGGcc.
-Notation cu_GGcccc := equiv_cu_GGcccc.
-Notation cu_ccGGcc := equiv_cu_ccGGcc.
-Notation cu_ccccGG := equiv_cu_ccccGG.
+Abbreviation cu_GGGGGG := equiv_cu_GGGGGG.
+Abbreviation cu_Gccccc := equiv_cu_Gccccc.
+Abbreviation cu_cGcccc := equiv_cu_cGcccc.
+Abbreviation cu_ccGccc := equiv_cu_ccGccc.
+Abbreviation cu_cccGcc := equiv_cu_cccGcc.
+Abbreviation cu_ccccGc := equiv_cu_ccccGc.
+Abbreviation cu_cccccG := equiv_cu_cccccG.
+Abbreviation cu_ccGGGG := equiv_cu_ccGGGG.
+Abbreviation cu_GGGGcc := equiv_cu_GGGGcc.
+Abbreviation cu_GGcccc := equiv_cu_GGcccc.
+Abbreviation cu_ccGGcc := equiv_cu_ccGGcc.
+Abbreviation cu_ccccGG := equiv_cu_ccccGG.
 
 (* Rotating top and bottom to front and back *)
 Definition equiv_cu_rot_tb_fb {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
@@ -232,7 +230,7 @@ Proof.
   by destruct e.
 Defined.
 
-Notation cu_rot_tb_fb := equiv_cu_rot_tb_fb.
+Abbreviation cu_rot_tb_fb := equiv_cu_rot_tb_fb.
 
 (** Degenerate cubes formed from paths between squares *)
 
@@ -283,9 +281,9 @@ Proof.
   by exact equiv_cu_G11.
 Defined.
 
-Notation cu_G11 := equiv_cu_G11.
-Notation cu_1G1 := equiv_cu_1G1.
-Notation cu_11G := equiv_cu_11G.
+Abbreviation cu_G11 := equiv_cu_G11.
+Abbreviation cu_1G1 := equiv_cu_1G1.
+Abbreviation cu_11G := equiv_cu_11G.
 
 (** Degenerate cubes given by squares *)
 Section PathPathSquares.
@@ -325,9 +323,9 @@ Section PathPathSquares.
 
 End PathPathSquares.
 
-Notation cu_GG1 := equiv_cu_GG1.
-Notation cu_G1G := equiv_cu_G1G.
-Notation cu_1GG := equiv_cu_1GG.
+Abbreviation cu_GG1 := equiv_cu_GG1.
+Abbreviation cu_G1G := equiv_cu_G1G.
+Abbreviation cu_1GG := equiv_cu_1GG.
 Arguments cu_GG1 {_ _ _ _ _ _ _ _ _ _ _}.
 Arguments cu_G1G {_ _ _ _ _ _ _ _ _ _ _}.
 Arguments cu_1GG {_ _ _ _ _ _ _ _ _ _ _}.
@@ -352,7 +350,7 @@ Proof.
   exact cu_GG1.
 Defined.
 
-Notation cu_ds := equiv_cu_ds.
+Abbreviation cu_ds := equiv_cu_ds.
 
 (** [PathCube]s can be given by [DPath]s over [PathSquare]s *)
 Definition equiv_dp_cu {A B : Type} {x1 x2 : A} {a00 a01 a10 a11 : A -> B}
@@ -367,7 +365,7 @@ Proof.
   destruct p; symmetry; exact cu_G11.
 Defined.
 
-Notation dp_cu := equiv_dp_cu.
+Abbreviation dp_cu := equiv_dp_cu.
 
 (** Flipping a cube along the left right direction *)
 Definition equiv_cu_flip_lr {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
@@ -392,7 +390,7 @@ Proof.
   all: exact (eisretr sq_G1 _)^.
 Defined.
 
-Notation cu_flip_lr := equiv_cu_flip_lr.
+Abbreviation cu_flip_lr := equiv_cu_flip_lr.
 
 (** [PathCube] Kan fillers ~ Every open crate has a lid *)
 
@@ -570,7 +568,7 @@ End Concat.
 (* Notation for left right concatenation *)
 Notation "x '@lr' y" := (cu_concat_lr x y) : cube_scope.
 
-Local Notation apc := (ap_compose_sq _ _ _).
+Local Abbreviation apc := (ap_compose_sq _ _ _).
 
 (** [sq_ap] analogue for [ap_compose] *)
 Definition sq_ap_compose {A B C : Type} {a00 a10 a01 a11 : A}
@@ -581,7 +579,7 @@ Proof.
   by destruct s.
 Defined.
 
-Local Notation api := (ap_idmap_sq _).
+Local Abbreviation api := (ap_idmap_sq _).
 
 (** [sq_ap] analogue for [ap_idmap] *)
 Definition sq_ap_idmap {A : Type} {a00 a10 a01 a11 : A}
@@ -592,7 +590,7 @@ Proof.
   by destruct s.
 Defined.
 
-Local Notation apn := (ap_nat _ _).
+Local Abbreviation apn := (ap_nat _ _).
 
 (** [sq_ap] analogue for [ap_nat] *)
 Definition sq_ap_nat

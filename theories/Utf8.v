@@ -6,9 +6,9 @@ Require Import Spaces.Circle Spaces.TwoSphere HoTT.Truncations Homotopy.Suspensi
 
 (** Some Unicode symbols that we don't use within the library.  See also Utf8Minimal.v for a small number of symbols uses in the Classes library. *)
 
-Notation Type₀ := Type0.
-Notation pr₁ := pr1.
-Notation pr₂ := pr2.
+Abbreviation Type₀ := Type0.
+Abbreviation pr₁ := pr1.
+Abbreviation pr₂ := pr2.
 Local Open Scope fibration_scope.
 (*Notation "f → g" := (f -> g)%equiv : equiv_scope.*)
 Notation "x ₁" := (x.1) : fibration_scope.
@@ -65,4 +65,4 @@ Notation "❘ a ❘₂" := (@tr 2 _ a) : trunc_scope.
 
 Notation "∞" := purely.
 
-Notation Σ := Susp.
+Abbreviation Σ := Susp.

@@ -73,8 +73,8 @@ Add Printing Let prod.
 Notation "x * y" := (prod x y) : type_scope.
 Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
 Notation "A /\ B" := (prod A B) (only parsing) : type_scope.
-Notation and := prod (only parsing).
-Notation conj := pair (only parsing).
+Abbreviation and := prod (only parsing).
+Abbreviation conj := pair (only parsing).
 
 #[export] Hint Resolve pair inl inr : core.
 
@@ -142,7 +142,7 @@ Tactic Notation "transitivity" constr(x) := etransitivity x.
 (** ** Basic definitions *)
 
 (** Define an alias for [Set], which is really [Type₀], the smallest universe. *)
-Notation Type0 := Set.
+Abbreviation Type0 := Set.
 
 (** ** Sigma types *)
 
@@ -189,8 +189,8 @@ Notation "( x ; .. ; y ; z )" := (exist _ x .. (exist _ y z) ..) : fibration_sco
 (** We bind [fibration_scope] with [sig] so that we are automatically in [fibration_scope] when we are passing an argument of type [sig]. *)
 Bind Scope fibration_scope with sig.
 
-Notation pr1 := proj1.
-Notation pr2 := proj2.
+Abbreviation pr1 := proj1.
+Abbreviation pr2 := proj2.
 
 (** The following notation is very convenient, although it unfortunately clashes with Proof General's "electric period".  We have added [format] specifiers in Notations.v so that it will display without an extra space, as [x.1] rather than as [x .1]. *)
 Notation "x .1" := (pr1 x) : fibration_scope.
@@ -198,8 +198,8 @@ Notation "x .2" := (pr2 x) : fibration_scope.
 
 (** ** Functions *)
 
-(** We make the identity map a notation so we do not have to unfold it, or complicate matters with its type. *)
-Notation idmap := (fun x => x).
+(** We make the identity map an abbreviation so we do not have to unfold it, or complicate matters with its type. *)
+Abbreviation idmap := (fun x => x).
 
 Instance reflexive_fun : Reflexive (fun A B => A -> B)
   := fun _ => idmap.
@@ -209,7 +209,7 @@ Definition const {A B} (b : B) := fun x : A => b.
 
 (** Composition of functions. *)
 
-Notation compose := (fun g f x => g (f x)).
+Abbreviation compose := (fun g f x => g (f x)).
 
 (** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
 
@@ -431,7 +431,7 @@ Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope : si
 Register ap as core.identity.congr.
 
 (** We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element. Thus, [ap] is a shorthand for [ap01]. *)
-Notation ap01 := ap (only parsing).
+Abbreviation ap01 := ap (only parsing).
 
 (** Similarly, dependent functions act on paths; but the type is a bit more subtle. If [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y]. Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
 
@@ -495,7 +495,7 @@ Definition ap10 {A B} {f g : A -> B} (h : f = g) : f == g
 Global Arguments ap10 {A B}%_type_scope {f g}%_function_scope h%_path_scope _.
 
 (** For the benefit of readers of the HoTT Book: *)
-Notation happly := ap10 (only parsing).
+Abbreviation happly := ap10 (only parsing).
 
 Definition ap11 {A B} {f g : A -> B} (h : f = g) {x y : A} (p : x = y) : f x = g y.
 Proof.
@@ -619,7 +619,7 @@ Notation "n .+4" := (n.+1.+3)%trunc : trunc_scope.
 Notation "n .+5" := (n.+1.+4)%trunc : trunc_scope.
 Local Open Scope trunc_scope.
 
-(** We define truncatedness using an inductive type [IsTrunc_internal A n].  We use a notation [IsTrunc n A] simply to swap the orders of arguments, and notations [Contr], [IsHProp] and [IsHSet] which specialize to [n] being [-2], [-1] and [0], respectively.  An alternative is to use a [Fixpoint], and that was done in the past.  The advantages of the inductive approach are:  [IsTrunc_internal] is cumulative; typeclass inference works smoothly; the library builds faster.  Some disadvantages are that we need to manually apply the constructors when proving that something is truncated, and that the induction principle is awkward to work with. *)
+(** We define truncatedness using an inductive type [IsTrunc_internal A n].  We use an abbreviation [IsTrunc n A] simply to swap the orders of arguments, and abbreviations [Contr], [IsHProp] and [IsHSet] which specialize to [n] being [-2], [-1] and [0], respectively.  An alternative is to use a [Fixpoint], and that was done in the past.  The advantages of the inductive approach are:  [IsTrunc_internal] is cumulative; typeclass inference works smoothly; the library builds faster.  Some disadvantages are that we need to manually apply the constructors when proving that something is truncated, and that the induction principle is awkward to work with. *)
 
 Inductive IsTrunc_internal (A : Type@{u}) : trunc_index -> Type@{u} :=
 | Build_Contr : forall (center : A) (contr : forall y, center = y), IsTrunc_internal A minus_two
@@ -627,7 +627,7 @@ Inductive IsTrunc_internal (A : Type@{u}) : trunc_index -> Type@{u} :=
 
 Existing Class IsTrunc_internal.
 
-Notation IsTrunc n A := (IsTrunc_internal A n).
+Abbreviation IsTrunc n A := (IsTrunc_internal A n).
 
 Scheme IsTrunc_internal_ind := Induction for IsTrunc_internal Sort Type.
 Scheme IsTrunc_internal_rec := Minimality for IsTrunc_internal Sort Type.
@@ -667,9 +667,9 @@ Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
   : IsTrunc n (x = y)
   := istrunc_unfold n.+1 A H x y.
 
-Notation Contr A := (IsTrunc minus_two A).
-Notation IsHProp A := (IsTrunc minus_two.+1 A).
-Notation IsHSet A := (IsTrunc minus_two.+2 A).
+Abbreviation Contr A := (IsTrunc minus_two A).
+Abbreviation IsHProp A := (IsTrunc minus_two.+1 A).
+Abbreviation IsHSet A := (IsTrunc minus_two.+2 A).
 
 Definition center (A : Type) {H : Contr A} : A := pr1 (istrunc_unfold _ _ H).
 Definition contr {A : Type} {H : Contr A} (y : A) : center A = y := pr2 (istrunc_unfold _ _ H) y.
@@ -698,8 +698,8 @@ Coercion istrunc_fun : IsTrunc >-> Funclass.
 
 (** *** Truncated relations  *)
 
-(** Hprop-valued relations.  Making this a [Notation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the notation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)
-Notation is_mere_relation A R := (forall (x y : A), IsHProp (R x y)).
+(** Hprop-valued relations.  Making this an [Abbreviation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the abbreviation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)
+Abbreviation is_mere_relation A R := (forall (x y : A), IsHProp (R x y)).
 
 (** ** Natural numbers *)
 

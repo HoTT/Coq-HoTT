@@ -552,7 +552,7 @@ Section Reflective_Subuniverse.
   End Replete.
 
   (** The maps that are inverted by the reflector.  Note that this notation is not (yet) global (because notations in a section cannot be made global); it only exists in this section.  After the section is over, we will redefine it globally. *)
-  Local Notation O_inverts f := (IsEquiv (O_functor f)).
+  Local Abbreviation O_inverts f := (IsEquiv (O_functor f)).
 
   Section OInverts.
 
@@ -1338,7 +1338,7 @@ Section Reflective_Subuniverse.
 End Reflective_Subuniverse.
 
 (** Now we make the [O_inverts] notation global. *)
-Notation O_inverts O f := (IsEquiv (O_functor O f)).
+Abbreviation O_inverts O f := (IsEquiv (O_functor O f)).
 
 (** ** Modally connected types *)
 

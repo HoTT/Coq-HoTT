@@ -3,9 +3,7 @@ Require Import Category.Core Functor.Core.
 Require Import Category.Dual Functor.Dual.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Comma.Core.
-Local Set Warnings "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
-Local Set Warnings "notation-overridden".
 
 Set Implicit Arguments.
 Generalizable All Variables.
@@ -23,11 +21,11 @@ Section opposite.
     Variable S : Functor A C.
     Variable T : Functor B C.
 
-    Local Notation obj_of x
+    Local Abbreviation obj_of x
       := (CommaCategory.Build_object (T^op) (S^op) _ _ (CommaCategory.f x)
           : object ((T^op / S^op)^op)).
 
-    Local Notation mor_of s d m
+    Local Abbreviation mor_of s d m
       := (CommaCategory.Build_morphism'
             (obj_of d) (obj_of s)
             (CommaCategory.h m%morphism)

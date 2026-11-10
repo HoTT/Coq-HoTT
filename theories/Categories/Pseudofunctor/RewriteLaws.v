@@ -133,7 +133,7 @@ Section lemmas.
     etransitivity; apply Category.Core.left_identity.
   Qed.
 
-  Local Notation typeof x := ((fun T (_ : T) => T) _ x) (only parsing).
+  Local Abbreviation typeof x := ((fun T (_ : T) => T) _ x) (only parsing).
 
   Let p_composition_of_coherent_for_rewrite_type w x y z f g h
     := Eval simpl in typeof (ap (@morphism_isomorphic _ _ _)

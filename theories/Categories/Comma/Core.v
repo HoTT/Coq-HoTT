@@ -62,7 +62,7 @@ Module Import CommaCategory.
     Global Arguments b _ / .
     Global Arguments f _ / .
 
-    Local Notation object_sig_T :=
+    Local Abbreviation object_sig_T :=
       ({ a : A
        | { b : B
          | morphism C (S a) (T b) }}).
@@ -132,12 +132,12 @@ Module Import CommaCategory.
     Global Arguments p _ _ _ / .
     Global Arguments p_sym _ _ _ / .
 
-    Local Notation morphism_sig_T abf a'b'f' :=
+    Local Abbreviation morphism_sig_T abf a'b'f' :=
       ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))
        | { h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b))
          | T _1 h o abf.(f) = a'b'f'.(f) o S _1 g }}).
 
-    Local Notation morphism_sig_T' abf a'b'f' :=
+    Local Abbreviation morphism_sig_T' abf a'b'f' :=
       ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))
        | { h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b))
          | { _ : T _1 h o abf.(f) = a'b'f'.(f) o S _1 g
@@ -331,7 +331,6 @@ Global Arguments CC_Functor' / .
 Global Arguments cc_functor_from_terminal' / .
 Global Arguments cc_identity_functor' / .
 
-Local Set Warnings "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Module Export CommaCoreNotations.
   (** We really want to use infix [↓] for comma categories, but that's Unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [/] of [↓]. *)
   (** Set some notations for printing *)

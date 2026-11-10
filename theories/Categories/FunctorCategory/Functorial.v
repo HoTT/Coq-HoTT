@@ -15,7 +15,7 @@ Section functor.
   Context `{forall C, IsHProp (P C)}.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (sub_pre_cat P HF).
+  Local Abbreviation cat := (sub_pre_cat P HF).
 
   Hypothesis has_functor_categories : forall C D : cat, P (C.1 -> D.1).
 

@@ -39,5 +39,5 @@ Module Export Core.
     Definition semisimplicial_prop := semisimplicial_category prop_cat.
   End semisimplicial_sets.
 
-  Notation semisimplicial_of obj := (semisimplicial_category (cat_of obj)).
+  Abbreviation semisimplicial_of obj := (semisimplicial_category (cat_of obj)).
 End Core.

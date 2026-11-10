@@ -80,7 +80,7 @@ Definition arity_symboltype {σ} : SymbolType σ → nat
 (* [Carriers] is a notation because it will be used for an implicit
    coercion [Algebra >-> Funclass] below. *)
 
-Notation Carriers σ := (Sort σ → Type).
+Abbreviation Carriers σ := (Sort σ → Type).
 
 (** The function [Operation] maps a family of carriers [A : Carriers σ]
     and [w : SymbolType σ] to the corresponding function type.
@@ -173,7 +173,7 @@ Defined.
 Class IsTruncAlgebra (n : trunc_index) {σ : Signature} (A : Algebra σ)
   := trunc_carriers_algebra :: ∀ (s : Sort σ), IsTrunc n (A s).
 
-Notation IsHSetAlgebra := (IsTruncAlgebra 0).
+Abbreviation IsHSetAlgebra := (IsTruncAlgebra 0).
 
 Instance hprop_is_trunc_algebra `{Funext} (n : trunc_index)
   {σ : Signature} (A : Algebra σ)

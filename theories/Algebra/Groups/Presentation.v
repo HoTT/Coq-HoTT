@@ -131,7 +131,7 @@ Defined.
 (** ** Notations for presentations *)
 
 (** Convenient abbreviation when defining notations. *)
-Local Notation ff := (freegroup_in o fin_nat).
+Local Abbreviation ff := (freegroup_in o fin_nat).
 
 (** TODO: I haven't worked out how to generalize to any number of binders, so we explicitly list the first few levels. *)
 

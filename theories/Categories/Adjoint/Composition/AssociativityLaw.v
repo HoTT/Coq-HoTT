@@ -11,7 +11,7 @@ Local Open Scope adjunction_scope.
 Local Open Scope morphism_scope.
 
 Section composition_lemmas.
-  Local Notation AdjunctionWithFunctors C D :=
+  Local Abbreviation AdjunctionWithFunctors C D :=
     { fg : Functor C D * Functor D C
     | fst fg -| snd fg }.
 

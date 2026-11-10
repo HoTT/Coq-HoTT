@@ -5,7 +5,7 @@ Require Import HoTT.Basics HoTT.Types TruncType.
 Set Implicit Arguments.
 Generalizable All Variables.
 
-Notation cat_of obj :=
+Abbreviation cat_of obj :=
   (@Build_PreCategory obj
                       (fun x y => x -> y)
                       (fun _ x => x)

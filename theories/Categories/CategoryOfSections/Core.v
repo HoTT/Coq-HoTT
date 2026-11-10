@@ -25,7 +25,7 @@ Section FunctorSectionCategory.
       section_of_functor_issect : R o section_of_functor_morphism = 1
     }.
 
-  Local Notation section_of_functor_sig :=
+  Local Abbreviation section_of_functor_sig :=
     { section_of_functor_morphism : Functor D C
     | R o section_of_functor_morphism = 1 }.
 

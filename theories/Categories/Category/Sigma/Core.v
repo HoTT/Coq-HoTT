@@ -5,7 +5,7 @@ Require Import Basics.Trunc Types.Sigma.
 Set Implicit Arguments.
 Generalizable All Variables.
 
-Local Notation sig_type := sig.
+Local Abbreviation sig_type := sig.
 
 (** We can generalize the notion of [sig] to categories.  This is, essentially, a type-theoretic perspective on the Grothendieck construction. *)
 
@@ -13,11 +13,11 @@ Section sig_obj_mor.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
-  Local Notation obj := (sig Pobj).
+  Local Abbreviation obj := (sig Pobj).
 
   Variable Pmor : forall s d : obj, morphism A s.1 d.1 -> Type.
 
-  Local Notation mor s d := (sig (Pmor s d)).
+  Local Abbreviation mor s d := (sig (Pmor s d)).
   Context `(HPmor : forall s d, IsHSet (mor s d)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -26,8 +26,8 @@ Section sig_obj_mor.
                         -> @Pmor s d m2
                         -> @Pmor s d' (m1 o m2).
 
-  Local Notation identity x := (@identity A x.1; @Pidentity x).
-  Local Notation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
+  Local Abbreviation identity x := (@identity A x.1; @Pidentity x).
+  Local Abbreviation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
 
   Hypothesis P_associativity
   : forall x1 x2 x3 x4 (m1 : mor x1 x2) (m2 : mor x2 x3) (m3 : mor x3 x4),
@@ -73,11 +73,11 @@ Section sig_obj_mor_hProp.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
-  Local Notation obj := (sig_type Pobj).
+  Local Abbreviation obj := (sig_type Pobj).
 
   Variable Pmor : forall s d : obj, morphism A s.1 d.1 -> Type.
 
-  Local Notation mor s d := (sig_type (Pmor s d)).
+  Local Abbreviation mor s d := (sig_type (Pmor s d)).
   Context `(HPmor : forall s d m, IsHProp (Pmor s d m)).
 
   Variable Pidentity : forall x, @Pmor x x (@identity A _).
@@ -86,8 +86,8 @@ Section sig_obj_mor_hProp.
                         -> @Pmor s d m2
                         -> @Pmor s d' (m1 o m2).
 
-  Local Notation identity x := (@identity A x.1; @Pidentity x).
-  Local Notation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
+  Local Abbreviation identity x := (@identity A x.1; @Pidentity x).
+  Local Abbreviation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
 
   Local Ltac t ex_tac :=
     intros;
@@ -135,4 +135,4 @@ End sig_obj_mor_hProp.
 
 Arguments proj1_sig {A Pobj Pmor HPmor Pidentity Pcompose}.
 
-Notation subcategory := sig.
+Abbreviation subcategory := sig.

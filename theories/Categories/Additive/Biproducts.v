@@ -8,8 +8,8 @@ From HoTT Require Import Basics.Overture Basics.Tactics.
 From HoTT.Categories Require Import Category.Core.
 From HoTT.Categories.Additive Require Import ZeroObjects.
 
-Local Notation fst_type := Basics.Overture.fst.
-Local Notation snd_type := Basics.Overture.snd.
+Local Abbreviation fst_type := Basics.Overture.fst.
+Local Abbreviation snd_type := Basics.Overture.snd.
 
 Local Open Scope morphism_scope.
 
@@ -511,8 +511,7 @@ Hint Resolve
   biproduct_prod_beta_l biproduct_prod_beta_r
   : biproduct.
 
-(* TODO: Once the minimum Rocq version is 9.2, declare the [biproduct_simplify] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
-#[warning="-implicit-create-rewrite-hint-db"]
+Local Create Rewrite HintDb biproduct_simplify.
 Hint Rewrite
   @zero_morphism_left @zero_morphism_right
   : biproduct_simplify.

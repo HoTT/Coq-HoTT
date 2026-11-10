@@ -5,9 +5,9 @@ Require Import Types.Prod.
 Set Implicit Arguments.
 Generalizable All Variables.
 
-Local Notation fst_type := fst.
-Local Notation snd_type := snd.
-Local Notation pair_type := pair.
+Local Abbreviation fst_type := fst.
+Local Abbreviation snd_type := snd.
+Local Abbreviation pair_type := pair.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
@@ -101,7 +101,6 @@ Section induced.
   Defined.
 End induced.
 
-Local Set Warnings "-notation-overridden".
 Module Export FunctorProdCoreNotations.
   Infix "*" := prod : functor_scope.
   Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : functor_scope.

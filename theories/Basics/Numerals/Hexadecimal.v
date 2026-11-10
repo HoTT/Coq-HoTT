@@ -48,7 +48,7 @@ Inductive uint : Type0 :=
     but rather use [D0 Nil] instead, since this form will be denoted
     as [0], while [Nil] will be printed as [Nil]. *)
 
-Notation zero := (D0 Nil).
+Abbreviation zero := (D0 Nil).
 
 (** For signed integers, we use two constructors [Pos] and [Neg]. *)
 

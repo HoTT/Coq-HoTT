@@ -360,7 +360,7 @@ Fixpoint pos_of_succ_nat (n : nat) : Pos :=
 
 (** ** Conversion with a decimal representation for printing/parsing *)
 
-Local Notation ten := 1~0~1~0.
+Local Abbreviation ten := 1~0~1~0.
 
 Fixpoint pos_of_uint_acc (d : Decimal.uint) (acc : Pos) :=
   match d with

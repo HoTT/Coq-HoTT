@@ -47,7 +47,7 @@ Proof.
   by destruct p.
 Defined.
 
-Notation dp_const := equiv_dp_const.
+Abbreviation dp_const := equiv_dp_const.
 
 (** [dp_apD] of a non-dependent map is just a constant [DPath] *)
 Definition dp_apD_const {A B} (f : A -> B) {a0 a1 : A}
@@ -224,7 +224,7 @@ Proof.
   apply equiv_concat_l, transport_paths_l.
 Defined.
 
-Notation dp_paths_l := equiv_dp_paths_l.
+Abbreviation dp_paths_l := equiv_dp_paths_l.
 
 Definition equiv_dp_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1) r
   :  q @ p = r <~> DPath (fun y => x = y) p q r.
@@ -232,7 +232,7 @@ Proof.
   apply equiv_concat_l, transport_paths_r.
 Defined.
 
-Notation dp_paths_r := equiv_dp_paths_r.
+Abbreviation dp_paths_r := equiv_dp_paths_r.
 
 Definition equiv_dp_paths_lr {A : Type} {x1 x2 : A} (p : x1 = x2) (q : x1 = x1) r
   : (p^ @ q) @ p = r <~> DPath (fun x : A => x = x) p q r.
@@ -240,7 +240,7 @@ Proof.
   apply equiv_concat_l, transport_paths_lr.
 Defined.
 
-Notation dp_paths_lr := equiv_dp_paths_lr.
+Abbreviation dp_paths_lr := equiv_dp_paths_lr.
 
 Definition equiv_dp_paths_Fl {A B} {f : A -> B} {x1 x2 : A} {y : B} (p : x1 = x2)
   (q : f x1 = y) r :  (ap f p)^ @ q = r <~> DPath (fun x => f x = y) p q r.
@@ -248,7 +248,7 @@ Proof.
   apply equiv_concat_l, transport_paths_Fl.
 Defined.
 
-Notation dp_paths_Fl := equiv_dp_paths_Fl.
+Abbreviation dp_paths_Fl := equiv_dp_paths_Fl.
 
 Definition equiv_dp_paths_Fr {A B} {g : A -> B} {y1 y2 : A} {x : B} (p : y1 = y2)
   (q : x = g y1) r :  q @ ap g p = r <~> DPath (fun y : A => x = g y) p q r.
@@ -256,7 +256,7 @@ Proof.
   apply equiv_concat_l, transport_paths_Fr.
 Defined.
 
-Notation dp_paths_Fr := equiv_dp_paths_Fr.
+Abbreviation dp_paths_Fr := equiv_dp_paths_Fr.
 
 Definition equiv_dp_paths_FFlr {A B} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : g (f x1) = x1) r
@@ -265,7 +265,7 @@ Proof.
   apply equiv_concat_l, transport_paths_FFlr.
 Defined.
 
-Notation dp_paths_FFlr := equiv_dp_paths_FFlr.
+Abbreviation dp_paths_FFlr := equiv_dp_paths_FFlr.
 
 Definition equiv_dp_paths_FlFr {A B} {f g : A -> B} {x1 x2 : A} (p : x1 = x2)
   (q : f x1 = g x1) r
@@ -274,7 +274,7 @@ Proof.
   apply equiv_concat_l, transport_paths_FlFr.
 Defined.
 
-Notation dp_paths_FlFr := equiv_dp_paths_FlFr.
+Abbreviation dp_paths_FlFr := equiv_dp_paths_FlFr.
 
 Definition equiv_dp_paths_lFFr {A B} {f : A -> B} {g : B -> A} {x1 x2 : A} 
   (p : x1 = x2) (q : x1 = g (f x1)) r
@@ -283,7 +283,7 @@ Proof.
   apply equiv_concat_l, transport_paths_lFFr.
 Defined.
 
-Notation dp_paths_lFFr := equiv_dp_paths_lFFr.
+Abbreviation dp_paths_lFFr := equiv_dp_paths_lFFr.
 
 Definition equiv_dp_paths_FlFr_D {A B} (f g : forall a : A, B a) 
   {x1 x2 : A} (p : x1 = x2) (q : f x1 = g x1) (r : f x2 = g x2)
@@ -293,7 +293,7 @@ Proof.
   apply equiv_concat_l, transport_paths_FlFr_D.
 Defined.
 
-Notation dp_paths_FlFr_D := equiv_dp_paths_FlFr_D.
+Abbreviation dp_paths_FlFr_D := equiv_dp_paths_FlFr_D.
 
 Definition equiv_dp_compose' {A B} (f : A -> B) (P : B -> Type) {x y : A}
   {p : x = y} {q : f x = f y} (r : ap f p = q) {u : P (f x)} {v : P (f y)}
@@ -302,14 +302,14 @@ Proof.
   by destruct r, p.
 Defined.
 
-Notation dp_compose' := equiv_dp_compose'.
+Abbreviation dp_compose' := equiv_dp_compose'.
 
 Definition equiv_dp_compose {A B} (f : A -> B) (P : B -> Type) {x y : A}
   (p : x = y) {u : P (f x)} {v : P (f y)}
   : DPath (fun x => P (f x)) p u v <~> DPath P (ap f p) u v
   := dp_compose' f P (idpath (ap f p)).
 
-Notation dp_compose := equiv_dp_compose.
+Abbreviation dp_compose := equiv_dp_compose.
 
 Definition dp_apD_compose' {A B : Type} (f : A -> B) (P : B -> Type)
            {x y : A} {p : x = y} {q : f x = f y} (r : ap f p = q) (g : forall b:B, P b)
@@ -348,7 +348,7 @@ Definition equiv_path_sigma_dp {A P} {x x' : A} {y : P x} {y' : P x'}
   : {p : x = x' & DPath P p y y'} <~> (x; y) = (x'; y')
   := equiv_path_sigma P (x; y) (x'; y').
 
-Notation path_sigma_dp := equiv_path_sigma_dp.
+Abbreviation path_sigma_dp := equiv_path_sigma_dp.
 
 Definition ap_pr1_path_sigma_dp {A : Type} {P : A -> Type}
   {x x' : A} {y : P x} {y' : P x'} (p : x = x') (q : DPath P p y y')
@@ -377,7 +377,7 @@ Proof.
   + by intro.
 Defined.
 
-Notation dp_forall := equiv_dp_forall.
+Abbreviation dp_forall := equiv_dp_forall.
 
 (* [DPath] over an arrow *)
 Definition equiv_dp_arrow `{Funext} {A : Type} {B C : A -> Type}
@@ -389,7 +389,7 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
-Notation dp_arrow := equiv_dp_arrow.
+Abbreviation dp_arrow := equiv_dp_arrow.
 
 (* Restricted version allowing us to pull the domain of a forall out *)
 Definition equiv_dp_forall_domain `{Funext} {D : Type} {A : Type} {B : D -> A -> Type}
@@ -401,7 +401,7 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
-Notation dp_forall_domain := equiv_dp_forall_domain.
+Abbreviation dp_forall_domain := equiv_dp_forall_domain.
 
 Definition equiv_dp_sigma {A : Type} {B : A -> Type}
   {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
@@ -418,4 +418,4 @@ Proof.
   by destruct q.
 Defined.
 
-Notation dp_sigma := equiv_dp_sigma.
+Abbreviation dp_sigma := equiv_dp_sigma.

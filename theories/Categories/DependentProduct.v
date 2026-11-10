@@ -16,7 +16,7 @@ Section dependent_product.
   (*Context `{forall C, IsHProp (P C)}.*)
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation cat := (@sub_pre_cat _ P HF).
 
   Variable F : Functor C cat.
 
@@ -43,4 +43,4 @@ Section dependent_product.
     := category_of_sections (Grothendieck.ToCat.pr1 F).
 End dependent_product.
 
-Notation Pi := dependent_product.
+Abbreviation Pi := dependent_product.

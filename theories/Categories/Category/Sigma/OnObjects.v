@@ -9,8 +9,8 @@ Import Functor.Composition.Core.FunctorCompositionCoreNotations.
 Set Implicit Arguments.
 Generalizable All Variables.
 
-Local Notation sig_type := Overture.sig.
-Local Notation pr1_type := Overture.pr1.
+Local Abbreviation sig_type := Overture.sig.
+Local Abbreviation pr1_type := Overture.pr1.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.

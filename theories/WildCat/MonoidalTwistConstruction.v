@@ -261,7 +261,7 @@ Section TwistConstruction.
   Defined.
 
   (** We abbreviate the associator to [α] for the remainder of the section. *)
-  Local Notation α := associator_twist.
+  Local Abbreviation α := associator_twist.
 
   (** *** Unitors *)
 

@@ -822,7 +822,7 @@ Module Import Notation.
   Infix "∩" := ideal_intersection : ideal_scope.
   Infix "::" := ideal_quotient    : ideal_scope.
   Notation "〈 X 〉" := (ideal_generated X)  : ideal_scope.
-  Notation Ann := ideal_annihilator.
+  Abbreviation Ann := ideal_annihilator.
 End Notation.
 
 (** *** Ideal Lemmas *)

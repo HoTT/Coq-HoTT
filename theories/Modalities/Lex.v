@@ -12,7 +12,7 @@ Local Open Scope subuniverse_scope.
 We choose as our definition that a lex modality to be a reflective subuniverse such that [O <<< O], which is close to (but not quite the same as) RSS Theorem 3.1 (xiii).
 
 Note that since this includes [O << O] as a precondition, such an [O] must indeed be a modality (and since modalities coerce to reflective subuniverses, in the following notation [O] could be either an element of [ReflectiveSubuniverse] or of [Modality]). *)
-Notation Lex O := (O <<< O).
+Abbreviation Lex O := (O <<< O).
 
 (** ** Properties of lex modalities *)
 

@@ -44,7 +44,7 @@ Section iso_contr.
   Variable C : PreCategory.
   Variables s d : C.
 
-  Local Notation IsIsomorphism_sig_T m :=
+  Local Abbreviation IsIsomorphism_sig_T m :=
     { inverse : morphism C d s
     | { _ : inverse o m = identity _
       | m o inverse = identity _ } } (only parsing).
@@ -90,7 +90,7 @@ Section iso_contr.
     Qed.
   End IsIsomorphism.
 
-  Local Notation Isomorphic_sig_T :=
+  Local Abbreviation Isomorphic_sig_T :=
     { m : morphism C s d
     | IsIsomorphism m } (only parsing).
 
@@ -101,7 +101,7 @@ Section iso_contr.
     issig.
   Defined.
 
-  Local Notation Isomorphic_full_sig_T :=
+  Local Abbreviation Isomorphic_full_sig_T :=
     { m : morphism C s d
     | IsIsomorphism_sig_T m } (only parsing).
 
@@ -462,9 +462,10 @@ End iso_lemmas.
 Hint Extern 1 (@IsIsomorphism _ _ _ (@morphism_of ?C ?D ?F ?s ?d ?m))
 => apply (@iso_functor C D F s d m) : typeclass_instances.
 
-(* TODO: Once the minimum Rocq version is 9.2, declare the [core] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
-#[export, warning="-implicit-create-rewrite-hint-db"]
-Hint Rewrite idtoiso_of_transport idtoiso_inv idtoiso_comp idtoiso_functor.
+Local Create Rewrite HintDb core.
+#[export]
+Hint Rewrite idtoiso_of_transport idtoiso_inv idtoiso_comp idtoiso_functor
+  : core.
 
 (** ** Lemmas about how to move isomorphisms around equalities, following [HoTT.PathGroupoids] *)
 Section iso_concat_lemmas.

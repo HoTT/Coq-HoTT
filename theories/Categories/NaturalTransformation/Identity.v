@@ -23,7 +23,7 @@ Section identity.
                               (morphism_of F)
                     = morphism_of G.
 
-    Local Notation CO c := (transport (fun GO => morphism D (F c) (GO c))
+    Local Abbreviation CO c := (transport (fun GO => morphism D (F c) (GO c))
                                       HO
                                       (identity (F c))).
 

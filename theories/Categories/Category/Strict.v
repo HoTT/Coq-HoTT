@@ -10,7 +10,7 @@ Local Open Scope morphism_scope.
 (** Definition. A _strict category_ is a precategory whose type of
     objects is a set. *)
 
-Notation IsStrictCategory C := (IsHSet (object C)).
+Abbreviation IsStrictCategory C := (IsHSet (object C)).
 
 Record StrictCategory :=
   {

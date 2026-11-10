@@ -16,7 +16,7 @@ Section Grothendieck.
   (*Context `{forall C, IsHProp (P C)}.*)
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation cat := (@sub_pre_cat _ P HF).
 
   Variable C : PreCategory.
   Variable F : Functor C cat.

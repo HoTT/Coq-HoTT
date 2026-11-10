@@ -58,7 +58,7 @@ Module Import LaxCommaCategoryParts.
         f : Functor (S a) (T b)
       }.
 
-    Local Notation object_sig_T :=
+    Local Abbreviation object_sig_T :=
       ({ a : A
        | { b : B
          | Functor (S a) (T b) }}).
@@ -124,7 +124,7 @@ Module Import LaxCommaCategoryParts.
                                   (a'b'f'.(f) o p_morphism_of S g)
       }.
 
-    Local Notation morphism_sig_T abf a'b'f' :=
+    Local Abbreviation morphism_sig_T abf a'b'f' :=
       ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))
        | { h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b))
          | NaturalTransformation (p_morphism_of T h o abf.(f))

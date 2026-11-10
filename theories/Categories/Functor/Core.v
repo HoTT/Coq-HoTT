@@ -43,6 +43,7 @@ End Functor.
 Bind Scope functor_scope with Functor.
 
 Create HintDb functor discriminated.
+Local Create Rewrite HintDb functor.
 
 Arguments Functor C D : assert.
 Arguments object_of {C%_category D%_category} F%_functor c%_object : rename, simpl nomatch.
@@ -62,6 +63,5 @@ End FunctorCoreNotations.
 Hint Resolve composition_of identity_of : category functor.
 #[export]
 Hint Rewrite identity_of : category.
-(* TODO: Once the minimum Rocq version is 9.2, declare the [functor] rewrite hint database with [Create Rewrite HintDb] and remove this warning suppression. *)
-#[export, warning="-implicit-create-rewrite-hint-db"]
+#[export]
 Hint Rewrite identity_of : functor.

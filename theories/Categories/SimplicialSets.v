@@ -48,9 +48,9 @@ Module Export Core.
     Definition simplicial_prop := simplicial_category prop_cat.
   End simplicial_sets.
 
-  Notation simplicial_of obj := (simplicial_category (cat_of obj)).
+  Abbreviation simplicial_of obj := (simplicial_category (cat_of obj)).
 End Core.
 
 Module Utf8.
-  Notation Δ := simplex_category.
+  Abbreviation Δ := simplex_category.
 End Utf8.

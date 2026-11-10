@@ -66,7 +66,7 @@ Proof.
   exact sq_path.
 Defined.
 
-Notation ds_dpath := equiv_ds_dpath.
+Abbreviation ds_dpath := equiv_ds_dpath.
 
 (** We have an [apD] for [DPathSquare]s *)
 Definition ds_apD {A} {B : A -> Type} (f : forall a, B a) {a00 a10 a01 a11 : A}
@@ -105,7 +105,7 @@ Proof.
   by destruct s.
 Defined.
 
-Notation ds_const' := equiv_ds_const'.
+Abbreviation ds_const' := equiv_ds_const'.
 
 (** [dp_apD] fits into a natural square *)
 Definition dp_apD_nat {A} {P : A -> Type} {f g : forall x, P x} {x y : A}
@@ -126,7 +126,7 @@ Proof.
   exact sq_G1.
 Defined.
 
-Notation ds_G1 := equiv_ds_G1.
+Abbreviation ds_G1 := equiv_ds_G1.
 
 (** A [DPath] in a path-type is naturally a [DPathSquare].  *)
 
@@ -139,7 +139,7 @@ Proof.
   exact sq_1G.
 Defined.
 
-Notation ds_dp := equiv_ds_dp.
+Abbreviation ds_dp := equiv_ds_dp.
 
 (** Dependent Kan operations *)
 
@@ -238,4 +238,4 @@ Proof.
   apply transport_paths_r.
 Defined.
 
-Notation ds_transport_dpath := equiv_ds_transport_dpath.
+Abbreviation ds_transport_dpath := equiv_ds_transport_dpath.

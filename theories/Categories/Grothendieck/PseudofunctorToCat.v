@@ -25,7 +25,7 @@ Section Grothendieck.
       x : object (F c)
     }.
 
-  Local Notation morphism s d :=
+  Local Abbreviation morphism s d :=
     { f : morphism C s.(c) d.(c)
     | morphism _ (p_morphism_of F f s.(x)) d.(x) }.
 

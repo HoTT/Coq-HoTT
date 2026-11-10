@@ -41,10 +41,10 @@ Section MonoidalCategoryConcepts.
   Variable alpha : associator.
   Variable lambda : left_unitor.
   Variable rho : right_unitor.
-  Notation alpha_nat_trans := ((@morphism_isomorphic
+  Abbreviation alpha_nat_trans := ((@morphism_isomorphic
                                   (C * (C * C) -> C)%category right_assoc left_assoc) alpha).
-  Notation lambda_nat_trans := ((@morphism_isomorphic _ _ _) lambda).
-  Notation rho_nat_trans := ((@morphism_isomorphic _ _ _) rho).
+  Abbreviation lambda_nat_trans := ((@morphism_isomorphic _ _ _) lambda).
+  Abbreviation rho_nat_trans := ((@morphism_isomorphic _ _ _) rho).
 
   Section coherence_laws.
     Variable a b c d : C.

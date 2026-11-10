@@ -49,12 +49,11 @@ Arguments sq_id {A x}.
 Arguments PathSquare {A _ _ _ _}.
 Notation "1" := sq_id : square_scope.
 
-(** TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
-(** register=no: otherwise the scheme confuses the make_equiv tactic. When the minimum supported version is >= 9.2.0, the warning can be re-enabled. *)
-#[warnings="-unsupported-attributes",register=no] Scheme PathSquare_ind := Induction for PathSquare Sort Type.
-Arguments PathSquare_ind {A} P f {_ _ _ _ _ _ _ _} _ : rename.
-#[warnings="-unsupported-attributes",register=no] Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
-Arguments PathSquare_rec {A} P f {_ _ _ _ _ _ _ _} _ : rename.
+(** [register=no] prevents the schemes from confusing the [make_equiv] tactic. *)
+#[register=no] Scheme PathSquare_ind := Induction for PathSquare Sort Type.
+Arguments PathSquare_ind {A} P sq_id {_ _ _ _ _ _ _ _} _.
+#[register=no] Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
+Arguments PathSquare_rec {A} P sq_id {_ _ _ _ _ _ _ _} _.
 
 (** [PathSquare_ind] is an equivalence, similar to how [paths_ind] is. *)
 Instance isequiv_PathSquare_ind `{Funext} {A}
@@ -97,7 +96,7 @@ Proof.
     reflexivity.
 Defined.
 
-Notation sq_path := equiv_sq_path.
+Abbreviation sq_path := equiv_sq_path.
 
 (** Squares in (n+2)-truncated types are n-truncated. *)
 Instance istrunc_sq n
@@ -124,8 +123,8 @@ Section PathSquaresFromPaths.
 
 End PathSquaresFromPaths.
 
-Notation sq_G1 := equiv_sq_G1.
-Notation sq_1G := equiv_sq_1G.
+Abbreviation sq_G1 := equiv_sq_G1.
+Abbreviation sq_1G := equiv_sq_1G.
 
 Local Open Scope equiv_scope.
 Local Open Scope square_scope.
@@ -150,7 +149,7 @@ Proof.
   exact sq_G1^-1.
 Defined.
 
-Notation sq_flip_h := equiv_sq_flip_h.
+Abbreviation sq_flip_h := equiv_sq_flip_h.
 
 (** Vertical flip. *)
 Definition equiv_sq_flip_v {A : Type} {a00 a10 a01 a11 : A}
@@ -163,7 +162,7 @@ Proof.
   exact sq_1G^-1.
 Defined.
 
-Notation sq_flip_v := equiv_sq_flip_v.
+Abbreviation sq_flip_v := equiv_sq_flip_v.
 
 (** Transpose of a square. We make a local definition that will never get unfolded. *)
 Local Definition tr {A : Type} {a00 a10 a01 a11 : A}
@@ -183,7 +182,7 @@ Proof.
   1,2: by intros [].
 Defined.
 
-Notation sq_tr := equiv_sq_tr.
+Abbreviation sq_tr := equiv_sq_tr.
 
 (** NOTE: sq_tr ought to be some sort of involution but it obviously isn't since it is not of the form A -> A. Perhaps there is a more general "involution" but between equivalent types? But then that very equivalence is given by sq_tr so it seems a bit circular... *)
 
@@ -240,9 +239,9 @@ Section PathSquareOps.
 
 End PathSquareOps.
 
-Notation sq_V := equiv_sq_V.
-Notation sq_rot_l:= equiv_sq_rot_l.
-Notation sq_rot_r := equiv_sq_rot_r.
+Abbreviation sq_V := equiv_sq_V.
+Abbreviation sq_rot_l:= equiv_sq_rot_l.
+Abbreviation sq_rot_r := equiv_sq_rot_r.
 
 (** Lemmas for rewriting sides of squares. *)
 Section PathSquareRewriting.
@@ -280,19 +279,19 @@ Section PathSquareRewriting.
 
 End PathSquareRewriting.
 
-Notation sq_GGGG := equiv_sq_GGGG.
-Notation sq_Gccc := equiv_sq_Gccc.
-Notation sq_cGcc := equiv_sq_cGcc.
-Notation sq_ccGc := equiv_sq_ccGc.
-Notation sq_cccG := equiv_sq_cccG.
-Notation sq_GGcc := equiv_sq_GGcc.
-Notation sq_GcGc := equiv_sq_GcGc.
-Notation sq_GccG := equiv_sq_GccG.
-Notation sq_cGGc := equiv_sq_cGGc.
-Notation sq_cGcG := equiv_sq_cGcG.
-Notation sq_ccGG := equiv_sq_ccGG.
-Notation sq_GGGc := equiv_sq_GGGc.
-Notation sq_cGGG := equiv_sq_cGGG.
+Abbreviation sq_GGGG := equiv_sq_GGGG.
+Abbreviation sq_Gccc := equiv_sq_Gccc.
+Abbreviation sq_cGcc := equiv_sq_cGcc.
+Abbreviation sq_ccGc := equiv_sq_ccGc.
+Abbreviation sq_cccG := equiv_sq_cccG.
+Abbreviation sq_GGcc := equiv_sq_GGcc.
+Abbreviation sq_GcGc := equiv_sq_GcGc.
+Abbreviation sq_GccG := equiv_sq_GccG.
+Abbreviation sq_cGGc := equiv_sq_cGGc.
+Abbreviation sq_cGcG := equiv_sq_cGcG.
+Abbreviation sq_ccGG := equiv_sq_ccGG.
+Abbreviation sq_GGGc := equiv_sq_GGGc.
+Abbreviation sq_cGGG := equiv_sq_cGGG.
 
 Section MovePaths.
   Context {A : Type} {x x00 x20 x02 x22 : A}
@@ -349,12 +348,12 @@ Section MovePaths.
 
 End MovePaths.
 
-Notation sq_move_23 := equiv_sq_move_23.
-Notation sq_move_14 := equiv_sq_move_14.
-Notation sq_move_24 := equiv_sq_move_24.
-Notation sq_move_42 := equiv_sq_move_42.
-Notation sq_move_13 := equiv_sq_move_13.
-Notation sq_move_31 := equiv_sq_move_31.
+Abbreviation sq_move_23 := equiv_sq_move_23.
+Abbreviation sq_move_14 := equiv_sq_move_14.
+Abbreviation sq_move_24 := equiv_sq_move_24.
+Abbreviation sq_move_42 := equiv_sq_move_42.
+Abbreviation sq_move_13 := equiv_sq_move_13.
+Abbreviation sq_move_31 := equiv_sq_move_31.
 
 (** Dependent path product definition of [PathSquare]. *)
 Definition equiv_sq_dp_prod {A : Type} {a00 a10 a01 a11 : A}
@@ -369,7 +368,7 @@ Proof.
   exact (sq_ccGG (ap_fst_path_prod _ _) (ap_snd_path_prod _ _)).
 Defined.
 
-Notation sq_dp_prod := equiv_sq_dp_prod.
+Abbreviation sq_dp_prod := equiv_sq_dp_prod.
 
 (** Concatenation of squares. *)
 Section PathSquareConcat.
@@ -420,8 +419,8 @@ Section GroupoidLawsH.
     {px3 : a03 = a13} {p0z : a02 = a03} {p1z : a12 = a13}
     (s : PathSquare px0 px1 p0x p1x).
 
-  Notation hr := (sq_refl_h _).
-  Notation vr := (sq_refl_v _).
+  Abbreviation hr := (sq_refl_h _).
+  Abbreviation vr := (sq_refl_v _).
 
   Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
   Proof.
@@ -706,7 +705,7 @@ Proof.
   exact sq_G1.
 Defined.
 
-Notation sq_dp := equiv_sq_dp.
+Abbreviation sq_dp := equiv_sq_dp.
 
 (** [ap011] fits into a square. *)
 Definition sq_ap011 {A B C} (f : A -> B -> C)
@@ -737,4 +736,4 @@ Proof.
   exact sq_path.
 Defined.
 
-Notation sq_prod := equiv_sq_prod.
+Abbreviation sq_prod := equiv_sq_prod.

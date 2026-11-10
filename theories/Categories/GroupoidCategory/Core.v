@@ -22,7 +22,7 @@ Module GroupoidCategoryInternals.
     Variable X : Type.
     Context `{IsTrunc 1 X}.
 
-    Local Notation morphism := (@paths X).
+    Local Abbreviation morphism := (@paths X).
 
     Definition compose s d d' (m : morphism d d') (m' : morphism s d)
     : morphism s d'

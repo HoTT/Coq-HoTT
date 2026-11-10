@@ -9,9 +9,8 @@ Local Set Universe Minimization ToSet.
 
 Generalizable Variables X A B f g n.
 
-(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
 Scheme prod_ind := Induction for prod Sort Type.
-Arguments prod_ind {A B} P f p : rename.
+Arguments prod_ind {A B} P pair p.
 
 (** ** Unpacking *)
 

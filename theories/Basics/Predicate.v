@@ -69,7 +69,7 @@ Section OperationsAndIdentities.
 (** ** Operations on predicates *)
 
   Context {A : Type}.
-  Local Notation Pred := (A -> Type).
+  Local Abbreviation Pred := (A -> Type).
 
   Definition pred_and (P Q : Pred) : Pred
     := fun a => P a /\ Q a.

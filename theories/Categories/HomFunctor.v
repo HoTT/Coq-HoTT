@@ -14,7 +14,7 @@ Section hom_functor.
   Context `{Funext}.
   Variable C : PreCategory.
 
-  Local Notation obj_of c'c :=
+  Local Abbreviation obj_of c'c :=
     (Build_HSet
        (morphism
           C

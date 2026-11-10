@@ -15,7 +15,7 @@ Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 (** [coe] is [transport idmap : (A = B) -> (A -> B)], but is described as the underlying map of an equivalence so that Coq knows that it is an equivalence. *)
-Notation coe := (fun p => equiv_fun (equiv_path _ _ p)).
+Abbreviation coe := (fun p => equiv_fun (equiv_path _ _ p)).
 Notation "a ^+" := (@arr sequence_graph _ _ _ 1 a).
 
 (** Mapping spaces into hprops from colimits of sequences can be characterized. *)
@@ -107,8 +107,8 @@ Proof.
   - exact (ap seq_pair_shift q).
 Defined.
 
-Notation inj A := (@colim sequence_graph A).
-Notation glue A := (fun n => @colimp sequence_graph A n n.+1 1).
+Abbreviation inj A := (@colim sequence_graph A).
+Abbreviation glue A := (fun n => @colimp sequence_graph A n n.+1 1).
 
 (** The uniqueness principle for sequential colimits; Lemma 3.3. *)
 Definition seq_colimit_uniq {A : Sequence} E (F G : Colimit A -> E)

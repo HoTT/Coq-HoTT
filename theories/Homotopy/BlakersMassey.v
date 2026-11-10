@@ -55,9 +55,9 @@ Section GBM.
                                ((y2;q32) = (y4;q34) :> {y:Y & Q x3 y}))).
 
     Let P := SPushout Q.
-    Local Notation left := (spushl Q).
-    Local Notation right := (spushr Q).
-    Local Notation glue := (spglue Q).
+    Local Abbreviation left := (spushl Q).
+    Local Abbreviation right := (spushr Q).
+    Local Abbreviation glue := (spglue Q).
 
     (** Here's a lemma that's a sort of "singleton contractibility" equivalence, but expressed in a particularly strange way.  As we'll see, this form of the lemma comes up naturally *twice* in the proof, and proving it once here to use in both places is crucial so that the two uses can be identified later on. *)
 

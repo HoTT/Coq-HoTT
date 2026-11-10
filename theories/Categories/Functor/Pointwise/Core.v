@@ -19,9 +19,9 @@ Section pointwise.
   Variables D D' : PreCategory.
   Variable G : Functor D D'.
 
-  Local Notation pointwise_object_of H := (G o H o F : object (C' -> D')).
-  Local Notation pointwise_whiskerL_object_of H := (G o H : object (C -> D')).
-  Local Notation pointwise_whiskerR_object_of H := (H o F : object (C' -> D)).
+  Local Abbreviation pointwise_object_of H := (G o H o F : object (C' -> D')).
+  Local Abbreviation pointwise_whiskerL_object_of H := (G o H : object (C -> D')).
+  Local Abbreviation pointwise_whiskerR_object_of H := (H o F : object (C' -> D)).
 (*  Definition pointwise_object_of : (C -> D) -> (C' -> D')
     := fun H => G o H o F.*)
 

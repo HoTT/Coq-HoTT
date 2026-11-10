@@ -86,7 +86,7 @@ Proof.
   by destruct cube.
 Defined.
 
-Notation dc_const' := equiv_dc_const'.
+Abbreviation dc_const' := equiv_dc_const'.
 
 Definition equiv_dc_const {A B : Type}
   {x000 x010 x100 x110 x001 x011 x101 x111 : A}
@@ -123,7 +123,7 @@ Proof.
   by destruct cube.
 Defined.
 
-Notation dc_const := equiv_dc_const.
+Abbreviation dc_const := equiv_dc_const.
 
 (** Dependent Kan fillers *)
 

@@ -1051,7 +1051,7 @@ Qed.
   UN UN} Z N
   := Z_abs'.
 
-Notation n_to_z := (naturals_to_semiring N Z).
+Abbreviation n_to_z := (naturals_to_semiring N Z).
 
 Definition zero_product_aux a b :
   n_to_z a * n_to_z b = 0 -> n_to_z a = 0 |_| n_to_z b = 0.

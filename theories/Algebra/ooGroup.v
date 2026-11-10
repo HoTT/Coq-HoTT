@@ -24,7 +24,7 @@ Record ooGroup :=
     isconn_classifying_space :: IsConnected 0 classifying_space
   }.
 
-Local Notation B := classifying_space.
+Local Abbreviation B := classifying_space.
 
 Definition group_type (G : ooGroup) : Type
   := point (B G) = point (B G).

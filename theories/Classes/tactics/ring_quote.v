@@ -40,7 +40,7 @@ Section contents.
 Universe U.
 Context (R:Type@{U}) `{AlmostRing R}.
 
-Notation Vars V := (V -> R).
+Abbreviation Vars V := (V -> R).
 
 Fixpoint eval {V:Type0} (vs : Vars V) (e : Expr V) : R :=
   match e with

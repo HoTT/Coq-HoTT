@@ -41,20 +41,20 @@ Record Signature := Build_Signature
   ; hset_sort :: IsHSet Sort
   ; hset_symbol :: IsHSet Symbol }.
 
-Notation SymbolType σ := (SymbolTypeOf (Sort σ)).
+Abbreviation SymbolType σ := (SymbolTypeOf (Sort σ)).
 
 Global Coercion symbol_types : Signature >-> Funclass.
 
 (** Each [Algebra] has a collection of carrier types [Carriers σ],
     indexed by the type of sorts [Sort σ]. *)
 
-Notation Carriers σ := (Sort σ -> Type).
+Abbreviation Carriers σ := (Sort σ -> Type).
 
 (** Given [A : Carriers σ] and [w : SymbolType σ], the domain of an
     algebra operation [DomOperation A w] is a product of carrier types
     from [A], indexed by [Arity w]. *)
 
-Notation DomOperation A w
+Abbreviation DomOperation A w
   := (forall i : Arity w, A (sorts_dom w i)) (only parsing).
 
 (** Given a symbol type [w : SymbolType σ], an algebra with carriers

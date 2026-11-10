@@ -53,10 +53,10 @@ Module Import LaxCommaCategory.
 
     Context `{forall a b, IsHSet (Functor (S a) (T b))}.
 
-    Local Notation object := (@object _ A B S T).
-    Local Notation morphism := (@morphism _ A B S T).
-    Local Notation compose := (@compose _ A B S T).
-    Local Notation identity := (@identity _ A B S T).
+    Local Abbreviation object := (@object _ A B S T).
+    Local Abbreviation morphism := (@morphism _ A B S T).
+    Local Abbreviation compose := (@compose _ A B S T).
+    Local Abbreviation identity := (@identity _ A B S T).
 
     Local Ltac t_do_work :=
       repeat match goal with

@@ -18,7 +18,7 @@ Section path_adjunction.
   Variable F : Functor C D.
   Variable G : Functor D C.
 
-  Notation adjunction_sig :=
+  Abbreviation adjunction_sig :=
     { eta : NaturalTransformation 1 (G o F)
     | { eps : NaturalTransformation (F o G) 1
       | { equ1 : forall Y : C, (eps (F Y) o F _1 (eta Y))%morphism = 1%morphism

@@ -268,7 +268,7 @@ Definition himage {X Y} (f : X -> Y) := image (Tr (-1)) f.
 (** ** Surjections *)
 
 (** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
-Notation IsSurjection := (IsConnMap (Tr (-1))).
+Abbreviation IsSurjection := (IsConnMap (Tr (-1))).
 
 Definition BuildIsSurjection {A B} (f : A -> B)
   : (forall b, merely (hfiber f b)) -> IsSurjection f.

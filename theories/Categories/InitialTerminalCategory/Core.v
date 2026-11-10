@@ -7,8 +7,8 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Local Unset Primitive Projections. (* suppress a warning about [IsTerminalCategory] *)
 
-Notation initial_category := (nat_category 0) (only parsing).
-Notation terminal_category := (nat_category 1) (only parsing).
+Abbreviation initial_category := (nat_category 0) (only parsing).
+Abbreviation terminal_category := (nat_category 1) (only parsing).
 
 (** ** Terminal categories *)
 (** A precategory is terminal if its objects and morphisms are contractible types. *)
