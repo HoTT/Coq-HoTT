@@ -10,7 +10,7 @@ Local Set Universe Minimization ToSet.
 Generalizable Variables X A B f g n.
 
 Scheme prod_ind := Induction for prod Sort Type.
-Arguments prod_ind {A B} P _ p.
+Arguments prod_ind {A B} P pair p.
 
 (** ** Unpacking *)
 
