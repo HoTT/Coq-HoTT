@@ -310,7 +310,7 @@ Section hom_term_algebra.
     intros u a. by refine (ap u.#A _).
   Qed.
 
-  Definition hom_term_algebra : TermAlgebra C $-> A
+  Definition hom_term_algebra : Homomorphism (TermAlgebra C) A
     := @Build_Homomorphism σ (TermAlgebra C) A (map_term_algebra A f) _.
 
 End hom_term_algebra.
@@ -343,12 +343,12 @@ Section ump_term_algebra.
   (** By precomposing [Homomorphism (TermAlgebra C) A] with
       [var_term_algebra], we obtain a family [forall s, C s -> A s]. *)
 
-  Definition precomp_var_term_algebra (f : TermAlgebra C $-> A)
+  Definition precomp_var_term_algebra (f : Homomorphism (TermAlgebra C) A)
     : forall s, C s -> A s
     := fun s x => f s (var_term_algebra C s x).
 
   Lemma path_precomp_var_term_algebra_to_hom_term_algebra
-    : forall (f : TermAlgebra C $-> A),
+    : forall (f : Homomorphism (TermAlgebra C) A),
       hom_term_algebra A (precomp_var_term_algebra f) = f.
   Proof.
     intro f.
@@ -383,7 +383,7 @@ Section ump_term_algebra.
       Notice [isequiv_precomp_var_term_algebra] above. *)
 
   Theorem ump_term_algebra
-    : (TermAlgebra C $-> A) <~> (forall s, C s -> A s).
+    : Homomorphism (TermAlgebra C) A <~> (forall s, C s -> A s).
   Proof.
     exact (Build_Equiv _ _ precomp_var_term_algebra _).
   Defined.

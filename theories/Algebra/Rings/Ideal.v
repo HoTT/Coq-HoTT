@@ -486,7 +486,7 @@ Definition leftideal_generated@{u v} {R : Ring@{u}} (X : R -> Type@{v}) : LeftId
 Proof.
   snapply Build_LeftIdeal.
   - snapply Build_Subgroup'.
-    + exact (fun x => merely (leftideal_generated_type X x)).
+    + exact (fun x => merely@{v} (leftideal_generated_type@{u v} X x)).
     + exact _.
     + apply tr, ligt_zero.
     + intros x y p q; strip_truncations.

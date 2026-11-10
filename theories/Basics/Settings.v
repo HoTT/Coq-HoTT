@@ -25,6 +25,9 @@ Global Set Default Goal Selector "!".
 (** Activate universe polymorphism everywhere. This means that whenever you see a [Type], it's actually a [Type@{i}] for some universe level [i]. This allows us to reuse definitions for each universe level without having to redefine them. *)
 Global Set Universe Polymorphism.
 
+(** Make polymorphic inductive types, records and classes cumulative by default. *)
+Global Set Polymorphic Inductive Cumulativity.
+
 (** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
 Global Unset Strict Universe Declaration.
 

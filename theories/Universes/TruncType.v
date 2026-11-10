@@ -37,9 +37,10 @@ Section TruncType.
     : (A <~> B) <~> (A = B :> TruncType n)
     := equiv_path_trunctype' _ _ oE equiv_path_universe _ _.
 
-  Definition path_trunctype@{a b} {n : trunc_index} {A B : TruncType n}
-    : A <~> B -> (A = B :> TruncType n)
-  := equiv_path_trunctype@{a b} A B.
+  Definition path_trunctype@{i j | i < j}
+    {n : trunc_index} {A B : TruncType@{i} n}
+    : Equiv@{i i} A B -> (A = B :> TruncType@{i} n)
+    := equiv_path_trunctype@{i i i j} A B.
 
   #[export] Instance isequiv_path_trunctype {n : trunc_index} {A B : TruncType n}
     : IsEquiv (@path_trunctype n A B) := _.
@@ -93,23 +94,25 @@ Section TruncType.
   Definition path_hset {A B} := @path_trunctype 0 A B.
   Definition path_hprop {A B} := @path_trunctype (-1) A B.
 
-  #[export] Instance istrunc_trunctype {n : trunc_index}
-    : IsTrunc n.+1 (TruncType n) | 0.
+  Definition istrunc_trunctype@{i j | i < j}
+    {n : trunc_index}
+    : IsTrunc_internal@{j} (TruncType@{i} n) n.+1.
   Proof.
     apply istrunc_S.
     intros A B.
-    refine (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i j} A B)).
+    refine (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i i i j} A B)).
     case n as [ | n'].
     - exact contr_equiv_contr_contr. (* The reason is different in this case. *)
     - exact istrunc_equiv.
   Defined.
 
-  #[export] Instance isset_HProp : IsHSet HProp := _.
+  #[export] Instance isset_HProp : IsHSet HProp := istrunc_trunctype.
 
   #[export] Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type & IsTrunc n A } | 0.
   Proof.
     intro n.
-    exact (istrunc_equiv_istrunc _ issig_trunctype^-1).
+    nrefine (istrunc_equiv_istrunc _ issig_trunctype^-1).
+    exact istrunc_trunctype.
   Defined.
 
   (** ** Some standard inhabitants *)
@@ -212,3 +215,9 @@ Section TruncType.
   Defined.
 
 End TruncType.
+
+(** Use [exact] rather than a precompiled instance hint: with cumulativity, the latter can instantiate [TruncType] at a different universe from the one in the goal.  Head-reduce the type before matching, so that transparent aliases are recognized without instantiating unknown types. *)
+#[export] Hint Extern 0 (IsTrunc _ ?A) =>
+  lazymatch eval hnf in A with
+  | TruncType _ => exact istrunc_trunctype
+  end : typeclass_instances.
