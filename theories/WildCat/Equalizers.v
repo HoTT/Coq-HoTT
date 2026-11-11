@@ -4,7 +4,7 @@ From HoTT.WildCat Require Import Core Equiv ZeroGroupoid EquivGpd
 
 (** * Categories with equalizers *)
 
-(** When [eq] is the source object in a double arrow diagram, then for any object [z] we get a commuting diagram of 0-groupoids by applying the functor [z $-> -], which is [opyon_0gpd z].  Thus there is a natural map of 0-groupoids from [z $-> pb] to the 0-groupoid equalizer of
+(** When [eq] is the source object in a double arrow diagram, then for any object [z] we get a commuting diagram of 0-groupoids by applying the functor [z $-> -], which is [opyon_0gpd z].  Thus there is a natural map of 0-groupoids from [z $-> eq] to the 0-groupoid equalizer of
 
 <<
                   -->
@@ -214,7 +214,7 @@ Section InducedFromEquiv.
 
   (** The induced injection is given by the equivalence. *)
   Definition cat_eq_inj_comp
-    : cat_eq_inj $== cat_eq_inj $o h
+    : cat_eq_inj (cat_eq:=y) $== cat_eq_inj $o h
     := Id _.
 
   (** The induced corecursion is given by the equivalence. *)
@@ -267,7 +267,7 @@ Defined.
 
 (** The equalizer map is a monomorphism. *)
 
-Local Instance monic_cat_equalizer {A : Type} `{Is1Cat A}
+#[export] Instance monic_cat_equalizer {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
   : Monic cat_eq_inj.
 Proof.
@@ -277,7 +277,7 @@ Defined.
 
 (** Equalizers define a subclass of strong monomorphisms, namely monos which have the right lifting property against epis. *)
 
-(** TODO: move everything about strong monics to a different file? *)
+(** TODO: The topic of strong monics is not about equalizers. If this will ever be expanded upon in the future, then it should get its own file. *)
 
 Class StrongMonic {A : Type} `{Is1Cat A} {a b : A} (m : a $-> b) := {
   ismonic_strongmonic :: Monic m;
@@ -308,7 +308,7 @@ Proof.
 Defined.
 
 (** The map [cat_eq_inj] is a strong monic. *)
-Local Instance strongmonic_equalizer {A : Type} `{Is1Cat A} {b c : A}
+#[export] Instance strongmonic_equalizer {A : Type} `{Is1Cat A} {b c : A}
   (f g : b $-> c) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
   : StrongMonic cat_eq_inj.
 Proof.

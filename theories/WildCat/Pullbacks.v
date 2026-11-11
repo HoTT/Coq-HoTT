@@ -1,8 +1,8 @@
-Require Import Basics.Equivalences Basics.Overture Basics.Tactics Basics.Trunc.
-Require Import Limits.Pullback.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.
-Require Import WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid.
-Require Import WildCat.Induced WildCat.Opposite WildCat.NatTrans WildCat.FunctorCat.
+From HoTT.Basics Require Import Equivalences Overture Tactics Trunc.
+From HoTT.Limits Require Import Pullback.
+From HoTT.WildCat Require Import Core Equiv EquivGpd Universe Yoneda
+                                 ZeroGroupoid Induced Opposite NatTrans
+                                 FunctorCat.
 
 (** * Categories with pullbacks *)
 
