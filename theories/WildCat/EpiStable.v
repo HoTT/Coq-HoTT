@@ -12,7 +12,7 @@ From HoTT.WildCat Require Import Core SetoidRewrite Equiv EquivGpd PointedCat
 Class IsEpiStable (A : Type) `{Is1Cat A} := {
     haspullbacks :: HasPullbacks A;
     stable_epic :: forall {a b c} (f : a $-> c) (g : b $-> c) {ep : Epic f},
-        Epic (cat_pb_pr2 (CatPullback:=haspullbacks a b c f g));
+        Epic (cat_pb_pr2 (f:=f) (g:=g));
   }.
 
 (** ** Diagram chasing in an epi-stable category *)
