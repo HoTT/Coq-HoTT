@@ -1,9 +1,8 @@
-Require Import Basics.Overture Basics.Equivalences Basics.Tactics Basics.Decidable.
-Require Import Types.Bool.
-Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
-               WildCat.Opposite WildCat.Products WildCat.Universe
-               WildCat.Yoneda WildCat.ZeroGroupoid WildCat.PointedCat
-               WildCat.Monoidal WildCat.Bifunctor.
+From HoTT.Basics Require Import Overture Equivalences Tactics Decidable.
+From HoTT.Types Require Import Bool.
+From HoTT.WildCat Require Import Core Equiv Forall NatTrans Opposite Products
+                                 Universe Yoneda ZeroGroupoid PointedCat
+                                 Monoidal Bifunctor.
 
 (** * Categories with coproducts *)
 

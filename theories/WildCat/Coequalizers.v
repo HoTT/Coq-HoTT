@@ -1,6 +1,6 @@
-From HoTT.Basics Require Import Equivalences Overture Tactics Trunc.
+From HoTT.Basics Require Import Equivalences Overture Tactics.
 From HoTT.WildCat Require Import Core Equiv EquivGpd NatTrans
-  Universe Yoneda Graph ZeroGroupoid Induced Opposite Equalizers.
+  Yoneda ZeroGroupoid Induced Opposite Equalizers.
 
 (** * Categories with coequalizers *)
 
@@ -203,7 +203,7 @@ Class HasCoequalizers (A : Type) `{Is1Cat A}
 
 (** The coequalizer map is an epimorphism. *)
 
-Local Instance epic_cat_coequalizer {A : Type} `{Is1Cat A}
+#[export] Instance epic_cat_coequalizer {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b) {cat_coeq : A} `{!IsCatCoequalizer f g cat_coeq}
   : Epic cat_coeq_proj
   := monic_cat_equalizer (A:=A^op) (a:=b) f g.
@@ -239,7 +239,7 @@ Definition llp_unique_strongepic {A : Type} `{Is1Cat A} {a b : A} (e : a $-> b) 
   := rlp_unique_strongmonic (A:=A^op) (a:=b) e (a':=b') (b':=a') m v u sq h utr.
 
 (** The map [cat_coeq_proj] is a strong epic. *)
-Local Instance strongepic_coequalizer {A : Type} `{Is1Cat A} {c a : A}
+#[export] Instance strongepic_coequalizer {A : Type} `{Is1Cat A} {c a : A}
   (f g : c $-> a) {cat_coeq : A} `{!IsCatCoequalizer f g cat_coeq}
   : StrongEpic cat_coeq_proj
   := strongmonic_equalizer (A:=A^op) (b:=a) f g.

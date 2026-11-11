@@ -1,18 +1,17 @@
-Require Import Basics.Equivalences Basics.Overture Basics.Tactics.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.
-Require Import WildCat.Yoneda WildCat.ZeroGroupoid.
-Require Import WildCat.Induced WildCat.Opposite WildCat.NatTrans WildCat.FunctorCat.
-Require Import WildCat.Pullbacks.
+From HoTT.Basics Require Import Equivalences Overture Tactics.
+From HoTT.WildCat Require Import Core Equiv EquivGpd Yoneda
+                                 ZeroGroupoid Induced Opposite
+                                 NatTrans FunctorCat Pullbacks.
 
 (** * Categories with pushouts *)
 
 (** When [po] is the target object in a commuting square, then for any object [z] we get a commuting square of 0-groupoids by applying the functor [- $-> z], which is [yon_0gpd z].  Thus there is a natural map of 0-groupoids from [po $-> z] to the 0-groupoid pullback of
 <<
-        (c $-> z) --> (a $-> z)
+        (po $-> z) --> (c $-> z)
             |             |
             |             |
             v             v
-        (b $-> z) -> (po $-> z)
+        (b $-> z)  --> (a $-> z)
 >>
 In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors). *)
 
