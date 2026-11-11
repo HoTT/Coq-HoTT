@@ -187,22 +187,17 @@ End InducedFromEquiv.
 
 (** ** Symmetry *)
 
-Section Symmetry.
-
-  Context {A : Type} `{Is1Cat A} {a b : A} {f g : a $-> b}
-    (cat_coeq : A) `{!IsCatCoequalizer f g cat_coeq}.
-
-  (** A coequalizer of [f] and [g] is also a coequalizer of [g] and [f]. *)
-  Definition iscatcoequalizer_sym : IsCatCoequalizer g f cat_coeq
-    := iscatequalizer_sym (A:=A^op) (a:=b) (f:=f) (g:=g) cat_coeq.
-
-End Symmetry.
+(** A coequalizer of [f] and [g] is also a coequalizer of [g] and [f]. *)
+Definition iscatcoequalizer_sym {A : Type} `{Is1Cat A}
+  {a b : A} {f g : a $-> b}
+  (cat_coeq : A) `{!IsCatCoequalizer f g cat_coeq}
+  : IsCatCoequalizer g f cat_coeq
+  := iscatequalizer_sym (A:=A^op) (a:=b) (f:=f) (g:=g) cat_coeq.
 
 (** ** Categories with coequalizers *)
 
 Class HasCoequalizers (A : Type) `{Is1Cat A}
   := has_coequalizers :: forall {a b} (f g : a $-> b), CatCoequalizer f g.
-
 
 (** * Epis *)
 

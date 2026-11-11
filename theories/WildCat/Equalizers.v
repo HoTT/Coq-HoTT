@@ -226,26 +226,22 @@ End InducedFromEquiv.
 
 (** ** Symmetry *)
 
-Section Symmetry.
-
-  Context {A : Type} `{Is1Cat A} {a b : A} {f g : a $-> b}
-    (cat_eq : A) `{!IsCatEqualizer f g cat_eq}.
-
-  (** An equalizer of [f] and [g] is also an equalizer of [g] and [f]. *)
-  Definition iscatequalizer_sym : IsCatEqualizer g f cat_eq.
-  Proof.
-    snapply Build_IsCatEqualizer.
-    - exact cat_eq_inj.
-    - exact cat_eq_glue^$.
-    - intros z [k p].
-      exact (cat_eq_corec f g z k p^$).
-    - intros z [k p]; cbn beta.
-      exact (cat_eq_corec_beta_inj f g z k p^$).
-    - intros z k k' e.
-      exact (isinj_equiv_0gpd (cate_eq_corec_inv f g z) e).
-  Defined.
-
-End Symmetry.
+(** An equalizer of [f] and [g] is also an equalizer of [g] and [f]. *)
+Definition iscatequalizer_sym {A : Type} `{Is1Cat A}
+  {a b : A} {f g : a $-> b}
+  (cat_eq : A) `{!IsCatEqualizer f g cat_eq}
+  : IsCatEqualizer g f cat_eq.
+Proof.
+  snapply Build_IsCatEqualizer.
+  - exact cat_eq_inj.
+  - exact cat_eq_glue^$.
+  - intros z [k p].
+    exact (cat_eq_corec f g z k p^$).
+  - intros z [k p]; cbn beta.
+    exact (cat_eq_corec_beta_inj f g z k p^$).
+  - intros z k k' e.
+    exact (isinj_equiv_0gpd (cate_eq_corec_inv f g z) e).
+Defined.
 
 (** ** Categories with equalizers *)
 
@@ -266,7 +262,6 @@ Proof.
   - reflexivity.
   - exact (equalizer_0gpd_homotopic f g).
 Defined.
-
 
 (** * Monics *)
 
