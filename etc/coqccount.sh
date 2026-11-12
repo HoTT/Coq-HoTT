@@ -1,56 +1,55 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# A script to help determine where there are bottlenecks in the
-# parallelization of the build.
+# Wrap the Rocq driver to report compiler concurrency on standard error.
+# Use: make -jJ ROCQ=etc/coqccount.sh ...
+# Counts may be smaller for very short jobs or jobs starting simultaneously.
 
-# This is a wrapper for coqc that indicates when each coqc process
-# starts and stops and the total number of coqc processes running
-# at those moments (including the one just about to start and the
-# one that is just finishing).  If you run with -j8, you would
-# ideally see a lot of 8's in the output.  But note that when
-# multiple processes start at once, they often don't count each other.
+ARGS=("$@")
+CURFILE=
+for arg in "$@"; do
+    case "$arg" in
+        --version|--print-version|-v|--help|-help|-h|-where|-config|-list-tags)
+            exec rocq "$@" ;;
+    esac
+    [[ "$arg" == *.v ]] && CURFILE="$arg"
+done
 
-# When you see smaller numbers transition to larger numbers,
-# you can look at which jobs ended just before the transition
-# and which jobs started just after the transition, and check
-# if the dependencies there are really needed.
+FIRST=0
+while [[ "${ARGS[FIRST]-}" == -debug-shim ]]; do
+    ((FIRST+=1))
+done
+case "${ARGS[FIRST]-}" in
+    compile|c) ;;
+    -*|*.v)
+        [[ -n "$CURFILE" ]] || exec rocq "$@"
+        ARGS=("${ARGS[@]:0:FIRST}" compile "${ARGS[@]:FIRST}")
+        ;;
+    *) exec rocq "$@" ;;
+esac
 
-# To use this script, do
-#   make -jJ COQC=etc/coqccount.sh ...
-# or
-#   export COQC=etc/coqccount.sh
-#   make -jJ ...
-# In both cases, fill in J with the number of parallel jobs you want.
+# Do not count or annotate non-file calls.
+[[ -n "$CURFILE" ]] || exec rocq "${ARGS[@]}"
 
-# The script sends its output to standard error, so use
-# "make ... >file 2>&1" to save it into a file or
-# "make ... 2>&1 | command" to pipe it into a command.
-
-# The script uses the pgrep utility to count the number of processes
-# named "coqc".  It might seem more sensible to count the coqccount.sh
-# processes, but for some reason the same process sometimes shows up
-# multiple times, leading to overcounting.
-
-# If the last argument isn't a .v file, we are probably being called
-# to determine the Coq version, so just transparently call coqc.
-CURFILE="${@: -1}"
-if [[ "$CURFILE" != *.v ]]; then
-    exec coqc "$@"
-fi
-
-# Run coqc in the background, and do our first count a bit after it starts.
-# We do it this way rather than adding 1, as it usually allows us to count
-# peers that started at about the same time.
-coqc "$@" &
+# Select real workers first, then exclude check/repl workers by their arguments.
+# Checking the process name also handles executable paths containing spaces.
+count_compilers() {
+    local pids
+    pids=$(pgrep -x rocqworker) || true
+    if [[ -z "$pids" ]]; then
+        printf '0\n'
+        return
+    fi
+    ps -ww -p "${pids//$'\n'/,}" -o command= 2>/dev/null |
+        grep -Ec -- '(^|[[:space:]])--kind=compile([[:space:]]|$)' || true
+}
+rocq "${ARGS[@]}" &
+PID=$!
 sleep 0.001
-CNT=`pgrep -cx '^coqc$'`
+CNT=$(count_compilers)
 echo "-> $CNT $CURFILE" >&2
 
-# Do our final count when it ends, and add one for us.
-wait $!
+wait "$PID"
 RET=$?
-CNT=$((`pgrep -cx '^coqc$'` + 1))
+CNT=$(( $(count_compilers) + 1 ))
 echo "<- $CNT $CURFILE" >&2
-
-# We preserve the return value, so that the build stops when there is an error.
-exit $RET
+exit "$RET"
