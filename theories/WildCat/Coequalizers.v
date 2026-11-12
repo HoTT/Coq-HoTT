@@ -4,7 +4,7 @@ From HoTT.WildCat Require Import Core Equiv EquivGpd NatTrans
 
 (** * Categories with coequalizers *)
 
-(** When [coeq] is the target object in a double arrow diagram, then for any object [z] we get a commuting diagram of 0-groupoids by applying the functor [- $-> z], which is [yon_0gpd z].  Thus there is a natural map of 0-groupoids from [coeq $-> z] to the 0-groupoid equalizer of
+(** When [cat_coeq] is the target object in a double arrow diagram, then for any object [z] we get a commuting diagram of 0-groupoids by applying the functor [- $-> z], which is [yon_0gpd z].  Thus there is a natural map of 0-groupoids from [cat_coeq $-> z] to the 0-groupoid equalizer of
 
 <<
                   -->
@@ -15,10 +15,10 @@ In this diagram, the hom sets are regarded as 0-groupoids and the top-level arro
 
 Definition cat_coeq_rec_inv {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b)
-  (coeq : A) (proj : b $-> coeq) (glue : proj $o f $== proj $o g)
+  (cat_coeq : A) (proj : b $-> cat_coeq) (glue : proj $o f $== proj $o g)
   (z : A)
-  : yon_0gpd z coeq $-> equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
-  := cat_eq_corec_inv (A:=A^op) (a:=b) f g coeq proj glue z.
+  : yon_0gpd z cat_coeq $-> equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
+  := cat_eq_corec_inv (A:=A^op) (a:=b) f g cat_coeq proj glue z.
 
 (** A coequalizer is an object completing [f] and [g] to a commuting diagram such that the map above is an equivalence of 0-groupoids for each [z]. We record this as the object being an equalizer in the opposite category and deduce the relevant structure. *)
 Class IsCatCoequalizer {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b) (cat_coeq : A)
@@ -27,9 +27,9 @@ Class IsCatCoequalizer {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b) (cat_coe
 Definition Build_IsCatCoequalizer' {A : Type} `{Is1Cat A} {a b : A}
   (f g : a $-> b) (cat_coeq : A) (cat_coeq_proj : b $-> cat_coeq)
   (cat_coeq_glue : cat_coeq_proj $o f $== cat_coeq_proj $o g)
-  (eq : forall z : A, CatIsEquiv (cat_coeq_rec_inv f g cat_coeq cat_coeq_proj cat_coeq_glue z))
+  (catie_cat_coeq_rec_inv : forall z : A, CatIsEquiv (cat_coeq_rec_inv f g cat_coeq cat_coeq_proj cat_coeq_glue z))
   : IsCatCoequalizer f g cat_coeq
-  := Build_IsCatEqualizer' (A:=A^op) (a:=b) f g cat_coeq cat_coeq_proj cat_coeq_glue eq.
+  := Build_IsCatEqualizer' (A:=A^op) (a:=b) f g cat_coeq cat_coeq_proj cat_coeq_glue catie_cat_coeq_rec_inv.
 
 Definition cat_coeq_proj {A : Type} `{Is1Cat A} {a b : A} {f g : a $-> b}
   {cat_coeq : A} `{!IsCatCoequalizer f g cat_coeq}
@@ -48,19 +48,19 @@ Instance catie_cat_coeq_rec_inv {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)
 
 (** A coequalizer in a category is an equalizer in the opposite category. *)
 Class CatCoequalizer {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)
-  := coeq : CatEqualizer (A:=A^op) (a:=b) f g.
+  := cat_coequalizer : CatEqualizer (A:=A^op) (a:=b) f g.
 
 Definition cat_coeq {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b) `{!CatCoequalizer f g} : A
-  := coeq.(cat_eq (A:=A^op) (a:=b) f g).
+  := cat_coequalizer.(cat_eq (A:=A^op) (a:=b) f g).
 
-Arguments cat_coeq {A _ _ _ _ _ _} f g {coeq} : rename.
+Arguments cat_coeq {A _ _ _ _ _ _} f g {cat_coequalizer} : rename.
 
 (** We derive that a coequalizer is also a coequalizer in the sense above. *)
 Instance cat_iscoeq {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b) `{!CatCoequalizer f g}
   : IsCatCoequalizer f g (cat_coeq f g)
-  := coeq.(cat_iseq).
+  := cat_coequalizer.(cat_iseq).
 
-Arguments cat_iscoeq {A _ _ _ _ _ _} f g {coeq} : rename.
+Arguments cat_iscoeq {A _ _ _ _ _ _} f g {cat_coequalizer} : rename.
 
 (** A wrapper for building coequalizers with less typechecking. *)
 Definition Build_CatCoequalizer' {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)

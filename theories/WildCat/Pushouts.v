@@ -5,22 +5,22 @@ From HoTT.WildCat Require Import Core Equiv EquivGpd Yoneda
 
 (** * Categories with pushouts *)
 
-(** When [po] is the target object in a commuting square, then for any object [z] we get a commuting square of 0-groupoids by applying the functor [- $-> z], which is [yon_0gpd z].  Thus there is a natural map of 0-groupoids from [po $-> z] to the 0-groupoid pullback of
+(** When [cat_po] is the target object in a commuting square, then for any object [z] we get a commuting square of 0-groupoids by applying the functor [- $-> z], which is [yon_0gpd z].  Thus there is a natural map of 0-groupoids from [cat_po $-> z] to the 0-groupoid pullback of
 <<
-        (po $-> z) --> (c $-> z)
-            |             |
-            |             |
-            v             v
+                      (c $-> z)
+                          |
+                          |
+                          v
         (b $-> z)  --> (a $-> z)
 >>
 In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors). *)
 
 Definition cat_po_rec_inv {A : Type} `{Is1Cat A}
   {a b c : A} (f : a $-> b) (g : a $-> c)
-  (po : A) (in1 : b $-> po) (in2 : c $-> po) (glue : in1 $o f $== in2 $o g)
+  (cat_po : A) (in1 : b $-> cat_po) (in2 : c $-> cat_po) (glue : in1 $o f $== in2 $o g)
   (z : A)
-  : yon_0gpd z po $-> pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
-  := cat_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a) f g po in1 in2 glue z.
+  : yon_0gpd z cat_po $-> pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
+  := cat_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a) f g cat_po in1 in2 glue z.
 
 (** A pushout is an object completing [f] and [g] to a commuting square such that the map above is an equivalence of 0-groupoids for each [z]. We record this as the object being a pullback in the opposite category and deduce the relevant structure. *)
 Class IsCatPushout {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> b) (g : a $-> c) (cat_po : A)
@@ -51,26 +51,26 @@ Definition Build_IsCatPushout' {A : Type} `{Is1Cat A} {a b c : A}
   (f : a $-> b) (g : a $-> c) (cat_po : A)
   (cat_po_in1 : b $-> cat_po) (cat_po_in2 : c $-> cat_po)
   (cat_po_glue : cat_po_in1 $o f $== cat_po_in2 $o g)
-  (eq : forall z : A, CatIsEquiv (cat_po_rec_inv f g cat_po cat_po_in1 cat_po_in2 cat_po_glue z))
+  (catie_cat_pb_corec_inv : forall z : A, CatIsEquiv (cat_po_rec_inv f g cat_po cat_po_in1 cat_po_in2 cat_po_glue z))
   : IsCatPushout f g cat_po
   := Build_IsCatPullback' (A:=A^op) (a:=b) (b:=c) (c:=a)
-       f g cat_po cat_po_in1 cat_po_in2 cat_po_glue eq.
+       f g cat_po cat_po_in1 cat_po_in2 cat_po_glue catie_cat_pb_corec_inv.
 
 Class CatPushout {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> b) (g : a $-> c)
-  := po : CatPullback (A:=A^op) (a:=b) (b:=c) (c:=a) f g.
+  := cat_pushout : CatPullback (A:=A^op) (a:=b) (b:=c) (c:=a) f g.
 
 Definition cat_po {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> b) (g : a $-> c)
   `{!CatPushout f g} : A
-  := po.(cat_pb (A:=A^op) (a:=b) (b:=c) (c:=a) f g).
+  := cat_pushout.(cat_pb (A:=A^op) (a:=b) (b:=c) (c:=a) f g).
 
-Arguments cat_po {A IsGraph Is2Graph Is01Cat H a b c} f g {po} : rename.
+Arguments cat_po {A IsGraph Is2Graph Is01Cat H a b c} f g {cat_pushout} : rename.
 
 Instance cat_ispo {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> b) (g : a $-> c)
   `{!CatPushout f g}
   : IsCatPushout f g (cat_po f g)
-  := po.(cat_ispb).
+  := cat_pushout.(cat_ispb).
 
-Arguments cat_ispo {A IsGraph Is2Graph Is01Cat H a b c} f g {po} : rename.
+Arguments cat_ispo {A IsGraph Is2Graph Is01Cat H a b c} f g {cat_pushout} : rename.
 
 Definition Build_CatPushout' {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> b) (g : a $-> c)
   (cat_po : A) (cat_ispo : IsCatPushout f g cat_po)
