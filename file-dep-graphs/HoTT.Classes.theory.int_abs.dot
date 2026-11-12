@@ -1,0 +1,34 @@
+digraph HoTT_Classes_theory_int_abs {
+  graph [ratio=0.5]
+  node [style=filled]
+int_abs_int_abs_mult [label="int_abs_mult", URL=<int_abs.html#int_abs_mult>, peripheries=3, fillcolor="#F070D1"] ;
+int_abs_int_abs_nonneg_plus [label="int_abs_nonneg_plus", URL=<int_abs.html#int_abs_nonneg_plus>, peripheries=3, fillcolor="#F070D1"] ;
+int_abs_int_abs_1 [label="int_abs_1", URL=<int_abs.html#int_abs_1>, peripheries=3, fillcolor="#F070D1"] ;
+int_abs_int_abs_nonpos [label="int_abs_nonpos", URL=<int_abs.html#int_abs_nonpos>, fillcolor="#F070D1"] ;
+int_abs_int_abs_nonneg [label="int_abs_nonneg", URL=<int_abs.html#int_abs_nonneg>, fillcolor="#F070D1"] ;
+int_abs_int_abs_0 [label="int_abs_0", URL=<int_abs.html#int_abs_0>, fillcolor="#F070D1"] ;
+int_abs_int_abs_ne_0 [label="int_abs_ne_0", URL=<int_abs.html#int_abs_ne_0>, peripheries=3, fillcolor="#F070D1"] ;
+int_abs_int_abs_0_alt [label="int_abs_0_alt", URL=<int_abs.html#int_abs_0_alt>, fillcolor="#F070D1"] ;
+int_abs_int_abs_negate [label="int_abs_negate", URL=<int_abs.html#int_abs_negate>, fillcolor="#F070D1"] ;
+int_abs_int_abs_negate_nat [label="int_abs_negate_nat", URL=<int_abs.html#int_abs_negate_nat>, fillcolor="#F070D1"] ;
+int_abs_int_abs_nat [label="int_abs_nat", URL=<int_abs.html#int_abs_nat>, fillcolor="#F070D1"] ;
+int_abs_int_abs_sig_alt [label="int_abs_sig_alt", URL=<int_abs.html#int_abs_sig_alt>, peripheries=3, fillcolor="#F070D1"] ;
+int_abs_int_abs_spec [label="int_abs_spec", URL=<int_abs.html#int_abs_spec>, fillcolor="#F070D1"] ;
+int_abs_int_abs_unique [label="int_abs_unique", URL=<int_abs.html#int_abs_unique>, peripheries=3, fillcolor="#F070D1"] ;
+  int_abs_int_abs_mult -> int_abs_int_abs_nonpos [] ;
+  int_abs_int_abs_nonneg_plus -> int_abs_int_abs_nonneg [] ;
+  int_abs_int_abs_1 -> int_abs_int_abs_nonneg [] ;
+  int_abs_int_abs_nonpos -> int_abs_int_abs_nonneg [] ;
+  int_abs_int_abs_nonpos -> int_abs_int_abs_negate [] ;
+  int_abs_int_abs_nonneg -> int_abs_int_abs_0 [] ;
+  int_abs_int_abs_0 -> int_abs_int_abs_0_alt [] ;
+  int_abs_int_abs_ne_0 -> int_abs_int_abs_0_alt [] ;
+  int_abs_int_abs_0_alt -> int_abs_int_abs_nat [] ;
+  int_abs_int_abs_negate -> int_abs_int_abs_negate_nat [] ;
+  int_abs_int_abs_negate -> int_abs_int_abs_nat [] ;
+  int_abs_int_abs_negate_nat -> int_abs_int_abs_spec [] ;
+  int_abs_int_abs_nat -> int_abs_int_abs_spec [] ;
+  int_abs_int_abs_sig_alt -> int_abs_int_abs_spec [] ;
+subgraph cluster_int_abs { label="int_abs"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+int_abs_int_abs_unique; int_abs_int_abs_spec; int_abs_int_abs_sig_alt; int_abs_int_abs_nat; int_abs_int_abs_negate_nat; int_abs_int_abs_negate; int_abs_int_abs_0_alt; int_abs_int_abs_ne_0; int_abs_int_abs_0; int_abs_int_abs_nonneg; int_abs_int_abs_nonpos; int_abs_int_abs_1; int_abs_int_abs_nonneg_plus; int_abs_int_abs_mult; };
+} /* END */

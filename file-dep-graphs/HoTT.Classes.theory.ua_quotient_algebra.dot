@@ -1,0 +1,61 @@
+digraph HoTT_Classes_theory_ua_quotient_algebra {
+  graph [ratio=0.5]
+  node [style=filled]
+ua_quotient_algebra_ump_quotient_algebra [label="ump_quotient_algebra", URL=<ua_quotient_algebra.html#ump_quotient_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_quotient_algebra_ump_quotient_algebra_rl [label="ump_quotient_algebra_rl", URL=<ua_quotient_algebra.html#ump_quotient_algebra_rl>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_ump_quotient_algebra_lr [label="ump_quotient_algebra_lr", URL=<ua_quotient_algebra.html#ump_quotient_algebra_lr>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_hom_quotient_algebra_mapin [label="hom_quotient_algebra_mapin", URL=<ua_quotient_algebra.html#hom_quotient_algebra_mapin>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_compute_quotient_algebra_mapout [label="compute_quotient_algebra_mapout", URL=<ua_quotient_algebra.html#compute_quotient_algebra_mapout>, peripheries=3, fillcolor="#F070D1"] ;
+ua_quotient_algebra_hom_quotient_algebra_mapout [label="hom_quotient_algebra_mapout", URL=<ua_quotient_algebra.html#hom_quotient_algebra_mapout>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_is_homomorphism_quotient_algebra_mapout [label="is_homomorphism_quotient_algebra_mapout", URL=<ua_quotient_algebra.html#is_homomorphism_quotient_algebra_mapout>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_oppreserving_quotient_algebra_mapout [label="oppreserving_quotient_algebra_mapout", URL=<ua_quotient_algebra.html#oppreserving_quotient_algebra_mapout>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_def_hom_quotient_algebra_mapout [label="def_hom_quotient_algebra_mapout", URL=<ua_quotient_algebra.html#def_hom_quotient_algebra_mapout>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_is_isomorphism_quotient [label="is_isomorphism_quotient", URL=<ua_quotient_algebra.html#is_isomorphism_quotient>, peripheries=3, fillcolor="#F070D1"] ;
+ua_quotient_algebra_surjection_quotient [label="surjection_quotient", URL=<ua_quotient_algebra.html#surjection_quotient>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_hom_quotient [label="hom_quotient", URL=<ua_quotient_algebra.html#hom_quotient>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_is_homomorphism_quotient [label="is_homomorphism_quotient", URL=<ua_quotient_algebra.html#is_homomorphism_quotient>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_oppreserving_quotient [label="oppreserving_quotient", URL=<ua_quotient_algebra.html#oppreserving_quotient>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_def_hom_quotient [label="def_hom_quotient", URL=<ua_quotient_algebra.html#def_hom_quotient>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_path_quotient_algebra_iff [label="path_quotient_algebra_iff", URL=<ua_quotient_algebra.html#path_quotient_algebra_iff>, peripheries=3, fillcolor="#F070D1"] ;
+ua_quotient_algebra_path_quotient_algebra [label="path_quotient_algebra", URL=<ua_quotient_algebra.html#path_quotient_algebra>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_compute_op_quotient [label="compute_op_quotient", URL=<ua_quotient_algebra.html#compute_op_quotient>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_hset_quotient_algebra [label="hset_quotient_algebra", URL=<ua_quotient_algebra.html#hset_quotient_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_quotient_algebra_QuotientAlgebra [label="QuotientAlgebra", URL=<ua_quotient_algebra.html#QuotientAlgebra>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_ops_quotient_algebra [label="ops_quotient_algebra", URL=<ua_quotient_algebra.html#ops_quotient_algebra>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_op_quotient_algebra [label="op_quotient_algebra", URL=<ua_quotient_algebra.html#op_quotient_algebra>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_op_quotient_algebra_well_def [label="op_quotient_algebra_well_def", URL=<ua_quotient_algebra.html#op_quotient_algebra_well_def>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_ComputeOpQuotient [label="ComputeOpQuotient", URL=<ua_quotient_algebra.html#ComputeOpQuotient>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_quotient_ind_prop_family_prod [label="quotient_ind_prop_family_prod", URL=<ua_quotient_algebra.html#quotient_ind_prop_family_prod>, fillcolor="#F070D1"] ;
+ua_quotient_algebra_carriers_quotient_algebra [label="carriers_quotient_algebra", URL=<ua_quotient_algebra.html#carriers_quotient_algebra>, fillcolor="#F070D1"] ;
+  ua_quotient_algebra_ump_quotient_algebra -> ua_quotient_algebra_ump_quotient_algebra_rl [] ;
+  ua_quotient_algebra_ump_quotient_algebra -> ua_quotient_algebra_ump_quotient_algebra_lr [] ;
+  ua_quotient_algebra_ump_quotient_algebra_rl -> ua_quotient_algebra_hom_quotient_algebra_mapin [] ;
+  ua_quotient_algebra_ump_quotient_algebra_lr -> ua_quotient_algebra_hom_quotient_algebra_mapout [] ;
+  ua_quotient_algebra_hom_quotient_algebra_mapin -> ua_quotient_algebra_hom_quotient [] ;
+  ua_quotient_algebra_compute_quotient_algebra_mapout -> ua_quotient_algebra_hom_quotient_algebra_mapout [] ;
+  ua_quotient_algebra_hom_quotient_algebra_mapout -> ua_quotient_algebra_is_homomorphism_quotient_algebra_mapout [] ;
+  ua_quotient_algebra_is_homomorphism_quotient_algebra_mapout -> ua_quotient_algebra_oppreserving_quotient_algebra_mapout [] ;
+  ua_quotient_algebra_is_homomorphism_quotient_algebra_mapout -> ua_quotient_algebra_compute_op_quotient [] ;
+  ua_quotient_algebra_oppreserving_quotient_algebra_mapout -> ua_quotient_algebra_def_hom_quotient_algebra_mapout [] ;
+  ua_quotient_algebra_def_hom_quotient_algebra_mapout -> ua_quotient_algebra_QuotientAlgebra [] ;
+  ua_quotient_algebra_is_isomorphism_quotient -> ua_quotient_algebra_surjection_quotient [] ;
+  ua_quotient_algebra_surjection_quotient -> ua_quotient_algebra_hom_quotient [] ;
+  ua_quotient_algebra_hom_quotient -> ua_quotient_algebra_is_homomorphism_quotient [] ;
+  ua_quotient_algebra_is_homomorphism_quotient -> ua_quotient_algebra_oppreserving_quotient [] ;
+  ua_quotient_algebra_is_homomorphism_quotient -> ua_quotient_algebra_compute_op_quotient [] ;
+  ua_quotient_algebra_oppreserving_quotient -> ua_quotient_algebra_def_hom_quotient [] ;
+  ua_quotient_algebra_def_hom_quotient -> ua_quotient_algebra_QuotientAlgebra [] ;
+  ua_quotient_algebra_path_quotient_algebra_iff -> ua_quotient_algebra_path_quotient_algebra [] ;
+  ua_quotient_algebra_path_quotient_algebra -> ua_quotient_algebra_QuotientAlgebra [] ;
+  ua_quotient_algebra_compute_op_quotient -> ua_quotient_algebra_QuotientAlgebra [] ;
+  ua_quotient_algebra_hset_quotient_algebra -> ua_quotient_algebra_QuotientAlgebra [] ;
+  ua_quotient_algebra_QuotientAlgebra -> ua_quotient_algebra_ops_quotient_algebra [] ;
+  ua_quotient_algebra_ops_quotient_algebra -> ua_quotient_algebra_op_quotient_algebra [] ;
+  ua_quotient_algebra_op_quotient_algebra -> ua_quotient_algebra_op_quotient_algebra_well_def [] ;
+  ua_quotient_algebra_op_quotient_algebra_well_def -> ua_quotient_algebra_ComputeOpQuotient [] ;
+  ua_quotient_algebra_op_quotient_algebra_well_def -> ua_quotient_algebra_quotient_ind_prop_family_prod [] ;
+  ua_quotient_algebra_ComputeOpQuotient -> ua_quotient_algebra_carriers_quotient_algebra [] ;
+  ua_quotient_algebra_quotient_ind_prop_family_prod -> ua_quotient_algebra_carriers_quotient_algebra [] ;
+subgraph cluster_ua_quotient_algebra { label="ua_quotient_algebra"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ua_quotient_algebra_carriers_quotient_algebra; ua_quotient_algebra_quotient_ind_prop_family_prod; ua_quotient_algebra_ComputeOpQuotient; ua_quotient_algebra_op_quotient_algebra_well_def; ua_quotient_algebra_op_quotient_algebra; ua_quotient_algebra_ops_quotient_algebra; ua_quotient_algebra_QuotientAlgebra; ua_quotient_algebra_hset_quotient_algebra; ua_quotient_algebra_compute_op_quotient; ua_quotient_algebra_path_quotient_algebra; ua_quotient_algebra_path_quotient_algebra_iff; ua_quotient_algebra_def_hom_quotient; ua_quotient_algebra_oppreserving_quotient; ua_quotient_algebra_is_homomorphism_quotient; ua_quotient_algebra_hom_quotient; ua_quotient_algebra_surjection_quotient; ua_quotient_algebra_is_isomorphism_quotient; ua_quotient_algebra_def_hom_quotient_algebra_mapout; ua_quotient_algebra_oppreserving_quotient_algebra_mapout; ua_quotient_algebra_is_homomorphism_quotient_algebra_mapout; ua_quotient_algebra_hom_quotient_algebra_mapout; ua_quotient_algebra_compute_quotient_algebra_mapout; ua_quotient_algebra_hom_quotient_algebra_mapin; ua_quotient_algebra_ump_quotient_algebra_lr; ua_quotient_algebra_ump_quotient_algebra_rl; ua_quotient_algebra_ump_quotient_algebra; };
+} /* END */

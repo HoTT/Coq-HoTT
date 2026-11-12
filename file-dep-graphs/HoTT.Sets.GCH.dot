@@ -1,0 +1,27 @@
+digraph HoTT_Sets_GCH {
+  graph [ratio=0.5]
+  node [style=filled]
+GCH_GCH_LEM [label="GCH_LEM", URL=<GCH.html#GCH_LEM>, peripheries=3, fillcolor="#F070D1"] ;
+GCH_CH_LEM [label="CH_LEM", URL=<GCH.html#CH_LEM>, fillcolor="#F070D1"] ;
+GCH_inject_sings [label="inject_sings", URL=<GCH.html#inject_sings>, fillcolor="#F070D1"] ;
+GCH_injective_proj1 [label="injective_proj1", URL=<GCH.html#injective_proj1>, fillcolor="#F070D1"] ;
+GCH_Cantor_sing [label="Cantor_sing", URL=<GCH.html#Cantor_sing>, fillcolor="#F070D1"] ;
+GCH_sing [label="sing", URL=<GCH.html#sing>, fillcolor="#F070D1"] ;
+GCH_hpaths [label="hpaths", URL=<GCH.html#hpaths>, fillcolor="#F070D1"] ;
+GCH_hprop_GCH [label="hprop_GCH", URL=<GCH.html#hprop_GCH>, peripheries=3, fillcolor="#F070D1"] ;
+GCH_Cantor_inj [label="Cantor_inj", URL=<GCH.html#Cantor_inj>, fillcolor="#F070D1"] ;
+GCH_GCH [label="GCH", URL=<GCH.html#GCH>, fillcolor="#F070D1"] ;
+  GCH_GCH_LEM -> GCH_CH_LEM [] ;
+  GCH_GCH_LEM -> GCH_GCH [] ;
+  GCH_CH_LEM -> GCH_inject_sings [] ;
+  GCH_CH_LEM -> GCH_injective_proj1 [] ;
+  GCH_CH_LEM -> GCH_Cantor_sing [] ;
+  GCH_CH_LEM -> GCH_Cantor_inj [] ;
+  GCH_inject_sings -> GCH_sing [] ;
+  GCH_Cantor_sing -> GCH_sing [] ;
+  GCH_sing -> GCH_hpaths [] ;
+  GCH_hprop_GCH -> GCH_Cantor_inj [] ;
+  GCH_hprop_GCH -> GCH_GCH [] ;
+subgraph cluster_GCH { label="GCH"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+GCH_GCH; GCH_Cantor_inj; GCH_hprop_GCH; GCH_hpaths; GCH_sing; GCH_Cantor_sing; GCH_injective_proj1; GCH_inject_sings; GCH_CH_LEM; GCH_GCH_LEM; };
+} /* END */

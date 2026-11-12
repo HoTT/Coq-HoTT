@@ -1,0 +1,14 @@
+N: 3 "dummy_ind" [opaque=no, body=yes, kind=cnst, prop=yes, path="EvalIn", ];
+N: 2 "dummy_rec" [opaque=no, body=yes, kind=cnst, prop=no, path="EvalIn", ];
+N: 4 "dummy_rect" [opaque=no, body=yes, kind=cnst, prop=no, path="EvalIn", ];
+N: 1 "dummy_sind" [opaque=no, body=yes, kind=cnst, prop=no, path="EvalIn", ];
+N: 6 "dummy" [kind=inductive, prop=no, path="EvalIn", ];
+N: 5 "adummy" [kind=construct, prop=no, path="EvalIn", ];
+E: 1 5 [weight=2, ];
+E: 1 6 [weight=5, ];
+E: 2 5 [weight=2, ];
+E: 2 6 [weight=5, ];
+E: 3 5 [weight=2, ];
+E: 3 6 [weight=5, ];
+E: 4 5 [weight=2, ];
+E: 4 6 [weight=5, ];

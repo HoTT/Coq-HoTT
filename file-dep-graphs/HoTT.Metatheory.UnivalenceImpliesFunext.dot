@@ -1,0 +1,17 @@
+digraph HoTT_Metatheory_UnivalenceImpliesFunext {
+  graph [ratio=0.5]
+  node [style=filled]
+UnivalenceImpliesFunext_Univalence_type_implies_Funext_type [label="Univalence_type_implies_Funext_type", URL=<UnivalenceImpliesFunext.html#Univalence_type_implies_Funext_type>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceImpliesFunext_Univalence_implies_WeakFunext [label="Univalence_implies_WeakFunext", URL=<UnivalenceImpliesFunext.html#Univalence_implies_WeakFunext>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceImpliesFunext_Univalence_implies_FunextNondep [label="Univalence_implies_FunextNondep", URL=<UnivalenceImpliesFunext.html#Univalence_implies_FunextNondep>, fillcolor="#F070D1"] ;
+UnivalenceImpliesFunext_isequiv_tgt_compose [label="isequiv_tgt_compose", URL=<UnivalenceImpliesFunext.html#isequiv_tgt_compose>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceImpliesFunext_isequiv_src_compose [label="isequiv_src_compose", URL=<UnivalenceImpliesFunext.html#isequiv_src_compose>, fillcolor="#F070D1"] ;
+UnivalenceImpliesFunext_univalence_isequiv_postcompose [label="univalence_isequiv_postcompose", URL=<UnivalenceImpliesFunext.html#univalence_isequiv_postcompose>, fillcolor="#F070D1"] ;
+  UnivalenceImpliesFunext_Univalence_type_implies_Funext_type -> UnivalenceImpliesFunext_Univalence_implies_FunextNondep [] ;
+  UnivalenceImpliesFunext_Univalence_implies_WeakFunext -> UnivalenceImpliesFunext_Univalence_implies_FunextNondep [] ;
+  UnivalenceImpliesFunext_Univalence_implies_FunextNondep -> UnivalenceImpliesFunext_isequiv_src_compose [] ;
+  UnivalenceImpliesFunext_isequiv_tgt_compose -> UnivalenceImpliesFunext_univalence_isequiv_postcompose [] ;
+  UnivalenceImpliesFunext_isequiv_src_compose -> UnivalenceImpliesFunext_univalence_isequiv_postcompose [] ;
+subgraph cluster_UnivalenceImpliesFunext { label="UnivalenceImpliesFunext"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+UnivalenceImpliesFunext_univalence_isequiv_postcompose; UnivalenceImpliesFunext_isequiv_src_compose; UnivalenceImpliesFunext_isequiv_tgt_compose; UnivalenceImpliesFunext_Univalence_implies_FunextNondep; UnivalenceImpliesFunext_Univalence_implies_WeakFunext; UnivalenceImpliesFunext_Univalence_type_implies_Funext_type; };
+} /* END */

@@ -1,0 +1,8 @@
+N: 4 "Coequalizer" [opaque=no, body=yes, kind=cnst, prop=no, path="Colimit_Coequalizer", ];
+N: 5 "IsCoequalizer" [opaque=no, body=yes, kind=cnst, prop=no, path="Colimit_Coequalizer", ];
+N: 3 "cocone_Coeq" [opaque=no, body=yes, kind=cnst, prop=no, path="Colimit_Coequalizer", ];
+N: 1 "equiv_Coeq_Coequalizer" [opaque=no, body=yes, kind=cnst, prop=no, path="Colimit_Coequalizer", ];
+N: 2 "iscoequalizer_Coeq" [opaque=no, body=yes, kind=cnst, prop=no, path="Colimit_Coequalizer", ];
+E: 1 2 [weight=1, ];
+E: 1 4 [weight=2, ];
+E: 2 3 [weight=211, ];

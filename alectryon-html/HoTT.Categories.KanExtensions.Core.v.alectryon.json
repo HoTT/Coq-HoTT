@@ -1,0 +1,184 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Kan Extensions *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Functorial.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import UniversalProperties.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting nLab on Kan extensions:\n\n    ** Idea\n\n    The Kan extension of a functor [F : C \u2192 D] with respect to a\n    functor\n\n<<\n    C\n    |\n    | p\n    \u2193\n    C'\n>>\n\n    is, if it exists, a kind of best approximation to the problem of\n    finding a functor [C' \u2192 D] such that\n\n<<\n        F\n    C -----> D\n    |       \u2197\n    | p   /\n    |   /\n    \u2193 /\n    C'\n>>\n\n    hence to extending the domain of [F] through [p] from [C] to [C'].\n\n    More generally, this makes sense not only in Cat but in any\n    2-category.\n\n    Similarly, a Kan lift is the best approximation to lifting a\n    morphism [F : C \u2192 D] through a morphism\n\n<<\n    D'\n    |\n    \u2193\n    D\n>>\n\n    to a morphism [F\u0302]\n\n<<\n                D'\n              \u2197 |\n            /   |\n        F\u0302 /     |\n        /       |\n      /   F     \u2193\n    C --------> D\n>>\n\n    Kan extensions are ubiquitous. See the discussion at Examples\n    below.\n\n    ** Definitions\n\n    There are various slight variants of the definition of Kan\n    extension. In good cases they all exist and all coincide, but in\n    some cases only some of these will actually exist.\n\n    We (have to) distinguish the following cases:\n\n    - \u201cordinary\u201d or \u201cweak\u201d Kan extensions\n\n      These define the extension of an entire functor, by an\n      adjointness relation.\n\n      Here we (have to) distinguish further between\n\n      - global Kan extensions,\n\n        which define extensions of all possible functors of given\n        domain and codomain (if all of them indeed exist);\n\n      - local Kan extensions,\n\n        which define extensions of single functors only, which may\n        exist even if not every functor has an extension.\n\n    - \u201cpointwise\u201d or \u201cstrong\u201d Kan extensions\n\n      These define the value of an extended functor on each object\n      (each \u201cpoint\u201d) by a weighted (co)limit.\n\n      Furthermore, a pointwise Kan extension can be \u201cabsolute\u201d.\n\n    If the pointwise version exists, then it coincides with the\n    \u201cordinary\u201d or \u201cweak\u201d version, but the former may exist without the\n    pointwise version existing. See below for more.\n\n    Some authors (such as Kelly) assert that only pointwise Kan\n    extensions deserve the name \u201cKan extension,\u201d and use the term as\n    \u201cweak Kan extension\u201d for a functor equipped with a universal\n    natural transformation. It is certainly true that most Kan\n    extensions which arise in practice are pointwise. This distinction\n    is even more important in enriched category theory. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section kan_extensions.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** Ordinary or weak Kan extensions\n\n      *** Global Kan extensions\n\n      Let [p : C \u2192 C'] be a functor. For [D] any other category, write\n      [p* : (C' \u2192 D) \u2192 (C \u2192 D)] for the induced functor on the functor\n      categories: this sends a functor [h : C' \u2192 D] to the composite functor\n\n<<\n                p      h\n      p* h : C --> C' --> D\n>>\n   *)\n  (** *** Pullback-along functor *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C C' D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section pullback_along.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pullback_along_functor\n    : object ((C -> C') -> (C' -> D) -> (C -> D))\n      := Functor.Composition.Functorial.Core.compose_functor _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pullback_along (p : Functor C C')\n    : object ((C' -> D) -> (C -> D))\n      := Eval hnf in pullback_along_functor p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End pullback_along.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Definition. If [p*] has a left adjoint, typically denoted [p_! :\n      (C \u2192 D) \u2192 (C' \u2192 D)] or [Lan_p : (C \u2192 D) \u2192 (C' \u2192 D)] then this\n      left adjoint is called the (ordinary or weak) left Kan extension\n      operation along [p]. For [h \u2208 (C -> D)] we call [p_! h] the left\n      Kan extension of [h] along [p].\n\n      Similarly, if [p*] has a right adjoint, this right adjoint is\n      called the right Kan extension operation along [p]. It is\n      typically denoted [p_* : (C \u2192 D) \u2192 (C' \u2192 D)] or [Ran = Ran_p :\n      (C \u2192 D) \u2192 (C' \u2192 D)].\n\n      The analogous definition clearly makes sense as stated in other\n      contexts, such as in enriched category theory.\n\n      Observation. If [C' = 1] is the terminal category, then\n\n      - the left Kan extension operation forms the colimit of a functor;\n\n      - the right Kan extension operation forms the limit of a functor. *)\n\n  (** *** Left Kan extensions *)\n  (** Colimits are initial morphisms. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsLeftKanExtensionAlong (p : Functor C C') (h : Functor C D)\n    := @IsInitialMorphism (_ -> _) _ h (pullback_along p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** *** Right Kan extensions *)\n  (** Limits are terminal morphisms *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsRightKanExtensionAlong (p : Functor C C') (h : Functor C D)\n    := @IsTerminalMorphism _ (_ -> _) (pullback_along p) h.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End kan_extensions.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

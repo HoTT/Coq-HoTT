@@ -1,0 +1,43 @@
+digraph HoTT_Colimits_CoeqUnivProp {
+  graph [ratio=0.5]
+  node [style=filled]
+CoeqUnivProp_Coeq_ind_inv_nat [label="Coeq_ind_inv_nat", URL=<CoeqUnivProp.html#Coeq_ind_inv_nat>, peripheries=3, fillcolor="#F070D1"] ;
+CoeqUnivProp_is0functor_functor_Coeq_ind_type [label="is0functor_functor_Coeq_ind_type", URL=<CoeqUnivProp.html#is0functor_functor_Coeq_ind_type>, peripheries=3, fillcolor="#F070D1"] ;
+CoeqUnivProp_functor_Coeq_ind_type [label="functor_Coeq_ind_type", URL=<CoeqUnivProp.html#functor_Coeq_ind_type>, fillcolor="#F070D1"] ;
+CoeqUnivProp_is0functor_functor_Coeq_ind_data [label="is0functor_functor_Coeq_ind_data", URL=<CoeqUnivProp.html#is0functor_functor_Coeq_ind_data>, peripheries=3, fillcolor="#F070D1"] ;
+CoeqUnivProp_Coeq_ind_functor_coeq_beta_cglue [label="Coeq_ind_functor_coeq_beta_cglue", URL=<CoeqUnivProp.html#Coeq_ind_functor_coeq_beta_cglue>, fillcolor="#F070D1"] ;
+CoeqUnivProp_functor_Coeq_ind_data [label="functor_Coeq_ind_data", URL=<CoeqUnivProp.html#functor_Coeq_ind_data>, fillcolor="#F070D1"] ;
+CoeqUnivProp_isgraph_Coeq_ind_data_total [label="isgraph_Coeq_ind_data_total", URL=<CoeqUnivProp.html#isgraph_Coeq_ind_data_total>, fillcolor="#F070D1"] ;
+CoeqUnivProp_equiv_0gpd_Coeq_ind [label="equiv_0gpd_Coeq_ind", URL=<CoeqUnivProp.html#equiv_0gpd_Coeq_ind>, peripheries=3, fillcolor="#F070D1"] ;
+CoeqUnivProp_issurjinj_Coeq_ind_inv [label="issurjinj_Coeq_ind_inv", URL=<CoeqUnivProp.html#issurjinj_Coeq_ind_inv>, fillcolor="#F070D1"] ;
+CoeqUnivProp_is0functor_Coeq_ind_inv [label="is0functor_Coeq_ind_inv", URL=<CoeqUnivProp.html#is0functor_Coeq_ind_inv>, fillcolor="#F070D1"] ;
+CoeqUnivProp_Coeq_ind_inv [label="Coeq_ind_inv", URL=<CoeqUnivProp.html#Coeq_ind_inv>, fillcolor="#F070D1"] ;
+CoeqUnivProp_isd0gpd_Coeq_ind_data [label="isd0gpd_Coeq_ind_data", URL=<CoeqUnivProp.html#isd0gpd_Coeq_ind_data>, fillcolor="#F070D1"] ;
+CoeqUnivProp_isd01cat_Coeq_ind_data [label="isd01cat_Coeq_ind_data", URL=<CoeqUnivProp.html#isd01cat_Coeq_ind_data>, fillcolor="#F070D1"] ;
+CoeqUnivProp_isdgraph_Coeq_ind_data [label="isdgraph_Coeq_ind_data", URL=<CoeqUnivProp.html#isdgraph_Coeq_ind_data>, fillcolor="#F070D1"] ;
+CoeqUnivProp_Coeq_ind_data [label="Coeq_ind_data", URL=<CoeqUnivProp.html#Coeq_ind_data>, fillcolor="#F070D1"] ;
+CoeqUnivProp_Coeq_ind_type [label="Coeq_ind_type", URL=<CoeqUnivProp.html#Coeq_ind_type>, fillcolor="#F070D1"] ;
+  CoeqUnivProp_Coeq_ind_inv_nat -> CoeqUnivProp_functor_Coeq_ind_type [] ;
+  CoeqUnivProp_Coeq_ind_inv_nat -> CoeqUnivProp_functor_Coeq_ind_data [] ;
+  CoeqUnivProp_Coeq_ind_inv_nat -> CoeqUnivProp_isgraph_Coeq_ind_data_total [] ;
+  CoeqUnivProp_Coeq_ind_inv_nat -> CoeqUnivProp_Coeq_ind_inv [] ;
+  CoeqUnivProp_is0functor_functor_Coeq_ind_type -> CoeqUnivProp_functor_Coeq_ind_type [] ;
+  CoeqUnivProp_functor_Coeq_ind_type -> CoeqUnivProp_Coeq_ind_type [] ;
+  CoeqUnivProp_is0functor_functor_Coeq_ind_data -> CoeqUnivProp_Coeq_ind_functor_coeq_beta_cglue [] ;
+  CoeqUnivProp_is0functor_functor_Coeq_ind_data -> CoeqUnivProp_functor_Coeq_ind_data [] ;
+  CoeqUnivProp_is0functor_functor_Coeq_ind_data -> CoeqUnivProp_isgraph_Coeq_ind_data_total [] ;
+  CoeqUnivProp_functor_Coeq_ind_data -> CoeqUnivProp_Coeq_ind_data [] ;
+  CoeqUnivProp_isgraph_Coeq_ind_data_total -> CoeqUnivProp_isdgraph_Coeq_ind_data [] ;
+  CoeqUnivProp_equiv_0gpd_Coeq_ind -> CoeqUnivProp_issurjinj_Coeq_ind_inv [] ;
+  CoeqUnivProp_issurjinj_Coeq_ind_inv -> CoeqUnivProp_is0functor_Coeq_ind_inv [] ;
+  CoeqUnivProp_issurjinj_Coeq_ind_inv -> CoeqUnivProp_isd0gpd_Coeq_ind_data [] ;
+  CoeqUnivProp_is0functor_Coeq_ind_inv -> CoeqUnivProp_Coeq_ind_inv [] ;
+  CoeqUnivProp_is0functor_Coeq_ind_inv -> CoeqUnivProp_isdgraph_Coeq_ind_data [] ;
+  CoeqUnivProp_Coeq_ind_inv -> CoeqUnivProp_Coeq_ind_data [] ;
+  CoeqUnivProp_Coeq_ind_inv -> CoeqUnivProp_Coeq_ind_type [] ;
+  CoeqUnivProp_isd0gpd_Coeq_ind_data -> CoeqUnivProp_isd01cat_Coeq_ind_data [] ;
+  CoeqUnivProp_isd01cat_Coeq_ind_data -> CoeqUnivProp_isdgraph_Coeq_ind_data [] ;
+  CoeqUnivProp_isdgraph_Coeq_ind_data -> CoeqUnivProp_Coeq_ind_data [] ;
+subgraph cluster_CoeqUnivProp { label="CoeqUnivProp"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+CoeqUnivProp_Coeq_ind_type; CoeqUnivProp_Coeq_ind_data; CoeqUnivProp_isdgraph_Coeq_ind_data; CoeqUnivProp_isd01cat_Coeq_ind_data; CoeqUnivProp_isd0gpd_Coeq_ind_data; CoeqUnivProp_Coeq_ind_inv; CoeqUnivProp_is0functor_Coeq_ind_inv; CoeqUnivProp_issurjinj_Coeq_ind_inv; CoeqUnivProp_equiv_0gpd_Coeq_ind; CoeqUnivProp_isgraph_Coeq_ind_data_total; CoeqUnivProp_functor_Coeq_ind_data; CoeqUnivProp_Coeq_ind_functor_coeq_beta_cglue; CoeqUnivProp_is0functor_functor_Coeq_ind_data; CoeqUnivProp_functor_Coeq_ind_type; CoeqUnivProp_is0functor_functor_Coeq_ind_type; CoeqUnivProp_Coeq_ind_inv_nat; };
+} /* END */

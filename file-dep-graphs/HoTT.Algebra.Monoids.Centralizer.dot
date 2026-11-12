@@ -1,0 +1,11 @@
+digraph HoTT_Algebra_Monoids_Centralizer {
+  graph [ratio=0.5]
+  node [style=filled]
+Centralizer_centralizer_sgop [label="centralizer_sgop", URL=<Centralizer.html#centralizer_sgop>, peripheries=3, fillcolor="#F070D1"] ;
+Centralizer_centralizer_unit [label="centralizer_unit", URL=<Centralizer.html#centralizer_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Centralizer_centralizer [label="centralizer", URL=<Centralizer.html#centralizer>, fillcolor="#F070D1"] ;
+  Centralizer_centralizer_sgop -> Centralizer_centralizer [] ;
+  Centralizer_centralizer_unit -> Centralizer_centralizer [] ;
+subgraph cluster_Centralizer { label="Centralizer"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Centralizer_centralizer; Centralizer_centralizer_unit; Centralizer_centralizer_sgop; };
+} /* END */

@@ -1,0 +1,1334 @@
+<html>
+<head>
+<title>groups.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for groups.v</h1>
+
+<div class="code" title="File: groups.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 45.454545454545%"></div>
+<pre>From HoTT Require Import Basics.Overture.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 1
+Time: 0.055s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import
+  HoTT.Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Generalizable Variables G H A B C f g.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Cancellation with one-sided inverse and unit laws does not require a group or set truncation. *)</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section inverse_cancellation.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 9
+Time: 0.004s">
+<div class="time" style="width: 7.2727272727273%"></div>
+<pre>
+
+  Definition sgop_inv_g_Vg {A : Type} `{op : SgOp A}
+    {e : A} {i : A -&gt; A}
+    `{!Associative op, !LeftIdentity op e,
+      !RightInverse op i e} (x y : A)
+    : x * (i x * y) = y
+    := simple_associativity _ _ _
+        @ ap (.* y) (right_inverse x)
+        @ left_identity y.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 18
+Time: 0.004s">
+<div class="time" style="width: 7.2727272727273%"></div>
+<pre>
+
+  Definition sgop_inv_V_gg {A : Type} `{op : SgOp A}
+    {e : A} {i : A -&gt; A}
+    `{!Associative op, !LeftIdentity op e,
+      !LeftInverse op i e} (x y : A)
+    : i x * (x * y) = y
+    := simple_associativity _ _ _
+        @ ap (.* y) (left_inverse x)
+        @ left_identity y.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 27
+Time: 0.004s">
+<div class="time" style="width: 7.2727272727273%"></div>
+<pre>
+
+  Definition sgop_inv_gV_g {A : Type} `{op : SgOp A}
+    {e : A} {i : A -&gt; A}
+    `{!Associative op, !RightIdentity op e,
+      !LeftInverse op i e} (x y : A)
+    : (x * i y) * y = x
+    := (simple_associativity _ _ _)^
+        @ ap (x *.) (left_inverse y)
+        @ right_identity x.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 36
+Time: 0.004s">
+<div class="time" style="width: 7.2727272727273%"></div>
+<pre>
+
+  Definition sgop_inv_gg_V {A : Type} `{op : SgOp A}
+    {e : A} {i : A -&gt; A}
+    `{!Associative op, !RightIdentity op e,
+      !RightInverse op i e} (x y : A)
+    : (x * y) * i y = x
+    := (simple_associativity _ _ _)^
+        @ ap (x *.) (right_inverse y)
+        @ right_identity x.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End inverse_cancellation.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The properties in this section can also be proved without assuming that [G] is set-truncated, but currently typeclass inference can fail to find these results for rings if proved without the [IsGroup] hypothesis. *)</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section group_props.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{IsGroup G}.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Group inverses are involutive *)
+ </pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance inverse_involutive : Involutive (^).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 55
+Time: 0.003s">
+<div class="time" style="width: 5.4545454545455%"></div>
+<pre>
+    rhs_V rapply left_identity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 56
+Time: 0.006s">
+<div class="time" style="width: 10.909090909091%"></div>
+<pre>
+    lhs_V rapply (sgop_inv_gV_g _ x).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (.* x) (left_inverse _)).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isinj_group_inverse : IsInjective (^).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y E.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((involutive x)^ @ _ @ involutive y).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, E.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma inverse_mon_unit : mon_unit^ = mon_unit.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+    rhs_V rapply (left_inverse mon_unit).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 70
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+    apply symmetry, right_identity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros z x y E.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 76
+Time: 0.005s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    rhs_V rapply (sgop_inv_V_gg z).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 77
+Time: 0.005s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    lhs_V rapply (sgop_inv_V_gg z).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap _ E).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance group_cancelR: forall z : G, RightCancellation (.*.) z.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros z x y E.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 84
+Time: 0.005s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    rhs_V rapply (sgop_inv_gg_V _ z).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 85
+Time: 0.005s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    lhs_V rapply (sgop_inv_gg_V _ z).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (.* z^) E).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+
+  Lemma inverse_sg_op x y : (x * y)^ = y^ * x^.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (group_cancelL (x * y)).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+    lhs rapply right_inverse.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 94
+Time: 0.005s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    lhs rapply simple_associativity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 95
+Time: 0.007s">
+<div class="time" style="width: 12.727272727273%"></div>
+<pre>
+    lhs rapply (ap (.* x^) (sgop_inv_gg_V _ _)).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply right_inverse.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+
+End group_props.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section abgroup_props.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+
+  Lemma negate_sg_op_distr `{IsAbGroup G} x y : -(x + y) = -x + -y.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 106
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+    path_via (-y + -x).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 108
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> rapply inverse_sg_op.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 109
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre> apply commutativity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Close Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End abgroup_props.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section groupmor_props.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+
+  Context `{IsGroup A} `{IsGroup B} {f : A -&gt; B} `{!IsMonoidPreserving f}.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma preserves_inverse x : f x^ = (f x)^.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (left_cancellation (.*.) (f x)).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+    rewrite &lt;-preserves_sg_op.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+    rewrite 2!right_inverse.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact preserves_mon_unit.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End groupmor_props.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section from_another_sg.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 129
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+
+  Context
+    `{IsSemiGroup A} `{IsHSet B}
+    `{Bop : SgOp B} (f : B -&gt; A) `{!IsInjective f}
+    (op_correct : forall x y, f (x * y) = f x * f y).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma projected_sg: IsSemiGroup B.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat intro; apply (injective f).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+    rewrite !op_correct.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply associativity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End from_another_sg.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section from_another_com.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 145
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+
+  Context `{SgOp A} `{!Commutative (A:=A) sg_op} {B}
+   `{Bop : SgOp B} (f : B -&gt; A) `{!IsInjective f}
+   (op_correct : forall x y, f (x * y) = f x * f y).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma projected_comm : Commutative (A:=B) sg_op.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (injective f).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2!op_correct.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply commutativity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End from_another_com.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section from_another_com_sg.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+
+  Context
+    `{IsCommutativeSemiGroup A} `{IsHSet B}
+    `{Bop : SgOp B} (f : B -&gt; A) `{!IsInjective f}
+    (op_correct : forall x y, f (x * y) = f x * f y).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma projected_com_sg : IsCommutativeSemiGroup B.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (projected_sg f);assumption.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (projected_comm f);assumption.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End from_another_com_sg.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section from_another_monoid.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 177
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+
+  Context `{IsMonoid A} `{IsHSet B}
+   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -&gt; A) `{!IsInjective f}
+   (op_correct : forall x y, f (x * y) = f x * f y) (unit_correct : f mon_unit = mon_unit).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma projected_monoid : IsMonoid B.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> apply (projected_sg f).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat intro; apply (injective f).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+      rewrite op_correct, unit_correct, left_identity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat intro; apply (injective f).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+      rewrite op_correct, unit_correct, right_identity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 192
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End from_another_monoid.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section from_another_com_monoid.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 197
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+
+  Context
+   `{IsCommutativeMonoid A} `{IsHSet B}
+   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -&gt; A) `{!IsInjective f}
+   (op_correct : forall x y, f (x * y) = f x * f y)
+   (unit_correct : f mon_unit = mon_unit).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma projected_com_monoid : IsCommutativeMonoid B.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (projected_monoid f);assumption.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 209
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> apply (projected_comm f);assumption.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End from_another_com_monoid.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section from_another_group.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 214
+Time: 0.003s">
+<div class="time" style="width: 5.4545454545455%"></div>
+<pre>
+
+  Context
+    `{isg : IsGroup A} `{IsHSet B}
+    `{Bop : SgOp B} `{Bunit : MonUnit B} `{Binv : Inverse B}
+    (f : B -&gt; A) `{!IsInjective f}
+    (op_correct : forall x y, f (x * y) = f x * f y)
+    (unit_correct : f mon_unit = mon_unit)
+    (inverse_correct : forall x, f x^ = (f x)^).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma projected_group : IsGroup B.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 227
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre> apply (projected_monoid f);assumption.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat intro; apply (injective f).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 228
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+      rewrite op_correct, inverse_correct, unit_correct, left_inverse.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply reflexivity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat intro; apply (injective f).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 231
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+      rewrite op_correct, inverse_correct, unit_correct, right_inverse.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 233
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End from_another_group.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section from_another_ab_group.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 239
+Time: 0.003s">
+<div class="time" style="width: 5.4545454545455%"></div>
+<pre>
+
+  Context `{IsAbGroup A} `{IsHSet B}
+   `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
+   (f : B -&gt; A) `{!IsInjective f}
+   (op_correct : forall x y, f (x + y) = f x + f y)
+   (unit_correct : f 0 = 0)
+   (negate_correct : forall x, f (-x) = -f x).</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma projected_ab_group : IsAbGroup B.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 251
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> apply (projected_group f (isg:=abgroup_group _)); assumption.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 252
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre> apply (projected_comm f); assumption.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Close Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End from_another_ab_group.</pre>
+</div>
+<div class="code" title="File: groups.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

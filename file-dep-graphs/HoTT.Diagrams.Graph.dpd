@@ -1,0 +1,18 @@
+N: 5 "Graph_ind" [opaque=no, body=yes, kind=cnst, prop=yes, path="Graph", ];
+N: 4 "Graph_rec" [opaque=no, body=yes, kind=cnst, prop=no, path="Graph", ];
+N: 6 "Graph_rect" [opaque=no, body=yes, kind=cnst, prop=no, path="Graph", ];
+N: 3 "Graph_sind" [opaque=no, body=yes, kind=cnst, prop=no, path="Graph", ];
+N: 2 "graph0" [opaque=no, body=yes, kind=cnst, prop=no, path="Graph", ];
+N: 1 "graph1" [opaque=no, body=yes, kind=cnst, prop=no, path="Graph", ];
+N: 8 "Graph" [kind=inductive, prop=no, path="Graph", ];
+N: 7 "Build_Graph" [kind=construct, prop=no, path="Graph", ];
+E: 1 8 [weight=2, ];
+E: 2 8 [weight=2, ];
+E: 3 7 [weight=2, ];
+E: 3 8 [weight=5, ];
+E: 4 7 [weight=2, ];
+E: 4 8 [weight=5, ];
+E: 5 7 [weight=2, ];
+E: 5 8 [weight=5, ];
+E: 6 7 [weight=2, ];
+E: 6 8 [weight=5, ];

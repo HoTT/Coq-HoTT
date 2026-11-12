@@ -1,0 +1,168 @@
+<html>
+<head>
+<title>Centralizer.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Centralizer.v</h1>
+
+<div class="code" title="File: Centralizer.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 44.067796610169%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 1
+Time: 0.059s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Algebra.Monoids.Monoid.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Centralizers *)
+
+(** The centralizer of [g] consists of the elements that commute with [g]. We only need a binary operation so this concept is not special to monoids. *)</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 8
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>Definition centralizer {A : Type} `{SgOp A} (g h : A)
+  := g * h = h * g.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A two-sided identity commutes with every element. *)</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 11
+Time: 0.002s">
+<div class="time" style="width: 3.3898305084746%"></div>
+<pre>Definition centralizer_unit {A : Type} `{SgOp A} {Aunit : MonUnit A}
+  `{!LeftIdentity _ mon_unit, !RightIdentity _ mon_unit} (g : A) 
+  : centralizer g mon_unit
+  := right_identity g @ (left_identity g)^.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Associativity alone makes each centralizer closed under the operation. *)</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>Definition centralizer_sgop {A : Type} `{SgOp A, !Associative (.*.)} 
+  (g h k : A) (p : centralizer g h) (q : centralizer g k)
+  : centralizer g (h * k).</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold centralizer.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 20
+Time: 0.003s">
+<div class="time" style="width: 5.0847457627119%"></div>
+<pre>
+  lhs tapply associativity.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 21
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  lhs napply (ap (.* k) p).</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 22
+Time: 0.003s">
+<div class="time" style="width: 5.0847457627119%"></div>
+<pre>
+  lhs_V tapply associativity.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply (ap (h *.) q).</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 24
+Time: 0.002s">
+<div class="time" style="width: 3.3898305084746%"></div>
+<pre>
+  tapply associativity.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Centralizer.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

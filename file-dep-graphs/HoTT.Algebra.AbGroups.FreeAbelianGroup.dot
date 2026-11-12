@@ -1,0 +1,37 @@
+digraph HoTT_Algebra_AbGroups_FreeAbelianGroup {
+  graph [ratio=0.5]
+  node [style=filled]
+FreeAbelianGroup_is1functor_freeabgroup [label="is1functor_freeabgroup", URL=<FreeAbelianGroup.html#is1functor_freeabgroup>, peripheries=3, fillcolor="#F070D1"] ;
+FreeAbelianGroup_is0functor_freeabgroup [label="is0functor_freeabgroup", URL=<FreeAbelianGroup.html#is0functor_freeabgroup>, fillcolor="#F070D1"] ;
+FreeAbelianGroup_isfreeabgroup_freeabgroup [label="isfreeabgroup_freeabgroup", URL=<FreeAbelianGroup.html#isfreeabgroup_freeabgroup>, peripheries=3, fillcolor="#F070D1"] ;
+FreeAbelianGroup_isfreeabgroupon_isabelianization_isfreegroup [label="isfreeabgroupon_isabelianization_isfreegroup", URL=<FreeAbelianGroup.html#isfreeabgroupon_isabelianization_isfreegroup>, fillcolor="#F070D1"] ;
+FreeAbelianGroup_FreeAbGroup_ind_homotopy [label="FreeAbGroup_ind_homotopy", URL=<FreeAbelianGroup.html#FreeAbGroup_ind_homotopy>, peripheries=3, fillcolor="#F070D1"] ;
+FreeAbelianGroup_FreeAbGroup_rec_beta_in [label="FreeAbGroup_rec_beta_in", URL=<FreeAbelianGroup.html#FreeAbGroup_rec_beta_in>, peripheries=3, fillcolor="#F070D1"] ;
+FreeAbelianGroup_FreeAbGroup_rec [label="FreeAbGroup_rec", URL=<FreeAbelianGroup.html#FreeAbGroup_rec>, fillcolor="#F070D1"] ;
+FreeAbelianGroup_freeabgroup_in [label="freeabgroup_in", URL=<FreeAbelianGroup.html#freeabgroup_in>, fillcolor="#F070D1"] ;
+FreeAbelianGroup_FreeAbGroup [label="FreeAbGroup", URL=<FreeAbelianGroup.html#FreeAbGroup>, fillcolor="#F070D1"] ;
+FreeAbelianGroup_isfreeabgroup_isfreeabgroupon [label="isfreeabgroup_isfreeabgroupon", URL=<FreeAbelianGroup.html#isfreeabgroup_isfreeabgroupon>, peripheries=3, fillcolor="#F070D1"] ;
+FreeAbelianGroup_isfreegroup [label="isfreegroup", URL=<FreeAbelianGroup.html#isfreegroup>, peripheries=3, fillcolor="#F070D1"] ;
+FreeAbelianGroup_IsFreeAbGroup [label="IsFreeAbGroup", URL=<FreeAbelianGroup.html#IsFreeAbGroup>, fillcolor="#F070D1"] ;
+FreeAbelianGroup_contr_isfreeabgroupon [label="contr_isfreeabgroupon", URL=<FreeAbelianGroup.html#contr_isfreeabgroupon>, peripheries=3, fillcolor="#F070D1"] ;
+FreeAbelianGroup_IsFreeAbGroupOn [label="IsFreeAbGroupOn", URL=<FreeAbelianGroup.html#IsFreeAbGroupOn>, fillcolor="#F070D1"] ;
+FreeAbelianGroup_FactorsThroughFreeAbGroup [label="FactorsThroughFreeAbGroup", URL=<FreeAbelianGroup.html#FactorsThroughFreeAbGroup>, fillcolor="#F070D1"] ;
+  FreeAbelianGroup_is1functor_freeabgroup -> FreeAbelianGroup_is0functor_freeabgroup [] ;
+  FreeAbelianGroup_is0functor_freeabgroup -> FreeAbelianGroup_FreeAbGroup [] ;
+  FreeAbelianGroup_isfreeabgroup_freeabgroup -> FreeAbelianGroup_isfreeabgroupon_isabelianization_isfreegroup [] ;
+  FreeAbelianGroup_isfreeabgroup_freeabgroup -> FreeAbelianGroup_freeabgroup_in [] ;
+  FreeAbelianGroup_isfreeabgroup_freeabgroup -> FreeAbelianGroup_IsFreeAbGroup [] ;
+  FreeAbelianGroup_isfreeabgroupon_isabelianization_isfreegroup -> FreeAbelianGroup_IsFreeAbGroupOn [] ;
+  FreeAbelianGroup_FreeAbGroup_ind_homotopy -> FreeAbelianGroup_freeabgroup_in [] ;
+  FreeAbelianGroup_FreeAbGroup_rec_beta_in -> FreeAbelianGroup_FreeAbGroup_rec [] ;
+  FreeAbelianGroup_FreeAbGroup_rec_beta_in -> FreeAbelianGroup_freeabgroup_in [] ;
+  FreeAbelianGroup_FreeAbGroup_rec -> FreeAbelianGroup_FreeAbGroup [] ;
+  FreeAbelianGroup_freeabgroup_in -> FreeAbelianGroup_FreeAbGroup [] ;
+  FreeAbelianGroup_isfreeabgroup_isfreeabgroupon -> FreeAbelianGroup_IsFreeAbGroup [] ;
+  FreeAbelianGroup_isfreegroup -> FreeAbelianGroup_IsFreeAbGroup [] ;
+  FreeAbelianGroup_IsFreeAbGroup -> FreeAbelianGroup_IsFreeAbGroupOn [] ;
+  FreeAbelianGroup_contr_isfreeabgroupon -> FreeAbelianGroup_IsFreeAbGroupOn [] ;
+  FreeAbelianGroup_IsFreeAbGroupOn -> FreeAbelianGroup_FactorsThroughFreeAbGroup [] ;
+subgraph cluster_FreeAbelianGroup { label="FreeAbelianGroup"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+FreeAbelianGroup_FactorsThroughFreeAbGroup; FreeAbelianGroup_IsFreeAbGroupOn; FreeAbelianGroup_contr_isfreeabgroupon; FreeAbelianGroup_IsFreeAbGroup; FreeAbelianGroup_isfreegroup; FreeAbelianGroup_isfreeabgroup_isfreeabgroupon; FreeAbelianGroup_FreeAbGroup; FreeAbelianGroup_freeabgroup_in; FreeAbelianGroup_FreeAbGroup_rec; FreeAbelianGroup_FreeAbGroup_rec_beta_in; FreeAbelianGroup_FreeAbGroup_ind_homotopy; FreeAbelianGroup_isfreeabgroupon_isabelianization_isfreegroup; FreeAbelianGroup_isfreeabgroup_freeabgroup; FreeAbelianGroup_is0functor_freeabgroup; FreeAbelianGroup_is1functor_freeabgroup; };
+} /* END */

@@ -1,0 +1,3830 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** This file continues the development of algebra [Operation]. It",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    gives a way to construct operations using (conventional) curried\n    functions, and shows that such curried operations are equivalent\n    to the uncurried operations [Operation]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Algebra.Universal.Algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Types\n  HoTT.Spaces.Finite\n  HoTT.Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope Algebra_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Functions [head_dom'] and [head_dom] are used to get the first\n    element of a nonempty operation domain [a : forall i, A (ss i)]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Monomorphic Definition head_dom' {\u03c3} (A : Carriers \u03c3) (n : nat)\n  : forall (N : n > 0) (ss : FinSeq n (Sort \u03c3)) (a : forall i, A (ss i)),\n    A (fshead' n N ss)\n  := match n with\n     | 0 => fun N ss _ => Empty_rec (lt_irrefl _ N)\n     | n'.+1 => fun N ss a => a fin_zero\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Monomorphic Definition head_dom {\u03c3} (A : Carriers \u03c3) {n : nat}\n  (ss : FinSeq n.+1 (Sort \u03c3)) (a : forall i, A (ss i))\n  : A (fshead ss)\n  := head_dom' A n.+1 _ ss a.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Functions [tail_dom'] and [tail_dom] are used to obtain the tail\n    of an operation domain [a : forall i, A (ss i)]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Monomorphic Definition tail_dom' {\u03c3} (A : Carriers \u03c3) (n : nat)\n  : forall (ss : FinSeq n (Sort \u03c3)) (a : forall i, A (ss i)) (i : Fin (nat_pred n)),\n    A (fstail' n ss i)\n  := match n with\n     | 0 => fun ss _ i => Empty_rec i\n     | n'.+1 => fun ss a i => a (fsucc i)\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Monomorphic Definition tail_dom {\u03c3} (A : Carriers \u03c3) {n : nat}\n  (ss : FinSeq n.+1 (Sort \u03c3)) (a : forall i, A (ss i))\n  : forall i, A (fstail ss i)\n  := tail_dom' A n.+1 ss a.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Functions [cons_dom'] and [cons_dom] to add an element to\n    the front of a given domain [a : forall i, A (ss i)]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Monomorphic Definition cons_dom' {\u03c3} (A : Carriers \u03c3) {n : nat}\n  : forall (i : Fin n) (ss : FinSeq n (Sort \u03c3)) (N : n > 0),\n    A (fshead' n N ss) -> (forall i, A (fstail' n ss i)) -> A (ss i)\n  := fin_ind\n      (fun n i =>\n        forall (ss : Fin n -> Sort \u03c3) (N : n > 0),\n        A (fshead' n N ss) -> (forall i, A (fstail' n ss i)) -> A (ss i))\n      (fun n' _ z x _ => x)\n      (fun n' i' _ => fun _ _ _ xs => xs i').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cons_dom {\u03c3} (A : Carriers \u03c3)\n  {n : nat} (ss : FinSeq n.+1 (Sort \u03c3))\n  (x : A (fshead ss)) (xs : forall i, A (fstail ss i))\n  : forall i : Fin n.+1, A (ss i)\n  := fun i => cons_dom' A i ss _ x xs.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The empty domain: *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nil_dom {\u03c3} (A : Carriers \u03c3) (ss : FinSeq 0 (Sort \u03c3))\n  : forall i : Fin 0, A (ss i)\n  := Empty_ind (A o ss).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A specialization of [Operation] to finite [Fin n] arity. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition FiniteOperation {\u03c3 : Signature} (A : Carriers \u03c3)\n  {n : nat} (ss : FinSeq n (Sort \u03c3)) (t : Sort \u03c3) : Type\n  := Operation A {| Arity := Fin n; sorts_dom := ss; sort_cod := t |}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A type of curried operations\n<<\nCurriedOperation A [s1, ..., sn] t := A s1 -> ... -> A sn -> A t.\n>>\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint CurriedOperation {\u03c3} (A : Carriers \u03c3) {n : nat}\n  : (FinSeq n (Sort \u03c3)) -> Sort \u03c3 -> Type\n  := match n with\n     | 0 => fun ss t => A t\n     | n'.+1 =>\n        fun ss t => A (fshead ss) -> CurriedOperation A (fstail ss) t\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Function [operation_uncurry] is used to uncurry an operation\n<<\noperation_uncurry A [s1, ..., sn] t (op : CurriedOperation A [s1, ..., sn] t)\n  : FiniteOperation A [s1, ..., sn] t\n  := fun (x1 : A s1, ..., xn : A xn) => op x1 ... xn\n>>\nSee [equiv_operation_curry] below. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint operation_uncurry {\u03c3} (A : Carriers \u03c3) {n : nat}\n  : forall (ss : FinSeq n (Sort \u03c3)) (t : Sort \u03c3),\n    CurriedOperation A ss t -> FiniteOperation A ss t\n  := match n with\n     | 0 => fun ss t op _ => op\n     | n'.+1 =>\n        fun ss t op a =>\n          operation_uncurry A (fstail ss) t (op (a fin_zero)) (a o fsucc)\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Example computation_example_operation_uncurry\n  : forall\n      (\u03c3 : Signature) (A : Carriers \u03c3) (n : nat) (s1 s2 t : Sort \u03c3)\n      (ss := (fscons s1 (fscons s2 fsnil)))\n      (op : CurriedOperation A ss t) (a : forall i, A (ss i)),\n    operation_uncurry A ss t op\n    = fun a => op (a fin_zero) (a (fsucc fin_zero)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (\u03c3 : Signature) (A : Carriers \u03c3),\nnat ->\nforall (s1 s2 t : Sort \u03c3) (ss := fscons s1 (fscons s2 fsnil))\n(op : CurriedOperation A ss t),\n(forall i : Fin 2, A (ss i)) ->\noperation_uncurry A ss t op =\n(fun\n   a : forall i : Arity {| Arity := Fin 2; sorts_dom := ss; sort_cod := t |},\n       A (sorts_dom {| Arity := Fin 2; sorts_dom := ss; sort_cod := t |} i) =>\n op (a fin_zero) (a (fsucc fin_zero)))",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (\u03c3 : Signature) (A : Carriers \u03c3),\nnat ->\nforall (s1 s2 t : Sort \u03c3) (ss := fscons s1 (fscons s2 fsnil))\n(op : CurriedOperation A ss t),\n(forall i : Fin 2, A (ss i)) ->\noperation_uncurry A ss t op =\n(fun\n   a : forall i : Arity {| Arity := Fin 2; sorts_dom := ss; sort_cod := t |},\n       A (sorts_dom {| Arity := Fin 2; sorts_dom := ss; sort_cod := t |} i) =>\n op (a fin_zero) (a (fsucc fin_zero)))",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Function [operation_curry] is used to curry an operation\n<<\noperation_curry A [s1, ..., sn] t (op : FiniteOperation A [s1, ..., sn] t)\n  : CurriedOperation A [s1, ..., sn] t\n  := fun (x1 : A s1) ... (xn : A xn) => op (x1, ..., xn)\n>>\nSee [equiv_operation_curry] below. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint operation_curry {\u03c3} (A : Carriers \u03c3) {n : nat} \n  : forall (ss : FinSeq n (Sort \u03c3)) (t : Sort \u03c3),\n    FiniteOperation A ss t -> CurriedOperation A ss t\n  := match n with\n     | 0 => fun ss t op => op (Empty_ind _)\n     | n'.+1 =>\n        fun ss t op x =>\n          operation_curry A (fstail ss) t (op o cons_dom A ss x)\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Example computation_example_operation_curry\n  : forall\n      (\u03c3 : Signature) (A : Carriers \u03c3) (n : nat) (s1 s2 t : Sort \u03c3)\n      (ss := (fscons s1 (fscons s2 fsnil)))\n      (op : FiniteOperation A ss t)\n      (x1 : A s1) (x2 : A s2),\n    operation_curry A ss t op\n    = fun x1 x2 => op (cons_dom A ss x1 (cons_dom A _ x2 (nil_dom A _))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (\u03c3 : Signature) (A : Carriers \u03c3),\nnat ->\nforall (s1 s2 t : Sort \u03c3) (ss := fscons s1 (fscons s2 fsnil))\n(op : FiniteOperation A ss t),\nA s1 ->\nA s2 ->\noperation_curry A ss t op =\n(fun (x1 : A (fshead ss)) (x2 : A (fshead (fstail ss))) =>\n op\n   (cons_dom A ss x1\n      (cons_dom A (fstail ss) x2 (nil_dom A (fstail (fstail ss))))))",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (\u03c3 : Signature) (A : Carriers \u03c3),\nnat ->\nforall (s1 s2 t : Sort \u03c3) (ss := fscons s1 (fscons s2 fsnil))\n(op : FiniteOperation A ss t),\nA s1 ->\nA s2 ->\noperation_curry A ss t op =\n(fun (x1 : A (fshead ss)) (x2 : A (fshead (fstail ss))) =>\n op\n   (cons_dom A ss x1\n      (cons_dom A (fstail ss) x2 (nil_dom A (fstail (fstail ss))))))",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma expand_cons_dom' {\u03c3} (A : Carriers \u03c3) (n : nat)\n  : forall (i : Fin n) (ss : FinSeq n (Sort \u03c3)) (N : n > 0)\n           (a : forall i, A (ss i)),\n    cons_dom' A i ss N (head_dom' A n N ss a) (tail_dom' A n ss a) = a i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i : Fin n) (ss : FinSeq n (Sort \u03c3)) (N : n > 0)\n(a : forall i0 : Fin n, A (ss i0)),\ncons_dom' A i ss N (head_dom' A n N ss a) (tail_dom' A n ss a) = a i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i : Fin n) (ss : FinSeq n (Sort \u03c3)) (N : n > 0)\n(a : forall i0 : Fin n, A (ss i0)),\ncons_dom' A i ss N (head_dom' A n N ss a) (tail_dom' A n ss a) = a i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (ss : FinSeq n (Sort \u03c3)) (N : n > 0)\n(a : forall i0 : Fin n, A (ss i0)),\ncons_dom' A i ss N (head_dom' A n N ss a) (tail_dom' A n ss a) = a i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction i using fin_ind; intros ss N a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons_dom' A fin_zero ss N (head_dom' A n.+1 N ss a) (tail_dom' A n.+1 ss a) =\na fin_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i : Fin n.+1, A (ss i)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons_dom' A (fsucc i) ss N (head_dom' A n.+1 N ss a) (tail_dom' A n.+1 ss a) =\na (fsucc i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (N0 : n > 0)\n(a0 : forall i0 : Fin n, A (ss0 i0)),\ncons_dom' A i ss0 N0 (head_dom' A n N0 ss0 a0) (tail_dom' A n ss0 a0) = a0 i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin n.+1, A (ss i0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons_dom' A fin_zero ss N (head_dom' A n.+1 N ss a) (tail_dom' A n.+1 ss a) =\na fin_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i : Fin n.+1, A (ss i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold cons_dom'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i : Fin n0) =>\n   forall (ss0 : Fin n0 -> Sort \u03c3) (N0 : n0 > 0),\n   A (fshead' n0 N0 ss0) ->\n   (forall i0 : Fin (nat_pred n0), A (fstail' n0 ss0 i0)) -> A (ss0 i))\n  (fun (n' : nat) (ss0 : Fin n'.+1 -> Sort \u03c3) (z : n'.+1 > 0)\n     (x : A (fshead' n'.+1 z ss0))\n     (_ : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n   x)\n  (fun (n' : nat) (i' : Fin n')\n     (_ : forall (ss0 : Fin n' -> Sort \u03c3) (N0 : n' > 0),\n          A (fshead' n' N0 ss0) ->\n          (forall i : Fin (nat_pred n'), A (fstail' n' ss0 i)) -> A (ss0 i'))\n     (ss0 : Fin n'.+1 -> Sort \u03c3) (N0 : n'.+1 > 0)\n     (_ : A (fshead' n'.+1 N0 ss0))\n     (xs : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n   xs i')\n  fin_zero ss N (head_dom' A n.+1 N ss a) (tail_dom' A n.+1 ss a) =\na fin_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i : Fin n.+1, A (ss i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite fin_ind_beta_zero.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "head_dom' A n.+1 N ss a = a fin_zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i : Fin n.+1, A (ss i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons_dom' A (fsucc i) ss N (head_dom' A n.+1 N ss a) (tail_dom' A n.+1 ss a) =\na (fsucc i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (N0 : n > 0)\n(a0 : forall i0 : Fin n, A (ss0 i0)),\ncons_dom' A i ss0 N0 (head_dom' A n N0 ss0 a0) (tail_dom' A n ss0 a0) = a0 i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin n.+1, A (ss i0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold cons_dom'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i0 : Fin n0) =>\n   forall (ss0 : Fin n0 -> Sort \u03c3) (N0 : n0 > 0),\n   A (fshead' n0 N0 ss0) ->\n   (forall i1 : Fin (nat_pred n0), A (fstail' n0 ss0 i1)) -> A (ss0 i0))\n  (fun (n' : nat) (ss0 : Fin n'.+1 -> Sort \u03c3) (z : n'.+1 > 0)\n     (x : A (fshead' n'.+1 z ss0))\n     (_ : forall i0 : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i0)) =>\n   x)\n  (fun (n' : nat) (i' : Fin n')\n     (_ : forall (ss0 : Fin n' -> Sort \u03c3) (N0 : n' > 0),\n          A (fshead' n' N0 ss0) ->\n          (forall i0 : Fin (nat_pred n'), A (fstail' n' ss0 i0)) ->\n          A (ss0 i'))\n     (ss0 : Fin n'.+1 -> Sort \u03c3) (N0 : n'.+1 > 0)\n     (_ : A (fshead' n'.+1 N0 ss0))\n     (xs : forall i0 : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i0)) =>\n   xs i')\n  (fsucc i) ss N (head_dom' A n.+1 N ss a) (tail_dom' A n.+1 ss a) =\na (fsucc i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHi"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (N0 : n > 0)\n(a0 : forall i0 : Fin n, A (ss0 i0)),\ncons_dom' A i ss0 N0 (head_dom' A n N0 ss0 a0) (tail_dom' A n ss0 a0) = a0 i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "n.+1 > 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin n.+1, A (ss i0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by rewrite fin_ind_beta_fsucc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma expand_cons_dom `{Funext} {\u03c3} (A : Carriers \u03c3)\n  {n : nat} (ss : FinSeq n.+1 (Sort \u03c3)) (a : forall i, A (ss i))\n  : cons_dom A ss (head_dom A ss a) (tail_dom A ss a) = a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons_dom A ss (head_dom A ss a) (tail_dom A ss a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i : Fin n.+1, A (ss i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons_dom A ss (head_dom A ss a) (tail_dom A ss a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i : Fin n.+1, A (ss i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons_dom A ss (head_dom A ss a) (tail_dom A ss a) i = a i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall i0 : Fin n.+1, A (ss i0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply expand_cons_dom'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_operation_curry_to_cunurry `{Funext} {\u03c3} (A : Carriers \u03c3)\n  {n : nat} (ss : FinSeq n (Sort \u03c3)) (t : Sort \u03c3)\n  : operation_uncurry A ss t o operation_curry A ss t == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t o operation_curry A ss t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t o operation_curry A ss t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t (operation_curry A ss t a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [| n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t (operation_curry A ss t a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq 0 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t (operation_curry A ss t a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : FiniteOperation A ss0 t),\noperation_uncurry A ss0 t (operation_curry A ss0 t a0) = a0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t (operation_curry A ss t a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq 0 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext d.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t (operation_curry A ss t a) d = a d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq 0 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin 0; sorts_dom := ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin 0; sorts_dom := ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap a _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty_ind\n  (fun e : Empty =>\n   A (sorts_dom {| Arity := Fin 0; sorts_dom := ss; sort_cod := t |} e)) =\nd",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq 0 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin 0; sorts_dom := ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin 0; sorts_dom := ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t (operation_curry A ss t a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : FiniteOperation A ss0 t),\noperation_uncurry A ss0 t (operation_curry A ss0 t a0) = a0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext a'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t (operation_curry A ss t a) a' = a a'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : FiniteOperation A ss0 t),\noperation_uncurry A ss0 t (operation_curry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n.+1; sorts_dom := ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n.+1; sorts_dom := ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (fun x => x _) (IHn _ _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a (cons_dom A ss (a' fin_zero) (fun x : Fin n => a' (fsucc x))) = a a'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : FiniteOperation A ss0 t),\noperation_uncurry A ss0 t (operation_curry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n.+1; sorts_dom := ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n.+1; sorts_dom := ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap a _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons_dom A ss (a' fin_zero) (fun x : Fin n => a' (fsucc x)) = a'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "FiniteOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : FiniteOperation A ss0 t),\noperation_uncurry A ss0 t (operation_curry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n.+1; sorts_dom := ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n.+1; sorts_dom := ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply expand_cons_dom.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_operation_uncurry_to_curry `{Funext} {\u03c3} (A : Carriers \u03c3)\n  {n : nat} (ss : FinSeq n (Sort \u03c3)) (t : Sort \u03c3)\n  : operation_curry A ss t o operation_uncurry A ss t == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_curry A ss t o operation_uncurry A ss t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_curry A ss t o operation_uncurry A ss t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_curry A ss t (operation_uncurry A ss t a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n; [reflexivity|].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_curry A ss t (operation_uncurry A ss t a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_curry A ss t (operation_uncurry A ss t a) x = a x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ IHn (fstail ss) (a x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_curry A ss t (operation_uncurry A ss t a) x =\noperation_curry A (fstail ss) t (operation_uncurry A (fstail ss) t (a x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (operation_curry A (fstail ss) t) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x0 : forall i : Fin n, A (fstail ss i) =>\n operation_uncurry A ss t a (cons_dom A ss x x0)) =\noperation_uncurry A (fstail ss) t (a x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext a'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t a (cons_dom A ss x a') =\noperation_uncurry A (fstail ss) t (a x) a'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A (fstail ss) t (a (cons_dom A ss x a' fin_zero))\n  (fun x0 : Fin n => cons_dom A ss x a' (fsucc x0)) =\noperation_uncurry A (fstail ss) t (a x) a'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold cons_dom, cons_dom'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A (fstail ss) t\n  (a\n     (fin_ind\n        (fun (n0 : nat) (i : Fin n0) =>\n         forall (ss0 : Fin n0 -> Sort \u03c3) (N : n0 > 0),\n         A (fshead' n0 N ss0) ->\n         (forall i0 : Fin (nat_pred n0), A (fstail' n0 ss0 i0)) -> A (ss0 i))\n        (fun (n' : nat) (ss0 : Fin n'.+1 -> Sort \u03c3) \n           (z : n'.+1 > 0) (x0 : A (fshead' n'.+1 z ss0))\n           (_ : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n         x0)\n        (fun (n' : nat) (i' : Fin n')\n           (_ : forall (ss0 : Fin n' -> Sort \u03c3) (N : n' > 0),\n                A (fshead' n' N ss0) ->\n                (forall i : Fin (nat_pred n'), A (fstail' n' ss0 i)) ->\n                A (ss0 i'))\n           (ss0 : Fin n'.+1 -> Sort \u03c3) (N : n'.+1 > 0)\n           (_ : A (fshead' n'.+1 N ss0))\n           (xs : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n         xs i')\n        fin_zero ss (leq_add_r 1 n) x a'))\n  (fun x0 : Fin n =>\n   fin_ind\n     (fun (n0 : nat) (i : Fin n0) =>\n      forall (ss0 : Fin n0 -> Sort \u03c3) (N : n0 > 0),\n      A (fshead' n0 N ss0) ->\n      (forall i0 : Fin (nat_pred n0), A (fstail' n0 ss0 i0)) -> A (ss0 i))\n     (fun (n' : nat) (ss0 : Fin n'.+1 -> Sort \u03c3) (z : n'.+1 > 0)\n        (x1 : A (fshead' n'.+1 z ss0))\n        (_ : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n      x1)\n     (fun (n' : nat) (i' : Fin n')\n        (_ : forall (ss0 : Fin n' -> Sort \u03c3) (N : n' > 0),\n             A (fshead' n' N ss0) ->\n             (forall i : Fin (nat_pred n'), A (fstail' n' ss0 i)) ->\n             A (ss0 i'))\n        (ss0 : Fin n'.+1 -> Sort \u03c3) (N : n'.+1 > 0)\n        (_ : A (fshead' n'.+1 N ss0))\n        (xs : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n      xs i')\n     (fsucc x0) ss (leq_add_r 1 n) x a') =\noperation_uncurry A (fstail ss) t (a x) a'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite fin_ind_beta_zero.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A (fstail ss) t (a x)\n  (fun x0 : Fin n =>\n   fin_ind\n     (fun (n0 : nat) (i : Fin n0) =>\n      forall (ss0 : Fin n0 -> Sort \u03c3) (N : n0 > 0),\n      A (fshead' n0 N ss0) ->\n      (forall i0 : Fin (nat_pred n0), A (fstail' n0 ss0 i0)) -> A (ss0 i))\n     (fun (n' : nat) (ss0 : Fin n'.+1 -> Sort \u03c3) (z : n'.+1 > 0)\n        (x1 : A (fshead' n'.+1 z ss0))\n        (_ : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n      x1)\n     (fun (n' : nat) (i' : Fin n')\n        (_ : forall (ss0 : Fin n' -> Sort \u03c3) (N : n' > 0),\n             A (fshead' n' N ss0) ->\n             (forall i : Fin (nat_pred n'), A (fstail' n' ss0 i)) ->\n             A (ss0 i'))\n        (ss0 : Fin n'.+1 -> Sort \u03c3) (N : n'.+1 > 0)\n        (_ : A (fshead' n'.+1 N ss0))\n        (xs : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n      xs i')\n     (fsucc x0) ss (leq_add_r 1 n) x a') =\noperation_uncurry A (fstail ss) t (a x) a'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (operation_uncurry A (fstail ss) t (a x)) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x0 : Fin n =>\n fin_ind\n   (fun (n0 : nat) (i : Fin n0) =>\n    forall (ss0 : Fin n0 -> Sort \u03c3) (N : n0 > 0),\n    A (fshead' n0 N ss0) ->\n    (forall i0 : Fin (nat_pred n0), A (fstail' n0 ss0 i0)) -> A (ss0 i))\n   (fun (n' : nat) (ss0 : Fin n'.+1 -> Sort \u03c3) (z : n'.+1 > 0)\n      (x1 : A (fshead' n'.+1 z ss0))\n      (_ : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n    x1)\n   (fun (n' : nat) (i' : Fin n')\n      (_ : forall (ss0 : Fin n' -> Sort \u03c3) (N : n' > 0),\n           A (fshead' n' N ss0) ->\n           (forall i : Fin (nat_pred n'), A (fstail' n' ss0 i)) -> A (ss0 i'))\n      (ss0 : Fin n'.+1 -> Sort \u03c3) (N : n'.+1 > 0)\n      (_ : A (fshead' n'.+1 N ss0))\n      (xs : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n    xs i')\n   (fsucc x0) ss (leq_add_r 1 n) x a') =\na'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |} i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext i'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_ind\n  (fun (n0 : nat) (i : Fin n0) =>\n   forall (ss0 : Fin n0 -> Sort \u03c3) (N : n0 > 0),\n   A (fshead' n0 N ss0) ->\n   (forall i0 : Fin (nat_pred n0), A (fstail' n0 ss0 i0)) -> A (ss0 i))\n  (fun (n' : nat) (ss0 : Fin n'.+1 -> Sort \u03c3) (z : n'.+1 > 0)\n     (x0 : A (fshead' n'.+1 z ss0))\n     (_ : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n   x0)\n  (fun (n' : nat) (i'0 : Fin n')\n     (_ : forall (ss0 : Fin n' -> Sort \u03c3) (N : n' > 0),\n          A (fshead' n' N ss0) ->\n          (forall i : Fin (nat_pred n'), A (fstail' n' ss0 i)) -> A (ss0 i'0))\n     (ss0 : Fin n'.+1 -> Sort \u03c3) (N : n'.+1 > 0)\n     (_ : A (fshead' n'.+1 N ss0))\n     (xs : forall i : Fin (nat_pred n'.+1), A (fstail' n'.+1 ss0 i)) =>\n   xs i'0)\n  (fsucc i') ss (leq_add_r 1 n) x a' =\na' i'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n.+1 (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "CurriedOperation A ss t"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (ss0 : FinSeq n (Sort \u03c3)) (a0 : CurriedOperation A ss0 t),\noperation_curry A ss0 t (operation_uncurry A ss0 t a0) = a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A (fshead ss)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "forall i : Arity {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |},\nA (sorts_dom {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |} i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i'"
+              ],
+              "body": null,
+              "type": "Arity {| Arity := Fin n; sorts_dom := fstail ss; sort_cod := t |}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by rewrite fin_ind_beta_fsucc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_operation_curry `{Funext} {\u03c3} (A : Carriers \u03c3)\n  {n : nat} (ss : FinSeq n (Sort \u03c3)) (t : Sort \u03c3)\n  : IsEquiv (operation_curry A ss t).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (operation_curry A ss t)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (operation_curry A ss t)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply isequiv_adjointify.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "CurriedOperation A ss t -> FiniteOperation A ss t",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_curry A ss t o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o operation_curry A ss t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "CurriedOperation A ss t -> FiniteOperation A ss t",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply operation_uncurry.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_curry A ss t o operation_uncurry A ss t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_operation_uncurry_to_curry.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "operation_uncurry A ss t o operation_curry A ss t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ss"
+              ],
+              "body": null,
+              "type": "FinSeq n (Sort \u03c3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "Sort \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_operation_curry_to_cunurry.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_operation_curry `{Funext} {\u03c3} (A : Carriers \u03c3)\n  {n : nat} (ss : FinSeq n (Sort \u03c3)) (t : Sort \u03c3)\n  : FiniteOperation A ss t <~> CurriedOperation A ss t\n  := Build_Equiv _ _ (operation_curry A ss t) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    }
+  ]
+]

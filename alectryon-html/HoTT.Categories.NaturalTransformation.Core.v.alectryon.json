@@ -1,0 +1,224 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Definition of natural transformation *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope natural_transformation_scope with natural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section NaturalTransformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables F G : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (**\n     Quoting from the lecture notes for 18.705, Commutative Algebra:\n\n     A map of functors is known as a natural transformation. Namely,\n     given two functors [F : C -> D], [G : C -> D], a natural\n     transformation [T: F -> G] is a collection of maps [T A : F A ->\n     G A], one for each object [A] of [C], such that [(T B) \u2218 (F m) =\n     (G m) \u2218 (T A)] for every map [m : A -> B] of [C]; that is, the\n     following diagram is commutative:\n\n<<\n           F m\n     F A -------> F B\n      |            |\n      |            |\n      | T A        | T B\n      |            |\n      V    G m     V\n     G A --------> G B\n>>\n     **)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record NaturalTransformation :=\n    Build_NaturalTransformation' {\n        components_of :> forall c, morphism D (F c) (G c);\n        commutes : forall s d (m : morphism C s d),\n                     components_of d o F _1 m = G _1 m o components_of s;\n        (* We require the following symmetrized version so that for eta-expanded [T], we have [(T^op)^op = T] judgementally. *)\n        commutes_sym : forall s d (m : C.(morphism) s d),\n                         G _1 m o components_of s = components_of d o F _1 m\n      }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_NaturalTransformation CO COM\n    := Build_NaturalTransformation'\n         CO\n         COM\n         (fun _ _ _ => symmetry _ _ (COM _ _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End NaturalTransformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope natural_transformation_scope with NaturalTransformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb natural_transformation discriminated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments components_of {C D}%_category {F G}%_functor T%_natural_transformation /\n          c%_object : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments commutes {C D F G} !T / _ _ _ : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments commutes_sym {C D F G} !T / _ _ _ : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Resolve commutes : category natural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Helper lemmas *)\n(** Some helper lemmas for rewriting.  In the names, [p] stands for a\n    morphism, [T] for natural transformation, and [F] for functor. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition commutes_pT_F C D (F G : Functor C D) (T : NaturalTransformation F G)\n      s d d' (m : morphism C s d) (m' : morphism D _ d')\n: (m' o T d) o F _1 m = (m' o G _1 m) o T s\n  := ((Category.Core.associativity _ _ _ _ _ _ _ _)\n        @ ap _ (commutes _ _ _ _)\n        @ (Category.Core.associativity_sym _ _ _ _ _ _ _ _))%path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition commutes_T_Fp C D (F G : Functor C D) (T : NaturalTransformation F G)\n      s d d' (m : morphism C s d) (m' : morphism D d' _)\n: T d o (F _1 m o m') = G _1 m o (T s o m')\n  := ((Category.Core.associativity_sym _ _ _ _ _ _ _ _)\n        @ ap10 (ap _ (commutes _ _ _ _)) _\n        @ (Category.Core.associativity _ _ _ _ _ _ _ _))%path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

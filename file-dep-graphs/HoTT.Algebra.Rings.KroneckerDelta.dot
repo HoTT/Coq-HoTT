@@ -1,0 +1,33 @@
+digraph HoTT_Algebra_Rings_KroneckerDelta {
+  graph [ratio=0.5]
+  node [style=filled]
+KroneckerDelta_rng_sum_kronecker_delta_r_ [label="rng_sum_kronecker_delta_r'", URL=<KroneckerDelta.html#rng_sum_kronecker_delta_r'>, peripheries=3, fillcolor="#F070D1"] ;
+KroneckerDelta_rng_sum_kronecker_delta_r [label="rng_sum_kronecker_delta_r", URL=<KroneckerDelta.html#rng_sum_kronecker_delta_r>, peripheries=3, fillcolor="#F070D1"] ;
+KroneckerDelta_rng_sum_kronecker_delta_l_ [label="rng_sum_kronecker_delta_l'", URL=<KroneckerDelta.html#rng_sum_kronecker_delta_l'>, fillcolor="#F070D1"] ;
+KroneckerDelta_rng_sum_kronecker_delta_l [label="rng_sum_kronecker_delta_l", URL=<KroneckerDelta.html#rng_sum_kronecker_delta_l>, fillcolor="#F070D1"] ;
+KroneckerDelta_kronecker_delta_gt [label="kronecker_delta_gt", URL=<KroneckerDelta.html#kronecker_delta_gt>, fillcolor="#F070D1"] ;
+KroneckerDelta_kronecker_delta_lt [label="kronecker_delta_lt", URL=<KroneckerDelta.html#kronecker_delta_lt>, peripheries=3, fillcolor="#F070D1"] ;
+KroneckerDelta_kronecker_delta_comm [label="kronecker_delta_comm", URL=<KroneckerDelta.html#kronecker_delta_comm>, fillcolor="#F070D1"] ;
+KroneckerDelta_kronecker_delta_map_inj [label="kronecker_delta_map_inj", URL=<KroneckerDelta.html#kronecker_delta_map_inj>, peripheries=3, fillcolor="#F070D1"] ;
+KroneckerDelta_kronecker_delta_symm [label="kronecker_delta_symm", URL=<KroneckerDelta.html#kronecker_delta_symm>, fillcolor="#F070D1"] ;
+KroneckerDelta_kronecker_delta_neq [label="kronecker_delta_neq", URL=<KroneckerDelta.html#kronecker_delta_neq>, fillcolor="#F070D1"] ;
+KroneckerDelta_kronecker_delta_refl [label="kronecker_delta_refl", URL=<KroneckerDelta.html#kronecker_delta_refl>, fillcolor="#F070D1"] ;
+KroneckerDelta_kronecker_delta [label="kronecker_delta", URL=<KroneckerDelta.html#kronecker_delta>, fillcolor="#F070D1"] ;
+  KroneckerDelta_rng_sum_kronecker_delta_r_ -> KroneckerDelta_rng_sum_kronecker_delta_l_ [] ;
+  KroneckerDelta_rng_sum_kronecker_delta_r_ -> KroneckerDelta_kronecker_delta_comm [] ;
+  KroneckerDelta_rng_sum_kronecker_delta_r -> KroneckerDelta_rng_sum_kronecker_delta_l [] ;
+  KroneckerDelta_rng_sum_kronecker_delta_r -> KroneckerDelta_kronecker_delta_comm [] ;
+  KroneckerDelta_rng_sum_kronecker_delta_l_ -> KroneckerDelta_rng_sum_kronecker_delta_l [] ;
+  KroneckerDelta_rng_sum_kronecker_delta_l_ -> KroneckerDelta_kronecker_delta_symm [] ;
+  KroneckerDelta_rng_sum_kronecker_delta_l -> KroneckerDelta_kronecker_delta_gt [] ;
+  KroneckerDelta_rng_sum_kronecker_delta_l -> KroneckerDelta_kronecker_delta_refl [] ;
+  KroneckerDelta_kronecker_delta_gt -> KroneckerDelta_kronecker_delta_neq [] ;
+  KroneckerDelta_kronecker_delta_lt -> KroneckerDelta_kronecker_delta_neq [] ;
+  KroneckerDelta_kronecker_delta_comm -> KroneckerDelta_kronecker_delta [] ;
+  KroneckerDelta_kronecker_delta_map_inj -> KroneckerDelta_kronecker_delta [] ;
+  KroneckerDelta_kronecker_delta_symm -> KroneckerDelta_kronecker_delta [] ;
+  KroneckerDelta_kronecker_delta_neq -> KroneckerDelta_kronecker_delta [] ;
+  KroneckerDelta_kronecker_delta_refl -> KroneckerDelta_kronecker_delta [] ;
+subgraph cluster_KroneckerDelta { label="KroneckerDelta"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+KroneckerDelta_kronecker_delta; KroneckerDelta_kronecker_delta_refl; KroneckerDelta_kronecker_delta_neq; KroneckerDelta_kronecker_delta_symm; KroneckerDelta_kronecker_delta_map_inj; KroneckerDelta_kronecker_delta_comm; KroneckerDelta_kronecker_delta_lt; KroneckerDelta_kronecker_delta_gt; KroneckerDelta_rng_sum_kronecker_delta_l; KroneckerDelta_rng_sum_kronecker_delta_l_; KroneckerDelta_rng_sum_kronecker_delta_r; KroneckerDelta_rng_sum_kronecker_delta_r_; };
+} /* END */
