@@ -45,7 +45,8 @@
     - [9.2. Indentation](#92-indentation)
     - [9.3. Line lengths and comments](#93-line-lengths-and-comments)
     - [9.4. Tactic scripts](#94-tactic-scripts)
-    - [9.5. Placement of Arguments and types](#95-placement-of-arguments-and-types)
+    - [9.5. Goal selectors](#95-goal-selectors)
+    - [9.6. Placement of Arguments and types](#96-placement-of-arguments-and-types)
   - [10. Implicit Arguments](#10-implicit-arguments)
   - [11. Coding Hints](#11-coding-hints)
     - [11.1. Notations](#111-notations)
@@ -1073,12 +1074,54 @@ themselves. Other lines can contain several short tactic commands
 (separated by either periods or semicolons), if they together
 implement a single idea or finish off a subgoal.
 
+### 9.5. Goal selectors
+
 For long proofs with multiple significant subgoals, use branching
 constructs such as bullets and braces to clarify the structure. See
-the section of the Coq Reference Manual entitled "Navigation in the
+the section of the Rocq Reference Manual entitled "Navigation in the
 proof tree".
 
-### 9.5. Placement of Arguments and types
+Prefer bullets for routine branching, using `-`, `+`, and `*` in that
+order. For deeper nesting, use repeated bullets such as `--`, `++`, and
+`**` rather than braces just to restart the bullet sequence. Deep
+nesting is also a reason to consider extracting intermediate lemmas.
+
+```coq
+Goal forall A B C : Type, A -> B -> C -> A * (B * C).
+Proof.
+  intros A B C a b c.
+  split.
+  - exact a.
+  - split.
+    + exact b.
+    + exact c.
+Defined.
+```
+
+When one of two subgoals has a short proof, a numbered selector can
+finish it before continuing with the other goal:
+
+```coq
+Goal forall A B C : Type, A -> B -> C -> A * (B * C).
+Proof.
+  intros A B C a b c.
+  split.
+  1: exact a.
+  split.
+  - exact b.
+  - exact c.
+Defined.
+```
+
+Selectors can also target several subgoals, as in `1,5: tactic`, or all
+of them with `all: tactic`.
+
+The project sets `Default Goal Selector "!"` in
+[`theories/Basics/Settings.v`](../theories/Basics/Settings.v). An
+unqualified tactic needs a unique focused goal; when several goals are
+open, focus them with bullets or select them explicitly.
+
+### 9.6. Placement of Arguments and types
 
 If the entire type of a theorem or definition does not fit on one
 line, then it is better to put the result type (the part after the
