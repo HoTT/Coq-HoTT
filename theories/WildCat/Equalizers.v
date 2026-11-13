@@ -86,14 +86,15 @@ Section Lemmata.
     `{!IsCatEqualizer f g cat_eq}
     {z : A}.
 
-  Definition cate_eq_corec_inv : opyon_0gpd z cat_eq $<~>
+  Definition cate_eq_corec_inv
+    : opyon_0gpd z cat_eq $<~>
         equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
     := Build_CatEquiv _.
 
   Definition cate_eq_corec
     : equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
       $<~> opyon_0gpd z cat_eq
-  := cate_eq_corec_inv^-1$.
+    := cate_eq_corec_inv^-1$.
 
   Definition cat_eq_corec
     (h : z $-> a) (p : f $o h $== g $o h)
