@@ -298,7 +298,7 @@ Class HasPullbacks (A : Type) `{Is1Cat A}
 Section Induced.
 
   (** If the 1-category structure on [A] is induced from that on [B] along a map [F], the pullback of [F f] and [F g] exists in [B], and that pullback object is in the image of [F] up to categorical equivalence, then the preimage is also a pullback.  Typically this will be applied with [h] being an identity equivalence (or [reflexivity]), but it would be awkward to state this lemma assuming that. *)
-  Instance cat_pb_induced {A B} `{Is1Cat B} `{!HasEquivs B}
+  Local Instance cat_pb_induced {A B} `{Is1Cat B} `{!HasEquivs B}
     (F : A -> B)
     {a b c : A} (f : F a $-> F c) (g : F b $-> F c)
     {cat_pb_b : B} `{!IsCatPullback f g cat_pb_b}
@@ -313,7 +313,7 @@ Section Induced.
     - intro z; exact cat_pb_pr_eta.
   Defined.
 
-  Instance haspullbacks_induced {A B} `{HasPullbacks B} `{!HasEquivs B}
+  Local Instance haspullbacks_induced {A B} `{HasPullbacks B} `{!HasEquivs B}
     (F : A -> B)
     (K : forall (a b c : A) (f : F a $-> F c) (g : F b $-> F c),
       exists q, F q $<~> cat_pb f g)

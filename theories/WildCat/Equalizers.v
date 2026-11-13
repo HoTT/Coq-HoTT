@@ -267,7 +267,7 @@ Defined.
 
 (** The equalizer map is a monomorphism. *)
 
-#[export] Instance monic_cat_equalizer {A : Type} `{Is1Cat A}
+Instance monic_cat_equalizer {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
   : Monic cat_eq_inj.
 Proof.
@@ -313,7 +313,7 @@ Proof.
 Defined.
 
 (** The map [cat_eq_inj] is a strong monic. *)
-#[export] Instance strongmonic_equalizer {A : Type} `{Is1Cat A} {b c : A}
+Instance strongmonic_equalizer {A : Type} `{Is1Cat A} {b c : A}
   (f g : b $-> c) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
   : StrongMonic cat_eq_inj.
 Proof.
