@@ -29,7 +29,8 @@ Proof.
 Defined.
 
 (** A pullback is an object completing [f] and [g] to a commuting square such that the map above is an equivalence of 0-groupoids for each [z].  The name [Pullback] is used for the construction in Limits.Pullback, so we use CatPullback here. *)
-Class IsCatPullback {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c) (cat_pb : A)
+Class IsCatPullback {A : Type} `{Is1Cat A} {a b c : A}
+  (f : a $-> c) (g : b $-> c) (cat_pb : A)
   := Build_IsCatPullback' {
     cat_pb_pr1 : cat_pb $-> a;
     cat_pb_pr2 : cat_pb $-> b;
@@ -257,7 +258,8 @@ Section InducedFromEquiv.
     := Id _.
 
   (** The induced corecursion is given by the equivalence. *)
-  Definition cat_pb_corec_comp {z : A} (k1 : z $-> a) (k2 : z $-> b) (p : f $o k1 $== g $o k2)
+  Definition cat_pb_corec_comp {z : A} (k1 : z $-> a) (k2 : z $-> b)
+    (p : f $o k1 $== g $o k2)
     : h $o cat_pb_corec (cat_pb:=y) k1 k2 p
       $== cat_pb_corec k1 k2 p
     := compose_h_Vh _ _.
@@ -313,7 +315,8 @@ Section Induced.
 
   Instance haspullbacks_induced {A B} `{HasPullbacks B} `{!HasEquivs B}
     (F : A -> B)
-    (K : forall (a b c : A) (f : F a $-> F c) (g : F b $-> F c), exists q, F q $<~> cat_pb f g)
+    (K : forall (a b c : A) (f : F a $-> F c) (g : F b $-> F c),
+      exists q, F q $<~> cat_pb f g)
     : HasPullbacks A (H:=is1cat_induced F).
   Proof.
     intros a b c f g.

@@ -19,39 +19,42 @@ Definition cat_po_rec_inv {A : Type} `{Is1Cat A}
   {a b c : A} (f : a $-> b) (g : a $-> c)
   (cat_po : A) (in1 : b $-> cat_po) (in2 : c $-> cat_po) (glue : in1 $o f $== in2 $o g)
   (z : A)
-  : yon_0gpd z cat_po $-> pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
+  : yon_0gpd z cat_po $-> pullback_0gpd (fmap (yon_0gpd z) (a:=b) f) (fmap (yon_0gpd z) (a:=c) g)
   := cat_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a) f g cat_po in1 in2 glue z.
 
 (** A pushout is an object completing [f] and [g] to a commuting square such that the map above is an equivalence of 0-groupoids for each [z]. We record this as the object being a pullback in the opposite category and deduce the relevant structure. *)
-Class IsCatPushout {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> b) (g : a $-> c) (cat_po : A)
+Class IsCatPushout {A : Type} `{Is1Cat A} {a b c : A}
+  (f : a $-> b) (g : a $-> c) (cat_po : A)
   := iscatpushout :: IsCatPullback (A:=A^op) (a:=b) (b:=c) (c:=a) f g cat_po.
 
 Definition cat_po_in1 {A : Type} `{Is1Cat A} {a b c : A} {f : a $-> b} {g : a $-> c}
   {cat_po : A} `{!IsCatPushout f g cat_po}
   : b $-> cat_po
-  := cat_pb_pr1 (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) (cat_pb:=cat_po).
+  := cat_pb_pr1 (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g).
 
 Definition cat_po_in2 {A : Type} `{Is1Cat A} {a b c : A} {f : a $-> b} {g : a $-> c}
   {cat_po : A} `{!IsCatPushout f g cat_po}
   : c $-> cat_po
-  := cat_pb_pr2 (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) (cat_pb:=cat_po).
+  := cat_pb_pr2 (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g).
 
 Definition cat_po_glue {A : Type} `{Is1Cat A} {a b c : A} {f : a $-> b} {g : a $-> c}
   {cat_po : A} `{!IsCatPushout f g cat_po}
   : cat_po_in1 $o f $== cat_po_in2 $o g
-  := cat_pb_glue (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) (cat_pb:=cat_po).
+  := cat_pb_glue (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g).
 
 Instance catie_cat_po_rec_inv {A : Type} `{Is1Cat A}
   {a b c : A} (f : a $-> b) (g : a $-> c)
   (cat_po : A) `{!IsCatPushout f g cat_po}
-  : forall z : A, CatIsEquiv (cat_po_rec_inv f g cat_po cat_po_in1 cat_po_in2 cat_po_glue z)
-  := catie_cat_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) (cat_pb:=cat_po).
+  : forall z : A,
+    CatIsEquiv (cat_po_rec_inv f g cat_po cat_po_in1 cat_po_in2 cat_po_glue z)
+  := catie_cat_pb_corec_inv (A:=A^op).
 
 Definition Build_IsCatPushout' {A : Type} `{Is1Cat A} {a b c : A}
   (f : a $-> b) (g : a $-> c) (cat_po : A)
   (cat_po_in1 : b $-> cat_po) (cat_po_in2 : c $-> cat_po)
   (cat_po_glue : cat_po_in1 $o f $== cat_po_in2 $o g)
-  (catie_cat_pb_corec_inv : forall z : A, CatIsEquiv (cat_po_rec_inv f g cat_po cat_po_in1 cat_po_in2 cat_po_glue z))
+  (catie_cat_pb_corec_inv : forall z : A,
+    CatIsEquiv (cat_po_rec_inv f g cat_po cat_po_in1 cat_po_in2 cat_po_glue z))
   : IsCatPushout f g cat_po
   := Build_IsCatPullback' (A:=A^op) (a:=b) (b:=c) (c:=a)
        f g cat_po cat_po_in1 cat_po_in2 cat_po_glue catie_cat_pb_corec_inv.
@@ -115,11 +118,13 @@ Section Lemmata.
 
   Definition cate_po_rec_inv
     : yon_0gpd z cat_po $<~>
-        pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
+        pullback_0gpd (fmap (yon_0gpd z) (a:=b) f) (fmap (yon_0gpd z) (a:=c) g)
     := cate_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a).
 
+  (* I am not able to resolve the following definition without specifying [is0functor_yon_0gpd _]. *)
   Definition cate_po_rec
-    : pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
+    : pullback_0gpd (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) f)
+                    (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) g)
       $<~> yon_0gpd z cat_po
     := cate_pb_corec (A:=A^op) (a:=b) (b:=c) (c:=a).
 
@@ -150,7 +155,8 @@ Section Lemmata.
     (glue_hk : h $o f $== k $o g) (glue_h'k' : h' $o f $== k' $o g)
     (p1 : h $== h') (p2 : k $== k')
     : cat_po_rec h k glue_hk $== cat_po_rec h' k' glue_h'k'
-    := cat_pb_corec_eta (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) h h' k k' glue_hk glue_h'k' p1 p2.
+    := cat_pb_corec_eta (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g)
+      h h' k k' glue_hk glue_h'k' p1 p2.
 
   Definition cat_po_in_eta (h h' : cat_po $-> z)
     (p1 : h $o cat_po_in1 $== h' $o cat_po_in1)
@@ -163,19 +169,21 @@ End Lemmata.
 Local Instance is0functor_pushout_0gpd_helper {A : Type} `{Is1Cat A}
   {a b c : A} (f : a $-> b) (g : a $-> c)
   : Is0Functor (A:=A)
-    (fun z : A => pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g))
+    (fun z : A => pullback_0gpd (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) f)
+                                (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) g))
   := is0functor_pullback_0gpd_helper (A:=A^op) (a:=b) (b:=c) (c:=a) f g.
 
 Local Instance is1functor_pushout_0gpd_helper {A : Type} `{Is1Cat A}
   {a b c : A} (f : a $-> b) (g : a $-> c)
   : Is1Functor (A:=A)
-    (fun z : A => pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g))
+    (fun z : A => pullback_0gpd (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) f)
+                                (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) g))
   := is1functor_pullback_0gpd_helper (A:=A^op) (a:=b) (b:=c) (c:=a) f g.
 
 Definition natequiv_cat_po_rec_inv {A : Type} `{Is1Cat A}
   {a b c : A} (f : a $-> b) (g : a $-> c) (cat_po : A) `{!IsCatPushout f g cat_po}
   : NatEquiv (A:=A) (opyon_0gpd cat_po)
-    (fun z : A => pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g))
+    (fun z : A => pullback_0gpd (fmap (yon_0gpd z) (a:=b) f) (fmap (yon_0gpd z) (a:=c) g))
   := natequiv_cat_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a) f g cat_po.
 
 (** ** Uniqueness of pushouts *)
@@ -212,7 +220,8 @@ Section InducedFromEquiv.
   (** The induced recursion is given by the equivalence. *)
   Definition cat_po_rec_comp {z : A} (k1 : b $-> z) (k2 : c $-> z) (p : k1 $o f $== k2 $o g)
     : cat_po_rec (cat_po:=y) k1 k2 p $o h $== cat_po_rec k1 k2 p
-    := cat_pb_corec_comp (A:=A^op) (he:=hasequivs_op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) cat_po y h k1 k2 p.
+    := cat_pb_corec_comp (A:=A^op) (he:=hasequivs_op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g)
+      cat_po y h k1 k2 p.
 
 End InducedFromEquiv.
 
@@ -248,7 +257,8 @@ Section Induced.
 
   Instance haspushouts_induced {A B} `{HasPushouts B} `{!HasEquivs B}
     (F : A -> B)
-    (K : forall (a b c : A) (f : F a $-> F b) (g : F a $-> F c), exists q, cat_po f g $<~> F q)
+    (K : forall (a b c : A) (f : F a $-> F b) (g : F a $-> F c),
+      exists q, cat_po f g $<~> F q)
     : HasPushouts A (H:=is1cat_induced F)
     := fun a b c f g =>
          haspullbacks_induced (A:=A^op) (B:=B^op) F

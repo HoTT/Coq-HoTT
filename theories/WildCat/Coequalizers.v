@@ -16,8 +16,8 @@ In this diagram, the hom sets are regarded as 0-groupoids and the top-level arro
 Definition cat_coeq_rec_inv {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b)
   (cat_coeq : A) (proj : b $-> cat_coeq) (glue : proj $o f $== proj $o g)
-  (z : A)
-  : yon_0gpd z cat_coeq $-> equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
+(z : A)
+  : yon_0gpd z cat_coeq $-> equalizer_0gpd (fmap (yon_0gpd z) (a:=b) f) (fmap (yon_0gpd z) (a:=b) g)
   := cat_eq_corec_inv (A:=A^op) (a:=b) f g cat_coeq proj glue z.
 
 (** A coequalizer is an object completing [f] and [g] to a commuting diagram such that the map above is an equivalence of 0-groupoids for each [z]. We record this as the object being an equalizer in the opposite category and deduce the relevant structure. *)
@@ -27,36 +27,42 @@ Class IsCatCoequalizer {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b) (cat_coe
 Definition Build_IsCatCoequalizer' {A : Type} `{Is1Cat A} {a b : A}
   (f g : a $-> b) (cat_coeq : A) (cat_coeq_proj : b $-> cat_coeq)
   (cat_coeq_glue : cat_coeq_proj $o f $== cat_coeq_proj $o g)
-  (catie_cat_coeq_rec_inv : forall z : A, CatIsEquiv (cat_coeq_rec_inv f g cat_coeq cat_coeq_proj cat_coeq_glue z))
+  (catie_cat_coeq_rec_inv : forall z : A,
+    CatIsEquiv (cat_coeq_rec_inv f g cat_coeq cat_coeq_proj cat_coeq_glue z))
   : IsCatCoequalizer f g cat_coeq
-  := Build_IsCatEqualizer' (A:=A^op) (a:=b) f g cat_coeq cat_coeq_proj cat_coeq_glue catie_cat_coeq_rec_inv.
+  := Build_IsCatEqualizer' (A:=A^op) (a:=b)
+    f g cat_coeq cat_coeq_proj cat_coeq_glue catie_cat_coeq_rec_inv.
 
 Definition cat_coeq_proj {A : Type} `{Is1Cat A} {a b : A} {f g : a $-> b}
   {cat_coeq : A} `{!IsCatCoequalizer f g cat_coeq}
   : b $-> cat_coeq
-  := cat_eq_inj (A:=A^op) (a:=b) (f:=f) (g:=g) (cat_eq:=cat_coeq).
+  := cat_eq_inj (A:=A^op) (a:=b) (f:=f) (g:=g).
 
 Definition cat_coeq_glue {A : Type} `{Is1Cat A} {a b : A} {f g : a $-> b}
   {cat_coeq : A} `{!IsCatCoequalizer f g cat_coeq}
   : cat_coeq_proj $o f $== cat_coeq_proj $o g
-  := cat_eq_glue (A:=A^op) (a:=b) (f:=f) (g:=g) (cat_eq:=cat_coeq).
+  := cat_eq_glue (A:=A^op) (a:=b) (f:=f) (g:=g).
 
 Instance catie_cat_coeq_rec_inv {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)
   (cat_coeq : A) `{!IsCatCoequalizer f g cat_coeq}
-  : forall z : A, CatIsEquiv (cat_coeq_rec_inv f g cat_coeq cat_coeq_proj cat_coeq_glue z)
-  := catie_cat_eq_corec_inv (A:=A^op) (a:=b) (f:=f) (g:=g) (cat_eq:=cat_coeq).
+  : forall z : A,
+    CatIsEquiv (cat_coeq_rec_inv f g cat_coeq cat_coeq_proj cat_coeq_glue z)
+  := catie_cat_eq_corec_inv (A:=A^op).
 
 (** A coequalizer in a category is an equalizer in the opposite category. *)
 Class CatCoequalizer {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)
   := cat_coequalizer : CatEqualizer (A:=A^op) (a:=b) f g.
 
-Definition cat_coeq {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b) `{!CatCoequalizer f g} : A
+Definition cat_coeq {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)
+  `{!CatCoequalizer f g}
+  : A
   := cat_coequalizer.(cat_eq (A:=A^op) (a:=b) f g).
 
 Arguments cat_coeq {A _ _ _ _ _ _} f g {cat_coequalizer} : rename.
 
 (** We derive that a coequalizer is also a coequalizer in the sense above. *)
-Instance cat_iscoeq {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b) `{!CatCoequalizer f g}
+Instance cat_iscoeq {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)
+  `{!CatCoequalizer f g}
   : IsCatCoequalizer f g (cat_coeq f g)
   := cat_coequalizer.(cat_iseq).
 
@@ -100,11 +106,11 @@ Section Lemmata.
 
   Definition cate_coeq_rec_inv
     : yon_0gpd z cat_coeq $<~>
-        equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
+        equalizer_0gpd (fmap (yon_0gpd z) (a:=b) f) (fmap (yon_0gpd z) (a:=b) g)
     := cate_eq_corec_inv (A:=A^op) (a:=b).
 
   Definition cate_coeq_rec
-    : equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
+    : equalizer_0gpd (fmap (yon_0gpd z) (a:=b) f) (fmap (yon_0gpd z) (a:=b) g)
       $<~> yon_0gpd z cat_coeq
     := cate_eq_corec (A:=A^op) (a:=b).
 
@@ -137,19 +143,21 @@ End Lemmata.
 Local Instance is0functor_coequalizer_0gpd_helper {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b)
   : Is0Functor (A:=A)
-    (fun z : A => equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g))
+    (fun z : A => equalizer_0gpd (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) f)
+                                 (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) g))
   := is0functor_equalizer_0gpd_helper (A:=A^op) (a:=b) f g.
 
 Local Instance is1functor_coequalizer_0gpd_helper {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b)
   : Is1Functor (A:=A)
-    (fun z : A => equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g))
+    (fun z : A => equalizer_0gpd (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) f)
+                                 (fmap (yon_0gpd z) (is0functor_F:=is0functor_yon_0gpd _) g))
   := is1functor_equalizer_0gpd_helper (A:=A^op) (a:=b) f g.
 
 Definition natequiv_cat_coeq_rec_inv {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b) (cat_coeq : A) `{!IsCatCoequalizer f g cat_coeq}
   : NatEquiv (A:=A) (opyon_0gpd cat_coeq)
-    (fun z : A => equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g))
+    (fun z : A => equalizer_0gpd (fmap (yon_0gpd z) (a:=b) f) (fmap (yon_0gpd z) (a:=b) g))
   := natequiv_cat_eq_corec_inv (A:=A^op) (a:=b) f g cat_coeq.
 
 (** ** Uniqueness of coequalizers *)
@@ -181,7 +189,8 @@ Section InducedFromEquiv.
   (** The induced recursion is given by the equivalence. *)
   Definition cat_coeq_rec_comp {z : A} (k : b $-> z) (p : k $o f $== k $o g)
     : cat_coeq_rec (cat_coeq:=y) k p $o h $== cat_coeq_rec k p
-    := cat_eq_corec_comp (A:=A^op) (he:=hasequivs_op) (a:=b) (f:=f) (g:=g) cat_coeq y h k p.
+    := cat_eq_corec_comp (A:=A^op) (he:=hasequivs_op) (a:=b) (f:=f) (g:=g)
+      cat_coeq y h k p.
 
 End InducedFromEquiv.
 
@@ -222,18 +231,21 @@ Definition llp_strongepic {A : Type} `{Is1Cat A} {a b : A} {e : a $-> b} `{!Stro
   (sq : m $o u $== v $o e) : b $-> a'
   := rlp_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq.
 
-Definition llp_ucomm_strongepic {A : Type} `{Is1Cat A} {a b : A} {e : a $-> b} `{!StrongEpic e}
-  {a' b' : A} {m : a' $>-> b'} {u : a $-> a'} {v : b $-> b'}
+Definition llp_ucomm_strongepic {A : Type} `{Is1Cat A} {a b : A}
+  {e : a $-> b} `{!StrongEpic e} {a' b' : A} {m : a' $>-> b'}
+  {u : a $-> a'} {v : b $-> b'}
   (sq : m $o u $== v $o e) : llp_strongepic sq $o e $== u
   := rlp_lcomm_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq.
 
-Definition llp_lcomm_strongepic {A : Type} `{Is1Cat A} {a b : A} (e : a $-> b) `{!StrongEpic e}
-  {a' b' : A} {m : a' $>-> b'} {u : a $-> a'} {v : b $-> b'} (sq : m $o u $== v $o e)
+Definition llp_lcomm_strongepic {A : Type} `{Is1Cat A} {a b : A}
+  {e : a $-> b} `{!StrongEpic e} {a' b' : A} {m : a' $>-> b'}
+  {u : a $-> a'} {v : b $-> b'} (sq : m $o u $== v $o e)
   : m $o llp_strongepic sq $== v
   := rlp_ucomm_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq.
 
-Definition llp_unique_strongepic {A : Type} `{Is1Cat A} {a b : A} (e : a $-> b) `{!StrongEpic e}
-  {a' b' : A} {m : a' $>-> b'} {u : a $-> a'} {v : b $-> b'} (sq : m $o u $== v $o e)
+Definition llp_unique_strongepic {A : Type} `{Is1Cat A} {a b : A}
+  {e : a $-> b} `{!StrongEpic e} {a' b' : A} {m : a' $>-> b'}
+  {u : a $-> a'} {v : b $-> b'} (sq : m $o u $== v $o e)
   {h : b $-> a'} (utr : h $o e $== u)
   : llp_strongepic sq $== h
   := rlp_unique_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq utr.
