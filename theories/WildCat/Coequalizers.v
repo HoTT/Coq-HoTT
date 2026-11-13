@@ -1,6 +1,6 @@
 From HoTT.Basics Require Import Equivalences Overture Tactics.
 From HoTT.WildCat Require Import Core Equiv EquivGpd NatTrans
-  Yoneda ZeroGroupoid Induced Opposite Equalizers.
+                                 Yoneda ZeroGroupoid Opposite Equalizers.
 
 (** * Categories with coequalizers *)
 

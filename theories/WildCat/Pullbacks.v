@@ -287,7 +287,6 @@ Proof.
     exact (cat_pb_pr_eta k h p2 p1).
 Defined.
 
-
 (** ** Categories with pullbacks *)
 
 Class HasPullbacks (A : Type) `{Is1Cat A}
