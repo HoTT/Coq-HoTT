@@ -11,7 +11,7 @@ From HoTT.WildCat Require Import Core Equiv EquivGpd NatTrans
         (b $-> z)     (a $-> z)
                   -->
 >>
-In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors).*)
+In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors). *)
 
 Definition cat_coeq_rec_inv {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b)
@@ -217,7 +217,7 @@ Instance epic_cat_coequalizer {A : Type} `{Is1Cat A}
   : Epic cat_coeq_proj
   := monic_cat_equalizer (A:=A^op) (a:=b) f g.
 
-(** Coequalizers define a subclass of strong epimorphisms, namely epis which have the left lifting property against monics. *)
+(** A strong epimorphisms is an epimorphism which has the left lifting property against monomorphisms. *)
 
 Class StrongEpic {A : Type} `{Is1Cat A} {a b : A} (e : a $-> b)
   := isstrongepic :: StrongMonic (A:=A^op) (a:=b) e.

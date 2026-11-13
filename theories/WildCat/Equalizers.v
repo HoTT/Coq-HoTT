@@ -11,7 +11,7 @@ From HoTT.WildCat Require Import Core Equiv ZeroGroupoid EquivGpd
         (z $-> a)     (z $-> b)
                   -->
 >>
-In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors).*)
+In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors). *)
 
 Definition cat_eq_corec_inv {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b)
@@ -275,7 +275,7 @@ Proof.
   exact (isinj_equiv_0gpd cate_eq_corec_inv p).
 Defined.
 
-(** Equalizers define a subclass of strong monomorphisms, namely monos which have the right lifting property against epis. *)
+(** A strong monomorphisms is a monomorphism which has the right lifting property against epimorphisms. *)
 
 (** TODO: The topic of strong monics is not about equalizers. If this will ever be expanded upon in the future, then it should get its own file. *)
 
