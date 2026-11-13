@@ -279,8 +279,6 @@ Defined.
 
 (** TODO: The topic of strong monics is not about equalizers. If this will ever be expanded upon in the future, then it should get its own file. *)
 
-Set Typeclasses Depth 4.
-
 Class StrongMonic {A : Type} `{Is1Cat A} {a b : A} (m : a $-> b) := {
   ismonic_strongmonic :: Monic m;
   rlp_strongmonic {a' b'} {e : a' $->> b'} {u : a' $-> a} {v : b' $-> b}
