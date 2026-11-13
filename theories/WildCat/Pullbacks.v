@@ -89,10 +89,10 @@ End PullbackConstructors.
 Section Lemmata.
 
   Context {A : Type} `{Is1Cat A}
-    {a b c : A} (f : a $-> c) (g : b $-> c)
+    {a b c : A} {f : a $-> c} {g : b $-> c}
     {cat_pb : A}
     `{!IsCatPullback f g cat_pb}
-    (z : A).
+    {z : A}.
 
   Definition cate_pb_corec_inv
     : opyon_0gpd z cat_pb $<~>
@@ -194,7 +194,7 @@ Definition natequiv_cat_pb_corec_inv {A : Type} `{Is1Cat A}
     (fun z : A => pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)).
 Proof.
   snapply Build_NatEquiv.
-  - exact (cate_pb_corec_inv f g).
+  - intro z; exact cate_pb_corec_inv.
   - exact (is1natural_yoneda_0gpd cat_pb
       (fun z : A => pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g))
       (cat_pb_pr1; (cat_pb_pr2; cat_pb_glue))).
@@ -227,22 +227,22 @@ Section InducedFromEquiv.
     snapply (Build_IsCatPullback f g y).
     - exact (cat_pb_pr1 $o h).
     - exact (cat_pb_pr2 $o h).
-    - exact (cat_pb_postcomp_glue f g _ h).
+    - exact (cat_pb_postcomp_glue h).
     - intros z k1 k2 p.
-      exact (h^-1$ $o cat_pb_corec f g z k1 k2 p).
+      exact (h^-1$ $o cat_pb_corec k1 k2 p).
     - intros z k1 k2 p; cbn beta.
-      refine (_ $@ cat_pb_corec_beta_pr1 f g z k1 k2 p).
+      refine (_ $@ cat_pb_corec_beta_pr1 k1 k2 p).
       refine (cat_assoc _ _ _ $@ _).
       apply cat_postwhisker.
       apply compose_h_Vh.
     - intros z k1 k2 p; cbn beta.
-      refine (_ $@ cat_pb_corec_beta_pr2 f g z k1 k2 p).
+      refine (_ $@ cat_pb_corec_beta_pr2 k1 k2 p).
       refine (cat_assoc _ _ _ $@ _).
       apply cat_postwhisker.
       apply compose_h_Vh.
     - cbn beta; intros z k k' p1 p2.
       napply (cate_monic_equiv h).
-      napply (cat_pb_pr_eta f g z).
+      napply cat_pb_pr_eta.
       + exact (cat_assoc_opp _ _ _ $@ p1 $@ cat_assoc _ _ _).
       + exact (cat_assoc_opp _ _ _ $@ p2 $@ cat_assoc _ _ _).
   Defined.
@@ -259,8 +259,8 @@ Section InducedFromEquiv.
 
   (** The induced corecursion is given by the equivalence. *)
   Definition cat_pb_corec_comp {z : A} (k1 : z $-> a) (k2 : z $-> b) (p : f $o k1 $== g $o k2)
-    : h $o cat_pb_corec (cat_pb:=y) f g z k1 k2 p
-      $== cat_pb_corec f g z k1 k2 p
+    : h $o cat_pb_corec (cat_pb:=y) k1 k2 p
+      $== cat_pb_corec k1 k2 p
     := compose_h_Vh _ _.
 
 End InducedFromEquiv.
@@ -277,13 +277,13 @@ Proof.
   - exact cat_pb_pr1.
   - exact cat_pb_glue^$.
   - intros z h k p.
-    exact (cat_pb_corec f g z k h p^$).
+    exact (cat_pb_corec k h p^$).
   - intros z h k p.
-    exact (cat_pb_corec_beta_pr2 f g z k h p^$).
+    exact (cat_pb_corec_beta_pr2 k h p^$).
   - intros z h k p.
-    exact (cat_pb_corec_beta_pr1 f g z k h p^$).
+    exact (cat_pb_corec_beta_pr1 k h p^$).
   - intros z k h p1 p2.
-    exact (cat_pb_pr_eta f g z k h p2 p1).
+    exact (cat_pb_pr_eta k h p2 p1).
 Defined.
 
 
@@ -307,9 +307,9 @@ Section Induced.
     pose (cat_pb_equiv_pb (A:=B) cat_pb_b (F cat_pb_a) h).
     napply (Build_CatPullback (H:=is1cat_induced F) f g cat_pb_a).
     - exact (cat_pb_glue (cat_pb:=F cat_pb_a)).
-    - intro z; exact (cat_pb_corec_beta_pr1 f g (F z)).
-    - intro z; exact (cat_pb_corec_beta_pr2 f g (F z)).
-    - intro z; exact (cat_pb_pr_eta f g (F z)).
+    - intro z; exact cat_pb_corec_beta_pr1.
+    - intro z; exact cat_pb_corec_beta_pr2.
+    - intro z; exact cat_pb_pr_eta.
   Defined.
 
   Instance haspullbacks_induced {A B} `{HasPullbacks B} `{!HasEquivs B}

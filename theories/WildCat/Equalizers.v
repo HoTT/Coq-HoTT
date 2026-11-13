@@ -82,10 +82,10 @@ End EqualizerConstructors.
 Section Lemmata.
 
   Context {A : Type} `{Is1Cat A}
-    {a b : A} (f g : a $-> b)
+    {a b : A} {f g : a $-> b}
     {cat_eq : A}
     `{!IsCatEqualizer f g cat_eq}
-    (z : A).
+    {z : A}.
 
   Definition cate_eq_corec_inv : opyon_0gpd z cat_eq $<~>
         equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
@@ -166,7 +166,7 @@ Definition natequiv_cat_eq_corec_inv {A : Type} `{Is1Cat A}
     (fun z : A => equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)).
 Proof.
   snapply Build_NatEquiv.
-  - exact (cate_eq_corec_inv f g).
+  - intro z; exact cate_eq_corec_inv.
   - exact (is1natural_yoneda_0gpd cat_eq
     (fun z : A => equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g))
     (cat_eq_inj; cat_eq_glue)).
@@ -198,17 +198,17 @@ Section InducedFromEquiv.
   Proof.
     snapply Build_IsCatEqualizer.
     - exact (cat_eq_inj $o h).
-    - exact (cat_eq_inj_postcomp_glue f g _ h).
+    - exact (cat_eq_inj_postcomp_glue h).
     - intros z [k p].
-      exact (h^-1$ $o cat_eq_corec f g z k p).
+      exact (h^-1$ $o cat_eq_corec k p).
     - intros z [k p]; cbn beta.
-      refine (_ $@ cat_eq_corec_beta_inj f g z k p).
+      refine (_ $@ cat_eq_corec_beta_inj k p).
       refine (cat_assoc _ _ _ $@ _).
       apply cat_postwhisker.
       apply compose_h_Vh.
     - cbn beta; intros z k k' e.
       napply (cate_monic_equiv h).
-      apply (isinj_equiv_0gpd (cate_eq_corec_inv f g z)).
+      apply (isinj_equiv_0gpd (cate_eq_corec_inv)).
       exact (cat_assoc_opp _ _ _ $@ e $@ cat_assoc _ _ _).
   Defined.
 
@@ -219,7 +219,7 @@ Section InducedFromEquiv.
 
   (** The induced corecursion is given by the equivalence. *)
   Definition cat_eq_corec_comp {z : A} (k : z $-> a) (p : f $o k $== g $o k)
-    : h $o cat_eq_corec (IsCatEqualizer0:=cat_eq_equiv_eq) f g z k p $== cat_eq_corec f g z k p
+    : h $o cat_eq_corec (IsCatEqualizer0:=cat_eq_equiv_eq) k p $== cat_eq_corec k p
     := compose_h_Vh _ _.
 
 End InducedFromEquiv.
@@ -236,11 +236,11 @@ Proof.
   - exact cat_eq_inj.
   - exact cat_eq_glue^$.
   - intros z [k p].
-    exact (cat_eq_corec f g z k p^$).
+    exact (cat_eq_corec k p^$).
   - intros z [k p]; cbn beta.
-    exact (cat_eq_corec_beta_inj f g z k p^$).
+    exact (cat_eq_corec_beta_inj k p^$).
   - intros z k k' e.
-    exact (isinj_equiv_0gpd (cate_eq_corec_inv f g z) e).
+    exact (isinj_equiv_0gpd cate_eq_corec_inv e).
 Defined.
 
 (** ** Categories with equalizers *)
@@ -272,35 +272,40 @@ Defined.
   : Monic cat_eq_inj.
 Proof.
   intros ? ? ? p.
-  exact (isinj_equiv_0gpd (cate_eq_corec_inv _ _ _) p).
+  exact (isinj_equiv_0gpd cate_eq_corec_inv p).
 Defined.
 
 (** Equalizers define a subclass of strong monomorphisms, namely monos which have the right lifting property against epis. *)
 
 (** TODO: The topic of strong monics is not about equalizers. If this will ever be expanded upon in the future, then it should get its own file. *)
 
+Set Typeclasses Depth 4.
+
 Class StrongMonic {A : Type} `{Is1Cat A} {a b : A} (m : a $-> b) := {
   ismonic_strongmonic :: Monic m;
-  rlp_strongmonic {a' b'} (e : a' $->> b') (u : a' $-> a) (v : b' $-> b)
+  rlp_strongmonic {a' b'} {e : a' $->> b'} {u : a' $-> a} {v : b' $-> b}
     (sq : v $o e $== m $o u) : b' $-> a;
-  rlp_lcomm_strongmonic {a' b'} (e : a' $->> b') (u : a' $-> a) (v : b' $-> b)
-    (sq : v $o e $== m $o u) : m $o rlp_strongmonic e u v sq $== v
+  rlp_lcomm_strongmonic {a' b'} {e : a' $->> b'} {u : a' $-> a} {v : b' $-> b}
+    (sq : v $o e $== m $o u) : m $o rlp_strongmonic sq $== v
 }.
 
-Definition rlp_ucomm_strongmonic {A : Type} `{Is1Cat A} {a b : A} (m : a $-> b) `{!StrongMonic m}
-  {a' b'} (e : a' $->> b') (u : a' $-> a) (v : b' $-> b) (sq : v $o e $== m $o u)
-  : rlp_strongmonic e u v sq $o e $== u.
+Arguments rlp_strongmonic {A _ _ _ _ a b m _ a' b' e u v} sq.
+Arguments rlp_lcomm_strongmonic {A _ _ _ _ a b m _ a' b' e u v} sq.
+
+Definition rlp_ucomm_strongmonic {A : Type} `{Is1Cat A} {a b : A} {m : a $-> b} `{!StrongMonic m}
+  {a' b'} {e : a' $->> b'} {u : a' $-> a} {v : b' $-> b} (sq : v $o e $== m $o u)
+  : rlp_strongmonic sq $o e $== u.
 Proof.
   rapply (ismonic m).
   lhs' napply cat_assoc_opp.
-  lhs' napply (rlp_lcomm_strongmonic e u v sq $@R e).
+  lhs' napply (rlp_lcomm_strongmonic sq $@R e).
   exact sq.
 Defined.
 
-Definition rlp_unique_strongmonic {A : Type} `{Is1Cat A} {a b : A} (m : a $-> b) `{!StrongMonic m}
-  {a' b'} (e : a' $->> b') (u : a' $-> a) (v : b' $-> b) (sq : v $o e $== m $o u)
-  (h : b' $-> a) (ltr : m $o h $== v)
-  : rlp_strongmonic e u v sq $== h.
+Definition rlp_unique_strongmonic {A : Type} `{Is1Cat A} {a b : A} {m : a $-> b} `{!StrongMonic m}
+  {a' b'} {e : a' $->> b'} {u : a' $-> a} {v : b' $-> b} (sq : v $o e $== m $o u)
+  {h : b' $-> a} (ltr : m $o h $== v)
+  : rlp_strongmonic sq $== h.
 Proof.
   rapply (ismonic m).
   lhs' napply rlp_lcomm_strongmonic.
@@ -315,7 +320,7 @@ Proof.
   set (m := cat_eq_inj).
   srapply Build_StrongMonic.
   - intros a' b' e u v sq.
-    apply (cat_eq_corec f g _ v).
+    apply (cat_eq_corec v).
     apply (isepic e).
     lhs' napply cat_assoc; rhs' napply cat_assoc.
     lhs' napply (f $@L sq); rhs' napply (g $@L sq).

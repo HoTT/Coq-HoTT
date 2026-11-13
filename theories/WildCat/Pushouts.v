@@ -108,55 +108,55 @@ End PushoutConstructors.
 Section Lemmata.
 
   Context {A : Type} `{Is1Cat A}
-    {a b c : A} (f : a $-> b) (g : a $-> c)
+    {a b c : A} {f : a $-> b} {g : a $-> c}
     {cat_po : A}
     `{!IsCatPushout f g cat_po}
-    (z : A).
+    {z : A}.
 
   Definition cate_po_rec_inv
     : yon_0gpd z cat_po $<~>
         pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
-    := cate_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a) f g z.
+    := cate_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a).
 
   Definition cate_po_rec
     : pullback_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
       $<~> yon_0gpd z cat_po
-    := cate_pb_corec (A:=A^op) (a:=b) (b:=c) (c:=a) f g z.
+    := cate_pb_corec (A:=A^op) (a:=b) (b:=c) (c:=a).
 
   Definition cat_po_rec
     (h : b $-> z) (k : c $-> z) (p : h $o f $== k $o g)
     : cat_po $-> z
-    := cat_pb_corec (A:=A^op) (a:=b) (b:=c) (c:=a) f g z h k p.
+    := cat_pb_corec (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) h k p.
 
   Definition cat_po_rec_beta_in1
     (h : b $-> z) (k : c $-> z) (p : h $o f $== k $o g)
     : cat_po_rec h k p $o cat_po_in1 $== h
-    := cat_pb_corec_beta_pr1 (A:=A^op) (a:=b) (b:=c) (c:=a) f g z h k p.
+    := cat_pb_corec_beta_pr1 (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) h k p.
 
   Definition cat_po_rec_beta_in2
     (h : b $-> z) (k : c $-> z) (p : h $o f $== k $o g)
     : cat_po_rec h k p $o cat_po_in2 $== k
-    := cat_pb_corec_beta_pr2 (A:=A^op) (a:=b) (b:=c) (c:=a) f g z h k p.
+    := cat_pb_corec_beta_pr2 (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) h k p.
 
   Definition cat_po_precomp_glue (h : cat_po $-> z)
     : (h $o cat_po_in1) $o f $== (h $o cat_po_in2) $o g
-    := cat_pb_postcomp_glue (A:=A^op) (a:=b) (b:=c) (c:=a) f g z h.
+    := cat_pb_postcomp_glue (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) h.
 
   Definition cat_po_rec_eta_in (h : cat_po $-> z)
     : cat_po_rec (h $o cat_po_in1) (h $o cat_po_in2) (cat_po_precomp_glue h) $== h
-    := cat_pb_corec_eta_pr (A:=A^op) (a:=b) (b:=c) (c:=a) f g z h.
+    := cat_pb_corec_eta_pr (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) h.
 
   Definition cat_po_rec_eta (h h' : b $-> z) (k k' : c $-> z)
     (glue_hk : h $o f $== k $o g) (glue_h'k' : h' $o f $== k' $o g)
     (p1 : h $== h') (p2 : k $== k')
     : cat_po_rec h k glue_hk $== cat_po_rec h' k' glue_h'k'
-    := cat_pb_corec_eta (A:=A^op) (a:=b) (b:=c) (c:=a) f g z h h' k k' glue_hk glue_h'k' p1 p2.
+    := cat_pb_corec_eta (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) h h' k k' glue_hk glue_h'k' p1 p2.
 
   Definition cat_po_in_eta (h h' : cat_po $-> z)
     (p1 : h $o cat_po_in1 $== h' $o cat_po_in1)
     (p2 : h $o cat_po_in2 $== h' $o cat_po_in2)
     : h $== h'
-    := cat_pb_pr_eta (A:=A^op) (a:=b) (b:=c) (c:=a) f g z h h' p1 p2.
+    := cat_pb_pr_eta (A:=A^op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) h h' p1 p2.
 
 End Lemmata.
 
@@ -211,7 +211,7 @@ Section InducedFromEquiv.
 
   (** The induced recursion is given by the equivalence. *)
   Definition cat_po_rec_comp {z : A} (k1 : b $-> z) (k2 : c $-> z) (p : k1 $o f $== k2 $o g)
-    : cat_po_rec (cat_po:=y) f g z k1 k2 p $o h $== cat_po_rec f g z k1 k2 p
+    : cat_po_rec (cat_po:=y) k1 k2 p $o h $== cat_po_rec k1 k2 p
     := cat_pb_corec_comp (A:=A^op) (he:=hasequivs_op) (a:=b) (b:=c) (c:=a) (f:=f) (g:=g) cat_po y h k1 k2 p.
 
 End InducedFromEquiv.
