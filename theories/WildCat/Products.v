@@ -1,10 +1,9 @@
-Require Import Basics.Overture Basics.Equivalences Basics.Tactics.
-Require Import Types.Bool Types.Prod.
-Require Import WildCat.Core WildCat.Bifunctor WildCat.Equiv WildCat.EquivGpd
-               WildCat.Forall WildCat.NatTrans WildCat.Opposite
-               WildCat.Universe WildCat.Yoneda WildCat.Graph WildCat.ZeroGroupoid
-               WildCat.Monoidal WildCat.MonoidalTwistConstruction
-               WildCat.FunctorCat.
+From HoTT.Basics Require Import Overture Equivalences Tactics.
+From HoTT.Types Require Import Bool Prod.
+From HoTT.WildCat Require Import Core Bifunctor Equiv EquivGpd
+                                 Forall NatTrans Opposite Universe
+                                 Yoneda Graph ZeroGroupoid Monoidal
+                                 MonoidalTwistConstruction FunctorCat.
 
 (** * Categories with products *)
 

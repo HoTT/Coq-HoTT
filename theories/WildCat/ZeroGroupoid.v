@@ -331,3 +331,43 @@ Proof.
   1,2: apply flip_pullback_0gpd.
   1,2: apply involutive_flip_pullback_0gpd.
 Defined.
+
+(** ** Equalizers of 0-groupoids *)
+
+Section ZeroGpdEqualizer.
+
+  Context {G H : ZeroGpd} (g h : G $-> H).
+
+  (** A terminal object and pullbacks yield all finite limits, so an equalizer could be defined in terms of these limits. We choose to give a direct definition of an equalizer so as to get smaller terms. *)
+
+  Definition equalizer_0gpd : ZeroGpd
+    := @zerogpd_induced {x : G & g x $== h x} G pr1.
+
+  Definition equalizer_0gpd_inj : equalizer_0gpd $-> G
+    := zerogpd_induced_map pr1.
+
+  Definition equalizer_0gpd_eq
+    : g $o equalizer_0gpd_inj $== h $o equalizer_0gpd_inj
+    := pr2.
+
+  Definition equiv_equalizer_0gpd_corec {Z : ZeroGpd}
+    : { f : Z $-> G & g $o f $== h $o f } <~> (Z $-> equalizer_0gpd).
+  Proof.
+    snapply Build_Equiv.
+    { intros [f q].
+      snapply Build_Fun01'.
+      + exact (fun z => (f z; q z)).
+      + intros z z' p; cbn beta.
+        exact (fmap f p). }
+    snapply Build_IsEquiv.
+    1: exact (fun f' => (equalizer_0gpd_inj $o f'; equalizer_0gpd_eq o f')).
+    all: reflexivity.
+  Defined.
+
+  Definition equalizer_0gpd_homotopic [Z : ZeroGpd]
+    (j k : Z $-> equalizer_0gpd)
+    (p : equalizer_0gpd_inj $o j $== equalizer_0gpd_inj $o k)
+    : j $== k
+    := fun z => p z.
+
+End ZeroGpdEqualizer.
