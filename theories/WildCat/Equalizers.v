@@ -53,9 +53,9 @@ Section EqualizerConstructors.
   Context {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)
     (cat_eq : A) (cat_eq_inj : cat_eq $-> a)
     (cat_eq_glue : f $o cat_eq_inj $== g $o cat_eq_inj)
-    (cat_eq_corec : forall z : A,
-      equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g) -> (z $-> cat_eq))
-    (cat_eq_beta_inj : forall z hp, cat_eq_inj $o cat_eq_corec z hp $-> hp.1)
+    (cat_eq_corec : forall (z : A) (h : z $-> a) (p : f $o h $== g $o h),
+      z $-> cat_eq)
+    (cat_eq_beta_inj : forall z h p, cat_eq_inj $o cat_eq_corec z h p $== h)
     (cat_eq_eta : forall z (k h : z $-> cat_eq)
       (p : cat_eq_inj $o k $== cat_eq_inj $o h), k $== h).
 
@@ -66,9 +66,9 @@ Section EqualizerConstructors.
     intros z.
     napply isequiv_0gpd_issurjinj.
     napply Build_IsSurjInj.
-    - intros hp.
-      exists (cat_eq_corec z hp).
-      exact (cat_eq_beta_inj z hp).
+    - intros [h p].
+      exists (cat_eq_corec z h p).
+      exact (cat_eq_beta_inj z h p).
     - intros k h p.
       exact (cat_eq_eta z k h p).
   Defined.
@@ -199,9 +199,9 @@ Section InducedFromEquiv.
     snapply Build_IsCatEqualizer.
     - exact (cat_eq_inj $o h).
     - exact (cat_eq_inj_postcomp_glue h).
-    - intros z [k p].
+    - intros z k p.
       exact (h^-1$ $o cat_eq_corec k p).
-    - intros z [k p]; cbn beta.
+    - intros z k p; cbn beta.
       refine (_ $@ cat_eq_corec_beta_inj k p).
       refine (cat_assoc _ _ _ $@ _).
       apply cat_postwhisker.
@@ -235,9 +235,9 @@ Proof.
   snapply Build_IsCatEqualizer.
   - exact cat_eq_inj.
   - exact cat_eq_glue^$.
-  - intros z [k p].
+  - intros z k p.
     exact (cat_eq_corec k p^$).
-  - intros z [k p]; cbn beta.
+  - intros z k p; cbn beta.
     exact (cat_eq_corec_beta_inj k p^$).
   - intros z k k' e.
     exact (isinj_equiv_0gpd cate_eq_corec_inv e).
@@ -257,8 +257,8 @@ Proof.
   intros G H f g.
   snapply (Build_CatEqualizer f g (equalizer_0gpd f g)
              (equalizer_0gpd_inj f g) (equalizer_0gpd_eq f g)).
-  - intros Z hp.
-    exact (equiv_equalizer_0gpd_corec f g hp).
+  - intros Z h p.
+    exact (equiv_equalizer_0gpd_corec f g (h;p)).
   - reflexivity.
   - exact (equalizer_0gpd_homotopic f g).
 Defined.
