@@ -21,8 +21,7 @@ Definition cat_eq_corec_inv {A : Type} `{Is1Cat A}
 Proof.
   snapply equiv_equalizer_0gpd_corec.
   exists (fmap _ inj).
-  refine ((fmap_comp _ inj f)^$ $@ _ $@ fmap_comp _ inj g).
-  exact (fmap2 _ glue).
+  exact (fun k => cat_reassoc (glue $@R k)).
 Defined.
 
 (** An equalizer is an object completing [f] and [g] to a commuting diagram such that the map above is an equivalence of 0-groupoids for each [z]. *)
@@ -111,7 +110,7 @@ Section Lemmata.
     := cate_isretr cate_eq_corec_inv _.
 
   Definition cat_eq_inj_postcomp_glue (h : z $-> cat_eq)
-    := (cat_assoc _ _ _)^$ $@ (cat_eq_glue $@R h) $@ cat_assoc _ _ _.
+    := cat_reassoc (cat_eq_glue $@R h).
 
   Definition cat_eq_corec_eta_inj (h : z $-> cat_eq)
     : cat_eq_corec (cat_eq_inj $o h) (cat_eq_inj_postcomp_glue h) $== h
@@ -141,7 +140,7 @@ Proof.
   snapply Build_Fun01'.
   - intros [h p].
     exists (h $o k).
-    exact ((cat_assoc _ _ _)^$ $@ (p $@R k) $@ cat_assoc _ _ _).
+    exact (cat_reassoc (p $@R k)).
   - intros [h1 p1] [h2 p2] q.
     exact (q $@R k).
 Defined.
@@ -209,7 +208,7 @@ Section InducedFromEquiv.
     - cbn beta; intros z k k' e.
       napply (cate_monic_equiv h).
       apply (isinj_equiv_0gpd (cate_eq_corec_inv)).
-      exact (cat_assoc_opp _ _ _ $@ e $@ cat_assoc _ _ _).
+      exact (cat_reassoc e).
   Defined.
 
   (** The induced injection is given by the equivalence. *)
@@ -322,11 +321,9 @@ Proof.
   - intros a' b' e u v sq.
     apply (cat_eq_corec v).
     apply (isepic e).
-    lhs' napply cat_assoc; rhs' napply cat_assoc.
-    lhs' napply (f $@L sq); rhs' napply (g $@L sq).
-    lhs' napply cat_assoc_opp; rhs' napply cat_assoc_opp.
-    rapply cat_prewhisker.
-    exact cat_eq_glue.
+    apply cat_reassoc_opp.
+    lhs' exact (f $@L sq); rhs' exact (g $@L sq).
+    exact (cat_reassoc (cat_eq_glue $@R u)).
   - intros a' b' e u v sq; cbn.
     napply cat_eq_corec_beta_inj.
 Defined.

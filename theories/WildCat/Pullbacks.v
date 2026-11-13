@@ -25,8 +25,7 @@ Proof.
   snapply equiv_pullback_0gpd_corec.
   exists (fmap _ pra).  (* The underscores are [opyon_0gpd z]. *)
   exists (fmap _ prb).
-  refine ((fmap_comp _ pra f)^$ $@ _ $@ fmap_comp _ prb g).
-  exact (fmap2 _ glue).
+  exact (fun k => cat_reassoc (glue $@R k)).
 Defined.
 
 (** A pullback is an object completing [f] and [g] to a commuting square such that the map above is an equivalence of 0-groupoids for each [z].  The name [Pullback] is used for the construction in Limits.Pullback, so we use CatPullback here. *)
@@ -125,11 +124,11 @@ Section Lemmata.
 
   Definition cat_pb_postcomp_glue (h : z $-> cat_pb)
     : f $o (cat_pb_pr1 $o h) $== g $o (cat_pb_pr2 $o h)
-    := (cat_assoc _ _ _)^$ $@ (cat_pb_glue $@R h) $@ cat_assoc _ _ _.
+    := cat_reassoc (cat_pb_glue $@R h).
 
   Definition cat_pb_corec_eta_pr (h : z $-> cat_pb)
     : cat_pb_corec (cat_pb_pr1 $o h) (cat_pb_pr2 $o h) (cat_pb_postcomp_glue h) $== h
-    := cate_issect cate_pb_corec_inv h.
+    := (cate_issect cate_pb_corec_inv h).
 
   Definition cat_pb_corec_eta (h h' : z $-> a) (k k' : z $-> b)
     (glue_hk : f $o h $== g $o k) (glue_h'k' : f $o h' $== g $o k')
@@ -169,7 +168,7 @@ Proof.
   - intros [h [l p]].
     exists (h $o k).
     exists (l $o k).
-    exact ((cat_assoc _ _ _)^$ $@ (p $@R k) $@ cat_assoc _ _ _).
+    exact (cat_reassoc (p $@R k)).
   - intros [h1 [l1 p1]] [h2 [l2 p2]] [qh ql].
     exact (qh $@R k, ql $@R k).
 Defined.
@@ -243,8 +242,8 @@ Section InducedFromEquiv.
     - cbn beta; intros z k k' p1 p2.
       napply (cate_monic_equiv h).
       napply cat_pb_pr_eta.
-      + exact (cat_assoc_opp _ _ _ $@ p1 $@ cat_assoc _ _ _).
-      + exact (cat_assoc_opp _ _ _ $@ p2 $@ cat_assoc _ _ _).
+      + exact (cat_reassoc p1).
+      + exact (cat_reassoc p2).
   Defined.
 
   (** The induced first projection is given by the equivalence. *)
