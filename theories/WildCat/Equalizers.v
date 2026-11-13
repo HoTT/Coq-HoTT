@@ -313,11 +313,10 @@ Proof.
 Defined.
 
 (** The map [cat_eq_inj] is a strong monic. *)
-Instance strongmonic_equalizer {A : Type} `{Is1Cat A} {b c : A}
-  (f g : b $-> c) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
+Instance strongmonic_equalizer {A : Type} `{Is1Cat A} {a b : A}
+  (f g : a $-> b) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
   : StrongMonic cat_eq_inj.
 Proof.
-  set (m := cat_eq_inj).
   srapply Build_StrongMonic.
   - intros a' b' e u v sq.
     apply (cat_eq_corec v).

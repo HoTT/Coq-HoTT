@@ -251,7 +251,7 @@ Definition llp_unique_strongepic {A : Type} `{Is1Cat A} {a b : A}
   := rlp_unique_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq utr.
 
 (** The map [cat_coeq_proj] is a strong epic. *)
-Instance strongepic_coequalizer {A : Type} `{Is1Cat A} {c a : A}
-  (f g : c $-> a) {cat_coeq : A} `{!IsCatCoequalizer f g cat_coeq}
+Instance strongepic_coequalizer {A : Type} `{Is1Cat A} {a b : A}
+  (f g : a $-> b) {cat_coeq : A} `{!IsCatCoequalizer f g cat_coeq}
   : StrongEpic cat_coeq_proj
-  := strongmonic_equalizer (A:=A^op) (b:=a) f g.
+  := strongmonic_equalizer (A:=A^op) (a:=b) f g.
