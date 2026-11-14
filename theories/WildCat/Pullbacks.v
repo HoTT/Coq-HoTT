@@ -50,26 +50,25 @@ Section PullbackConstructors.
   Context {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c)
     (cat_pb : A) (cat_pb_pr1 : cat_pb $-> a) (cat_pb_pr2 : cat_pb $-> b)
     (cat_pb_glue : f $o cat_pb_pr1 $== g $o cat_pb_pr2)
-    (cat_pb_corec : forall z : A,
-        pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g) -> (z $-> cat_pb))
-    (cat_pb_beta_pr1 : forall z khp, cat_pb_pr1 $o cat_pb_corec z khp $-> khp.1)
-    (cat_pb_beta_pr2 : forall z khp, cat_pb_pr2 $o cat_pb_corec z khp $-> khp.2.1)
+    (cat_pb_corec : forall (z : A) (h : z $-> a) (k : z $-> b)
+      (sq : f $o h $== g $o k), (z $-> cat_pb))
+    (cat_pb_beta_pr1 : forall z h k p, cat_pb_pr1 $o cat_pb_corec z h k p $== h)
+    (cat_pb_beta_pr2 : forall z h k p, cat_pb_pr2 $o cat_pb_corec z h k p $== k)
     (cat_pb_eta : forall z (k h : z $-> cat_pb)
       (p1 : cat_pb_pr1 $o k $== cat_pb_pr1 $o h)
       (p2 : cat_pb_pr2 $o k $== cat_pb_pr2 $o h), k $== h).
 
   (** A convenience wrapper for building pullbacks. *)
-  (** TODO: maybe unbundle khp?  Or bundle them above to match? *)
   Definition Build_CatPullback : CatPullback f g.
   Proof.
     snapply (Build_CatPullback' f g cat_pb cat_pb_pr1 cat_pb_pr2 cat_pb_glue).
     intros z.
     napply isequiv_0gpd_issurjinj.
     napply Build_IsSurjInj.
-    - intros khp.
-      exists (cat_pb_corec z khp).
-      exact (cat_pb_beta_pr1 z khp, cat_pb_beta_pr2 z khp).
-    - intros k h p.
+    - intros [h [k p]]; simpl in h, k, p.
+      exists (cat_pb_corec z h k p).
+      exact (cat_pb_beta_pr1 z h k p, cat_pb_beta_pr2 z h k p).
+    - intros k h p; simpl in k, h, p.
       exact (cat_pb_eta z k h (fst p) (snd p)).
   Defined.
 
@@ -87,11 +86,16 @@ Section Lemmata.
         pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
     := Build_CatEquiv _.
 
+  Definition cate_pb_corec
+    : pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
+      $<~> opyon_0gpd z (cat_pb _ _)
+    := cate_pb_corec_inv^-1$.
+
   Definition cat_pb_corec
     (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
-    : opyon_0gpd z (cat_pb f g).
+    : z $-> cat_pb f g.
   Proof.
-    apply (cate_pb_corec_inv)^-1$.
+    apply cate_pb_corec.
     simpl.
     exact (h; k; p).
   Defined.
@@ -105,6 +109,39 @@ Section Lemmata.
     (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
     : cat_pb_pr2 $o cat_pb_corec h k p $== k
     := snd (cate_isretr cate_pb_corec_inv (h; k; p)).
+
+  Definition cat_pb_postcomp_glue (h : z $-> cat_pb f g)
+    : f $o (cat_pb_pr1 $o h) $== g $o (cat_pb_pr2 $o h)
+    := (cat_assoc _ _ _)^$ $@ (cat_pb_glue $@R h) $@ cat_assoc _ _ _.
+
+  Definition cat_pb_corec_eta_pr (h : z $-> cat_pb f g)
+    : cat_pb_corec (cat_pb_pr1 $o h) (cat_pb_pr2 $o h) (cat_pb_postcomp_glue h) $== h
+    := cate_issect cate_pb_corec_inv h.
+
+  Definition cat_pb_corec_eta (h h' : z $-> a) (k k' : z $-> b)
+    (glue_hk : f $o h $== g $o k) (glue_h'k' : f $o h' $== g $o k')
+    (p1 : h $== h') (p2 : k $== k')
+    : cat_pb_corec h k glue_hk $== cat_pb_corec h' k' glue_h'k'.
+  Proof.
+    apply (isinj_equiv_0gpd cate_pb_corec_inv).
+    cbn.
+    split.
+    - lhs' apply (cat_pb_corec_beta_pr1 h k glue_hk).
+      lhs' apply p1.
+      exact (cat_pb_corec_beta_pr1 h' k' glue_h'k')^$.
+    - lhs' apply (cat_pb_corec_beta_pr2 h k glue_hk).
+      lhs' apply p2.
+      exact (cat_pb_corec_beta_pr2 h' k' glue_h'k')^$.
+  Defined.
+
+  Definition cat_pb_pr_eta (h h' : z $-> cat_pb f g)
+    (p1 : cat_pb_pr1 $o h $== cat_pb_pr1 $o h')
+    (p2 : cat_pb_pr2 $o h $== cat_pb_pr2 $o h')
+    : h $== h'.
+  Proof.
+    apply (isinj_equiv_0gpd cate_pb_corec_inv).
+    exact (p1, p2).
+  Defined.
 
 End Lemmata.
 
@@ -228,8 +265,8 @@ Instance haspullbacks_type {A B C : Type} `{IsTrunc 0 C}
 Proof.
   snapply (Build_CatPullback f g (Pullback f g) pullback_pr1 pullback_pr2).
   - apply pullback_commsq.
-  - intros Z khp.
-    exact (pullback_corec_uncurried f g khp).
+  - intros Z h k p.
+    exact (fun z => (h z; k z; p z)).
   - reflexivity.
   - reflexivity.
   - intros Z k h p1 p2.
@@ -245,8 +282,8 @@ Proof.
   intros G H K f g.
   snapply (Build_CatPullback f g (pullback_0gpd f g)
              (pullback_0gpd_pr1 f g) (pullback_0gpd_pr2 f g) (pullback_0gpd_glue f g)).
-  - intros Z khp.
-    exact (equiv_pullback_0gpd_corec f g khp).
+  - intros Z h k p.
+    exact (equiv_pullback_0gpd_corec f g (h; k; p)).
   - reflexivity.
   - reflexivity.
   - exact (pullback_0gpd_homotopic f g).
