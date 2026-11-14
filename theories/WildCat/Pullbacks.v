@@ -45,66 +45,70 @@ Arguments Build_CatPullback' {A IsGraph Is2Graph Is01Cat H a b c}
   f g cat_pb cat_pb_pr1 cat_pb_pr2 cat_pb_glue eq : rename.
 Arguments cat_pb {A IsGraph Is2Graph Is01Cat H a b c} f g {pb} : rename.
 
-Definition cate_pb_corec_inv {A : Type} `{Is1Cat A}
-  {a b c : A} (f : a $-> c) (g : b $-> c)
-  {pb : CatPullback f g}
-  (z : A)
-  : opyon_0gpd z (cat_pb _ _) $<~>
-      pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
-  := Build_CatEquiv _.
+Section PullbackConstructors.
 
-Definition cat_pb_corec {A : Type} `{Is1Cat A}
-  {a b c : A} {f : a $-> c} {g : b $-> c}
-  {pb : CatPullback f g} {z : A}
-  (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
-  : opyon_0gpd z (cat_pb f g).
-Proof.
-  apply (cate_pb_corec_inv f g z)^-1$.
-  simpl.
-  exact (h; k; p).
-Defined.
+  Context {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c)
+    (cat_pb : A) (cat_pb_pr1 : cat_pb $-> a) (cat_pb_pr2 : cat_pb $-> b)
+    (cat_pb_glue : f $o cat_pb_pr1 $== g $o cat_pb_pr2)
+    (cat_pb_corec : forall z : A,
+        pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g) -> (z $-> cat_pb))
+    (cat_pb_beta_pr1 : forall z khp, cat_pb_pr1 $o cat_pb_corec z khp $-> khp.1)
+    (cat_pb_beta_pr2 : forall z khp, cat_pb_pr2 $o cat_pb_corec z khp $-> khp.2.1)
+    (cat_pb_eta : forall z (k h : z $-> cat_pb)
+      (p1 : cat_pb_pr1 $o k $== cat_pb_pr1 $o h)
+      (p2 : cat_pb_pr2 $o k $== cat_pb_pr2 $o h), k $== h).
 
-Definition cat_pb_corec_beta_pr1 {A : Type} `{Is1Cat A}
-  {a b c : A} (f : a $-> c) (g : b $-> c)
-  {pb : CatPullback f g} (z : A)
-  (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
-  : cat_pb_pr1 $o cat_pb_corec h k p $== h
-  := fst (cate_isretr (cate_pb_corec_inv f g z) (h; k; p)).
+  (** A convenience wrapper for building pullbacks. *)
+  (** TODO: maybe unbundle khp?  Or bundle them above to match? *)
+  Definition Build_CatPullback : CatPullback f g.
+  Proof.
+    snapply (Build_CatPullback' f g cat_pb cat_pb_pr1 cat_pb_pr2 cat_pb_glue).
+    intros z.
+    napply isequiv_0gpd_issurjinj.
+    napply Build_IsSurjInj.
+    - intros khp.
+      exists (cat_pb_corec z khp).
+      exact (cat_pb_beta_pr1 z khp, cat_pb_beta_pr2 z khp).
+    - intros k h p.
+      exact (cat_pb_eta z k h (fst p) (snd p)).
+  Defined.
 
-Definition cat_pb_corec_beta_pr2 {A : Type} `{Is1Cat A}
-  {a b c : A} (f : a $-> c) (g : b $-> c)
-  {pb : CatPullback f g} (z : A)
-  (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
-  : cat_pb_pr2 $o cat_pb_corec h k p $== k
-  := snd (cate_isretr (cate_pb_corec_inv f g z) (h; k; p)).
+End PullbackConstructors.
 
-(** A convenience wrapper for building pullbacks. *)
-(** TODO: maybe unbundle khp?  Or bundle them above to match? *)
-Definition Build_CatPullback {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c)
-  (cat_pb : A) (cat_pb_pr1 : cat_pb $-> a) (cat_pb_pr2 : cat_pb $-> b)
-  (cat_pb_glue : f $o cat_pb_pr1 $== g $o cat_pb_pr2)
-  (cat_pb_corec : forall z : A,
-      pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g) -> (z $-> cat_pb))
-  (cat_pb_beta_pr1 : forall z khp, cat_pb_pr1 $o cat_pb_corec z khp $-> khp.1)
-  (cat_pb_beta_pr2 : forall z khp, cat_pb_pr2 $o cat_pb_corec z khp $-> khp.2.1)
-  (cat_pb_eta : forall z (k : z $-> cat_pb) (h : z $-> cat_pb)
-                (p1 : cat_pb_pr1 $o k $== cat_pb_pr1 $o h)
-                (p2 : cat_pb_pr2 $o k $== cat_pb_pr2 $o h), k $== h)
-  : CatPullback f g.
-Proof.
-  snapply (Build_CatPullback' f g cat_pb cat_pb_pr1 cat_pb_pr2 cat_pb_glue).
-  intros z.
-  napply isequiv_0gpd_issurjinj.
-  napply Build_IsSurjInj.
-  - intros khp.
-    exists (cat_pb_corec z khp).
-    exact (cat_pb_beta_pr1 z khp, cat_pb_beta_pr2 z khp).
-  - intros k h p.
-    exact (cat_pb_eta z k h (fst p) (snd p)).
-Defined.
+Section Lemmata.
 
-Class HasPullbacks (A : Type) `{Is1Cat A}
-  := has_pullbacks :: forall {a b c} (f : a $-> c) (g : b $-> c), CatPullback f g.
+  Context {A : Type} `{Is1Cat A}
+    {a b c : A} (f : a $-> c) (g : b $-> c)
+    {pb : CatPullback f g}
+    (z : A).
+
+  Definition cate_pb_corec_inv
+    : opyon_0gpd z (cat_pb _ _) $<~>
+        pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
+    := Build_CatEquiv _.
+
+  Definition cat_pb_corec
+    (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
+    : opyon_0gpd z (cat_pb f g).
+  Proof.
+    apply (cate_pb_corec_inv)^-1$.
+    simpl.
+    exact (h; k; p).
+  Defined.
+
+  Definition cat_pb_corec_beta_pr1
+    (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
+    : cat_pb_pr1 $o cat_pb_corec h k p $== h
+    := fst (cate_isretr cate_pb_corec_inv (h; k; p)).
+
+  Definition cat_pb_corec_beta_pr2
+    (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
+    : cat_pb_pr2 $o cat_pb_corec h k p $== k
+    := snd (cate_isretr cate_pb_corec_inv (h; k; p)).
+
+End Lemmata.
+
+Arguments cat_pb_corec {A IsGraph Is2Graph Is01Cat H a b c f g pb z} h k p : rename.
 
 (** ** Uniqueness of pullbacks *)
 
@@ -175,6 +179,11 @@ Definition flip_pullback_pr2_pr1 {A : Type} `{Is1Cat A}
   (pb : CatPullback f g)
   : (flip_cat_pb f g pb).(cat_pb_pr2) $== cat_pb_pr1
   := Id _.
+
+(** ** Categories with pullbacks *)
+
+Class HasPullbacks (A : Type) `{Is1Cat A}
+  := has_pullbacks :: forall {a b c} (f : a $-> c) (g : b $-> c), CatPullback f g.
 
 (** ** Pullbacks in induced wild categories *)
 
