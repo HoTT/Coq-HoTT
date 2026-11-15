@@ -150,6 +150,22 @@ Definition cat_comp2 {A} `{Is1Cat A} {a b c : A}
 
 Notation "q $@@ p" := (cat_comp2 q p).
 
+(** Reassociating compositions on both sides of a 2-cell. *)
+
+Definition cat_reassoc {A} `{Is1Cat A} {a b b' c c' d : A}
+  {f : a $-> b} {g : b $-> c} {h : c $-> d}
+  {f' : a $-> b'} {g' : b' $-> c'} {h' : c' $-> d}
+  (p : (h $o g) $o f $== (h' $o g') $o f')
+  : h $o (g $o f) $== h' $o (g' $o f')
+  := cat_assoc_opp f g h $@ p $@ cat_assoc f' g' h'.
+
+Definition cat_reassoc_opp {A} `{Is1Cat A} {a b b' c c' d : A}
+  {f : a $-> b} {g : b $-> c} {h : c $-> d}
+  {f' : a $-> b'} {g' : b' $-> c'} {h' : c' $-> d}
+  (p : h $o (g $o f) $== h' $o (g' $o f'))
+  : (h $o g) $o f $== (h' $o g') $o f'
+  := cat_assoc f g h $@ p $@ cat_assoc_opp f' g' h'.
+
 (** Epimorphisms and monomorphisms. *)
 
 Class Epic {A} `{Is1Cat A} {a b : A} (f : a $-> b)
@@ -184,7 +200,7 @@ Section Epimorphisms.
     intros Q x x' h.
     apply (isepic g).
     apply (isepic f).
-    exact ((cat_assoc f g x) $@ h $@ (cat_assoc_opp f g x')).
+    exact (cat_reassoc_opp h).
   Defined.
 
   Definition epic_cancel {P P' P'' : A} (f : P $-> P') (g : P' $-> P'')
@@ -193,7 +209,7 @@ Section Epimorphisms.
   Proof.
     intros Q x x' h.
     rapply isepic.
-    exact ((cat_assoc_opp f g x) $@ (h $@R f) $@ (cat_assoc f g x')).
+    exact (cat_reassoc (h $@R f)).
   Defined.
 
   Definition Epi (P' P : A) := { e : P' $-> P & Epic e }.
@@ -244,7 +260,7 @@ Section Monomorphisms.
     intros Q x x' h.
     apply (ismonic f).
     apply (ismonic g).
-    exact ((cat_assoc_opp x f g) $@ h $@ (cat_assoc x' f g)).
+    exact (cat_reassoc h).
   Defined.
 
   Definition monic_cancel {P P' P'' : A} (f : P $-> P') (g : P' $-> P'')
@@ -253,7 +269,7 @@ Section Monomorphisms.
   Proof.
     intros Q x x' h.
     rapply ismonic.
-    exact ((cat_assoc x f g) $@ (g $@L h) $@ (cat_assoc_opp x' f g)).
+    exact (cat_reassoc_opp (g $@L h)).
   Defined.
 
   Definition Mono (P' P : A) := { e : P' $-> P & Monic e }.
