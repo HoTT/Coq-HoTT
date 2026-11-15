@@ -219,7 +219,7 @@ Section InducedFromEquiv.
 
   (** The induced corecursion is given by the equivalence. *)
   Definition cat_eq_corec_comp {z : A} (k : z $-> a) (p : f $o k $== g $o k)
-    : h $o cat_eq_corec (IsCatEqualizer0:=cat_eq_equiv_eq) k p $== cat_eq_corec k p
+    : h $o cat_eq_corec (cat_eq:=y) k p $== cat_eq_corec k p
     := compose_h_Vh _ _.
 
 End InducedFromEquiv.

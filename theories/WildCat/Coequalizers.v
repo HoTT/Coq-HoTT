@@ -175,12 +175,12 @@ Section InducedFromEquiv.
 
   (** The induced projection is given by the equivalence. *)
   Definition cat_coeq_proj_comp
-    : cat_coeq_proj $== h $o cat_coeq_proj
+    : cat_coeq_proj (cat_coeq:=y) $== h $o cat_coeq_proj
     := cat_eq_inj_comp (A:=A^op) (a:=b) (f:=f) (g:=g) cat_coeq y h.
 
   (** The induced recursion is given by the equivalence. *)
   Definition cat_coeq_rec_comp {z : A} (k : b $-> z) (p : k $o f $== k $o g)
-    : cat_coeq_rec (IsCatCoequalizer0:=cat_coeq_coeq_equiv) k p $o h $== cat_coeq_rec k p
+    : cat_coeq_rec (cat_coeq:=y) k p $o h $== cat_coeq_rec k p
     := cat_eq_corec_comp (A:=A^op) (he:=hasequivs_op) (a:=b) (f:=f) (g:=g) cat_coeq y h k p.
 
 End InducedFromEquiv.
