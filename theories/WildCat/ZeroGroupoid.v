@@ -338,7 +338,7 @@ Section ZeroGpdEqualizer.
 
   Context {G H : ZeroGpd} (g h : G $-> H).
 
-  (** Having products and pullbacks is sufficient to define any finite limit. An equalizer could be defined in terms of these limits. We choose to give a direct definition of an equalizer as so to get smaller terms. *)
+  (** A terminal object and pullbacks yield all finite limits, so an equalizer could be defined in terms of these limits. We choose to give a direct definition of an equalizer so as to get smaller terms. *)
 
   Definition equalizer_0gpd : ZeroGpd
     := @zerogpd_induced {x : G & g x $== h x} G pr1.
