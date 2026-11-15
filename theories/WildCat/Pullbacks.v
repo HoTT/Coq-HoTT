@@ -295,31 +295,28 @@ Class HasPullbacks (A : Type) `{Is1Cat A}
 
 Section Induced.
 
-  (** If the 1-category structure on [A] is induced from that on [B] along a map [F], the pullback of [F f] and [F g] exists in [B], and that pullback object is in the image of [F] up to categorical equivalence, then the preimage is also a pullback.  Typically this will be applied with [h] being an identity equivalence (or [reflexivity]), but it would be awkward to state this lemma assuming that. *)
-  Local Instance cat_pb_induced {A B} `{Is1Cat B} `{!HasEquivs B}
+  (** If the 1-category structure on [A] is induced from that on [B] along a map [F], and the pullback of [F f] and [F g] exists in [B] with pullback object in the image of [F], then the preimage is also a pullback. *)
+  Local Instance cat_pb_induced {A B} `{Is1Cat B}
     (F : A -> B)
     {a b c : A} (f : F a $-> F c) (g : F b $-> F c)
-    {cat_pb_b : B} `{!IsCatPullback f g cat_pb_b}
-    (cat_pb_a : A) (h : F cat_pb_a $<~> cat_pb_b)
+    (cat_pb_a : A) `{!IsCatPullback f g (F cat_pb_a)}
     : CatPullback (A:=A) (H:=is1cat_induced F) f g.
   Proof.
-    pose (cat_pb_equiv_pb (A:=B) cat_pb_b (F cat_pb_a) h).
-    napply (Build_CatPullback (H:=is1cat_induced F) f g cat_pb_a).
-    - exact (cat_pb_glue (cat_pb:=F cat_pb_a)).
-    - intro z; exact cat_pb_corec_beta_pr1.
-    - intro z; exact cat_pb_corec_beta_pr2.
-    - intro z; exact cat_pb_pr_eta.
+    rapply (Build_CatPullback' (H:=is1cat_induced F) f g cat_pb_a).
+    rapply Build_IsCatPullback'.
+    intro z.
+    exact (catie_cat_pb_corec_inv (F z)).
   Defined.
 
-  Local Instance haspullbacks_induced {A B} `{HasPullbacks B} `{!HasEquivs B}
+  Local Instance haspullbacks_induced {A B} `{HasPullbacks B}
     (F : A -> B)
     (K : forall (a b c : A) (f : F a $-> F c) (g : F b $-> F c),
-      exists q, F q $<~> cat_pb f g)
+      exists q, IsCatPullback f g (F q))
     : HasPullbacks A (H:=is1cat_induced F).
   Proof.
     intros a b c f g.
     destruct (K a b c f g) as [q h].
-    exact (cat_pb_induced F f g q h).
+    rapply (cat_pb_induced F f g q).
   Defined.
 
 End Induced.

@@ -35,7 +35,7 @@ Proof.
   rapply (haspullbacks_induced abgroup_group).
   intros A B C f g.
   exists (ab_pullback f g).
-  reflexivity.
+  exact cat_ispb.
 Defined.
 
 Instance isepistable_abgroup `{Univalence} : IsEpiStable AbGroup.

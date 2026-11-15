@@ -246,19 +246,18 @@ Local Instance haspullbacks_haspushouts_op {A : Type} `{HasPushouts A}
 
 Section Induced.
 
-  (** If the 1-category structure on [A] is induced from that on [B] along a map [F], the pushout of [F f] and [F g] exists in [B], and that pushout object is in the image of [F] up to categorical equivalence, then the preimage is also a pushout.  Typically this will be applied with [h] being an identity equivalence (or [reflexivity]), but it would be awkward to state this lemma assuming that. *)
-  Local Instance cat_po_induced {A B} `{Is1Cat B} `{!HasEquivs B}
+  (** If the 1-category structure on [A] is induced from that on [B] along a map [F], and the pushout of [F f] and [F g] exists in [B] with pushout object in the image of [F], then the preimage is also a pushout. *)
+  Local Instance cat_po_induced {A B} `{Is1Cat B}
     (F : A -> B)
     {a b c : A} (f : F a $-> F b) (g : F a $-> F c)
-    {cat_po_b : B} `{!IsCatPushout f g cat_po_b}
-    (cat_po_a : A) (h : cat_po_b $<~> F cat_po_a)
+    (cat_po_a : A) `{!IsCatPushout f g (F cat_po_a)}
     : CatPushout (A:=A) (H:=is1cat_induced F) f g
-    := cat_pb_induced (A:=A^op) (B:=B^op) (a:=b) (b:=c) (c:=a) F f g cat_po_a h.
+    := cat_pb_induced (A:=A^op) (B:=B^op) (a:=b) (b:=c) (c:=a) F f g cat_po_a.
 
-  Local Instance haspushouts_induced {A B} `{HasPushouts B} `{!HasEquivs B}
+  Local Instance haspushouts_induced {A B} `{HasPushouts B}
     (F : A -> B)
     (K : forall (a b c : A) (f : F a $-> F b) (g : F a $-> F c),
-      exists q, cat_po f g $<~> F q)
+      exists q, IsCatPushout f g (F q))
     : HasPushouts A (H:=is1cat_induced F)
     := fun a b c f g =>
          haspullbacks_induced (A:=A^op) (B:=B^op) F
