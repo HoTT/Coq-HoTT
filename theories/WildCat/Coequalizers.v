@@ -73,9 +73,9 @@ Section CoequalizerConstructors.
   Context {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b)
     (cat_coeq : A) (cat_coeq_proj : b $-> cat_coeq)
     (cat_coeq_glue : cat_coeq_proj $o f $== cat_coeq_proj $o g)
-    (cat_coeq_rec : forall z : A,
-      equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g) -> (cat_coeq $-> z))
-    (cat_coeq_beta_proj : forall z hp, cat_coeq_rec z hp $o cat_coeq_proj $== hp.1)
+    (cat_coeq_rec : forall (z : A) (h : b $-> z) (p : h $o f $== h $o g),
+      cat_coeq $-> z)
+    (cat_coeq_beta_proj : forall z h p, cat_coeq_rec z h p $o cat_coeq_proj $== h)
     (cat_coeq_eta : forall z (k h : cat_coeq $-> z)
       (p : k $o cat_coeq_proj $== h $o cat_coeq_proj), k $== h).
 
