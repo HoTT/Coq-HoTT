@@ -93,44 +93,44 @@ End CoequalizerConstructors.
 Section Lemmata.
 
   Context {A : Type} `{Is1Cat A}
-    {a b : A} (f g : a $-> b)
+    {a b : A} {f g : a $-> b}
     {cat_coeq : A}
     `{!IsCatCoequalizer f g cat_coeq}
-    (z : A).
+    {z : A}.
 
   Definition cate_coeq_rec_inv
     : yon_0gpd z cat_coeq $<~>
         equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
-    := cate_eq_corec_inv (A:=A^op) (a:=b) f g z.
+    := cate_eq_corec_inv (A:=A^op) (a:=b).
 
   Definition cate_coeq_rec
     : equalizer_0gpd ((is0functor_yon_0gpd z).(fmap _) f) ((is0functor_yon_0gpd z).(fmap _) g)
       $<~> yon_0gpd z cat_coeq
-    := cate_eq_corec (A:=A^op) (a:=b) f g z.
+    := cate_eq_corec (A:=A^op) (a:=b).
 
   Definition cat_coeq_rec
     (h : b $-> z) (p : h $o f $== h $o g)
     : cat_coeq $-> z
-    := cat_eq_corec (A:=A^op) (a:=b) f g z h p.
+    := cat_eq_corec (A:=A^op) (a:=b) (f:=f) (g:=g) h p.
 
   Definition cat_coeq_rec_beta_proj
     (h : b $-> z) (p : h $o f $== h $o g)
     : cat_coeq_rec h p $o cat_coeq_proj $== h
-    := cat_eq_corec_beta_inj (A:=A^op) (a:=b) f g z h p.
+    := cat_eq_corec_beta_inj (A:=A^op) (a:=b) (f:=f) (g:=g) h p.
 
   Definition cat_coeq_proj_precomp_glue (h : cat_coeq $-> z)
     : (h $o cat_coeq_proj) $o f $== (h $o cat_coeq_proj) $o g
-    := cat_eq_inj_postcomp_glue (A:=A^op) (a:=b) f g z h.
+    := cat_eq_inj_postcomp_glue (A:=A^op) (a:=b) (f:=f) (g:=g) h.
 
   Definition cat_coeq_rec_eta_proj (h : cat_coeq $-> z)
     : cat_coeq_rec (h $o cat_coeq_proj) (cat_coeq_proj_precomp_glue h) $== h
-    := cat_eq_corec_eta_inj (A:=A^op) (a:=b) f g z h.
+    := cat_eq_corec_eta_inj (A:=A^op) (a:=b) (f:=f) (g:=g) h.
 
   Definition cat_coeq_rec_eta (h h' : b $-> z)
     (glue_h : h $o f $== h $o g) (glue_h' : h' $o f $== h' $o g)
     (p : h $== h')
     : cat_coeq_rec h glue_h $== cat_coeq_rec h' glue_h'
-    := cat_eq_corec_eta (A:=A^op) (a:=b) f g z h h' glue_h glue_h' p.
+    := cat_eq_corec_eta (A:=A^op) (a:=b) (f:=f) (g:=g) h h' glue_h glue_h' p.
 
 End Lemmata.
 
@@ -180,7 +180,7 @@ Section InducedFromEquiv.
 
   (** The induced recursion is given by the equivalence. *)
   Definition cat_coeq_rec_comp {z : A} (k : b $-> z) (p : k $o f $== k $o g)
-    : cat_coeq_rec (IsCatCoequalizer0:=cat_coeq_coeq_equiv) f g z k p $o h $== cat_coeq_rec f g z k p
+    : cat_coeq_rec (IsCatCoequalizer0:=cat_coeq_coeq_equiv) k p $o h $== cat_coeq_rec k p
     := cat_eq_corec_comp (A:=A^op) (he:=hasequivs_op) (a:=b) (f:=f) (g:=g) cat_coeq y h k p.
 
 End InducedFromEquiv.
@@ -218,25 +218,25 @@ Instance isepic_strongepic {A : Type} `{Is1Cat A} {a b : A} (e : a $-> b) `{!Str
   := ismonic_strongmonic (A:=A^op) (a:=b) (m:=e).
 
 Definition llp_strongepic {A : Type} `{Is1Cat A} {a b : A} {e : a $-> b} `{!StrongEpic e}
-  {a' b' : A} (m : a' $>-> b') (u : a $-> a') (v : b $-> b')
+  {a' b' : A} {m : a' $>-> b'} {u : a $-> a'} {v : b $-> b'}
   (sq : m $o u $== v $o e) : b $-> a'
-  := rlp_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') m v u sq.
+  := rlp_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq.
 
 Definition llp_ucomm_strongepic {A : Type} `{Is1Cat A} {a b : A} {e : a $-> b} `{!StrongEpic e}
-  {a' b' : A} (m : a' $>-> b') (u : a $-> a') (v : b $-> b')
-  (sq : m $o u $== v $o e) : llp_strongepic m u v sq $o e $== u
-  := rlp_lcomm_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') m v u sq.
+  {a' b' : A} {m : a' $>-> b'} {u : a $-> a'} {v : b $-> b'}
+  (sq : m $o u $== v $o e) : llp_strongepic sq $o e $== u
+  := rlp_lcomm_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq.
 
 Definition llp_lcomm_strongepic {A : Type} `{Is1Cat A} {a b : A} (e : a $-> b) `{!StrongEpic e}
-  {a' b' : A} (m : a' $>-> b') (u : a $-> a') (v : b $-> b') (sq : m $o u $== v $o e)
-  : m $o llp_strongepic m u v sq $== v
-  := rlp_ucomm_strongmonic (A:=A^op) (a:=b) e (a':=b') (b':=a') m v u sq.
+  {a' b' : A} {m : a' $>-> b'} {u : a $-> a'} {v : b $-> b'} (sq : m $o u $== v $o e)
+  : m $o llp_strongepic sq $== v
+  := rlp_ucomm_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq.
 
 Definition llp_unique_strongepic {A : Type} `{Is1Cat A} {a b : A} (e : a $-> b) `{!StrongEpic e}
-  {a' b' : A} (m : a' $>-> b') (u : a $-> a') (v : b $-> b') (sq : m $o u $== v $o e)
-  (h : b $-> a') (utr : h $o e $== u)
-  : llp_strongepic m u v sq $== h
-  := rlp_unique_strongmonic (A:=A^op) (a:=b) e (a':=b') (b':=a') m v u sq h utr.
+  {a' b' : A} {m : a' $>-> b'} {u : a $-> a'} {v : b $-> b'} (sq : m $o u $== v $o e)
+  {h : b $-> a'} (utr : h $o e $== u)
+  : llp_strongepic sq $== h
+  := rlp_unique_strongmonic (A:=A^op) (a:=b) (m:=e) (a':=b') (b':=a') sq utr.
 
 (** The map [cat_coeq_proj] is a strong epic. *)
 #[export] Instance strongepic_coequalizer {A : Type} `{Is1Cat A} {c a : A}
