@@ -226,21 +226,24 @@ End InducedFromEquiv.
 
 (** ** Symmetry *)
 
+Definition flip_cat_eq_corec_inv {A : Type} `{Is1Cat A}
+  {a b : A} (f g : a $-> b)
+  (cat_eq : A) (cat_eq_inj : cat_eq $-> a)
+  (glue : f $o cat_eq_inj $== g $o cat_eq_inj) (z : A)
+  : cate_flip_equalizer_0gpd _ _ $o
+    cat_eq_corec_inv f g _ _ glue z
+    $== cat_eq_corec_inv g f _ _ (glue^$) z
+  := fun _ => Id _.
+
 (** An equalizer of [f] and [g] is also an equalizer of [g] and [f]. *)
 Definition iscatequalizer_sym {A : Type} `{Is1Cat A}
   {a b : A} {f g : a $-> b}
   (cat_eq : A) `{!IsCatEqualizer f g cat_eq}
   : IsCatEqualizer g f cat_eq.
 Proof.
-  snapply Build_IsCatEqualizer.
-  - exact cat_eq_inj.
-  - exact cat_eq_glue^$.
-  - intros z k p.
-    exact (cat_eq_corec k p^$).
-  - intros z k p; cbn beta.
-    exact (cat_eq_corec_beta_inj k p^$).
-  - intros z k k' e.
-    exact (isinj_equiv_0gpd cate_eq_corec_inv e).
+  apply (Build_IsCatEqualizer' _ _ _ cat_eq_inj cat_eq_glue^$).
+  intro z.
+  exact (catie_homotopic _ (flip_cat_eq_corec_inv f g _ _ _ z)).
 Defined.
 
 (** ** Categories with equalizers *)

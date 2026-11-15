@@ -227,6 +227,15 @@ End InducedFromEquiv.
 
 (** ** Symmetry of pushouts *)
 
+Definition flip_cat_po_rec_inv {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> b) (g : a $-> c)
+  (cat_po : A) (cat_po_in1 : b $-> cat_po) (cat_po_in2 : c $-> cat_po)
+  (glue : cat_po_in1 $o f $== cat_po_in2 $o g) (z : A)
+  : cate_flip_pullback_0gpd _ _ $o
+      cat_po_rec_inv _ _ _ cat_po_in1 cat_po_in2 glue z
+      $== cat_po_rec_inv _ _ _ cat_po_in2 cat_po_in1 (glue^$) z
+  := flip_cat_pb_corec_inv (A:=A^op) (a:=b) (b:=c) (c:=a) _ _ _ _ _ _ _.
+
 Definition iscatpushout_sym {A : Type} `{Is1Cat A}
   {a b c : A} {f : a $-> b} {g : a $-> c}
   (cat_po : A) `{!IsCatPushout f g cat_po}

@@ -267,23 +267,22 @@ End InducedFromEquiv.
 
 (** ** Symmetry of pullbacks *)
 
+Definition flip_cat_pb_corec_inv {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  (cat_pb : A) (cat_pb_pr1 : cat_pb $-> a) (cat_pb_pr2 : cat_pb $-> b)
+  (glue : f $o cat_pb_pr1 $== g $o cat_pb_pr2) (z : A)
+  : cate_flip_pullback_0gpd _ _ $o cat_pb_corec_inv _ _ _ cat_pb_pr1 cat_pb_pr2 glue z
+    $== cat_pb_corec_inv _ _ _ cat_pb_pr2 cat_pb_pr1 (glue^$) z
+  := fun _ => (Id _, Id _).
+
 Definition iscatpullback_sym {A : Type} `{Is1Cat A}
   {a b c : A} {f : a $-> c} {g : b $-> c}
   (cat_pb : A) `{!IsCatPullback f g cat_pb}
   : IsCatPullback g f cat_pb.
 Proof.
-  snapply (Build_IsCatPullback g f cat_pb).
-  - exact cat_pb_pr2.
-  - exact cat_pb_pr1.
-  - exact cat_pb_glue^$.
-  - intros z h k p.
-    exact (cat_pb_corec k h p^$).
-  - intros z h k p.
-    exact (cat_pb_corec_beta_pr2 k h p^$).
-  - intros z h k p.
-    exact (cat_pb_corec_beta_pr1 k h p^$).
-  - intros z k h p1 p2.
-    exact (cat_pb_pr_eta k h p2 p1).
+  apply (Build_IsCatPullback' _ _ _ cat_pb_pr2 cat_pb_pr1 cat_pb_glue^$).
+  intro z.
+  exact (catie_homotopic _ (flip_cat_pb_corec_inv f g _ _ _ _ z)).
 Defined.
 
 (** ** Categories with pullbacks *)

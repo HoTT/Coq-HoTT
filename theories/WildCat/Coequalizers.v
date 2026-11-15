@@ -196,6 +196,16 @@ End InducedFromEquiv.
 
 (** ** Symmetry *)
 
+Definition flip_cat_coeq_rec_inv {A : Type} `{Is1Cat A}
+  {a b : A} (f g : a $-> b)
+  (cat_coeq : A) (cat_coeq_proj : b $-> cat_coeq)
+  (glue : cat_coeq_proj $o f $== cat_coeq_proj $o g)
+  (z : A)
+  : cate_flip_equalizer_0gpd _ _ $o
+    cat_coeq_rec_inv f g _ _ glue z
+    $== cat_coeq_rec_inv g f _ _ (glue^$) z
+  := flip_cat_eq_corec_inv (A:=A^op) (a:=b) _ _ _ _ _ _.
+
 (** A coequalizer of [f] and [g] is also a coequalizer of [g] and [f]. *)
 Definition iscatcoequalizer_sym {A : Type} `{Is1Cat A}
   {a b : A} {f g : a $-> b}

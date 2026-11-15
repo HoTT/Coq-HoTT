@@ -371,3 +371,26 @@ Section ZeroGpdEqualizer.
     := fun z => p z.
 
 End ZeroGpdEqualizer.
+
+(** Taking equalizers of 0-groupoids is symmetric. *)
+Definition flip_equalizer_0gpd {G H : ZeroGpd} (g h : G $-> H)
+  : equalizer_0gpd g h $-> equalizer_0gpd h g.
+Proof.
+  snapply Build_Fun01'.
+  - intros [x p]; exact (x; p^$).
+  - cbn. intros ? ? q; exact q.
+Defined.
+
+Definition involutive_flip_equalizer_0gpd {G H : ZeroGpd} (g h : G $-> H)
+  : flip_equalizer_0gpd g h $o flip_equalizer_0gpd h g $== Id _.
+Proof.
+  intros ?; cbn; reflexivity.
+Defined.
+
+Definition cate_flip_equalizer_0gpd {G H : ZeroGpd} (g h : G $-> H)
+  : equalizer_0gpd g h $<~> equalizer_0gpd h g.
+Proof.
+  snapply cate_adjointify.
+  1,2: apply flip_equalizer_0gpd.
+  1,2: apply involutive_flip_equalizer_0gpd.
+Defined.
