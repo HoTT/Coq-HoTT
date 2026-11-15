@@ -4,7 +4,7 @@ From HoTT.WildCat Require Import Core Equiv ZeroGroupoid EquivGpd
 
 (** * Categories with equalizers *)
 
-(** When [eq] is the source object in a double arrow diagram, then for any object [z] we get a commuting diagram of 0-groupoids by applying the functor [z $-> -], which is [opyon_0gpd z].  Thus there is a natural map of 0-groupoids from [z $-> eq] to the 0-groupoid equalizer of
+(** When [cat_eq] is the source object in a double arrow diagram, then for any object [z] we get a commuting diagram of 0-groupoids by applying the functor [z $-> -], which is [opyon_0gpd z].  Thus there is a natural map of 0-groupoids from [z $-> cat_eq] to the 0-groupoid equalizer of
 
 <<
                   -->
@@ -15,9 +15,9 @@ In this diagram, the hom sets are regarded as 0-groupoids and the top-level arro
 
 Definition cat_eq_corec_inv {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b)
-  (eq : A) (inj : eq $-> a) (glue : f $o inj $== g $o inj)
+  (cat_eq : A) (inj : cat_eq $-> a) (glue : f $o inj $== g $o inj)
   (z : A)
-  : opyon_0gpd z eq $-> equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g).
+  : opyon_0gpd z cat_eq $-> equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g).
 Proof.
   snapply equiv_equalizer_0gpd_corec.
   exists (fmap _ inj).
@@ -252,7 +252,7 @@ Class HasEqualizers (A : Type) `{Is1Cat A}
 
 (** *** Equalizers in ZeroGpd *)
 
-Instance has_equalizers_0gpd : HasEqualizers ZeroGpd.
+Instance hasequalizers_0gpd : HasEqualizers ZeroGpd.
 Proof.
   intros G H f g.
   snapply (Build_CatEqualizer f g (equalizer_0gpd f g)

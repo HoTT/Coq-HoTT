@@ -6,7 +6,7 @@ From HoTT.WildCat Require Import Core Equiv EquivGpd Universe Yoneda
 
 (** * Categories with pullbacks *)
 
-(** When [pb] is the source object in a commuting square, then for any object [z] we get a commuting square of 0-groupoids by applying the functor [z $-> -], which is [opyon_0gpd z].  Thus there is a natural map of 0-groupoids from [z $-> pb] to the 0-groupoid pullback of
+(** When [cat_pb] is the source object in a commuting square, then for any object [z] we get a commuting square of 0-groupoids by applying the functor [z $-> -], which is [opyon_0gpd z].  Thus there is a natural map of 0-groupoids from [z $-> cat_pb] to the 0-groupoid pullback of
 <<
                       (z $-> b)
                           |
@@ -18,9 +18,9 @@ In this diagram, the hom sets are regarded as 0-groupoids and the top-level arro
 
 Definition cat_pb_corec_inv {A : Type} `{Is1Cat A}
   {a b c : A} (f : a $-> c) (g : b $-> c)
-  (pb : A) (pra : pb $-> a) (prb : pb $-> b) (glue : f $o pra $== g $o prb)
+  (cat_pb : A) (pra : cat_pb $-> a) (prb : cat_pb $-> b) (glue : f $o pra $== g $o prb)
   (z : A)
-  : opyon_0gpd z pb $-> pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g).
+  : opyon_0gpd z cat_pb $-> pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g).
 Proof.
   snapply equiv_pullback_0gpd_corec.
   exists (fmap _ pra).  (* The underscores are [opyon_0gpd z]. *)
@@ -123,12 +123,12 @@ Section Lemmata.
     : cat_pb_pr2 $o cat_pb_corec h k p $== k
     := snd (cate_isretr cate_pb_corec_inv (h; k; p)).
 
-  Definition cat_pb_postcomp_glue (h : z $-> cat_pb)
+  Definition cat_pb_pr_postcomp_glue (h : z $-> cat_pb)
     : f $o (cat_pb_pr1 $o h) $== g $o (cat_pb_pr2 $o h)
     := (cat_assoc _ _ _)^$ $@ (cat_pb_glue $@R h) $@ cat_assoc _ _ _.
 
   Definition cat_pb_corec_eta_pr (h : z $-> cat_pb)
-    : cat_pb_corec (cat_pb_pr1 $o h) (cat_pb_pr2 $o h) (cat_pb_postcomp_glue h) $== h
+    : cat_pb_corec (cat_pb_pr1 $o h) (cat_pb_pr2 $o h) (cat_pb_pr_postcomp_glue h) $== h
     := cate_issect cate_pb_corec_inv h.
 
   Definition cat_pb_corec_eta (h h' : z $-> a) (k k' : z $-> b)
@@ -227,7 +227,7 @@ Section InducedFromEquiv.
     snapply (Build_IsCatPullback f g y).
     - exact (cat_pb_pr1 $o h).
     - exact (cat_pb_pr2 $o h).
-    - exact (cat_pb_postcomp_glue f g _ h).
+    - exact (cat_pb_pr_postcomp_glue f g _ h).
     - intros z k1 k2 p.
       exact (h^-1$ $o cat_pb_corec f g z k1 k2 p).
     - intros z k1 k2 p; cbn beta.
