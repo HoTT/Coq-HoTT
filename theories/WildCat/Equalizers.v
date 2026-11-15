@@ -11,7 +11,7 @@ From HoTT.WildCat Require Import Core Equiv ZeroGroupoid EquivGpd
         (z $-> a)     (z $-> b)
                   -->
 >>
-In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors).*)
+In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors). *)
 
 Definition cat_eq_corec_inv {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b)
@@ -31,7 +31,7 @@ Class IsCatEqualizer {A : Type} `{Is1Cat A} {a b : A} (f g : a $-> b) (cat_eq : 
     cat_eq_glue : f $o cat_eq_inj $== g $o cat_eq_inj;
     catie_cat_eq_corec_inv
       :: forall z : A, CatIsEquiv (cat_eq_corec_inv f g
-                                cat_eq cat_eq_inj cat_eq_glue z);
+                                  cat_eq cat_eq_inj cat_eq_glue z);
   }.
 
 Arguments Build_IsCatEqualizer' {A IsGraph Is2Graph Is01Cat H a b}
@@ -86,14 +86,15 @@ Section Lemmata.
     `{!IsCatEqualizer f g cat_eq}
     {z : A}.
 
-  Definition cate_eq_corec_inv : opyon_0gpd z cat_eq $<~>
+  Definition cate_eq_corec_inv
+    : opyon_0gpd z cat_eq $<~>
         equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
     := Build_CatEquiv _.
 
   Definition cate_eq_corec
     : equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
       $<~> opyon_0gpd z cat_eq
-  := cate_eq_corec_inv^-1$.
+    := cate_eq_corec_inv^-1$.
 
   Definition cat_eq_corec
     (h : z $-> a) (p : f $o h $== g $o h)
@@ -167,8 +168,7 @@ Definition natequiv_cat_eq_corec_inv {A : Type} `{Is1Cat A}
 Proof.
   snapply Build_NatEquiv.
   - intro z; exact cate_eq_corec_inv.
-  - exact (is1natural_yoneda_0gpd cat_eq
-    (fun z : A => equalizer_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g))
+  - exact (is1natural_yoneda_0gpd cat_eq _
     (cat_eq_inj; cat_eq_glue)).
 Defined.
 
@@ -267,7 +267,7 @@ Defined.
 
 (** The equalizer map is a monomorphism. *)
 
-#[export] Instance monic_cat_equalizer {A : Type} `{Is1Cat A}
+Instance monic_cat_equalizer {A : Type} `{Is1Cat A}
   {a b : A} (f g : a $-> b) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
   : Monic cat_eq_inj.
 Proof.
@@ -275,7 +275,7 @@ Proof.
   exact (isinj_equiv_0gpd cate_eq_corec_inv p).
 Defined.
 
-(** Equalizers define a subclass of strong monomorphisms, namely monos which have the right lifting property against epis. *)
+(** A strong monomorphism is a monomorphism which has the right lifting property against epimorphisms. *)
 
 (** TODO: The topic of strong monics is not about equalizers. If this will ever be expanded upon in the future, then it should get its own file. *)
 
@@ -290,8 +290,9 @@ Class StrongMonic {A : Type} `{Is1Cat A} {a b : A} (m : a $-> b) := {
 Arguments rlp_strongmonic {A _ _ _ _ a b m _ a' b' e u v} sq.
 Arguments rlp_lcomm_strongmonic {A _ _ _ _ a b m _ a' b' e u v} sq.
 
-Definition rlp_ucomm_strongmonic {A : Type} `{Is1Cat A} {a b : A} {m : a $-> b} `{!StrongMonic m}
-  {a' b'} {e : a' $->> b'} {u : a' $-> a} {v : b' $-> b} (sq : v $o e $== m $o u)
+Definition rlp_ucomm_strongmonic {A : Type} `{Is1Cat A} {a b : A}
+  {m : a $-> b} `{!StrongMonic m} {a' b'} {e : a' $->> b'}
+  {u : a' $-> a} {v : b' $-> b} (sq : v $o e $== m $o u)
   : rlp_strongmonic sq $o e $== u.
 Proof.
   rapply (ismonic m).
@@ -300,8 +301,9 @@ Proof.
   exact sq.
 Defined.
 
-Definition rlp_unique_strongmonic {A : Type} `{Is1Cat A} {a b : A} {m : a $-> b} `{!StrongMonic m}
-  {a' b'} {e : a' $->> b'} {u : a' $-> a} {v : b' $-> b} (sq : v $o e $== m $o u)
+Definition rlp_unique_strongmonic {A : Type} `{Is1Cat A} {a b : A}
+  {m : a $-> b} `{!StrongMonic m} {a' b'} {e : a' $->> b'}
+  {u : a' $-> a} {v : b' $-> b} (sq : v $o e $== m $o u)
   {h : b' $-> a} (ltr : m $o h $== v)
   : rlp_strongmonic sq $== h.
 Proof.
@@ -311,11 +313,10 @@ Proof.
 Defined.
 
 (** The map [cat_eq_inj] is a strong monic. *)
-#[export] Instance strongmonic_equalizer {A : Type} `{Is1Cat A} {b c : A}
-  (f g : b $-> c) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
+Instance strongmonic_equalizer {A : Type} `{Is1Cat A} {a b : A}
+  (f g : a $-> b) {cat_eq : A} `{!IsCatEqualizer f g cat_eq}
   : StrongMonic cat_eq_inj.
 Proof.
-  set (m := cat_eq_inj).
   srapply Build_StrongMonic.
   - intros a' b' e u v sq.
     apply (cat_eq_corec v).

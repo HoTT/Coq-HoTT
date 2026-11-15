@@ -29,7 +29,8 @@ Proof.
 Defined.
 
 (** A pullback is an object completing [f] and [g] to a commuting square such that the map above is an equivalence of 0-groupoids for each [z].  The name [Pullback] is used for the construction in Limits.Pullback, so we use CatPullback here. *)
-Class IsCatPullback {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c) (cat_pb : A)
+Class IsCatPullback {A : Type} `{Is1Cat A} {a b c : A}
+  (f : a $-> c) (g : b $-> c) (cat_pb : A)
   := Build_IsCatPullback' {
     cat_pb_pr1 : cat_pb $-> a;
     cat_pb_pr2 : cat_pb $-> b;
@@ -194,8 +195,7 @@ Definition natequiv_cat_pb_corec_inv {A : Type} `{Is1Cat A}
 Proof.
   snapply Build_NatEquiv.
   - intro z; exact cate_pb_corec_inv.
-  - exact (is1natural_yoneda_0gpd cat_pb
-      (fun z : A => pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g))
+  - exact (is1natural_yoneda_0gpd cat_pb _
       (cat_pb_pr1; (cat_pb_pr2; cat_pb_glue))).
 Defined.
 
@@ -257,7 +257,8 @@ Section InducedFromEquiv.
     := Id _.
 
   (** The induced corecursion is given by the equivalence. *)
-  Definition cat_pb_corec_comp {z : A} (k1 : z $-> a) (k2 : z $-> b) (p : f $o k1 $== g $o k2)
+  Definition cat_pb_corec_comp {z : A} (k1 : z $-> a) (k2 : z $-> b)
+    (p : f $o k1 $== g $o k2)
     : h $o cat_pb_corec (cat_pb:=y) k1 k2 p
       $== cat_pb_corec k1 k2 p
     := compose_h_Vh _ _.
@@ -285,7 +286,6 @@ Proof.
     exact (cat_pb_pr_eta k h p2 p1).
 Defined.
 
-
 (** ** Categories with pullbacks *)
 
 Class HasPullbacks (A : Type) `{Is1Cat A}
@@ -296,7 +296,7 @@ Class HasPullbacks (A : Type) `{Is1Cat A}
 Section Induced.
 
   (** If the 1-category structure on [A] is induced from that on [B] along a map [F], the pullback of [F f] and [F g] exists in [B], and that pullback object is in the image of [F] up to categorical equivalence, then the preimage is also a pullback.  Typically this will be applied with [h] being an identity equivalence (or [reflexivity]), but it would be awkward to state this lemma assuming that. *)
-  Instance cat_pb_induced {A B} `{Is1Cat B} `{!HasEquivs B}
+  Local Instance cat_pb_induced {A B} `{Is1Cat B} `{!HasEquivs B}
     (F : A -> B)
     {a b c : A} (f : F a $-> F c) (g : F b $-> F c)
     {cat_pb_b : B} `{!IsCatPullback f g cat_pb_b}
@@ -311,9 +311,10 @@ Section Induced.
     - intro z; exact cat_pb_pr_eta.
   Defined.
 
-  Instance haspullbacks_induced {A B} `{HasPullbacks B} `{!HasEquivs B}
+  Local Instance haspullbacks_induced {A B} `{HasPullbacks B} `{!HasEquivs B}
     (F : A -> B)
-    (K : forall (a b c : A) (f : F a $-> F c) (g : F b $-> F c), exists q, F q $<~> cat_pb f g)
+    (K : forall (a b c : A) (f : F a $-> F c) (g : F b $-> F c),
+      exists q, F q $<~> cat_pb f g)
     : HasPullbacks A (H:=is1cat_induced F).
   Proof.
     intros a b c f g.
