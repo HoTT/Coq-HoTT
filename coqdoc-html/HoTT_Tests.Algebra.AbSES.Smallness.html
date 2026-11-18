@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT_Tests.Algebra.AbSES.Smallness</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT_Tests.Algebra.AbSES.Smallness</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Types.Universe.html#"><span class="id" title="library">Types.Universe</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#"><span class="id" title="library">Algebra.AbGroups.AbelianGroup</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbSES.Core.html#"><span class="id" title="library">Algebra.AbSES.Core</span></a> <a class="idref" href="HoTT.Algebra.AbSES.Ext.html#"><span class="id" title="library">Algebra.AbSES.Ext</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbSES.Classification.html#"><span class="id" title="library">Algebra.AbSES.Classification</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typeclass search should show that <span class="inlinecode"><a class="idref" href="HoTT.Algebra.AbSES.Core.html#AbSES"><span class="id" title="definition">AbSES</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Sigma.html#Sigma.B"><span class="id" title="variable">B</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Square.html#Squares2.A"><span class="id" title="variable">A</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Algebra.AbSES.Ext.html#Ext"><span class="id" title="definition">Ext</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Sigma.html#Sigma.B"><span class="id" title="variable">B</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Square.html#Squares2.A"><span class="id" title="variable">A</span></a></span> are small in the universe of <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Sigma.html#Sigma.B"><span class="id" title="variable">B</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Square.html#Squares2.A"><span class="id" title="variable">A</span></a></span>, not merely in some larger universe. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Smallness" class="idref" href="#Smallness"><span class="id" title="section">Smallness</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Universe</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>} {<a id="Smallness.B" class="idref" href="#Smallness.B"><span class="id" title="variable">B</span></a> <a id="Smallness.A" class="idref" href="#Smallness.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup@</span></a>{<span class="id" title="var">u</span>}}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="test_issmall_abses" class="idref" href="#test_issmall_abses"><span class="id" title="definition">test_issmall_abses</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsSmall"><span class="id" title="class">IsSmall@</span></a>{<span class="id" title="var">u</span> <span class="id" title="var">_</span>} (<a class="idref" href="HoTT.Algebra.AbSES.Core.html#AbSES"><span class="id" title="definition">AbSES</span></a> <a class="idref" href="HoTT_Tests.Algebra.AbSES.Smallness.html#Smallness.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT_Tests.Algebra.AbSES.Smallness.html#Smallness.A"><span class="id" title="variable">A</span></a>) := <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="test_issmall_ext" class="idref" href="#test_issmall_ext"><span class="id" title="definition">test_issmall_ext</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsSmall"><span class="id" title="class">IsSmall@</span></a>{<span class="id" title="var">u</span> <span class="id" title="var">_</span>} (<a class="idref" href="HoTT.Algebra.AbSES.Ext.html#Ext"><span class="id" title="definition">Ext</span></a> <a class="idref" href="HoTT_Tests.Algebra.AbSES.Smallness.html#Smallness.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT_Tests.Algebra.AbSES.Smallness.html#Smallness.A"><span class="id" title="variable">A</span></a>) := <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT_Tests.Algebra.AbSES.Smallness.html#Smallness"><span class="id" title="section">Smallness</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

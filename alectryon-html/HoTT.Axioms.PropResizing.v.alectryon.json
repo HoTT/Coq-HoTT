@@ -1,0 +1,40 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** To assume the [PropResizing] axiom outright, import this file. (Doing this instead of simply positing [PropResizing] directly avoids creating multiple witnesses for the axiom in different developments.) *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Axiom propresizing_axiom : PropResizing.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Existing Instance propresizing_axiom.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

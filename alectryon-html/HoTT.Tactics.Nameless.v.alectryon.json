@@ -1,0 +1,188 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** * Building blocks for a globally nameless style of tactic reasoning *)\n\n(** ** [hyp] returns any hypothesis, with subsequent failures backtracking through all hypotheses *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac hyp := multimatch goal with H : _ |- _ => constr:(H) end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** [enforce foo] ensures that [foo] is well-typed *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"enforce\" open_constr(term) := idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** [syntax_enforce [ H := body ]] ensures that [H] has a body which is syntactically equal to [body] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"syntax_enforce\" \"[\" constr(H) \":=\" open_constr(body) \"]\" := let H' := (eval unfold H in H) in constr_eq H' body.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** [enforce [ x = y ]] ensures that two terms, possibly containing holes, are judgmentally equal *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"enforce\" \"[\" open_constr(x) \"=\" open_constr(y) \"]\" := unify x y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** An example *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Goal Empty -> let X0 := tt in Empty -> Unit.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty -> let X0 := tt in Empty -> Unit",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty -> let X0 := tt in Empty -> Unit",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": "tt",
+              "type": "Unit"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "let H := hyp in\n  enforce (H : Unit);\n    syntax_enforce [ H := tt ];\n    enforce [ H = _ ];\n    enforce [ _ = H ];\n    enforce [ H = tt ].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": "tt",
+              "type": "Unit"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,17 @@
+digraph HoTT_Types_Empty {
+  graph [ratio=0.5]
+  node [style=filled]
+Empty_equiv_to_empty [label="equiv_to_empty", URL=<Empty.html#equiv_to_empty>, peripheries=3, fillcolor="#F070D1"] ;
+Empty_isequiv_all_to_empty [label="isequiv_all_to_empty", URL=<Empty.html#isequiv_all_to_empty>, fillcolor="#F070D1"] ;
+Empty_istrunc_Empty [label="istrunc_Empty", URL=<Empty.html#istrunc_Empty>, peripheries=3, fillcolor="#F070D1"] ;
+Empty_equiv_empty_rec [label="equiv_empty_rec", URL=<Empty.html#equiv_empty_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Empty_isequiv_empty_rec [label="isequiv_empty_rec", URL=<Empty.html#isequiv_empty_rec>, fillcolor="#F070D1"] ;
+Empty_Empty_rec [label="Empty_rec", URL=<Empty.html#Empty_rec>, fillcolor="#F070D1"] ;
+Empty_contr_from_Empty [label="contr_from_Empty", URL=<Empty.html#contr_from_Empty>, peripheries=3, fillcolor="#F070D1"] ;
+  Empty_equiv_to_empty -> Empty_isequiv_all_to_empty [] ;
+  Empty_isequiv_all_to_empty -> Empty_Empty_rec [] ;
+  Empty_equiv_empty_rec -> Empty_isequiv_empty_rec [] ;
+  Empty_isequiv_empty_rec -> Empty_Empty_rec [] ;
+subgraph cluster_Empty { label="Empty"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Empty_contr_from_Empty; Empty_Empty_rec; Empty_isequiv_empty_rec; Empty_equiv_empty_rec; Empty_istrunc_Empty; Empty_isequiv_all_to_empty; Empty_equiv_to_empty; };
+} /* END */

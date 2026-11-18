@@ -1,0 +1,56 @@
+digraph HoTT_Sets_GCHtoAC {
+  graph [ratio=0.5]
+  node [style=filled]
+GCHtoAC_GCH_AC [label="GCH_AC", URL=<GCHtoAC.html#GCH_AC>, peripheries=3, fillcolor="#F070D1"] ;
+GCHtoAC_GCH_injects [label="GCH_injects", URL=<GCHtoAC.html#GCH_injects>, fillcolor="#F070D1"] ;
+GCHtoAC_GCH_injects_ [label="GCH_injects'", URL=<GCHtoAC.html#GCH_injects'>, fillcolor="#F070D1"] ;
+GCHtoAC_Sierpinski_step [label="Sierpinski_step", URL=<GCHtoAC.html#Sierpinski_step>, fillcolor="#F070D1"] ;
+GCHtoAC_InjectsInto_sum [label="InjectsInto_sum", URL=<GCHtoAC.html#InjectsInto_sum>, fillcolor="#F070D1"] ;
+GCHtoAC_powfix [label="powfix", URL=<GCHtoAC.html#powfix>, fillcolor="#F070D1"] ;
+GCHtoAC_Cantor_injects_injects [label="Cantor_injects_injects", URL=<GCHtoAC.html#Cantor_injects_injects>, fillcolor="#F070D1"] ;
+GCHtoAC_InjectsInto_power_morph [label="InjectsInto_power_morph", URL=<GCHtoAC.html#InjectsInto_power_morph>, fillcolor="#F070D1"] ;
+GCHtoAC_Cantor_rel [label="Cantor_rel", URL=<GCHtoAC.html#Cantor_rel>, fillcolor="#F070D1"] ;
+GCHtoAC_Cantor_path_injection [label="Cantor_path_injection", URL=<GCHtoAC.html#Cantor_path_injection>, peripheries=3, fillcolor="#F070D1"] ;
+GCHtoAC_clean_sum [label="clean_sum", URL=<GCHtoAC.html#clean_sum>, fillcolor="#F070D1"] ;
+GCHtoAC_hCantor [label="hCantor", URL=<GCHtoAC.html#hCantor>, fillcolor="#F070D1"] ;
+GCHtoAC_Cantor [label="Cantor", URL=<GCHtoAC.html#Cantor>, peripheries=3, fillcolor="#F070D1"] ;
+GCHtoAC_path_infinite_power [label="path_infinite_power", URL=<GCHtoAC.html#path_infinite_power>, fillcolor="#F070D1"] ;
+GCHtoAC_path_infinite_unit [label="path_infinite_unit", URL=<GCHtoAC.html#path_infinite_unit>, fillcolor="#F070D1"] ;
+GCHtoAC_path_ran [label="path_ran", URL=<GCHtoAC.html#path_ran>, fillcolor="#F070D1"] ;
+GCHtoAC_ran [label="ran", URL=<GCHtoAC.html#ran>, fillcolor="#F070D1"] ;
+GCHtoAC_path_pred_sum [label="path_pred_sum", URL=<GCHtoAC.html#path_pred_sum>, fillcolor="#F070D1"] ;
+GCHtoAC_path_bool_subsingleton [label="path_bool_subsingleton", URL=<GCHtoAC.html#path_bool_subsingleton>, fillcolor="#F070D1"] ;
+GCHtoAC_path_bool_prop [label="path_bool_prop", URL=<GCHtoAC.html#path_bool_prop>, fillcolor="#F070D1"] ;
+GCHtoAC_path_unit_fun [label="path_unit_fun", URL=<GCHtoAC.html#path_unit_fun>, fillcolor="#F070D1"] ;
+GCHtoAC_path_unit_nat [label="path_unit_nat", URL=<GCHtoAC.html#path_unit_nat>, fillcolor="#F070D1"] ;
+GCHtoAC_path_sum_bool [label="path_sum_bool", URL=<GCHtoAC.html#path_sum_bool>, fillcolor="#F070D1"] ;
+GCHtoAC_path_sum_assoc [label="path_sum_assoc", URL=<GCHtoAC.html#path_sum_assoc>, fillcolor="#F070D1"] ;
+GCHtoAC_path_sum_prod [label="path_sum_prod", URL=<GCHtoAC.html#path_sum_prod>, fillcolor="#F070D1"] ;
+  GCHtoAC_GCH_AC -> GCHtoAC_GCH_injects [] ;
+  GCHtoAC_GCH_injects -> GCHtoAC_GCH_injects_ [] ;
+  GCHtoAC_GCH_injects_ -> GCHtoAC_Sierpinski_step [] ;
+  GCHtoAC_GCH_injects_ -> GCHtoAC_path_infinite_power [] ;
+  GCHtoAC_Sierpinski_step -> GCHtoAC_InjectsInto_sum [] ;
+  GCHtoAC_Sierpinski_step -> GCHtoAC_powfix [] ;
+  GCHtoAC_Sierpinski_step -> GCHtoAC_Cantor_injects_injects [] ;
+  GCHtoAC_Cantor_injects_injects -> GCHtoAC_InjectsInto_power_morph [] ;
+  GCHtoAC_Cantor_injects_injects -> GCHtoAC_Cantor_rel [] ;
+  GCHtoAC_Cantor_injects_injects -> GCHtoAC_clean_sum [] ;
+  GCHtoAC_Cantor_injects_injects -> GCHtoAC_path_sum_prod [] ;
+  GCHtoAC_Cantor_path_injection -> GCHtoAC_clean_sum [] ;
+  GCHtoAC_Cantor_path_injection -> GCHtoAC_hCantor [] ;
+  GCHtoAC_Cantor_path_injection -> GCHtoAC_path_sum_prod [] ;
+  GCHtoAC_path_infinite_power -> GCHtoAC_path_infinite_unit [] ;
+  GCHtoAC_path_infinite_power -> GCHtoAC_path_bool_subsingleton [] ;
+  GCHtoAC_path_infinite_power -> GCHtoAC_path_sum_bool [] ;
+  GCHtoAC_path_infinite_power -> GCHtoAC_path_sum_prod [] ;
+  GCHtoAC_path_infinite_unit -> GCHtoAC_path_ran [] ;
+  GCHtoAC_path_infinite_unit -> GCHtoAC_path_pred_sum [] ;
+  GCHtoAC_path_infinite_unit -> GCHtoAC_path_unit_nat [] ;
+  GCHtoAC_path_infinite_unit -> GCHtoAC_path_sum_assoc [] ;
+  GCHtoAC_path_ran -> GCHtoAC_ran [] ;
+  GCHtoAC_path_bool_subsingleton -> GCHtoAC_path_bool_prop [] ;
+  GCHtoAC_path_bool_subsingleton -> GCHtoAC_path_unit_fun [] ;
+subgraph cluster_GCHtoAC { label="GCHtoAC"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+GCHtoAC_path_sum_prod; GCHtoAC_path_sum_assoc; GCHtoAC_path_sum_bool; GCHtoAC_path_unit_nat; GCHtoAC_path_unit_fun; GCHtoAC_path_bool_prop; GCHtoAC_path_bool_subsingleton; GCHtoAC_path_pred_sum; GCHtoAC_ran; GCHtoAC_path_ran; GCHtoAC_path_infinite_unit; GCHtoAC_path_infinite_power; GCHtoAC_Cantor; GCHtoAC_hCantor; GCHtoAC_clean_sum; GCHtoAC_Cantor_path_injection; GCHtoAC_Cantor_rel; GCHtoAC_InjectsInto_power_morph; GCHtoAC_Cantor_injects_injects; GCHtoAC_powfix; GCHtoAC_InjectsInto_sum; GCHtoAC_Sierpinski_step; GCHtoAC_GCH_injects_; GCHtoAC_GCH_injects; GCHtoAC_GCH_AC; };
+} /* END */

@@ -1,0 +1,25 @@
+digraph HoTT_Classes_orders_dec_fields {
+  graph [ratio=0.5]
+  node [style=filled]
+dec_fields_flip_lt_dec_recip_r [label="flip_lt_dec_recip_r", URL=<dec_fields.html#flip_lt_dec_recip_r>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_flip_lt_dec_recip_l [label="flip_lt_dec_recip_l", URL=<dec_fields.html#flip_lt_dec_recip_l>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_flip_lt_dec_recip [label="flip_lt_dec_recip", URL=<dec_fields.html#flip_lt_dec_recip>, fillcolor="#F070D1"] ;
+dec_fields_flip_le_dec_recip_r [label="flip_le_dec_recip_r", URL=<dec_fields.html#flip_le_dec_recip_r>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_flip_le_dec_recip_l [label="flip_le_dec_recip_l", URL=<dec_fields.html#flip_le_dec_recip_l>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_flip_le_dec_recip [label="flip_le_dec_recip", URL=<dec_fields.html#flip_le_dec_recip>, fillcolor="#F070D1"] ;
+dec_fields_nonpos_dec_recip_compat [label="nonpos_dec_recip_compat", URL=<dec_fields.html#nonpos_dec_recip_compat>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_neg_dec_recip_compat [label="neg_dec_recip_compat", URL=<dec_fields.html#neg_dec_recip_compat>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_nonneg_dec_recip_compat [label="nonneg_dec_recip_compat", URL=<dec_fields.html#nonneg_dec_recip_compat>, fillcolor="#F070D1"] ;
+dec_fields_pos_dec_recip_compat [label="pos_dec_recip_compat", URL=<dec_fields.html#pos_dec_recip_compat>, fillcolor="#F070D1"] ;
+  dec_fields_flip_lt_dec_recip_r -> dec_fields_flip_lt_dec_recip [] ;
+  dec_fields_flip_lt_dec_recip_l -> dec_fields_flip_lt_dec_recip [] ;
+  dec_fields_flip_lt_dec_recip_l -> dec_fields_pos_dec_recip_compat [] ;
+  dec_fields_flip_le_dec_recip_r -> dec_fields_flip_le_dec_recip [] ;
+  dec_fields_flip_le_dec_recip_l -> dec_fields_flip_le_dec_recip [] ;
+  dec_fields_flip_le_dec_recip_l -> dec_fields_pos_dec_recip_compat [] ;
+  dec_fields_nonpos_dec_recip_compat -> dec_fields_nonneg_dec_recip_compat [] ;
+  dec_fields_neg_dec_recip_compat -> dec_fields_pos_dec_recip_compat [] ;
+  dec_fields_nonneg_dec_recip_compat -> dec_fields_pos_dec_recip_compat [] ;
+subgraph cluster_dec_fields { label="dec_fields"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+dec_fields_pos_dec_recip_compat; dec_fields_nonneg_dec_recip_compat; dec_fields_neg_dec_recip_compat; dec_fields_nonpos_dec_recip_compat; dec_fields_flip_le_dec_recip; dec_fields_flip_le_dec_recip_l; dec_fields_flip_le_dec_recip_r; dec_fields_flip_lt_dec_recip; dec_fields_flip_lt_dec_recip_l; dec_fields_flip_lt_dec_recip_r; };
+} /* END */

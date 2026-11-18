@@ -1,0 +1,70 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Classes Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Classes Require Import\n     interfaces.canonical_names\n     interfaces.orders\n     interfaces.rationals\n     theory.rationals.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Monomorphic Universe UQ.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Parameters (Q : Type@{UQ}) (Qap : Apart@{UQ UQ} Q)\n  (Qplus : Plus Q) (Qmult : Mult Q)\n  (Qzero : Zero Q) (Qone : One Q) (Qneg : Negate Q) (Qrecip : DecRecip Q)\n  (Qle : Le@{UQ UQ} Q) (Qlt : Lt@{UQ UQ} Q)\n  (QtoField : RationalsToField@{UQ UQ UQ UQ} Q)\n  (Qrats : Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q)\n  (Qtrivialapart : TrivialApart Q) (Qdec : DecidablePaths Q)\n  (Qmeet : Meet Q) (Qjoin : Join Q) (Qlattice : LatticeOrder Qle)\n  (Qle_total : TotalRelation (@le Q _))\n  (Qabs : Abs Q).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* I don't even want to know why this is necessary. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Parameter Qenum : Enumerable Q.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"Q+\" := (Qpos Q).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Existing Instances Qap Qplus Qmult Qzero Qone Qneg Qrecip\n         Qle Qlt QtoField Qrats Qtrivialapart Qdec\n         Qmeet Qjoin Qlattice Qle_total Qabs Qenum.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

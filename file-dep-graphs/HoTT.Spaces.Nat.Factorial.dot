@@ -1,0 +1,27 @@
+digraph HoTT_Spaces_Nat_Factorial {
+  graph [ratio=0.5]
+  node [style=filled]
+Factorial_nat_divides_factorial_mul_factorial_add_ [label="nat_divides_factorial_mul_factorial_add'", URL=<Factorial.html#nat_divides_factorial_mul_factorial_add'>, peripheries=3, fillcolor="#F070D1"] ;
+Factorial_nat_divides_factorial_mul_factorial_add [label="nat_divides_factorial_mul_factorial_add", URL=<Factorial.html#nat_divides_factorial_mul_factorial_add>, fillcolor="#F070D1"] ;
+Factorial_nat_divides_factorial_lt [label="nat_divides_factorial_lt", URL=<Factorial.html#nat_divides_factorial_lt>, peripheries=3, fillcolor="#F070D1"] ;
+Factorial_nat_divides_factorial_factor [label="nat_divides_factorial_factor", URL=<Factorial.html#nat_divides_factorial_factor>, peripheries=3, fillcolor="#F070D1"] ;
+Factorial_nat_factorial_strictly_monotone [label="nat_factorial_strictly_monotone", URL=<Factorial.html#nat_factorial_strictly_monotone>, peripheries=3, fillcolor="#F070D1"] ;
+Factorial_nat_factorial_strictly_monotone_succ [label="nat_factorial_strictly_monotone_succ", URL=<Factorial.html#nat_factorial_strictly_monotone_succ>, fillcolor="#F070D1"] ;
+Factorial_lt_zero_factorial [label="lt_zero_factorial", URL=<Factorial.html#lt_zero_factorial>, fillcolor="#F070D1"] ;
+Factorial_nat_factorial_pred [label="nat_factorial_pred", URL=<Factorial.html#nat_factorial_pred>, peripheries=3, fillcolor="#F070D1"] ;
+Factorial_nat_factorial_succ [label="nat_factorial_succ", URL=<Factorial.html#nat_factorial_succ>, fillcolor="#F070D1"] ;
+Factorial_nat_factorial_zero [label="nat_factorial_zero", URL=<Factorial.html#nat_factorial_zero>, peripheries=3, fillcolor="#F070D1"] ;
+Factorial_factorial [label="factorial", URL=<Factorial.html#factorial>, fillcolor="#F070D1"] ;
+  Factorial_nat_divides_factorial_mul_factorial_add_ -> Factorial_nat_divides_factorial_mul_factorial_add [] ;
+  Factorial_nat_divides_factorial_mul_factorial_add -> Factorial_nat_factorial_succ [] ;
+  Factorial_nat_divides_factorial_lt -> Factorial_factorial [] ;
+  Factorial_nat_divides_factorial_factor -> Factorial_factorial [] ;
+  Factorial_nat_factorial_strictly_monotone -> Factorial_nat_factorial_strictly_monotone_succ [] ;
+  Factorial_nat_factorial_strictly_monotone_succ -> Factorial_lt_zero_factorial [] ;
+  Factorial_lt_zero_factorial -> Factorial_factorial [] ;
+  Factorial_nat_factorial_pred -> Factorial_factorial [] ;
+  Factorial_nat_factorial_succ -> Factorial_factorial [] ;
+  Factorial_nat_factorial_zero -> Factorial_factorial [] ;
+subgraph cluster_Factorial { label="Factorial"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Factorial_factorial; Factorial_nat_factorial_zero; Factorial_nat_factorial_succ; Factorial_nat_factorial_pred; Factorial_lt_zero_factorial; Factorial_nat_factorial_strictly_monotone_succ; Factorial_nat_factorial_strictly_monotone; Factorial_nat_divides_factorial_factor; Factorial_nat_divides_factorial_lt; Factorial_nat_divides_factorial_mul_factorial_add; Factorial_nat_divides_factorial_mul_factorial_add_; };
+} /* END */

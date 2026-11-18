@@ -1,0 +1,34 @@
+digraph HoTT_Homotopy_Cofiber {
+  graph [ratio=0.5]
+  node [style=filled]
+Cofiber_isconnmap_isconnected_cofiber [label="isconnmap_isconnected_cofiber", URL=<Cofiber.html#isconnmap_isconnected_cofiber>, peripheries=3, fillcolor="#F070D1"] ;
+Cofiber_isconnected_fiber_to_cofiber [label="isconnected_fiber_to_cofiber", URL=<Cofiber.html#isconnected_fiber_to_cofiber>, fillcolor="#F070D1"] ;
+Cofiber_fiber_to_path_cofiber [label="fiber_to_path_cofiber", URL=<Cofiber.html#fiber_to_path_cofiber>, fillcolor="#F070D1"] ;
+Cofiber_isconnected_cofiber [label="isconnected_cofiber", URL=<Cofiber.html#isconnected_cofiber>, peripheries=3, fillcolor="#F070D1"] ;
+Cofiber_functor_cofiber_compose [label="functor_cofiber_compose", URL=<Cofiber.html#functor_cofiber_compose>, peripheries=3, fillcolor="#F070D1"] ;
+Cofiber_functor_cofiber_idmap [label="functor_cofiber_idmap", URL=<Cofiber.html#functor_cofiber_idmap>, peripheries=3, fillcolor="#F070D1"] ;
+Cofiber_functor_cofiber_homotopy [label="functor_cofiber_homotopy", URL=<Cofiber.html#functor_cofiber_homotopy>, peripheries=3, fillcolor="#F070D1"] ;
+Cofiber_functor_cofiber [label="functor_cofiber", URL=<Cofiber.html#functor_cofiber>, fillcolor="#F070D1"] ;
+Cofiber_cofiber_ind [label="cofiber_ind", URL=<Cofiber.html#cofiber_ind>, fillcolor="#F070D1"] ;
+Cofiber_cofiber_rec [label="cofiber_rec", URL=<Cofiber.html#cofiber_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Cofiber_cfglue [label="cfglue", URL=<Cofiber.html#cfglue>, fillcolor="#F070D1"] ;
+Cofiber_cf_apex [label="cf_apex", URL=<Cofiber.html#cf_apex>, fillcolor="#F070D1"] ;
+Cofiber_cofib [label="cofib", URL=<Cofiber.html#cofib>, fillcolor="#F070D1"] ;
+Cofiber_Cofiber [label="Cofiber", URL=<Cofiber.html#Cofiber>, fillcolor="#F070D1"] ;
+  Cofiber_isconnmap_isconnected_cofiber -> Cofiber_isconnected_fiber_to_cofiber [] ;
+  Cofiber_isconnected_fiber_to_cofiber -> Cofiber_fiber_to_path_cofiber [] ;
+  Cofiber_fiber_to_path_cofiber -> Cofiber_cfglue [] ;
+  Cofiber_isconnected_cofiber -> Cofiber_cofiber_ind [] ;
+  Cofiber_functor_cofiber_compose -> Cofiber_functor_cofiber [] ;
+  Cofiber_functor_cofiber_idmap -> Cofiber_functor_cofiber [] ;
+  Cofiber_functor_cofiber_homotopy -> Cofiber_functor_cofiber [] ;
+  Cofiber_functor_cofiber -> Cofiber_Cofiber [] ;
+  Cofiber_cofiber_ind -> Cofiber_cfglue [] ;
+  Cofiber_cofiber_rec -> Cofiber_Cofiber [] ;
+  Cofiber_cfglue -> Cofiber_cf_apex [] ;
+  Cofiber_cfglue -> Cofiber_cofib [] ;
+  Cofiber_cf_apex -> Cofiber_Cofiber [] ;
+  Cofiber_cofib -> Cofiber_Cofiber [] ;
+subgraph cluster_Cofiber { label="Cofiber"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Cofiber_Cofiber; Cofiber_cofib; Cofiber_cf_apex; Cofiber_cfglue; Cofiber_cofiber_rec; Cofiber_cofiber_ind; Cofiber_functor_cofiber; Cofiber_functor_cofiber_homotopy; Cofiber_functor_cofiber_idmap; Cofiber_functor_cofiber_compose; Cofiber_isconnected_cofiber; Cofiber_fiber_to_path_cofiber; Cofiber_isconnected_fiber_to_cofiber; Cofiber_isconnmap_isconnected_cofiber; };
+} /* END */

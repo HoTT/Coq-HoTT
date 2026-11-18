@@ -1,0 +1,450 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Squares of morphisms in a Wild Category.  *)\n\n(** These come up a lot as naturality squares. In this file we define basic operations on squares, to conveniently work with them. *)\n\n(** A Square is a cubical 2-cell in a 1-category. The order of the arguments is left-right-top-bottom: [Square l r t b].  It is defined to be [r $o t $== b $o l]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Square@{u v w} {A : Type@{u}} `{Is1Cat@{u w v} A} {x00 x20 x02 x22 : A}\n  (f01 : x00 $-> x02) (f21 : x20 $-> x22) (f10 : x00 $-> x20) (f12 : x02 $-> x22) \n  : Type@{w}\n  := f21 $o f10 $== f12 $o f01.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Squares.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* We declare a context with a lot of variables: the first component is horizontal, the second vertical.\n    x00 f10 x20 f30 x40\n    f01     f21     f41\n    x02 f12 x22 f32 x42\n    f03     f23     f43\n    x04 f14 x24 f34 x44 \n  All morphisms are pointed to the right or down. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} `{Is1Cat A} {x x' x00 x20 x40 x02 x22 x42 x04 x24 x44 : A}\n    {f10 f10' : x00 $-> x20} {f30 : x20 $-> x40} \n    {f12 f12' : x02 $-> x22} {f32 : x22 $-> x42} \n    {f14 : x04 $-> x24} {f34 : x24 $-> x44}\n    {f01 f01' : x00 $-> x02} {f21 f21' : x20 $-> x22} {f41 f41' : x40 $-> x42}\n    {f03 : x02 $-> x04} {f23 : x22 $-> x24} {f43 : x42 $-> x44}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We give a \"constructor\" and \"destructor\" for squares. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_Square (p : f21 $o f10 $== f12 $o f01) : Square f01 f21 f10 f12 := p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition gpdhom_square (s : Square f01 f21 f10 f12) : f21 $o f10 $== f12 $o f01 := s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Squares degenerate in two sides given by a single 2-morphism. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hdeg_square {f f' : x $-> x'} (p : f $== f') : Square f f' (Id x) (Id x')\n    := cat_idr f' $@ p^$ $@ (cat_idl f)^$.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition vdeg_square {f f' : x $-> x'} (p : f $== f') : Square (Id x) (Id x') f f'\n    := cat_idl f $@ p $@ (cat_idr f')^$.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Squares degenerate in two sides given by the identity 2-morphism at some morphism. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hrefl (f : x $-> x') : Square f f (Id x) (Id x') := hdeg_square (Id f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition vrefl (f : x $-> x') : Square (Id x) (Id x') f f := vdeg_square (Id f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The transpose of a square *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition transpose (s : Square f01 f21 f10 f12) : Square f10 f12 f01 f21 := s^$.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Horizontal and vertical concatenation of squares *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hconcat (s : Square f01 f21 f10 f12) (t : Square f21 f41 f30 f32)\n    : Square f01 f41 (f30 $o f10) (f32 $o f12)\n    := (cat_assoc _ _ _)^$ $@ (t $@R f10) $@ cat_assoc _ _ _ $@ (f32 $@L s) $@ (cat_assoc _ _ _)^$.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition vconcat (s : Square f01 f21 f10 f12) (t : Square f03 f23 f12 f14)\n    : Square (f03 $o f01) (f23 $o f21) f10 f14\n  := cat_assoc _ _ _ $@ (f23 $@L s) $@ (cat_assoc _ _ _)^$ $@ (t $@R f01) $@ cat_assoc _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** If the horizontal morphisms in a square are equivalences then we can flip the square by inverting them. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hinverse {HE : HasEquivs A} (f10 : x00 $<~> x20) (f12 : x02 $<~> x22) (s : Square f01 f21 f10 f12)\n    : Square f21 f01 f10^-1$ f12^-1$\n    := (cat_idl _)^$ $@ ((cate_issect f12)^$ $@R _) $@ cat_assoc _ _ _\n      $@ (_ $@L ((cat_assoc _ _ _)^$ $@ (s^$ $@R _) $@ cat_assoc _ _ _\n      $@ (_ $@L cate_isretr f10) $@ cat_idr _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The following four declarations modify one side of a Square using a 2-cell. The L or R indicate the side of the 2-cell. This can be thought of as rewriting the sides of a square using a homotopy. *)\n\n  (** Rewriting the left edge. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hconcatL (p : f01' $== f01) (s : Square f01 f21 f10 f12)\n    : Square f01' f21 f10 f12\n    := s $@ (f12 $@L p^$).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Rewriting the right edge. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hconcatR (s : Square f01 f21 f10 f12) (p : f21' $== f21)\n    : Square f01 f21' f10 f12\n    := (p $@R f10) $@ s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Rewriting the top edge. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition vconcatL (p : f10' $== f10) (s : Square f01 f21 f10 f12)\n    : Square f01 f21 f10' f12\n    := (f21 $@L p) $@ s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Rewriting the bottom edge. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition vconcatR (s : Square f01 f21 f10 f12) (p : f12' $== f12)\n    : Square f01 f21 f10 f12'\n    := s $@ (p^$ $@R f01).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Squares.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Squares2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We declare the context again, so that we can reuse some declarations where the variables have been inserted. This would not need to be done if Coq could generalize variables within sections. Currently this is possible in Lean and Agda. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} `{HasEquivs A}\n    {x x' x00 x20 x40 x02 x22 x42 x04 x24 x44 : A}\n    {f10 f10' : x00 $-> x20} {f30 : x20 $-> x40} \n    {f12 f12' : x02 $-> x22} {f32 : x22 $-> x42} \n    {f14 : x04 $-> x24} {f34 : x24 $-> x44}\n    {f01 f01' : x00 $-> x02} {f21 f21' : x20 $-> x22} {f41 f41' : x40 $-> x42}\n    {f03 : x02 $-> x04} {f23 : x22 $-> x24} {f43 : x42 $-> x44}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** If the vertical morphisms in a square are equivalences then we can flip the square by inverting them. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition vinverse (f01 : x00 $<~> x02) (f21 : x20 $<~> x22) (s : Square f01 f21 f10 f12)\n    : Square (f01^-1$) (f21^-1$) f12 f10\n    := transpose (hinverse _ _ (transpose s)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Whisker a map in one of the corners. For the bottom-left and top-right we have two choices. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whiskerTL {f : x $-> x00} (s : Square f01 f21 f10 f12)\n    : Square (f01 $o f) f21 (f10 $o f) f12\n    := (cat_assoc _ _ _)^$ $@ (s $@R f) $@ cat_assoc _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whiskerBR {f : x22 $-> x} (s : Square f01 f21 f10 f12)\n    : Square f01 (f $o f21) f10 (f $o f12)\n    := cat_assoc _ _ _ $@ (f $@L s) $@ (cat_assoc _ _ _)^$.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whiskerBL {f : x $<~> x02} (s : Square f01 f21 f10 f12)\n    : Square (f^-1$ $o f01) f21 f10 (f12 $o f)\n    := s $@ ((compose_hh_V _ _)^$ $@R f01) $@ cat_assoc _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whiskerLB {f : x02 $<~> x} (s : Square f01 f21 f10 f12)\n    : Square (f $o f01) f21 f10 (f12 $o f^-1$)\n    := s $@ ((compose_hV_h _ _)^$ $@R f01) $@ cat_assoc _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whiskerTR {f : x20 $<~> x} (s : Square f01 f21 f10 f12)\n    : Square f01 (f21 $o f^-1$) (f $o f10) f12\n    := cat_assoc _ _ _ $@ (f21 $@L compose_V_hh _ _) $@ s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whiskerRT {f : x $<~> x20} (s : Square f01 f21 f10 f12)\n    : Square f01 (f21 $o f) (f^-1$ $o f10) f12\n    := cat_assoc _ _ _ $@ (f21 $@L compose_h_Vh _ _) $@ s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Moving around maps in a square. Associativity laws. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition move_bottom_left {f01 : x00 $-> x} {f01' : x $-> x02}\n    (s : Square (f01' $o f01) f21 f10 f12) \n    : Square f01 f21 f10 (f12 $o f01')\n    := s $@ (cat_assoc _ _ _)^$.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition move_left_bottom {f12 : x02 $-> x} {f12' : x $-> x22}\n    (s : Square f01 f21 f10 (f12' $o f12)) \n    : Square (f12 $o f01) f21 f10 f12'\n    := s $@ cat_assoc _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition move_right_top {f10 : x00 $-> x} {f10' : x $-> x20}\n    (s : Square f01 f21 (f10' $o f10) f12) \n    : Square f01 (f21 $o f10') f10 f12\n    := cat_assoc _ _ _ $@ s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition move_top_right {f21 : x20 $-> x} {f21' : x $-> x22}\n    (s : Square f01 (f21' $o f21) f10 f12) \n    : Square f01 f21' (f21 $o f10) f12\n    := (cat_assoc _ _ _)^$ $@ s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fmap_square {B : Type} `{Is1Cat B} (f : A -> B) `{!Is0Functor f} `{!Is1Functor f}\n    (s : Square f01 f21 f10 f12)\n    : Square (fmap f f01) (fmap f f21) (fmap f f10) (fmap f f12)\n    := (fmap_comp f _ _)^$ $@ fmap2 f s $@ fmap_comp f _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Squares2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"s $@h t\" := (hconcat s t).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"s $@v t\" := (vconcat s t).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"s $@hR p\" := (hconcatR s p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"s $@hL p\" := (hconcatL p s).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"s $@vR p\" := (vconcatR s p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"s $@vL p\" := (vconcatL p s).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"s ^h$\" := (hinverse _ _ s).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"s ^v$\" := (vinverse _ _ s).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

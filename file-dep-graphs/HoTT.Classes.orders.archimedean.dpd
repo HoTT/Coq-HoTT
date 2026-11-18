@@ -1,0 +1,4 @@
+N: 3 "char_minus_left" [opaque=yes, body=yes, kind=cnst, prop=no, path="archimedean", ];
+N: 2 "char_minus_right" [opaque=yes, body=yes, kind=cnst, prop=no, path="archimedean", ];
+N: 1 "hexists4" [opaque=no, body=yes, kind=cnst, prop=no, path="archimedean", ];
+N: 4 "qinc" [opaque=no, body=yes, kind=cnst, prop=no, path="archimedean", ];

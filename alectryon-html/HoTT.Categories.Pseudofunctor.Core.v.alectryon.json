@@ -1,0 +1,214 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Pseudofunctors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section pseudofunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Quoting from nLab (http://ncatlab.org/nlab/show/pseudofunctor):\n\n      Given bicategories [C] and [D], a pseudofunctor (or weak 2-functor,\n      or just functor) [P : C \u2192 D] consists of:\n\n      - for each object [x] of [C], an object [P_x] of [D];\n\n      - for each hom-category [C(x,y)] in [C], a functor [P_{x,y} :\n        C(x,y) \u2192 D(P_x, P_y)];\n\n      - for each object [x] of [C], an invertible 2-morphism (2-cell)\n        [P_{id_x} : id_{P_x} \u21d2 P_{x,x}(id_x)];\n\n      - for each triple [x],[y],[z] of [C]-objects, a isomorphism\n        (natural in [f : x \u2192 y] and [g : y \u2192 z]) [P_{x,y,z}(f,g) :\n        P_{x,y}(f);P_{y,z}(g) \u21d2 P_{x,z}(f;g)];\n\n      - for each hom-category [C(x,y)],\n<<\n                                    id_{P\u2093} ; P_{x, y}(f)\n                                      //              \\\\\n                                    //                  \\\\\n        P_{id\u2093} ; id_{P_{x,y}(f)} //                      \\\\  \u03bb_{P_{x,y}(f)}\n                                //                          \\\\\n                               \u21d9                              \u21d8\n              P\u2093,\u2093(id\u2093) ; P_{x,y}(f)                       P_{x,y}(f)\n                               \\\\                             \u21d7\n                                 \\\\                         //\n                P_{x,x,y}(id\u2093, f)  \\\\                     // P_{x,y}(\u03bb_f)\n                                     \\\\                 //\n                                       \u21d8              //\n                                        P_{x,y}(id\u2093 ; f)\n>>\n\n        and\n\n<<\n                                    P_{x, y}(f) ; id_{P_y}\n                                      //              \\\\\n                                    //                  \\\\\n       id_{P_{x,y}(f)} ; P_{id_y} //                      \\\\  \u03c1_{P_{x,y}(f)}\n                                //                          \\\\\n                               \u21d9                              \u21d8\n              P_{x,y}(f) ; P_{y,y}(id_y)                   P_{x,y}(f)\n                               \\\\                             \u21d7\n                                 \\\\                         //\n                P_{x,y,y}(f, id_y) \\\\                     // P_{x,y}(\u03c1_f)\n                                     \\\\                 //\n                                       \u21d8              //\n                                       P_{x,y}(f ; id_y)\n>>\n        commute; and\n\n      - for each quadruple [w],[x],[y],[z] of [C]-objects,\n<<\n                                                  \u03b1_{P_{w,x}(f),P_{x,y}(g),P_{y,z}(h)}\n        (P_{w,x}(f) ; P_{x,y}(g)) ; P_{y,z}(h) ========================================\u21d2 P_{w,x}(f) ; (P_{x,y}(g) ; P_{y,z}(h))\n                                         \u2225                                                   \u2225\n                                         \u2225                                                   \u2225\n        P_{w,x,y}(f,g) ; id_{P_{y,z}(h)} \u2225                                                   \u2225 id_{P_{w,x}(f)} ; P_{x,y,z}(g, h)\n                                         \u2225                                                   \u2225\n                                         \u21d3                                                   \u21d3\n                   P_{w,y}(f ; g) ; P_{y,z}(h)                                           P_{w,x}(f) ; P_{x,z}(g ; h)\n                                         \u2225                                                   \u2225\n                                         \u2225                                                   \u2225\n                     P_{w,y,z}(f ; g, h) \u2225                                                   \u2225 P_{w,x,z}(f, g ; h)\n                                         \u2225                                                   \u2225\n                                         \u21d3                                                   \u21d3\n                          P_{w,z}((f ; g) ; h) ========================================\u21d2 P_{w,z}(f ; (g ; h))\n                                                          P_{w,z}(\u03b1_{f,g,h})\n>>\n        commutes.\n*)\n\n  (* To obtain the [p_composition_of_coherent] type, I ran\n<<\n  Unset Implicit Arguments.\n  Variable F : Pseudofunctor.\n  Goal forall (w x y z : C) (f : morphism C w x) (g : morphism C x y) (h : morphism C y z), Type.\n  Proof.\n    intros.\n    pose ((idtoiso (_ -> _) (ap (p_morphism_of F w z) (associativity C _ _ _ _ f g h))) : morphism _ _ _).\n    pose ((p_composition_of F w y z h (g \u2218 f)) : NaturalTransformation _ _).\n    pose (p_morphism_of F y z h \u2218 p_composition_of F w x y g f).\n\n    pose (associator_1 (p_morphism_of F y z h) (p_morphism_of F x y g) (p_morphism_of F w x f)).\n    pose (p_composition_of F x y z h g \u2218 p_morphism_of F w x f).\n    pose ((p_composition_of F w x z (h \u2218 g) f) : NaturalTransformation _ _).\n    simpl in *.\n    repeat match goal with\n             | [ H : _, H' : _ |- _ ] => unique_pose_with_body (NTComposeT H H'); subst H H'\n           end.\n    match goal with\n      | [ H := _, H' := _ |- _ ] => assert (H = H'); subst H H'\n    end.\n>>\n\n<<\n  Unset Implicit Arguments.\n  Variable F : Pseudofunctor.\n  Goal forall (x y : C) (f : morphism C x y), Type.\n  Proof.\n    intros.\n    pose (p_identity_of F y \u2218 p_morphism_of F x y f).\n    pose (p_composition_of F x y y (Identity y) f : NaturalTransformation _ _).\n    pose (idtoiso (_ -> _) (ap (p_morphism_of F x y) (left_identity _ _ _ f)) : morphism _ _ _).\n    pose (left_identity_natural_transformation_2 (p_morphism_of F x y f)).\n    simpl in *.\n    repeat match goal with\n             | [ H : _, H' : _ |- _ ] => unique_pose_with_body (NTComposeT H H'); subst H H'\n           end.\n    match goal with\n      | [ H := _, H' := _ |- _ ] => assert (H = H'); subst H H'\n    end.\n>>\n\n<<\n  Unset Implicit Arguments.\n  Variable F : Pseudofunctor.\n  Goal forall (x y : C) (f : morphism C x y), Type.\n  Proof.\n    intros.\n    pose (p_morphism_of F x y f \u2218 p_identity_of F x).\n    pose (p_composition_of F x x y f (Identity x) : NaturalTransformation _ _).\n    pose (idtoiso (_ -> _) (ap (p_morphism_of F x y) (right_identity _ _ _ f)) : morphism _ _ _).\n    pose (right_identity_natural_transformation_2 (p_morphism_of F x y f)).\n    simpl in *.\n    repeat match goal with\n             | [ H : _, H' : _ |- _ ] => unique_pose_with_body (NTComposeT H H'); subst H H'\n           end.\n    match goal with\n      | [ H := _, H' := _ |- _ ] => assert (H = H'); subst H H'\n    end.\n>>\n *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record Pseudofunctor :=\n    {\n      p_object_of :> C -> PreCategory;\n      p_morphism_of : forall s d, morphism C s d\n                                  -> Functor (p_object_of s) (p_object_of d);\n      p_composition_of : forall s d d'\n                                (m1 : morphism C d d') (m2 : morphism C s d),\n                           (p_morphism_of _ _ (m1 o m2))\n                             <~=~> (p_morphism_of _ _ m1 o p_morphism_of _ _ m2)%functor;\n      p_identity_of : forall x, p_morphism_of x x 1 <~=~> 1%functor;\n      p_composition_of_coherent\n      : forall w x y z\n               (f : morphism C w x) (g : morphism C x y) (h : morphism C y z),\n          ((associator_1 (p_morphism_of y z h) (p_morphism_of x y g) (p_morphism_of w x f))\n             o ((p_composition_of x y z h g oR p_morphism_of w x f)\n                  o (p_composition_of w x z (h o g) f)))\n          = ((p_morphism_of y z h oL p_composition_of w x y g f)\n               o ((p_composition_of w y z h (g o f))\n                    o (Category.Morphisms.idtoiso (_ -> _) (ap (p_morphism_of w z) (Category.Core.associativity C w x y z f g h)) : morphism _ _ _)));\n      p_left_identity_of_coherent\n      : forall x y (f : morphism C x y),\n          ((p_identity_of y oR p_morphism_of x y f)\n             o p_composition_of x y y 1 f)\n          = ((left_identity_natural_transformation_2 (p_morphism_of x y f))\n               o (Category.Morphisms.idtoiso (_ -> _) (ap (p_morphism_of x y) (Category.Core.left_identity C x y f)) : morphism _ _ _));\n      p_right_identity_of_coherent\n      : forall x y (f : morphism C x y),\n          ((p_morphism_of x y f oL p_identity_of x)\n             o p_composition_of x x y f 1)\n          = ((right_identity_natural_transformation_2 (p_morphism_of x y f))\n               o (Category.Morphisms.idtoiso (_ -> _) (ap (p_morphism_of x y) (Category.Core.right_identity C x y f)) : morphism _ _ _))\n    }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End pseudofunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope pseudofunctor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope pseudofunctor_scope with pseudofunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope pseudofunctor_scope with Pseudofunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb pseudofunctor discriminated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments p_object_of {_} {C%_category} F%_pseudofunctor / c%_object : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments p_morphism_of {_} {C%_category} F%_pseudofunctor / {s d}%_object m%_morphism : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*Notation \"F \u2080 x\" := (p_object_of F x) : object_scope.\nNotation \"F \u2081 m\" := (p_morphism_of F m) : morphism_scope.*)\n"
+    }
+  ]
+]

@@ -1,0 +1,53 @@
+digraph HoTT_Colimits_Colimit_Pushout {
+  graph [ratio=0.5]
+  node [style=filled]
+Colimit_Pushout_Pushout_rec_PO_rec [label="Pushout_rec_PO_rec", URL=<Colimit_Pushout.html#Pushout_rec_PO_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Pushout_equiv_pushout_PO_beta_pglue [label="equiv_pushout_PO_beta_pglue", URL=<Colimit_Pushout.html#equiv_pushout_PO_beta_pglue>, fillcolor="#F070D1"] ;
+Colimit_Pushout_equiv_pushout_PO [label="equiv_pushout_PO", URL=<Colimit_Pushout.html#equiv_pushout_PO>, fillcolor="#F070D1"] ;
+Colimit_Pushout_is_PO_pushout [label="is_PO_pushout", URL=<Colimit_Pushout.html#is_PO_pushout>, fillcolor="#F070D1"] ;
+Colimit_Pushout_PO_of_equiv [label="PO_of_equiv", URL=<Colimit_Pushout.html#PO_of_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Pushout_PO_rec_beta_pp [label="PO_rec_beta_pp", URL=<Colimit_Pushout.html#PO_rec_beta_pp>, fillcolor="#F070D1"] ;
+Colimit_Pushout_PO_rec [label="PO_rec", URL=<Colimit_Pushout.html#PO_rec>, fillcolor="#F070D1"] ;
+Colimit_Pushout_PO_ind_beta_pp [label="PO_ind_beta_pp", URL=<Colimit_Pushout.html#PO_ind_beta_pp>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Pushout_PO_ind [label="PO_ind", URL=<Colimit_Pushout.html#PO_ind>, fillcolor="#F070D1"] ;
+Colimit_Pushout_PO_ind_arr [label="PO_ind_arr", URL=<Colimit_Pushout.html#PO_ind_arr>, fillcolor="#F070D1"] ;
+Colimit_Pushout_PO_ind_obj [label="PO_ind_obj", URL=<Colimit_Pushout.html#PO_ind_obj>, fillcolor="#F070D1"] ;
+Colimit_Pushout_popp [label="popp", URL=<Colimit_Pushout.html#popp>, fillcolor="#F070D1"] ;
+Colimit_Pushout_por [label="por", URL=<Colimit_Pushout.html#por>, fillcolor="#F070D1"] ;
+Colimit_Pushout_pol [label="pol", URL=<Colimit_Pushout.html#pol>, fillcolor="#F070D1"] ;
+Colimit_Pushout_PO [label="PO", URL=<Colimit_Pushout.html#PO>, fillcolor="#F070D1"] ;
+Colimit_Pushout_is_PO [label="is_PO", URL=<Colimit_Pushout.html#is_PO>, fillcolor="#F070D1"] ;
+Colimit_Pushout_popp_ [label="popp'", URL=<Colimit_Pushout.html#popp'>, fillcolor="#F070D1"] ;
+Colimit_Pushout_por_ [label="por'", URL=<Colimit_Pushout.html#por'>, fillcolor="#F070D1"] ;
+Colimit_Pushout_pol_ [label="pol'", URL=<Colimit_Pushout.html#pol'>, fillcolor="#F070D1"] ;
+Colimit_Pushout_Build_span_cocone [label="Build_span_cocone", URL=<Colimit_Pushout.html#Build_span_cocone>, fillcolor="#F070D1"] ;
+  Colimit_Pushout_Pushout_rec_PO_rec -> Colimit_Pushout_equiv_pushout_PO_beta_pglue [] ;
+  Colimit_Pushout_Pushout_rec_PO_rec -> Colimit_Pushout_PO_rec_beta_pp [] ;
+  Colimit_Pushout_equiv_pushout_PO_beta_pglue -> Colimit_Pushout_equiv_pushout_PO [] ;
+  Colimit_Pushout_equiv_pushout_PO_beta_pglue -> Colimit_Pushout_popp [] ;
+  Colimit_Pushout_equiv_pushout_PO -> Colimit_Pushout_is_PO_pushout [] ;
+  Colimit_Pushout_equiv_pushout_PO -> Colimit_Pushout_PO [] ;
+  Colimit_Pushout_is_PO_pushout -> Colimit_Pushout_is_PO [] ;
+  Colimit_Pushout_is_PO_pushout -> Colimit_Pushout_popp_ [] ;
+  Colimit_Pushout_is_PO_pushout -> Colimit_Pushout_Build_span_cocone [] ;
+  Colimit_Pushout_PO_of_equiv -> Colimit_Pushout_PO_rec_beta_pp [] ;
+  Colimit_Pushout_PO_of_equiv -> Colimit_Pushout_PO_ind [] ;
+  Colimit_Pushout_PO_rec_beta_pp -> Colimit_Pushout_PO_rec [] ;
+  Colimit_Pushout_PO_rec_beta_pp -> Colimit_Pushout_popp [] ;
+  Colimit_Pushout_PO_rec -> Colimit_Pushout_PO [] ;
+  Colimit_Pushout_PO_rec -> Colimit_Pushout_Build_span_cocone [] ;
+  Colimit_Pushout_PO_ind_beta_pp -> Colimit_Pushout_PO_ind [] ;
+  Colimit_Pushout_PO_ind -> Colimit_Pushout_PO_ind_arr [] ;
+  Colimit_Pushout_PO_ind_arr -> Colimit_Pushout_PO_ind_obj [] ;
+  Colimit_Pushout_PO_ind_arr -> Colimit_Pushout_popp [] ;
+  Colimit_Pushout_PO_ind_obj -> Colimit_Pushout_por [] ;
+  Colimit_Pushout_PO_ind_obj -> Colimit_Pushout_pol [] ;
+  Colimit_Pushout_popp -> Colimit_Pushout_por [] ;
+  Colimit_Pushout_popp -> Colimit_Pushout_pol [] ;
+  Colimit_Pushout_por -> Colimit_Pushout_PO [] ;
+  Colimit_Pushout_pol -> Colimit_Pushout_PO [] ;
+  Colimit_Pushout_popp_ -> Colimit_Pushout_por_ [] ;
+  Colimit_Pushout_popp_ -> Colimit_Pushout_pol_ [] ;
+subgraph cluster_Colimit_Pushout { label="Colimit_Pushout"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Colimit_Pushout_Build_span_cocone; Colimit_Pushout_pol_; Colimit_Pushout_por_; Colimit_Pushout_popp_; Colimit_Pushout_is_PO; Colimit_Pushout_PO; Colimit_Pushout_pol; Colimit_Pushout_por; Colimit_Pushout_popp; Colimit_Pushout_PO_ind_obj; Colimit_Pushout_PO_ind_arr; Colimit_Pushout_PO_ind; Colimit_Pushout_PO_ind_beta_pp; Colimit_Pushout_PO_rec; Colimit_Pushout_PO_rec_beta_pp; Colimit_Pushout_PO_of_equiv; Colimit_Pushout_is_PO_pushout; Colimit_Pushout_equiv_pushout_PO; Colimit_Pushout_equiv_pushout_PO_beta_pglue; Colimit_Pushout_Pushout_rec_PO_rec; };
+} /* END */

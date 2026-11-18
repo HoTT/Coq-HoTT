@@ -1,0 +1,63 @@
+digraph HoTT_Classes_theory_ua_first_isomorphism {
+  graph [ratio=0.5]
+  node [style=filled]
+ua_first_isomorphism_id_first_isomorphism_inj [label="id_first_isomorphism_inj", URL=<ua_first_isomorphism.html#id_first_isomorphism_inj>, peripheries=3, fillcolor="#F070D1"] ;
+ua_first_isomorphism_isomorphic_first_isomorphism_inj [label="isomorphic_first_isomorphism_inj", URL=<ua_first_isomorphism.html#isomorphic_first_isomorphism_inj>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_hom_first_isomorphism_inj [label="hom_first_isomorphism_inj", URL=<ua_first_isomorphism.html#hom_first_isomorphism_inj>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_is_isomorphism_quotient_first_isomorphism_inj [label="is_isomorphism_quotient_first_isomorphism_inj", URL=<ua_first_isomorphism.html#is_isomorphism_quotient_first_isomorphism_inj>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_id_first_isomorphism_surjection [label="id_first_isomorphism_surjection", URL=<ua_first_isomorphism.html#id_first_isomorphism_surjection>, peripheries=3, fillcolor="#F070D1"] ;
+ua_first_isomorphism_isomorphic_first_isomorphism_surjection [label="isomorphic_first_isomorphism_surjection", URL=<ua_first_isomorphism.html#isomorphic_first_isomorphism_surjection>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_hom_first_isomorphism_surjection [label="hom_first_isomorphism_surjection", URL=<ua_first_isomorphism.html#hom_first_isomorphism_surjection>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_is_isomorphism_inc_first_isomorphism_surjection [label="is_isomorphism_inc_first_isomorphism_surjection", URL=<ua_first_isomorphism.html#is_isomorphism_inc_first_isomorphism_surjection>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_id_first_isomorphism [label="id_first_isomorphism", URL=<ua_first_isomorphism.html#id_first_isomorphism>, peripheries=3, fillcolor="#F070D1"] ;
+ua_first_isomorphism_isomorphic_first_isomorphism [label="isomorphic_first_isomorphism", URL=<ua_first_isomorphism.html#isomorphic_first_isomorphism>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_is_isomorphism_first_isomorphism [label="is_isomorphism_first_isomorphism", URL=<ua_first_isomorphism.html#is_isomorphism_first_isomorphism>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_surjection_first_isomorphism [label="surjection_first_isomorphism", URL=<ua_first_isomorphism.html#surjection_first_isomorphism>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_embedding_first_isomorphism [label="embedding_first_isomorphism", URL=<ua_first_isomorphism.html#embedding_first_isomorphism>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_hom_first_isomorphism [label="hom_first_isomorphism", URL=<ua_first_isomorphism.html#hom_first_isomorphism>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_is_homomorphism_first_isomorphism [label="is_homomorphism_first_isomorphism", URL=<ua_first_isomorphism.html#is_homomorphism_first_isomorphism>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_oppreserving_first_isomorphism [label="oppreserving_first_isomorphism", URL=<ua_first_isomorphism.html#oppreserving_first_isomorphism>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_def_first_isomorphism [label="def_first_isomorphism", URL=<ua_first_isomorphism.html#def_first_isomorphism>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_is_subalgebra_predicate_in_image_hom [label="is_subalgebra_predicate_in_image_hom", URL=<ua_first_isomorphism.html#is_subalgebra_predicate_in_image_hom>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_is_closed_under_ops_in_image_hom [label="is_closed_under_ops_in_image_hom", URL=<ua_first_isomorphism.html#is_closed_under_ops_in_image_hom>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_closed_under_op_in_image_hom [label="closed_under_op_in_image_hom", URL=<ua_first_isomorphism.html#closed_under_op_in_image_hom>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_in_image_hom [label="in_image_hom", URL=<ua_first_isomorphism.html#in_image_hom>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_is_congruence_ker [label="is_congruence_ker", URL=<ua_first_isomorphism.html#is_congruence_ker>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_ops_compatible_ker [label="ops_compatible_ker", URL=<ua_first_isomorphism.html#ops_compatible_ker>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_path_ap_operation_ker_related [label="path_ap_operation_ker_related", URL=<ua_first_isomorphism.html#path_ap_operation_ker_related>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_equiv_rel_ker [label="equiv_rel_ker", URL=<ua_first_isomorphism.html#equiv_rel_ker>, fillcolor="#F070D1"] ;
+ua_first_isomorphism_cong_ker [label="cong_ker", URL=<ua_first_isomorphism.html#cong_ker>, fillcolor="#F070D1"] ;
+  ua_first_isomorphism_id_first_isomorphism_inj -> ua_first_isomorphism_isomorphic_first_isomorphism_inj [] ;
+  ua_first_isomorphism_isomorphic_first_isomorphism_inj -> ua_first_isomorphism_hom_first_isomorphism_inj [] ;
+  ua_first_isomorphism_isomorphic_first_isomorphism_inj -> ua_first_isomorphism_is_isomorphism_quotient_first_isomorphism_inj [] ;
+  ua_first_isomorphism_isomorphic_first_isomorphism_inj -> ua_first_isomorphism_is_isomorphism_first_isomorphism [] ;
+  ua_first_isomorphism_hom_first_isomorphism_inj -> ua_first_isomorphism_hom_first_isomorphism [] ;
+  ua_first_isomorphism_is_isomorphism_quotient_first_isomorphism_inj -> ua_first_isomorphism_is_congruence_ker [] ;
+  ua_first_isomorphism_id_first_isomorphism_surjection -> ua_first_isomorphism_isomorphic_first_isomorphism_surjection [] ;
+  ua_first_isomorphism_isomorphic_first_isomorphism_surjection -> ua_first_isomorphism_hom_first_isomorphism_surjection [] ;
+  ua_first_isomorphism_isomorphic_first_isomorphism_surjection -> ua_first_isomorphism_is_isomorphism_inc_first_isomorphism_surjection [] ;
+  ua_first_isomorphism_isomorphic_first_isomorphism_surjection -> ua_first_isomorphism_is_isomorphism_first_isomorphism [] ;
+  ua_first_isomorphism_hom_first_isomorphism_surjection -> ua_first_isomorphism_hom_first_isomorphism [] ;
+  ua_first_isomorphism_is_isomorphism_inc_first_isomorphism_surjection -> ua_first_isomorphism_is_subalgebra_predicate_in_image_hom [] ;
+  ua_first_isomorphism_id_first_isomorphism -> ua_first_isomorphism_isomorphic_first_isomorphism [] ;
+  ua_first_isomorphism_isomorphic_first_isomorphism -> ua_first_isomorphism_is_isomorphism_first_isomorphism [] ;
+  ua_first_isomorphism_is_isomorphism_first_isomorphism -> ua_first_isomorphism_surjection_first_isomorphism [] ;
+  ua_first_isomorphism_is_isomorphism_first_isomorphism -> ua_first_isomorphism_embedding_first_isomorphism [] ;
+  ua_first_isomorphism_surjection_first_isomorphism -> ua_first_isomorphism_hom_first_isomorphism [] ;
+  ua_first_isomorphism_embedding_first_isomorphism -> ua_first_isomorphism_hom_first_isomorphism [] ;
+  ua_first_isomorphism_hom_first_isomorphism -> ua_first_isomorphism_is_homomorphism_first_isomorphism [] ;
+  ua_first_isomorphism_is_homomorphism_first_isomorphism -> ua_first_isomorphism_oppreserving_first_isomorphism [] ;
+  ua_first_isomorphism_oppreserving_first_isomorphism -> ua_first_isomorphism_def_first_isomorphism [] ;
+  ua_first_isomorphism_def_first_isomorphism -> ua_first_isomorphism_is_subalgebra_predicate_in_image_hom [] ;
+  ua_first_isomorphism_def_first_isomorphism -> ua_first_isomorphism_is_congruence_ker [] ;
+  ua_first_isomorphism_is_subalgebra_predicate_in_image_hom -> ua_first_isomorphism_is_closed_under_ops_in_image_hom [] ;
+  ua_first_isomorphism_is_closed_under_ops_in_image_hom -> ua_first_isomorphism_closed_under_op_in_image_hom [] ;
+  ua_first_isomorphism_closed_under_op_in_image_hom -> ua_first_isomorphism_in_image_hom [] ;
+  ua_first_isomorphism_is_congruence_ker -> ua_first_isomorphism_ops_compatible_ker [] ;
+  ua_first_isomorphism_is_congruence_ker -> ua_first_isomorphism_equiv_rel_ker [] ;
+  ua_first_isomorphism_ops_compatible_ker -> ua_first_isomorphism_path_ap_operation_ker_related [] ;
+  ua_first_isomorphism_path_ap_operation_ker_related -> ua_first_isomorphism_cong_ker [] ;
+  ua_first_isomorphism_equiv_rel_ker -> ua_first_isomorphism_cong_ker [] ;
+subgraph cluster_ua_first_isomorphism { label="ua_first_isomorphism"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ua_first_isomorphism_cong_ker; ua_first_isomorphism_equiv_rel_ker; ua_first_isomorphism_path_ap_operation_ker_related; ua_first_isomorphism_ops_compatible_ker; ua_first_isomorphism_is_congruence_ker; ua_first_isomorphism_in_image_hom; ua_first_isomorphism_closed_under_op_in_image_hom; ua_first_isomorphism_is_closed_under_ops_in_image_hom; ua_first_isomorphism_is_subalgebra_predicate_in_image_hom; ua_first_isomorphism_def_first_isomorphism; ua_first_isomorphism_oppreserving_first_isomorphism; ua_first_isomorphism_is_homomorphism_first_isomorphism; ua_first_isomorphism_hom_first_isomorphism; ua_first_isomorphism_embedding_first_isomorphism; ua_first_isomorphism_surjection_first_isomorphism; ua_first_isomorphism_is_isomorphism_first_isomorphism; ua_first_isomorphism_isomorphic_first_isomorphism; ua_first_isomorphism_id_first_isomorphism; ua_first_isomorphism_is_isomorphism_inc_first_isomorphism_surjection; ua_first_isomorphism_hom_first_isomorphism_surjection; ua_first_isomorphism_isomorphic_first_isomorphism_surjection; ua_first_isomorphism_id_first_isomorphism_surjection; ua_first_isomorphism_is_isomorphism_quotient_first_isomorphism_inj; ua_first_isomorphism_hom_first_isomorphism_inj; ua_first_isomorphism_isomorphic_first_isomorphism_inj; ua_first_isomorphism_id_first_isomorphism_inj; };
+} /* END */

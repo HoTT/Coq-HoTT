@@ -1,0 +1,64 @@
+digraph HoTT_Universes_BAut {
+  graph [ratio=0.5]
+  node [style=filled]
+BAut_equiv_pmap_pbaut_pfibration_connected [label="equiv_pmap_pbaut_pfibration_connected", URL=<BAut.html#equiv_pmap_pbaut_pfibration_connected>, peripheries=3, fillcolor="#F070D1"] ;
+BAut_equiv_pmap_pbaut_type_p [label="equiv_pmap_pbaut_type_p", URL=<BAut.html#equiv_pmap_pbaut_type_p>, fillcolor="#F070D1"] ;
+BAut_equiv_pmap_pbaut_pfibration [label="equiv_pmap_pbaut_pfibration", URL=<BAut.html#equiv_pmap_pbaut_pfibration>, peripheries=3, fillcolor="#F070D1"] ;
+BAut_pequiv_pbaut_typeOp [label="pequiv_pbaut_typeOp", URL=<BAut.html#pequiv_pbaut_typeOp>, fillcolor="#F070D1"] ;
+BAut_equiv_map_baut_fibration [label="equiv_map_baut_fibration", URL=<BAut.html#equiv_map_baut_fibration>, peripheries=3, fillcolor="#F070D1"] ;
+BAut_equiv_baut_typeO [label="equiv_baut_typeO", URL=<BAut.html#equiv_baut_typeO>, fillcolor="#F070D1"] ;
+BAut_subuniverse_merely_equiv [label="subuniverse_merely_equiv", URL=<BAut.html#subuniverse_merely_equiv>, fillcolor="#F070D1"] ;
+BAut_id_center2_baut [label="id_center2_baut", URL=<BAut.html#id_center2_baut>, peripheries=3, fillcolor="#F070D1"] ;
+BAut_center2_baut [label="center2_baut", URL=<BAut.html#center2_baut>, fillcolor="#F070D1"] ;
+BAut_center2_baut_subproof0 [label="center2_baut_subproof0", URL=<BAut.html#center2_baut_subproof0>, fillcolor="#F070D1"] ;
+BAut_center2_baut_subproof [label="center2_baut_subproof", URL=<BAut.html#center2_baut_subproof>, fillcolor="#F070D1"] ;
+BAut_id_center_baut [label="id_center_baut", URL=<BAut.html#id_center_baut>, peripheries=3, fillcolor="#F070D1"] ;
+BAut_center_baut [label="center_baut", URL=<BAut.html#center_baut>, fillcolor="#F070D1"] ;
+BAut_baut_ind_hset [label="baut_ind_hset", URL=<BAut.html#baut_ind_hset>, fillcolor="#F070D1"] ;
+BAut_ap_baut_prod_r [label="ap_baut_prod_r", URL=<BAut.html#ap_baut_prod_r>, peripheries=3, fillcolor="#F070D1"] ;
+BAut_baut_prod_r [label="baut_prod_r", URL=<BAut.html#baut_prod_r>, fillcolor="#F070D1"] ;
+BAut_trunc_el_baut [label="trunc_el_baut", URL=<BAut.html#trunc_el_baut>, fillcolor="#F070D1"] ;
+BAut_trunc_baut [label="trunc_baut", URL=<BAut.html#trunc_baut>, fillcolor="#F070D1"] ;
+BAut_transport_path_baut [label="transport_path_baut", URL=<BAut.html#transport_path_baut>, peripheries=3, fillcolor="#F070D1"] ;
+BAut_ap_pr1_path_baut [label="ap_pr1_path_baut", URL=<BAut.html#ap_pr1_path_baut>, fillcolor="#F070D1"] ;
+BAut_path_baut [label="path_baut", URL=<BAut.html#path_baut>, fillcolor="#F070D1"] ;
+BAut_pBAut [label="pBAut", URL=<BAut.html#pBAut>, fillcolor="#F070D1"] ;
+BAut_ispointed_baut [label="ispointed_baut", URL=<BAut.html#ispointed_baut>, fillcolor="#F070D1"] ;
+BAut_BAut_pr1 [label="BAut_pr1", URL=<BAut.html#BAut_pr1>, fillcolor="#F070D1"] ;
+BAut_BAut [label="BAut", URL=<BAut.html#BAut>, fillcolor="#F070D1"] ;
+  BAut_equiv_pmap_pbaut_pfibration_connected -> BAut_equiv_pmap_pbaut_type_p [] ;
+  BAut_equiv_pmap_pbaut_type_p -> BAut_pequiv_pbaut_typeOp [] ;
+  BAut_equiv_pmap_pbaut_pfibration -> BAut_pequiv_pbaut_typeOp [] ;
+  BAut_pequiv_pbaut_typeOp -> BAut_equiv_baut_typeO [] ;
+  BAut_pequiv_pbaut_typeOp -> BAut_pBAut [] ;
+  BAut_equiv_map_baut_fibration -> BAut_equiv_baut_typeO [] ;
+  BAut_equiv_baut_typeO -> BAut_subuniverse_merely_equiv [] ;
+  BAut_equiv_baut_typeO -> BAut_BAut [] ;
+  BAut_id_center2_baut -> BAut_center2_baut [] ;
+  BAut_id_center2_baut -> BAut_trunc_baut [] ;
+  BAut_center2_baut -> BAut_center2_baut_subproof0 [] ;
+  BAut_center2_baut -> BAut_center2_baut_subproof [] ;
+  BAut_center2_baut -> BAut_baut_ind_hset [] ;
+  BAut_center2_baut -> BAut_trunc_el_baut [] ;
+  BAut_id_center_baut -> BAut_center_baut [] ;
+  BAut_id_center_baut -> BAut_trunc_baut [] ;
+  BAut_center_baut -> BAut_baut_ind_hset [] ;
+  BAut_center_baut -> BAut_trunc_el_baut [] ;
+  BAut_baut_ind_hset -> BAut_ispointed_baut [] ;
+  BAut_baut_ind_hset -> BAut_BAut_pr1 [] ;
+  BAut_ap_baut_prod_r -> BAut_baut_prod_r [] ;
+  BAut_ap_baut_prod_r -> BAut_path_baut [] ;
+  BAut_baut_prod_r -> BAut_BAut_pr1 [] ;
+  BAut_trunc_el_baut -> BAut_ispointed_baut [] ;
+  BAut_trunc_el_baut -> BAut_BAut_pr1 [] ;
+  BAut_trunc_baut -> BAut_path_baut [] ;
+  BAut_trunc_baut -> BAut_ispointed_baut [] ;
+  BAut_transport_path_baut -> BAut_ap_pr1_path_baut [] ;
+  BAut_ap_pr1_path_baut -> BAut_path_baut [] ;
+  BAut_path_baut -> BAut_BAut_pr1 [] ;
+  BAut_pBAut -> BAut_ispointed_baut [] ;
+  BAut_ispointed_baut -> BAut_BAut [] ;
+  BAut_BAut_pr1 -> BAut_BAut [] ;
+subgraph cluster_BAut { label="BAut"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+BAut_BAut; BAut_BAut_pr1; BAut_ispointed_baut; BAut_pBAut; BAut_path_baut; BAut_ap_pr1_path_baut; BAut_transport_path_baut; BAut_trunc_baut; BAut_trunc_el_baut; BAut_baut_prod_r; BAut_ap_baut_prod_r; BAut_baut_ind_hset; BAut_center_baut; BAut_id_center_baut; BAut_center2_baut_subproof; BAut_center2_baut_subproof0; BAut_center2_baut; BAut_id_center2_baut; BAut_subuniverse_merely_equiv; BAut_equiv_baut_typeO; BAut_equiv_map_baut_fibration; BAut_pequiv_pbaut_typeOp; BAut_equiv_pmap_pbaut_pfibration; BAut_equiv_pmap_pbaut_type_p; BAut_equiv_pmap_pbaut_pfibration_connected; };
+} /* END */

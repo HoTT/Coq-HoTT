@@ -1,0 +1,17 @@
+digraph HoTT_Modalities_Nullification {
+  graph [ratio=0.5]
+  node [style=filled]
+Nullification_O_eq_lift_accmodality [label="O_eq_lift_accmodality", URL=<Nullification.html#O_eq_lift_accmodality>, peripheries=3, fillcolor="#F070D1"] ;
+Nullification_lift_accmodality [label="lift_accmodality", URL=<Nullification.html#lift_accmodality>, fillcolor="#F070D1"] ;
+Nullification_accmodality_nul [label="accmodality_nul", URL=<Nullification.html#accmodality_nul>, peripheries=3, fillcolor="#F070D1"] ;
+Nullification_Nul [label="Nul", URL=<Nullification.html#Nul>, fillcolor="#F070D1"] ;
+Nullification_ooextendable_over_unit [label="ooextendable_over_unit", URL=<Nullification.html#ooextendable_over_unit>, fillcolor="#F070D1"] ;
+Nullification_extendable_over_unit [label="extendable_over_unit", URL=<Nullification.html#extendable_over_unit>, fillcolor="#F070D1"] ;
+  Nullification_O_eq_lift_accmodality -> Nullification_lift_accmodality [] ;
+  Nullification_lift_accmodality -> Nullification_Nul [] ;
+  Nullification_accmodality_nul -> Nullification_Nul [] ;
+  Nullification_Nul -> Nullification_ooextendable_over_unit [] ;
+  Nullification_ooextendable_over_unit -> Nullification_extendable_over_unit [] ;
+subgraph cluster_Nullification { label="Nullification"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Nullification_extendable_over_unit; Nullification_ooextendable_over_unit; Nullification_Nul; Nullification_accmodality_nul; Nullification_lift_accmodality; Nullification_O_eq_lift_accmodality; };
+} /* END */

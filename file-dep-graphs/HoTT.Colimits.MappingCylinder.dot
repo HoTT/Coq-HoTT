@@ -1,0 +1,65 @@
+digraph HoTT_Colimits_MappingCylinder {
+  graph [ratio=0.5]
+  node [style=filled]
+MappingCylinder_pr_cyl_cylcoeq [label="pr_cyl_cylcoeq", URL=<MappingCylinder.html#pr_cyl_cylcoeq>, peripheries=3, fillcolor="#F070D1"] ;
+MappingCylinder_ap_pr_cylcoeq_cglue [label="ap_pr_cylcoeq_cglue", URL=<MappingCylinder.html#ap_pr_cylcoeq_cglue>, peripheries=3, fillcolor="#F070D1"] ;
+MappingCylinder_pr_cylcoeq [label="pr_cylcoeq", URL=<MappingCylinder.html#pr_cylcoeq>, fillcolor="#F070D1"] ;
+MappingCylinder_ap_cyl_cylcoeq_cglue [label="ap_cyl_cylcoeq_cglue", URL=<MappingCylinder.html#ap_cyl_cylcoeq_cglue>, peripheries=3, fillcolor="#F070D1"] ;
+MappingCylinder_cyl_cylcoeq [label="cyl_cylcoeq", URL=<MappingCylinder.html#cyl_cylcoeq>, fillcolor="#F070D1"] ;
+MappingCylinder_CylCoeq [label="CylCoeq", URL=<MappingCylinder.html#CylCoeq>, fillcolor="#F070D1"] ;
+MappingCylinder_pr_functor_cyl_cyl [label="pr_functor_cyl_cyl", URL=<MappingCylinder.html#pr_functor_cyl_cyl>, fillcolor="#F070D1"] ;
+MappingCylinder_pr_functor_cyl [label="pr_functor_cyl", URL=<MappingCylinder.html#pr_functor_cyl>, fillcolor="#F070D1"] ;
+MappingCylinder_functor_cyl_cyl [label="functor_cyl_cyl", URL=<MappingCylinder.html#functor_cyl_cyl>, fillcolor="#F070D1"] ;
+MappingCylinder_ap_functor_cyl_cyglue [label="ap_functor_cyl_cyglue", URL=<MappingCylinder.html#ap_functor_cyl_cyglue>, fillcolor="#F070D1"] ;
+MappingCylinder_functor_cyl [label="functor_cyl", URL=<MappingCylinder.html#functor_cyl>, fillcolor="#F070D1"] ;
+MappingCylinder_pr_cyl_ [label="pr_cyl'", URL=<MappingCylinder.html#pr_cyl'>, peripheries=3, fillcolor="#F070D1"] ;
+MappingCylinder_cyl_ [label="cyl'", URL=<MappingCylinder.html#cyl'>, peripheries=3, fillcolor="#F070D1"] ;
+MappingCylinder_pr_cyl_cyl [label="pr_cyl_cyl", URL=<MappingCylinder.html#pr_cyl_cyl>, peripheries=3, fillcolor="#F070D1"] ;
+MappingCylinder_ap_pr_cyl_cyglue [label="ap_pr_cyl_cyglue", URL=<MappingCylinder.html#ap_pr_cyl_cyglue>, fillcolor="#F070D1"] ;
+MappingCylinder_pr_cyl [label="pr_cyl", URL=<MappingCylinder.html#pr_cyl>, fillcolor="#F070D1"] ;
+MappingCylinder_Cyl_rec_beta_cyglue [label="Cyl_rec_beta_cyglue", URL=<MappingCylinder.html#Cyl_rec_beta_cyglue>, fillcolor="#F070D1"] ;
+MappingCylinder_Cyl_rec [label="Cyl_rec", URL=<MappingCylinder.html#Cyl_rec>, fillcolor="#F070D1"] ;
+MappingCylinder_Cyl_ind_beta_cyglue [label="Cyl_ind_beta_cyglue", URL=<MappingCylinder.html#Cyl_ind_beta_cyglue>, peripheries=3, fillcolor="#F070D1"] ;
+MappingCylinder_Cyl_ind [label="Cyl_ind", URL=<MappingCylinder.html#Cyl_ind>, fillcolor="#F070D1"] ;
+MappingCylinder_cyglue [label="cyglue", URL=<MappingCylinder.html#cyglue>, fillcolor="#F070D1"] ;
+MappingCylinder_cyr [label="cyr", URL=<MappingCylinder.html#cyr>, fillcolor="#F070D1"] ;
+MappingCylinder_cyl [label="cyl", URL=<MappingCylinder.html#cyl>, fillcolor="#F070D1"] ;
+MappingCylinder_Cyl [label="Cyl", URL=<MappingCylinder.html#Cyl>, fillcolor="#F070D1"] ;
+  MappingCylinder_pr_cyl_cylcoeq -> MappingCylinder_pr_cylcoeq [] ;
+  MappingCylinder_pr_cyl_cylcoeq -> MappingCylinder_cyl_cylcoeq [] ;
+  MappingCylinder_pr_cyl_cylcoeq -> MappingCylinder_pr_functor_cyl_cyl [] ;
+  MappingCylinder_ap_pr_cylcoeq_cglue -> MappingCylinder_pr_cylcoeq [] ;
+  MappingCylinder_pr_cylcoeq -> MappingCylinder_CylCoeq [] ;
+  MappingCylinder_pr_cylcoeq -> MappingCylinder_pr_functor_cyl [] ;
+  MappingCylinder_ap_cyl_cylcoeq_cglue -> MappingCylinder_cyl_cylcoeq [] ;
+  MappingCylinder_cyl_cylcoeq -> MappingCylinder_CylCoeq [] ;
+  MappingCylinder_cyl_cylcoeq -> MappingCylinder_functor_cyl_cyl [] ;
+  MappingCylinder_CylCoeq -> MappingCylinder_functor_cyl [] ;
+  MappingCylinder_pr_functor_cyl_cyl -> MappingCylinder_pr_functor_cyl [] ;
+  MappingCylinder_pr_functor_cyl_cyl -> MappingCylinder_ap_functor_cyl_cyglue [] ;
+  MappingCylinder_pr_functor_cyl_cyl -> MappingCylinder_ap_pr_cyl_cyglue [] ;
+  MappingCylinder_pr_functor_cyl -> MappingCylinder_functor_cyl [] ;
+  MappingCylinder_pr_functor_cyl -> MappingCylinder_pr_cyl [] ;
+  MappingCylinder_functor_cyl_cyl -> MappingCylinder_functor_cyl [] ;
+  MappingCylinder_ap_functor_cyl_cyglue -> MappingCylinder_functor_cyl [] ;
+  MappingCylinder_ap_functor_cyl_cyglue -> MappingCylinder_Cyl_rec_beta_cyglue [] ;
+  MappingCylinder_functor_cyl -> MappingCylinder_Cyl_rec [] ;
+  MappingCylinder_functor_cyl -> MappingCylinder_cyglue [] ;
+  MappingCylinder_pr_cyl_ -> MappingCylinder_pr_cyl [] ;
+  MappingCylinder_cyl_ -> MappingCylinder_cyl [] ;
+  MappingCylinder_pr_cyl_cyl -> MappingCylinder_pr_cyl [] ;
+  MappingCylinder_ap_pr_cyl_cyglue -> MappingCylinder_pr_cyl [] ;
+  MappingCylinder_pr_cyl -> MappingCylinder_Cyl_rec_beta_cyglue [] ;
+  MappingCylinder_pr_cyl -> MappingCylinder_Cyl_ind [] ;
+  MappingCylinder_Cyl_rec_beta_cyglue -> MappingCylinder_Cyl_rec [] ;
+  MappingCylinder_Cyl_rec_beta_cyglue -> MappingCylinder_cyglue [] ;
+  MappingCylinder_Cyl_rec -> MappingCylinder_Cyl [] ;
+  MappingCylinder_Cyl_ind_beta_cyglue -> MappingCylinder_Cyl_ind [] ;
+  MappingCylinder_Cyl_ind -> MappingCylinder_cyglue [] ;
+  MappingCylinder_cyglue -> MappingCylinder_cyr [] ;
+  MappingCylinder_cyglue -> MappingCylinder_cyl [] ;
+  MappingCylinder_cyr -> MappingCylinder_Cyl [] ;
+  MappingCylinder_cyl -> MappingCylinder_Cyl [] ;
+subgraph cluster_MappingCylinder { label="MappingCylinder"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+MappingCylinder_Cyl; MappingCylinder_cyl; MappingCylinder_cyr; MappingCylinder_cyglue; MappingCylinder_Cyl_ind; MappingCylinder_Cyl_ind_beta_cyglue; MappingCylinder_Cyl_rec; MappingCylinder_Cyl_rec_beta_cyglue; MappingCylinder_pr_cyl; MappingCylinder_ap_pr_cyl_cyglue; MappingCylinder_pr_cyl_cyl; MappingCylinder_cyl_; MappingCylinder_pr_cyl_; MappingCylinder_functor_cyl; MappingCylinder_ap_functor_cyl_cyglue; MappingCylinder_functor_cyl_cyl; MappingCylinder_pr_functor_cyl; MappingCylinder_pr_functor_cyl_cyl; MappingCylinder_CylCoeq; MappingCylinder_cyl_cylcoeq; MappingCylinder_ap_cyl_cylcoeq_cglue; MappingCylinder_pr_cylcoeq; MappingCylinder_ap_pr_cylcoeq_cglue; MappingCylinder_pr_cyl_cylcoeq; };
+} /* END */

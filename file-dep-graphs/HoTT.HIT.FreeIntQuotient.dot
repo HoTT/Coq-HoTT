@@ -1,0 +1,7 @@
+digraph HoTT_HIT_FreeIntQuotient {
+  graph [ratio=0.5]
+  node [style=filled]
+FreeIntQuotient_isset_RmodZ [label="isset_RmodZ", URL=<FreeIntQuotient.html#isset_RmodZ>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_FreeIntQuotient { label="FreeIntQuotient"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+FreeIntQuotient_isset_RmodZ; };
+} /* END */

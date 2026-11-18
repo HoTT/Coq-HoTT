@@ -1,0 +1,114 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Representable profunctors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core Functor.Prod.Core Profunctor.Core Functor.Dual Profunctor.Identity Functor.Composition.Core Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope profunctor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section representable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Quoting nLab on profunctors:\n\n      Every functor [f : C \u2192 D] induces two profunctors [D(1, f) : C \u21f8 D] and [D(f, 1) : D \u21f8 C], defined by [D(1, f)(d, c) = D(d, f(c))] and [D(f, 1)(c, d) = D(f(c), d)]. These profunctors are called representable (or sometimes one of them is corepresentable). *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition representable C D (F : Functor C D) : C -|-> D\n    := 1%profunctor o (1, F).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** TODO: Is there a define this so that we get proofs by duality about representable functors?  If we had judgemental eta expansion, maybe we could do it as [swap o (representable F^op)^op]? *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition corepresentable C D (F : Functor C D) : D -|-> C\n    := 1%profunctor o (F^op, 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End representable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,556 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Monoids.Monoid.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Centralizers *)\n\n(** The centralizer of [g] consists of the elements that commute with [g]. We only need a binary operation so this concept is not special to monoids. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition centralizer {A : Type} `{SgOp A} (g h : A)\n  := g * h = h * g.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A two-sided identity commutes with every element. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition centralizer_unit {A : Type} `{SgOp A} {Aunit : MonUnit A}\n  `{!LeftIdentity _ mon_unit, !RightIdentity _ mon_unit} (g : A) \n  : centralizer g mon_unit\n  := right_identity g @ (left_identity g)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Associativity alone makes each centralizer closed under the operation. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition centralizer_sgop {A : Type} `{SgOp A, !Associative (.*.)} \n  (g h k : A) (p : centralizer g h) (q : centralizer g k)\n  : centralizer g (h * k).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer g (h * k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "centralizer g h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "centralizer g k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer g (h * k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "centralizer g h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "centralizer g k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold centralizer.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g * (h * k) = h * k * g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "centralizer g h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "centralizer g k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs tapply associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g * h * k = h * k * g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "centralizer g h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "centralizer g k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply (ap (.* k) p).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h * g * k = h * k * g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "centralizer g h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "centralizer g k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V tapply associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h * (g * k) = h * k * g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "centralizer g h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "centralizer g k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply (ap (h *.) q).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h * (k * g) = h * k * g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "centralizer g h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "centralizer g k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "tapply associativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

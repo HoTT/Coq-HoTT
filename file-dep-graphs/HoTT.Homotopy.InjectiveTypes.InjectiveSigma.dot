@@ -1,0 +1,47 @@
+digraph HoTT_Homotopy_InjectiveTypes_InjectiveSigma {
+  graph [ratio=0.5]
+  node [style=filled]
+InjectiveSigma_alg_flab_reflective_subuniverse [label="alg_flab_reflective_subuniverse", URL=<InjectiveSigma.html#alg_flab_reflective_subuniverse>, peripheries=3, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_subuniverse_sigma [label="alg_flab_subuniverse_sigma", URL=<InjectiveSigma.html#alg_flab_subuniverse_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_subuniverse_forall [label="alg_flab_subuniverse_forall", URL=<InjectiveSigma.html#alg_flab_subuniverse_forall>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_pType [label="alg_flab_pType", URL=<InjectiveSigma.html#alg_flab_pType>, peripheries=3, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_sigma_sigma [label="alg_flab_sigma_sigma", URL=<InjectiveSigma.html#alg_flab_sigma_sigma>, fillcolor="#F070D1"] ;
+InjectiveSigma_sigma_condition_sigma_condition_sigma [label="sigma_condition_sigma_condition_sigma", URL=<InjectiveSigma.html#sigma_condition_sigma_condition_sigma>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_sigma_forall [label="alg_flab_sigma_forall", URL=<InjectiveSigma.html#alg_flab_sigma_forall>, fillcolor="#F070D1"] ;
+InjectiveSigma_sigma_condition_sigma_condition_forall [label="sigma_condition_sigma_condition_forall", URL=<InjectiveSigma.html#sigma_condition_sigma_condition_forall>, fillcolor="#F070D1"] ;
+InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_sigma [label="homotopic_alg_flab_map_alg_flab_map_sigma", URL=<InjectiveSigma.html#homotopic_alg_flab_map_alg_flab_map_sigma>, fillcolor="#F070D1"] ;
+InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_forall [label="homotopic_alg_flab_map_alg_flab_map_forall", URL=<InjectiveSigma.html#homotopic_alg_flab_map_alg_flab_map_forall>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_sigma_condition_sigma [label="alg_flab_sigma_condition_sigma", URL=<InjectiveSigma.html#alg_flab_sigma_condition_sigma>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_sigma_condition_forall [label="alg_flab_sigma_condition_forall", URL=<InjectiveSigma.html#alg_flab_sigma_condition_forall>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_map_sigma [label="alg_flab_map_sigma", URL=<InjectiveSigma.html#alg_flab_map_sigma>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_map_forall [label="alg_flab_map_forall", URL=<InjectiveSigma.html#alg_flab_map_forall>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_inj_sigma [label="alg_inj_sigma", URL=<InjectiveSigma.html#alg_inj_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_sigma [label="alg_flab_sigma", URL=<InjectiveSigma.html#alg_flab_sigma>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_sigma_condition [label="alg_flab_sigma_condition", URL=<InjectiveSigma.html#alg_flab_sigma_condition>, fillcolor="#F070D1"] ;
+InjectiveSigma_alg_flab_map [label="alg_flab_map", URL=<InjectiveSigma.html#alg_flab_map>, fillcolor="#F070D1"] ;
+  InjectiveSigma_alg_flab_reflective_subuniverse -> InjectiveSigma_alg_flab_subuniverse_forall [] ;
+  InjectiveSigma_alg_flab_subuniverse_sigma -> InjectiveSigma_alg_flab_sigma_sigma [] ;
+  InjectiveSigma_alg_flab_subuniverse_forall -> InjectiveSigma_alg_flab_sigma_forall [] ;
+  InjectiveSigma_alg_flab_pType -> InjectiveSigma_alg_flab_sigma_forall [] ;
+  InjectiveSigma_alg_flab_sigma_sigma -> InjectiveSigma_sigma_condition_sigma_condition_sigma [] ;
+  InjectiveSigma_alg_flab_sigma_sigma -> InjectiveSigma_alg_flab_sigma [] ;
+  InjectiveSigma_sigma_condition_sigma_condition_sigma -> InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_sigma [] ;
+  InjectiveSigma_sigma_condition_sigma_condition_sigma -> InjectiveSigma_alg_flab_sigma_condition_sigma [] ;
+  InjectiveSigma_sigma_condition_sigma_condition_sigma -> InjectiveSigma_alg_flab_sigma_condition [] ;
+  InjectiveSigma_alg_flab_sigma_forall -> InjectiveSigma_sigma_condition_sigma_condition_forall [] ;
+  InjectiveSigma_alg_flab_sigma_forall -> InjectiveSigma_alg_flab_sigma [] ;
+  InjectiveSigma_sigma_condition_sigma_condition_forall -> InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_forall [] ;
+  InjectiveSigma_sigma_condition_sigma_condition_forall -> InjectiveSigma_alg_flab_sigma_condition_forall [] ;
+  InjectiveSigma_sigma_condition_sigma_condition_forall -> InjectiveSigma_alg_flab_sigma_condition [] ;
+  InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_sigma -> InjectiveSigma_alg_flab_map_sigma [] ;
+  InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_sigma -> InjectiveSigma_alg_flab_map [] ;
+  InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_forall -> InjectiveSigma_alg_flab_map_forall [] ;
+  InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_forall -> InjectiveSigma_alg_flab_map [] ;
+  InjectiveSigma_alg_flab_sigma_condition_sigma -> InjectiveSigma_alg_flab_map_sigma [] ;
+  InjectiveSigma_alg_flab_sigma_condition_forall -> InjectiveSigma_alg_flab_map_forall [] ;
+  InjectiveSigma_alg_inj_sigma -> InjectiveSigma_alg_flab_sigma [] ;
+  InjectiveSigma_alg_flab_sigma -> InjectiveSigma_alg_flab_sigma_condition [] ;
+  InjectiveSigma_alg_flab_sigma_condition -> InjectiveSigma_alg_flab_map [] ;
+subgraph cluster_InjectiveSigma { label="InjectiveSigma"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+InjectiveSigma_alg_flab_map; InjectiveSigma_alg_flab_sigma_condition; InjectiveSigma_alg_flab_sigma; InjectiveSigma_alg_inj_sigma; InjectiveSigma_alg_flab_map_forall; InjectiveSigma_alg_flab_map_sigma; InjectiveSigma_alg_flab_sigma_condition_forall; InjectiveSigma_alg_flab_sigma_condition_sigma; InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_forall; InjectiveSigma_homotopic_alg_flab_map_alg_flab_map_sigma; InjectiveSigma_sigma_condition_sigma_condition_forall; InjectiveSigma_alg_flab_sigma_forall; InjectiveSigma_sigma_condition_sigma_condition_sigma; InjectiveSigma_alg_flab_sigma_sigma; InjectiveSigma_alg_flab_pType; InjectiveSigma_alg_flab_subuniverse_forall; InjectiveSigma_alg_flab_subuniverse_sigma; InjectiveSigma_alg_flab_reflective_subuniverse; };
+} /* END */

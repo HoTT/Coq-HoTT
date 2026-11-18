@@ -1,0 +1,9 @@
+digraph HoTT_Modalities_Identity {
+  graph [ratio=0.5]
+  node [style=filled]
+Identity_accmodality_purely [label="accmodality_purely", URL=<Identity.html#accmodality_purely>, peripheries=3, fillcolor="#F070D1"] ;
+Identity_purely [label="purely", URL=<Identity.html#purely>, fillcolor="#F070D1"] ;
+  Identity_accmodality_purely -> Identity_purely [] ;
+subgraph cluster_Identity { label="Identity"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Identity_purely; Identity_accmodality_purely; };
+} /* END */

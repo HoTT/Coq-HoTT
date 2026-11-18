@@ -1,0 +1,13 @@
+N: 6 "diagram_const" [opaque=no, body=yes, kind=cnst, prop=no, path="ConstantDiagram", ];
+N: 5 "diagram_const_functor" [opaque=no, body=yes, kind=cnst, prop=no, path="ConstantDiagram", ];
+N: 4 "diagram_const_functor_comp" [opaque=no, body=yes, kind=cnst, prop=no, path="ConstantDiagram", ];
+N: 3 "diagram_const_functor_idmap" [opaque=no, body=yes, kind=cnst, prop=no, path="ConstantDiagram", ];
+N: 2 "equiv_diagram_const_cocone" [opaque=no, body=yes, kind=cnst, prop=no, path="ConstantDiagram", ];
+N: 1 "equiv_diagram_const_cone" [opaque=no, body=yes, kind=cnst, prop=no, path="ConstantDiagram", ];
+E: 1 6 [weight=35, ];
+E: 2 6 [weight=122, ];
+E: 3 5 [weight=2, ];
+E: 3 6 [weight=5, ];
+E: 4 5 [weight=4, ];
+E: 4 6 [weight=7, ];
+E: 5 6 [weight=7, ];

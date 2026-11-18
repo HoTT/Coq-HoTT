@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT_Tests.Algebra.Rings.Matrix</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT_Tests.Algebra.Rings.Matrix</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#"><span class="id" title="library">Algebra.AbGroups.AbelianGroup</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#"><span class="id" title="library">Algebra.Rings.Ring</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#"><span class="id" title="library">Algebra.Rings.Matrix</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#"><span class="id" title="library">Spaces.List.Core</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Rings.Z.html#"><span class="id" title="library">Algebra.Rings.Z</span></a> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#"><span class="id" title="library">Algebra.Rings.CRing</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#"><span class="id" title="library">Classes.interfaces.canonical_names</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">list_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Matrices can be built with lists of lists. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> 5 7<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  4 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  5 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  6 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  7 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  8 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  9 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 10 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 11 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 12 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 13 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 14 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 15 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 16 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 17 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 18 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 19 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 20 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 21 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 22 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 23 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 24 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 25 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 26 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 27 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 28 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 29 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 30 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 31 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 32 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 33 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 34 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 35 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Malformed matrices are not accepted. 
+</div>
+<div class="code">
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <a id="test2" class="idref" href="#test2"><span class="id" title="definition">test2</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> 2 2<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 4 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 5<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Matrices can also be built with functions. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test2_A" class="idref" href="#test2_A"><span class="id" title="definition">test2_A</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix"><span class="id" title="definition">Build_Matrix</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> 4 4 (<span class="id" title="keyword">fun</span> <a id="i:1" class="idref" href="#i:1"><span class="id" title="binder">i</span></a> <a id="j:2" class="idref" href="#j:2"><span class="id" title="binder">j</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#i:1"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#j:2"><span class="id" title="variable">j</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test2_B" class="idref" href="#test2_B"><span class="id" title="definition">test2_B</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> 4 4<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  0 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  0 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  0 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  0 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  0 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  0 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  4 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  6 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  0 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  6 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  9 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test2" class="idref" href="#test2"><span class="id" title="definition">test2</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test2_A"><span class="id" title="definition">test2_A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test2_B"><span class="id" title="definition">test2_B</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">int_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Matrices with ring entries can be multiplied 
+<div class="paragraph"> </div>
+
+ This is the first matrix. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test3_A" class="idref" href="#test3_A"><span class="id" title="definition">test3_A</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3 2<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> -1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This is the second matrix. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test3_B" class="idref" href="#test3_B"><span class="id" title="definition">test3_B</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 2 4<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  4 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 0 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> -2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> -1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 5 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This is the expected result of the multiplication. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test3_AB" class="idref" href="#test3_AB"><span class="id" title="definition">test3_AB</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3 4<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 4 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 15 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  9 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> -5 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> -5 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  5 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> -1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The entries are propositionally equal, but with our use of HIT integers they are not definitionally equal, since the same integer has many representations.  Applying <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a></span> to each entry puts it into normal form, after which the two sides agree definitionally. Using <span class="inlinecode"><span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)</span> also works, but is slower. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test3" class="idref" href="#test3"><span class="id" title="definition">test3</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_map"><span class="id" title="definition">matrix_map</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_mult"><span class="id" title="definition">matrix_mult</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_B"><span class="id" title="definition">test3_B</span></a>)) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_AB"><span class="id" title="definition">test3_AB</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here we check the minors of a matrix are computed correctly. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test4" class="idref" href="#test4"><span class="id" title="definition">test4</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3 3<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  5 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  4 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  6 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  7 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  8 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  9 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test4_minor_0_1" class="idref" href="#test4_minor_0_1"><span class="id" title="definition">test4_minor_0_1</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 2 2<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  6 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  7 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  9 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test4_minor_0_1_eq" class="idref" href="#test4_minor_0_1_eq"><span class="id" title="definition">test4_minor_0_1_eq</span></a><br/>
+&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_minor"><span class="id" title="definition">matrix_minor</span></a> 0 1 <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test4"><span class="id" title="definition">test4</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test4_minor_0_1"><span class="id" title="definition">test4_minor_0_1</span></a><br/>
+&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test4_minor_1_1" class="idref" href="#test4_minor_1_1"><span class="id" title="definition">test4_minor_1_1</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 2 2<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  5 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  7 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  9 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test4_minor_1_1_eq" class="idref" href="#test4_minor_1_1_eq"><span class="id" title="definition">test4_minor_1_1_eq</span></a><br/>
+&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_minor"><span class="id" title="definition">matrix_minor</span></a> 1 1 <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test4"><span class="id" title="definition">test4</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test4_minor_1_1"><span class="id" title="definition">test4_minor_1_1</span></a><br/>
+&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Squaring the exchange matrix gives the identity. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test_exchange_matrix_square" class="idref" href="#test_exchange_matrix_square"><span class="id" title="definition">test_exchange_matrix_square</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_map"><span class="id" title="definition">matrix_map</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_mult"><span class="id" title="definition">matrix_mult</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#exchange_matrix"><span class="id" title="definition">exchange_matrix</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3) (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#exchange_matrix"><span class="id" title="definition">exchange_matrix</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#identity_matrix"><span class="id" title="definition">identity_matrix</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Exchange matrices reverse rows and columns of rectangular matrices. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test_exchange_matrix_rows_expected" class="idref" href="#test_exchange_matrix_rows_expected"><span class="id" title="definition">test_exchange_matrix_rows_expected</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3 2<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> -1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a>  3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test_exchange_matrix_columns_expected" class="idref" href="#test_exchange_matrix_columns_expected"><span class="id" title="definition">test_exchange_matrix_columns_expected</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Build_Matrix'"><span class="id" title="definition">Build_Matrix'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3 2<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  3 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a> -1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 2 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">[</span></a>  1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">,</span></a> 1 <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">]</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test_exchange_matrix_rows" class="idref" href="#test_exchange_matrix_rows"><span class="id" title="definition">test_exchange_matrix_rows</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_map"><span class="id" title="definition">matrix_map</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_mult"><span class="id" title="definition">matrix_mult</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#exchange_matrix"><span class="id" title="definition">exchange_matrix</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3) <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test_exchange_matrix_rows_expected"><span class="id" title="definition">test_exchange_matrix_rows_expected</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test_exchange_matrix_columns" class="idref" href="#test_exchange_matrix_columns"><span class="id" title="definition">test_exchange_matrix_columns</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_map"><span class="id" title="definition">matrix_map</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_mult"><span class="id" title="definition">matrix_mult</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#exchange_matrix"><span class="id" title="definition">exchange_matrix</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 2)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entries"><span class="id" title="definition">entries</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test_exchange_matrix_columns_expected"><span class="id" title="definition">test_exchange_matrix_columns_expected</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test_exchange_matrix_rows_entry" class="idref" href="#test_exchange_matrix_rows_entry"><span class="id" title="definition">test_exchange_matrix_rows_entry</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entry"><span class="id" title="definition">entry</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_mult"><span class="id" title="definition">matrix_mult</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#exchange_matrix"><span class="id" title="definition">exchange_matrix</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 3) <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a>) 0 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a> 2 1<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entry_matrix_mult_exchange_l"><span class="id" title="definition">entry_matrix_mult_exchange_l</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a> 0 1 <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test_exchange_matrix_columns_entry" class="idref" href="#test_exchange_matrix_columns_entry"><span class="id" title="definition">test_exchange_matrix_columns_entry</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entry"><span class="id" title="definition">entry</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#matrix_mult"><span class="id" title="definition">matrix_mult</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#exchange_matrix"><span class="id" title="definition">exchange_matrix</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> 2)) 1 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a> 1 1<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#entry_matrix_mult_exchange_r"><span class="id" title="definition">entry_matrix_mult_exchange_r</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#test3_A"><span class="id" title="definition">test3_A</span></a> 1 0 <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Centrosymmetry works without funext, including in dimension zero. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="Centrosymmetric" class="idref" href="#Centrosymmetric"><span class="id" title="section">Centrosymmetric</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="Centrosymmetric.R" class="idref" href="#Centrosymmetric.R"><span class="id" title="variable">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Definition</span> <a id="test" class="idref" href="#test"><span class="id" title="definition">test</span></a> (<a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#IsCentrosymmetric"><span class="id" title="class">IsCentrosymmetric</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#exchange_matrix"><span class="id" title="definition">exchange_matrix</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#Centrosymmetric.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#n:4"><span class="id" title="variable">n</span></a>) := <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">identity_matrix</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">R</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">0)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">identity_matrix</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">R</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">1)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="Centrosymmetric.n" class="idref" href="#Centrosymmetric.n"><span class="id" title="variable">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="Centrosymmetric.M" class="idref" href="#Centrosymmetric.M"><span class="id" title="variable">M</span></a> <a id="Centrosymmetric.N" class="idref" href="#Centrosymmetric.N"><span class="id" title="variable">N</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Matrix"><span class="id" title="definition">Matrix</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#Centrosymmetric.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#n:5"><span class="id" title="variable">n</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{!<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#IsCentrosymmetric"><span class="id" title="class">IsCentrosymmetric</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#Centrosymmetric.M"><span class="id" title="variable">M</span></a>} `{!<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#IsCentrosymmetric"><span class="id" title="class">IsCentrosymmetric</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#Centrosymmetric.N"><span class="id" title="variable">N</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">(</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">matrix_mult</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">M</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">N</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Closure instances can be applied repeatedly. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">matrix_negate</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">matrix_negate</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">M</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">))</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">(</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">matrix_plus</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">M</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">(</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">matrix_negate</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">N</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">))</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">IsCentrosymmetric</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">(</span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">matrix_transpose</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">(</span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">matrix_negate</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">(</span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">matrix_transpose</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">M</span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">)))</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Changing to the opposite ring requires no additional instance. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">(</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">A</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">:=</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">rng_op</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">R</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">M</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">matrix_mult</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">(</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">exchange_matrix</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">R</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">n</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">M</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">matrix_mult</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">M</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">(</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">exchange_matrix</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">R</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">n</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#commute_exchange_iscentrosymmetric"><span class="id" title="definition">commute_exchange_iscentrosymmetric</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#Centrosymmetric.M"><span class="id" title="variable">M</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="binder, definition"><span id="P:10" class="id">P</span></span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">Matrix</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">R</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">0</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">0,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">matrix_mult</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">(</span></a><a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">exchange_matrix</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">R</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">0)</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">P</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">matrix_mult</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">P</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">(</span></a><a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">exchange_matrix</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">R</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">0)</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">P</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#iscentrosymmetric_commute_exchange"><span class="id" title="definition">iscentrosymmetric_commute_exchange</span></a> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#Centrosymmetric"><span class="id" title="section">Centrosymmetric</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Transpose does not require any algebraic structure on the entries. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="CentrosymmetricType" class="idref" href="#CentrosymmetricType"><span class="id" title="section">CentrosymmetricType</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="CentrosymmetricType.A" class="idref" href="#CentrosymmetricType.A"><span class="id" title="variable">A</span></a> : <span class="id" title="keyword">Type</span>) (<a id="CentrosymmetricType.n" class="idref" href="#CentrosymmetricType.n"><span class="id" title="variable">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="CentrosymmetricType.M" class="idref" href="#CentrosymmetricType.M"><span class="id" title="variable">M</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Matrix"><span class="id" title="definition">Matrix</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#A:11"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#n:12"><span class="id" title="variable">n</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{!<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#IsCentrosymmetric"><span class="id" title="class">IsCentrosymmetric</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#CentrosymmetricType.M"><span class="id" title="variable">M</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">(</span></a><a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">matrix_transpose</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">M</span></a><a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#CentrosymmetricType"><span class="id" title="section">CentrosymmetricType</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Addition and negation only require an abelian group of entries. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="CentrosymmetricAbGroup" class="idref" href="#CentrosymmetricAbGroup"><span class="id" title="section">CentrosymmetricAbGroup</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="CentrosymmetricAbGroup.A" class="idref" href="#CentrosymmetricAbGroup.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup</span></a>) (<a id="CentrosymmetricAbGroup.n" class="idref" href="#CentrosymmetricAbGroup.n"><span class="id" title="variable">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="CentrosymmetricAbGroup.M" class="idref" href="#CentrosymmetricAbGroup.M"><span class="id" title="variable">M</span></a> <a id="CentrosymmetricAbGroup.N" class="idref" href="#CentrosymmetricAbGroup.N"><span class="id" title="variable">N</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Matrix.html#Matrix"><span class="id" title="definition">Matrix</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#A:15"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#n:16"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#n:16"><span class="id" title="variable">n</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{!<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#IsCentrosymmetric"><span class="id" title="class">IsCentrosymmetric</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#CentrosymmetricAbGroup.M"><span class="id" title="variable">M</span></a>} `{!<a class="idref" href="HoTT.Algebra.Rings.Matrix.html#IsCentrosymmetric"><span class="id" title="class">IsCentrosymmetric</span></a> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#CentrosymmetricAbGroup.N"><span class="id" title="variable">N</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">(</span></a><a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">matrix_plus</span></a> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">M</span></a> <a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">N</span></a><a id="Unnamed_thm9" class="idref" href="#Unnamed_thm9"><span class="id" title="definition">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm10" class="idref" href="#Unnamed_thm10"><span class="id" title="definition">IsCentrosymmetric</span></a> <a id="Unnamed_thm10" class="idref" href="#Unnamed_thm10"><span class="id" title="definition">(</span></a><a id="Unnamed_thm10" class="idref" href="#Unnamed_thm10"><span class="id" title="definition">matrix_negate</span></a> <a id="Unnamed_thm10" class="idref" href="#Unnamed_thm10"><span class="id" title="definition">M</span></a><a id="Unnamed_thm10" class="idref" href="#Unnamed_thm10"><span class="id" title="definition">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT_Tests.Algebra.Rings.Matrix.html#CentrosymmetricAbGroup"><span class="id" title="section">CentrosymmetricAbGroup</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

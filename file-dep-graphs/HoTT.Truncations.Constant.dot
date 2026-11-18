@@ -1,0 +1,48 @@
+digraph HoTT_Truncations_Constant {
+  graph [ratio=0.5]
+  node [style=filled]
+Constant_surjective_factor_factors [label="surjective_factor_factors", URL=<Constant.html#surjective_factor_factors>, peripheries=3, fillcolor="#F070D1"] ;
+Constant_surjective_factor [label="surjective_factor", URL=<Constant.html#surjective_factor>, fillcolor="#F070D1"] ;
+Constant_surjective_factor_aux [label="surjective_factor_aux", URL=<Constant.html#surjective_factor_aux>, fillcolor="#F070D1"] ;
+Constant_equiv_merely_rec_hset_if_domain [label="equiv_merely_rec_hset_if_domain", URL=<Constant.html#equiv_merely_rec_hset_if_domain>, peripheries=3, fillcolor="#F070D1"] ;
+Constant_merely_rec_hset_if_domain [label="merely_rec_hset_if_domain", URL=<Constant.html#merely_rec_hset_if_domain>, fillcolor="#F070D1"] ;
+Constant_cconst_wconst_hset_if_domain [label="cconst_wconst_hset_if_domain", URL=<Constant.html#cconst_wconst_hset_if_domain>, fillcolor="#F070D1"] ;
+Constant_merely_rec_hset_beta [label="merely_rec_hset_beta", URL=<Constant.html#merely_rec_hset_beta>, peripheries=3, fillcolor="#F070D1"] ;
+Constant_merely_rec_hset [label="merely_rec_hset", URL=<Constant.html#merely_rec_hset>, fillcolor="#F070D1"] ;
+Constant_cconst_wconst_hset [label="cconst_wconst_hset", URL=<Constant.html#cconst_wconst_hset>, fillcolor="#F070D1"] ;
+Constant_cconst_wconst_hset_if_merely_domain [label="cconst_wconst_hset_if_merely_domain", URL=<Constant.html#cconst_wconst_hset_if_merely_domain>, fillcolor="#F070D1"] ;
+Constant_hprop_image_wconst_hset_if_merely_domain [label="hprop_image_wconst_hset_if_merely_domain", URL=<Constant.html#hprop_image_wconst_hset_if_merely_domain>, fillcolor="#F070D1"] ;
+Constant_cconst_wconst_collapsible [label="cconst_wconst_collapsible", URL=<Constant.html#cconst_wconst_collapsible>, peripheries=3, fillcolor="#F070D1"] ;
+Constant_cconst_factors_contr [label="cconst_factors_contr", URL=<Constant.html#cconst_factors_contr>, peripheries=3, fillcolor="#F070D1"] ;
+Constant_cconst_factors_hprop [label="cconst_factors_hprop", URL=<Constant.html#cconst_factors_hprop>, fillcolor="#F070D1"] ;
+Constant_equiv_cconst_from_merely [label="equiv_cconst_from_merely", URL=<Constant.html#equiv_cconst_from_merely>, peripheries=3, fillcolor="#F070D1"] ;
+Constant_cconst_const [label="cconst_const", URL=<Constant.html#cconst_const>, peripheries=3, fillcolor="#F070D1"] ;
+Constant_ConditionallyConstant [label="ConditionallyConstant", URL=<Constant.html#ConditionallyConstant>, fillcolor="#F070D1"] ;
+Constant_collapsible_splitsupp [label="collapsible_splitsupp", URL=<Constant.html#collapsible_splitsupp>, peripheries=3, fillcolor="#F070D1"] ;
+Constant_splitsupp_collapsible [label="splitsupp_collapsible", URL=<Constant.html#splitsupp_collapsible>, fillcolor="#F070D1"] ;
+Constant_equiv_fix_merely [label="equiv_fix_merely", URL=<Constant.html#equiv_fix_merely>, fillcolor="#F070D1"] ;
+Constant_ishprop_fix_wconst [label="ishprop_fix_wconst", URL=<Constant.html#ishprop_fix_wconst>, fillcolor="#F070D1"] ;
+Constant_FixedBy [label="FixedBy", URL=<Constant.html#FixedBy>, fillcolor="#F070D1"] ;
+  Constant_surjective_factor_factors -> Constant_surjective_factor [] ;
+  Constant_surjective_factor -> Constant_surjective_factor_aux [] ;
+  Constant_surjective_factor_aux -> Constant_merely_rec_hset [] ;
+  Constant_equiv_merely_rec_hset_if_domain -> Constant_merely_rec_hset_if_domain [] ;
+  Constant_merely_rec_hset_if_domain -> Constant_cconst_wconst_hset_if_domain [] ;
+  Constant_cconst_wconst_hset_if_domain -> Constant_cconst_wconst_hset_if_merely_domain [] ;
+  Constant_merely_rec_hset_beta -> Constant_merely_rec_hset [] ;
+  Constant_merely_rec_hset -> Constant_cconst_wconst_hset [] ;
+  Constant_cconst_wconst_hset -> Constant_cconst_wconst_hset_if_merely_domain [] ;
+  Constant_cconst_wconst_hset_if_merely_domain -> Constant_hprop_image_wconst_hset_if_merely_domain [] ;
+  Constant_cconst_wconst_hset_if_merely_domain -> Constant_cconst_factors_hprop [] ;
+  Constant_cconst_wconst_collapsible -> Constant_ConditionallyConstant [] ;
+  Constant_cconst_wconst_collapsible -> Constant_splitsupp_collapsible [] ;
+  Constant_cconst_factors_contr -> Constant_ConditionallyConstant [] ;
+  Constant_cconst_factors_hprop -> Constant_ConditionallyConstant [] ;
+  Constant_equiv_cconst_from_merely -> Constant_ConditionallyConstant [] ;
+  Constant_cconst_const -> Constant_ConditionallyConstant [] ;
+  Constant_splitsupp_collapsible -> Constant_equiv_fix_merely [] ;
+  Constant_equiv_fix_merely -> Constant_ishprop_fix_wconst [] ;
+  Constant_ishprop_fix_wconst -> Constant_FixedBy [] ;
+subgraph cluster_Constant { label="Constant"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Constant_FixedBy; Constant_ishprop_fix_wconst; Constant_equiv_fix_merely; Constant_splitsupp_collapsible; Constant_collapsible_splitsupp; Constant_ConditionallyConstant; Constant_cconst_const; Constant_equiv_cconst_from_merely; Constant_cconst_factors_hprop; Constant_cconst_factors_contr; Constant_cconst_wconst_collapsible; Constant_hprop_image_wconst_hset_if_merely_domain; Constant_cconst_wconst_hset_if_merely_domain; Constant_cconst_wconst_hset; Constant_merely_rec_hset; Constant_merely_rec_hset_beta; Constant_cconst_wconst_hset_if_domain; Constant_merely_rec_hset_if_domain; Constant_equiv_merely_rec_hset_if_domain; Constant_surjective_factor_aux; Constant_surjective_factor; Constant_surjective_factor_factors; };
+} /* END */

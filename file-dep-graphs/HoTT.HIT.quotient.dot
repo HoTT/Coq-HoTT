@@ -1,0 +1,70 @@
+digraph HoTT_HIT_quotient {
+  graph [ratio=0.5]
+  node [style=filled]
+quotient_Quotient_quotient_ind_compute_path [label="quotient_ind_compute_path", URL=<quotient.html#Quotient.quotient_ind_compute_path>, peripheries=3, fillcolor="#FACDEF"] ;
+quotient_Quotient_quotient_ind_compute [label="quotient_ind_compute", URL=<quotient.html#Quotient.quotient_ind_compute>, peripheries=3, fillcolor="#F070D1"] ;
+quotient_Quotient_quotient_ind [label="quotient_ind", URL=<quotient.html#Quotient.quotient_ind>, fillcolor="#F070D1"] ;
+quotient_Quotient_quotient_set [label="quotient_set", URL=<quotient.html#Quotient.quotient_set>, fillcolor="#FACDEF"] ;
+quotient_Quotient_related_classes_eq [label="related_classes_eq", URL=<quotient.html#Quotient.related_classes_eq>, fillcolor="#FACDEF"] ;
+quotient_Quotient_class_of [label="class_of", URL=<quotient.html#Quotient.class_of>, fillcolor="#7FAAFF"] ;
+quotient_Quotient_quotient [label="quotient", URL=<quotient.html#Quotient.quotient>, fillcolor="#E2CDFA"] ;
+quotient_quotient_kernel_factor [label="quotient_kernel_factor", URL=<quotient.html#quotient_kernel_factor>, peripheries=3, fillcolor="#F070D1"] ;
+quotient_quotient_functor_equiv_ [label="quotient_functor_equiv'", URL=<quotient.html#quotient_functor_equiv'>, peripheries=3, fillcolor="#F070D1"] ;
+quotient_quotient_functor_equiv [label="quotient_functor_equiv", URL=<quotient.html#quotient_functor_equiv>, fillcolor="#F070D1"] ;
+quotient_quotient_functor_isequiv [label="quotient_functor_isequiv", URL=<quotient.html#quotient_functor_isequiv>, fillcolor="#F070D1"] ;
+quotient_quotient_functor_isequiv_subproof [label="quotient_functor_isequiv_subproof", URL=<quotient.html#quotient_functor_isequiv_subproof>, fillcolor="#F070D1"] ;
+quotient_quotient_functor [label="quotient_functor", URL=<quotient.html#quotient_functor>, fillcolor="#F070D1"] ;
+quotient_quotient_ump [label="quotient_ump", URL=<quotient.html#quotient_ump>, peripheries=3, fillcolor="#F070D1"] ;
+quotient_quotient_ump__ [label="quotient_ump''", URL=<quotient.html#quotient_ump''>, fillcolor="#F070D1"] ;
+quotient_quotient_ump_ [label="quotient_ump'", URL=<quotient.html#quotient_ump'>, fillcolor="#F070D1"] ;
+quotient_quotient_surjective [label="quotient_surjective", URL=<quotient.html#quotient_surjective>, fillcolor="#F070D1"] ;
+quotient_quotient_ind_prop_ [label="quotient_ind_prop'", URL=<quotient.html#quotient_ind_prop'>, fillcolor="#F070D1"] ;
+quotient_quotient_rec2 [label="quotient_rec2", URL=<quotient.html#quotient_rec2>, peripheries=3, fillcolor="#F070D1"] ;
+quotient_quotient_rec [label="quotient_rec", URL=<quotient.html#quotient_rec>, fillcolor="#F070D1"] ;
+quotient_sets_exact [label="sets_exact", URL=<quotient.html#sets_exact>, peripheries=3, fillcolor="#F070D1"] ;
+quotient_classes_eq_related [label="classes_eq_related", URL=<quotient.html#classes_eq_related>, fillcolor="#F070D1"] ;
+quotient_class_of_repr [label="class_of_repr", URL=<quotient.html#class_of_repr>, peripheries=3, fillcolor="#F070D1"] ;
+quotient_decidable_in_class [label="decidable_in_class", URL=<quotient.html#decidable_in_class>, peripheries=3, fillcolor="#F070D1"] ;
+quotient_quotient_ind_prop [label="quotient_ind_prop", URL=<quotient.html#quotient_ind_prop>, fillcolor="#F070D1"] ;
+quotient_in_class_pr [label="in_class_pr", URL=<quotient.html#in_class_pr>, fillcolor="#F070D1"] ;
+quotient_in_class [label="in_class", URL=<quotient.html#in_class>, fillcolor="#F070D1"] ;
+quotient_quotient_path2 [label="quotient_path2", URL=<quotient.html#quotient_path2>, fillcolor="#F070D1"] ;
+  quotient_Quotient_quotient_ind_compute_path -> quotient_Quotient_quotient_ind [] ;
+  quotient_Quotient_quotient_ind_compute -> quotient_Quotient_quotient_ind [] ;
+  quotient_Quotient_quotient_ind -> quotient_Quotient_related_classes_eq [] ;
+  quotient_Quotient_quotient_set -> quotient_Quotient_quotient [] ;
+  quotient_Quotient_related_classes_eq -> quotient_Quotient_class_of [] ;
+  quotient_Quotient_related_classes_eq -> quotient_Quotient_quotient [] ;
+  quotient_quotient_kernel_factor -> quotient_Quotient_quotient_set [] ;
+  quotient_quotient_kernel_factor -> quotient_quotient_surjective [] ;
+  quotient_quotient_functor_equiv_ -> quotient_quotient_functor_equiv [] ;
+  quotient_quotient_functor_equiv -> quotient_quotient_functor_isequiv [] ;
+  quotient_quotient_functor_isequiv -> quotient_quotient_functor_isequiv_subproof [] ;
+  quotient_quotient_functor_isequiv -> quotient_quotient_functor [] ;
+  quotient_quotient_functor -> quotient_Quotient_quotient_set [] ;
+  quotient_quotient_functor -> quotient_quotient_rec [] ;
+  quotient_quotient_ump -> quotient_quotient_ump__ [] ;
+  quotient_quotient_ump -> quotient_quotient_ump_ [] ;
+  quotient_quotient_ump -> quotient_quotient_ind_prop_ [] ;
+  quotient_quotient_ump__ -> quotient_quotient_rec [] ;
+  quotient_quotient_ump_ -> quotient_Quotient_related_classes_eq [] ;
+  quotient_quotient_surjective -> quotient_quotient_ind_prop [] ;
+  quotient_quotient_ind_prop_ -> quotient_Quotient_quotient_ind [] ;
+  quotient_quotient_rec2 -> quotient_quotient_rec [] ;
+  quotient_quotient_rec -> quotient_Quotient_quotient_ind [] ;
+  quotient_sets_exact -> quotient_Quotient_quotient_set [] ;
+  quotient_sets_exact -> quotient_classes_eq_related [] ;
+  quotient_classes_eq_related -> quotient_in_class_pr [] ;
+  quotient_class_of_repr -> quotient_in_class [] ;
+  quotient_class_of_repr -> quotient_quotient_path2 [] ;
+  quotient_decidable_in_class -> quotient_quotient_ind_prop [] ;
+  quotient_decidable_in_class -> quotient_in_class_pr [] ;
+  quotient_quotient_ind_prop -> quotient_Quotient_quotient_ind [] ;
+  quotient_in_class_pr -> quotient_in_class [] ;
+  quotient_in_class -> quotient_Quotient_quotient_ind [] ;
+  quotient_quotient_path2 -> quotient_Quotient_quotient_set [] ;
+subgraph cluster_quotient { label="quotient"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_quotient_Quotient { label="Quotient"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+quotient_Quotient_quotient; quotient_Quotient_class_of; quotient_Quotient_related_classes_eq; quotient_Quotient_quotient_set; quotient_Quotient_quotient_ind; quotient_Quotient_quotient_ind_compute; quotient_Quotient_quotient_ind_compute_path; };
+quotient_quotient_path2; quotient_in_class; quotient_in_class_pr; quotient_quotient_ind_prop; quotient_decidable_in_class; quotient_class_of_repr; quotient_classes_eq_related; quotient_sets_exact; quotient_quotient_rec; quotient_quotient_rec2; quotient_quotient_ind_prop_; quotient_quotient_surjective; quotient_quotient_ump_; quotient_quotient_ump__; quotient_quotient_ump; quotient_quotient_functor; quotient_quotient_functor_isequiv_subproof; quotient_quotient_functor_isequiv; quotient_quotient_functor_equiv; quotient_quotient_functor_equiv_; quotient_quotient_kernel_factor; };
+} /* END */

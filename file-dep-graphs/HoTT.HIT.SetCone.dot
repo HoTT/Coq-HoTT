@@ -1,0 +1,11 @@
+digraph HoTT_HIT_SetCone {
+  graph [ratio=0.5]
+  node [style=filled]
+SetCone_setcone_point [label="setcone_point", URL=<SetCone.html#setcone_point>, peripheries=3, fillcolor="#F070D1"] ;
+SetCone_istrunc_setcone [label="istrunc_setcone", URL=<SetCone.html#istrunc_setcone>, peripheries=3, fillcolor="#F070D1"] ;
+SetCone_setcone [label="setcone", URL=<SetCone.html#setcone>, fillcolor="#F070D1"] ;
+  SetCone_setcone_point -> SetCone_setcone [] ;
+  SetCone_istrunc_setcone -> SetCone_setcone [] ;
+subgraph cluster_SetCone { label="SetCone"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+SetCone_setcone; SetCone_istrunc_setcone; SetCone_setcone_point; };
+} /* END */

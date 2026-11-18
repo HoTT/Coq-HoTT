@@ -1,0 +1,31 @@
+digraph HoTT_Homotopy_HSpaceS1 {
+  graph [ratio=0.5]
+  node [style=filled]
+HSpaceS1_commutative_sgop_s1 [label="commutative_sgop_s1", URL=<HSpaceS1.html#commutative_sgop_s1>, peripheries=3, fillcolor="#F070D1"] ;
+HSpaceS1_associative_sgop_s1 [label="associative_sgop_s1", URL=<HSpaceS1.html#associative_sgop_s1>, peripheries=3, fillcolor="#F070D1"] ;
+HSpaceS1_iscohhspace_s1 [label="iscohhspace_s1", URL=<HSpaceS1.html#iscohhspace_s1>, peripheries=3, fillcolor="#F070D1"] ;
+HSpaceS1_iscoherent_s1 [label="iscoherent_s1", URL=<HSpaceS1.html#iscoherent_s1>, fillcolor="#F070D1"] ;
+HSpaceS1_hspace_s1 [label="hspace_s1", URL=<HSpaceS1.html#hspace_s1>, fillcolor="#F070D1"] ;
+HSpaceS1_rightidentity_s1 [label="rightidentity_s1", URL=<HSpaceS1.html#rightidentity_s1>, fillcolor="#F070D1"] ;
+HSpaceS1_leftidentity_s1 [label="leftidentity_s1", URL=<HSpaceS1.html#leftidentity_s1>, fillcolor="#F070D1"] ;
+HSpaceS1_sgop_s1 [label="sgop_s1", URL=<HSpaceS1.html#sgop_s1>, fillcolor="#F070D1"] ;
+HSpaceS1_s1_turn [label="s1_turn", URL=<HSpaceS1.html#s1_turn>, fillcolor="#F070D1"] ;
+HSpaceS1_Sph1_rec_beta_loop [label="Sph1_rec_beta_loop", URL=<HSpaceS1.html#Sph1_rec_beta_loop>, fillcolor="#F070D1"] ;
+HSpaceS1_Sph1_rec [label="Sph1_rec", URL=<HSpaceS1.html#Sph1_rec>, fillcolor="#F070D1"] ;
+HSpaceS1_Sph1_ind [label="Sph1_ind", URL=<HSpaceS1.html#Sph1_ind>, fillcolor="#F070D1"] ;
+  HSpaceS1_commutative_sgop_s1 -> HSpaceS1_rightidentity_s1 [] ;
+  HSpaceS1_associative_sgop_s1 -> HSpaceS1_rightidentity_s1 [] ;
+  HSpaceS1_iscohhspace_s1 -> HSpaceS1_iscoherent_s1 [] ;
+  HSpaceS1_iscoherent_s1 -> HSpaceS1_hspace_s1 [] ;
+  HSpaceS1_hspace_s1 -> HSpaceS1_rightidentity_s1 [] ;
+  HSpaceS1_hspace_s1 -> HSpaceS1_leftidentity_s1 [] ;
+  HSpaceS1_rightidentity_s1 -> HSpaceS1_sgop_s1 [] ;
+  HSpaceS1_rightidentity_s1 -> HSpaceS1_Sph1_rec_beta_loop [] ;
+  HSpaceS1_leftidentity_s1 -> HSpaceS1_sgop_s1 [] ;
+  HSpaceS1_sgop_s1 -> HSpaceS1_s1_turn [] ;
+  HSpaceS1_sgop_s1 -> HSpaceS1_Sph1_rec [] ;
+  HSpaceS1_s1_turn -> HSpaceS1_Sph1_ind [] ;
+  HSpaceS1_Sph1_rec_beta_loop -> HSpaceS1_Sph1_rec [] ;
+subgraph cluster_HSpaceS1 { label="HSpaceS1"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+HSpaceS1_Sph1_ind; HSpaceS1_Sph1_rec; HSpaceS1_Sph1_rec_beta_loop; HSpaceS1_s1_turn; HSpaceS1_sgop_s1; HSpaceS1_leftidentity_s1; HSpaceS1_rightidentity_s1; HSpaceS1_hspace_s1; HSpaceS1_iscoherent_s1; HSpaceS1_iscohhspace_s1; HSpaceS1_associative_sgop_s1; HSpaceS1_commutative_sgop_s1; };
+} /* END */
