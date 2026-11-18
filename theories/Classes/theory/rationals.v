@@ -399,7 +399,7 @@ Lemma path_avg_split_diff_l (q r : Q) : q + ((r - q) / 2) = (r + q) / 2.
 Proof.
   pattern q at 1.
   rewrite <- (mult_1_r q).
-  pattern (1 : Q) at 1.
+  pattern (1 :> Q) at 1.
   rewrite <- (dec_recip_inverse 2) by solve_propholds.
   rewrite (associativity q 2 (/2)).
   rewrite <- (distribute_r (q*2) (r-q) (/2)).
@@ -417,7 +417,7 @@ Lemma path_avg_split_diff_r (q r : Q) : r - ((r - q) / 2) = (r + q) / 2.
 Proof.
   pattern r at 1.
   rewrite <- (mult_1_r r).
-  pattern (1 : Q) at 1.
+  pattern (1 :> Q) at 1.
   rewrite <- (dec_recip_inverse 2) by solve_propholds.
   rewrite (associativity r 2 (/2)).
   rewrite negate_mult_distr_l.
