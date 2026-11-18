@@ -253,7 +253,8 @@ Proof.
   - apply grp_pullback_pr1.
   - apply grp_pullback_pr2.
   - apply pullback_commsq.
-  - apply grp_pullback_corec'.
+  - intro X.
+    exact (grp_pullback_corec f g).
   - simpl. reflexivity.
   - cbn. reflexivity.
   - intros Z k h p1 p2.

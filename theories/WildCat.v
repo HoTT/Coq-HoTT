@@ -19,6 +19,9 @@ Require Export WildCat.Biproducts.
 Require Export WildCat.Displayed.
 Require Export WildCat.DisplayedEquiv.
 Require Export WildCat.Pullbacks.
+Require Export WildCat.Pushouts.
+Require Export WildCat.Equalizers.
+Require Export WildCat.Coequalizers.
 Require Export WildCat.AbEnriched.
 Require Export WildCat.EpiStable.
 Require Export WildCat.HomologicalAlgebra.
