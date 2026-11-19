@@ -67,7 +67,14 @@ Class Inverse A := inv: A -> A.
 Class DecRecip A := dec_recip: A -> A.
 Definition ApartZero R `{Zero R} `{Apart R} := sig (≶ zero).
 Class Recip A `{Apart A} `{Zero A} := recip: ApartZero A -> A.
-#[global] Typeclasses Transparent SgOp MonUnit Plus Mult Zero One Negate.
+(** Keep these singleton classes transparent so that typeclass search can use their instances as the operations, units, and inverses of other algebraic structures. *)
+#[global] Typeclasses Transparent
+  SgOp MonUnit Plus Mult Zero One Negate Inverse.
+
+(** These projections are identities. Equivalent keys let [rewrite] specialize equations stated with [sg_op] and [inv] to ring operations without wrapper lemmas. *)
+Declare Equivalent Keys sg_op plus.
+Declare Equivalent Keys sg_op mult.
+Declare Equivalent Keys inv negate.
 
 Class Meet A := meet: A -> A -> A.
 Class Join A := join: A -> A -> A.

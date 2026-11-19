@@ -558,3 +558,6 @@ End morphisms.
 End Lift.
 
 End FracField.
+
+(** Keep unification from unfolding quotient operations into case analyses on the private inductive type when specializing algebraic equations. Their computation lemmas remain available above. *)
+#[global] Opaque FracField.Fplus FracField.Fmult FracField.Fneg.

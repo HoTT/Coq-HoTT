@@ -27,6 +27,13 @@ Proof.
 split; try exact _.
 Qed.
 
+Lemma dec_recip_mult_cancel_r (x y : F) : y <> 0 -> x / y * y = x.
+Proof.
+intros E.
+rewrite <- simple_associativity, (commutativity (/y)), dec_recip_inverse by assumption.
+apply mult_1_r.
+Qed.
+
 Lemma dec_recip_1: / 1 = 1.
 Proof.
 rewrite <-(rings.mult_1_l (/1)).
