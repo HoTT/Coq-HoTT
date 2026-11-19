@@ -10,11 +10,11 @@ Require Import Spaces.Nat.Core.
 Section bounded_search.
 
   Context (P : nat -> Type) (P_dec : forall n, Decidable (P n)).
-  
+
   (** We open [type_scope] again after [nat_scope] in order to use the product type notation. *)
   Local Open Scope nat_scope.
   Local Open Scope type_scope.
-  
+
   Local Definition minimal (n : nat) : Type := forall m : nat, P m -> n <= m.
 
   (** If we assume [Funext], then [minimal n] is a proposition.  But to avoid needing [Funext], we propositionally truncate it. *)

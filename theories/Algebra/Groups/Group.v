@@ -512,10 +512,10 @@ Section GroupEquations.
     := grp_assoc _ _ _ @ ap (.* y) (grp_inv_r x) @ grp_unit_l y.
 
   Definition grp_inv_gg_V : (x * y) * y^ = x
-    := (grp_assoc _ _ _)^ @ ap (x *.) (grp_inv_r y) @ grp_unit_r x.
+    := right_inverse_cancel _ x y.
 
   Definition grp_inv_gV_g : (x * y^) * y = x
-    := (grp_assoc _ _ _)^ @ ap (x *.) (grp_inv_l y) @ grp_unit_r x.
+    := left_inverse_cancel _ x y.
 
   Definition grp_1g_g1 : x = y <~> 1 * x = y * 1
     := equiv_concat_r (grp_unit_r _)^ _ oE equiv_concat_l (grp_unit_l _) _.

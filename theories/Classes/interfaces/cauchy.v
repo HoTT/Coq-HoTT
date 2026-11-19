@@ -4,6 +4,7 @@ From HoTT.Classes Require Import
      interfaces.orders
      implementations.peano_naturals
      orders.fields
+     orders.rationals
      theory.dec_fields
      theory.fields
      theory.rationals.
@@ -17,10 +18,6 @@ Section cauchy.
   Context `{Forderedfield : OrderedField F}.
   Let qinc : Cast Q F := rationals_to_field Q F.
   Existing Instance qinc.
-  (* TODO The following two instances should probably come from the
-  `Rationals` instance. *)
-  Context (qinc_strong_presving : IsSemiRingStrongPreserving qinc).
-  Existing Instance qinc_strong_presving.
 
   Section sequence.
     Context (x : nat -> F).
